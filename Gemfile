@@ -11,6 +11,11 @@ gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
 gem 'activeadmin'
 gem 'frontend-generators'
+gem 'bootstrap-sass'
+gem 'devise'
+gem 'high_voltage'
+gem 'better_errors'
+gem 'rails_layout'
 
 
 
@@ -39,11 +44,6 @@ group :development do
   gem 'spring'
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
-  gem 'bootstrap-sass'
-  gem 'devise'
-  gem 'high_voltage'
-  gem 'better_errors'
-  gem 'rails_layout'
   gem 'spring-commands-rspec'
 end
 
