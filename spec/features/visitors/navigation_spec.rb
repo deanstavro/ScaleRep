@@ -1,3 +1,5 @@
+=begin
+
 # Feature: Navigation links
 #   As a visitor
 #   I want to see navigation links
@@ -16,3 +18,4 @@ feature 'Navigation links', :devise do
   end
 
 end
+=end

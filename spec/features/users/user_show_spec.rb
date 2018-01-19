@@ -1,3 +1,4 @@
+=begin
 include Warden::Test::Helpers
 Warden.test_mode!
 
@@ -37,3 +38,4 @@ feature 'User profile page', :devise do
   end
 
 end
+=end

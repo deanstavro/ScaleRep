@@ -1,3 +1,4 @@
+=begin
 # Feature: Sign up
 #   As a visitor
 #   I want to sign up
@@ -60,3 +61,4 @@ feature 'Sign Up', :devise do
   end
 
 end
+=end

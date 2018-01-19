@@ -1,3 +1,4 @@
+=begin
 # Feature: Sign out
 #   As a user
 #   I want to sign out
@@ -17,5 +18,5 @@ feature 'Sign out', :devise do
   end
 
 end
-
+=end
 

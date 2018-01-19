@@ -2,6 +2,7 @@
 #   As a user
 #   I want to sign in
 #   So I can visit protected areas of the site
+=begin
 feature 'Sign in', :devise do
 
   # Scenario: User cannot sign in if not registered
@@ -47,3 +48,5 @@ feature 'Sign in', :devise do
   end
 
 end
+
+=end

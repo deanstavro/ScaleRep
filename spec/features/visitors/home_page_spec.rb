@@ -1,3 +1,4 @@
+=begin
 # Feature: Home page
 #   As a visitor
 #   I want to visit a home page
@@ -14,3 +15,4 @@ feature 'Home page' do
   end
 
 end
+=end
