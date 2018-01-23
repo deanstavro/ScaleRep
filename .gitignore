@@ -1,3 +1,6 @@
 
-*.cache
 tmp/
+config/database.yml
+
+*.cache
+*.log
