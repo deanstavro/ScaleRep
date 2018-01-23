@@ -21,7 +21,7 @@ hr {
 }
 
 hr.light {
-    border-color: #fff;
+    border-color: #aaa;
 }
 
 a {
@@ -52,7 +52,8 @@ p {
 }
 
 .bg-primary {
-    background-color: #f05f40;
+    background-color: #eee;
+    color: #000;
 }
 
 .bg-dark {
@@ -178,7 +179,7 @@ header {
     min-height: auto;
     text-align: center;
     color: #fff;
-    background-image: asset-data-url("stars_landing_page.jpg");
+    background: linear-gradient(45deg,#4e3188,#24babc);
     background-position: center;
     -webkit-background-size: cover;
     -moz-background-size: cover;
@@ -332,9 +333,9 @@ header .header-content .header-content-inner p {
 }
 
 .btn-default {
-    border-color: #fff;
-    color: #222;
-    background-color: #fff;
+    border-color: #4e3188;
+    color: #fff;
+    background-color: #4e3188;
     -webkit-transition: all .35s;
     -moz-transition: all .35s;
     transition: all .35s;
