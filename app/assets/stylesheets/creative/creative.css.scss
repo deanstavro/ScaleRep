@@ -20,8 +20,8 @@
 }
 
 .button1 {
-    background-color: white; 
-    color: black; 
+    background-color: white;
+    color: black;
     border: 2px solid #4CAF50;
 }
 
@@ -495,4 +495,11 @@ img::-moz-selection {
 
 body {
     webkit-tap-highlight-color: #222;
+}
+
+
+// modal code
+.modal-title {
+  width:80%;
+  float:left;
 }
