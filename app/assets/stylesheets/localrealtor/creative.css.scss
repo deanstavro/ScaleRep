@@ -20,8 +20,8 @@
 }
 
 .button1 {
-    background-color: white; 
-    color: black; 
+    background-color: white;
+    color: black;
     border: 2px solid #4CAF50;
 }
 
@@ -200,9 +200,9 @@ header {
     min-height: auto;
     text-align: center;
     color: #fff;
-    background: linear-gradient(45deg,#4e3188,#24babc);
+    background: linear-gradient(45deg,#2D4671,#0F5B30);
     background-position: center;
-    background-image: image-url('sf-houses.jpg');
+    // background-image: image-url('sf-houses.jpg');
 
 
     background-size: 100%;
@@ -223,7 +223,7 @@ header .header-content .header-content-inner h1 {
     margin-bottom: 0;
     text-transform: uppercase;
     font-weight: 700;
-    color: black;
+    color: white;
 }
 
 header .header-content .header-content-inner hr {
@@ -234,7 +234,7 @@ header .header-content .header-content-inner p {
     margin-bottom: 50px;
     font-size: 20px;
     font-weight: 300;
-    color: black;
+    color: white;
 }
 
 @media(min-width:768px) {
