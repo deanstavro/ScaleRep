@@ -200,8 +200,8 @@ header {
     min-height: auto;
     text-align: center;
     color: #fff;
-
-
+    background: linear-gradient(45deg,#4e3188,#24babc);
+    background-position: center;
     background-image: image-url('sf-houses.jpg');
 
 
@@ -215,6 +215,7 @@ header .header-content {
     width: 100%;
     padding: 100px 15px;
     text-align: center;
+
 }
 
 header .header-content .header-content-inner h1 {
@@ -260,8 +261,7 @@ header .header-content .header-content-inner p {
         margin-right: auto;
         margin-left: auto;
         max-width: 80%;
-        font-weight: 400;
-        font-size: 30px;
+        font-size: 22px;
     }
 }
 
