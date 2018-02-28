@@ -417,6 +417,11 @@ header .header-content .header-content-inner p {
     color: #f05f40;
 }
 
+.text-secondary {
+    color: #003057;
+
+}
+
 .no-gutter > [class*=col-] {
     padding-right: 0;
     padding-left: 0;
@@ -474,6 +479,7 @@ fieldset[disabled] .btn-default.active {
     color: #fff;
     background-color: #222;
 }
+
 
 .btn-primary {
     border-color: #f05f40;
