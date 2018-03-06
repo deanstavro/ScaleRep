@@ -1,0 +1,43 @@
+#
+#   Ensure the postgres gem is defined in your Gemfile
+#   
+#
+
+default: &default
+   adapter: postgresql
+   encoding: unicode
+   pool: 5
+   timeout: 5000
+   # For details on connection pooling, see rails configuration guide
+   # http://guides.rubyonrails.org/configuring.html#database-pooling
+
+
+development:
+  <<: *default
+  database: third_rep_development
+  host: localhost
+  port: 5432
+  username: thirdrep
+  password: thirdRep123!
+
+
+# Warning: The database defined as "test" will be erased and
+# re-generated from your development database when you run "rake".
+# Do not set this db to the same as development or production.
+test:
+  <<: *default
+  database: third_rep_test
+  username: thirdrep
+  password: thirdRep123!
+  
+
+production:
+  <<: *default
+  database: third_rep
+  host: localhost
+  port: 5432
+  username: thirdrep
+  password: thirdRep123!
+
+
+
