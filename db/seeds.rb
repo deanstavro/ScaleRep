@@ -9,5 +9,5 @@ user = CreateAdminService.new.call
 puts 'CREATED ADMIN USER: ' << user.email
 
 
-AdminUser.create!(email: 'dean@scalerep.com', password: 'Sc@leRep123!', password_confirmation: 'Sc@leRep123!') unless AdminUser.exists?(email: 'dean@scalerep.password_confirmation')
-AdminUser.create!(email: 'paul@scalerep.com', password: 'Sc@leRep123!', password_confirmation: 'Sc@leRep123!') unless AdminUser.exists?(email: 'dean@scalerep.password_confirmatio
+AdminUser.create!(email: 'dean@scalerep.com', password: 'Sc@leRep123!', password_confirmation: 'Sc@leRep123!') unless AdminUser.exists?(email: 'dean@scalerep.com')
+AdminUser.create!(email: 'paul@scalerep.com', password: 'Sc@leRep123!', password_confirmation: 'Sc@leRep123!') unless AdminUser.exists?(email: 'paul@scalerep.com')
