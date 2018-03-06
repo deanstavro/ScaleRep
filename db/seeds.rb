@@ -6,5 +6,6 @@
 #   cities = City.create([{ name: 'Chicago' }, { name: 'Copenhagen' }])
 #   Mayor.create(name: 'Emanuel', city: cities.first)
 user = CreateAdminService.new.call
-puts 'CREATED ADMIN USER: ' << user.email
-AdminUser.create!(email: 'admin@example.com', password: 'password', password_confirmation: 'password') if Rails.env.development?
+
+AdminUser.create!(email: 'dean@scalerep.com', password: 'Sc@leRep123!', password_confirmation: 'Sc@leRep123!')
+AdminUser.create!(email: 'paul@scalerep.com', password: 'Sc@leRep123!', password_confirmation: 'Sc@leRep123!')
