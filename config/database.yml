@@ -32,7 +32,7 @@ test:
   
 
 production:
-  url: <%= ENV['DATABASE_URL'] %>
+  url: <%= ENV['HEROKU_POSTGRESQL_BROWN_URL'] %>
 
 
 
