@@ -32,7 +32,7 @@ end
 group :development, :test do
   gem 'byebug', platform: :mri
   gem 'sqlite3'
-  gem 'factory_girl_rails'
+  gem 'factory_girl_rails', :require => false
   gem 'faker'
   gem 'rspec-rails'
 end
