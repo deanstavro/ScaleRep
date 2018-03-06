@@ -16,6 +16,7 @@ gem 'devise'
 gem 'high_voltage'
 gem 'better_errors'
 gem 'rails_layout'
+gem 'ahoy_matey'
 
 
 
