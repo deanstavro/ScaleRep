@@ -1,8 +1,9 @@
 <!DOCTYPE html>
 <html>
   <head>
+
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title><%= content_for?(:title) ? yield(:title) : "ScaleRep" %></title>
+    <title>ScaleRep - Sell Smarter</title>
     <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Your Automated Lead Conversion Tool" %>">
     <%= stylesheet_link_tag 'application', media: 'all', 'data-turbolinks-track' => true %>
     <%= javascript_include_tag 'application', 'data-turbolinks-track' => true %>
@@ -21,12 +22,8 @@
 
   </head>
   <body>
-    <header>
-      <%= render 'layouts/navigation' %>
-    </header>
-    <main role="main">
-       <%= render 'layouts/messages' %>
-       <%= yield %>
-    </main>
+
+    <%= yield %>
+
   </body>
 </html>
