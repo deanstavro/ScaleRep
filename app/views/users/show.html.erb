@@ -1,5 +1,8 @@
 <div class="user-page">
-	<h3>User</h3>
-	<p>Name: <%= @user.name if @user.name %></p>
+	<h3>Metrics for <%= @user.client_company.name if @user.client_company %></h3>
+	<p>Account Owner: <%= @user.name if @user.name %></p>
 	<p>Email: <%= @user.email if @user.email %></p>
+
+	<%= line_chart User.group_by_day(:created_at).count %>
+
 </div>

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180306084811) do
+ActiveRecord::Schema.define(version: 20180311072142) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,18 @@ ActiveRecord::Schema.define(version: 20180306084811) do
     t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true, using: :btree
   end
 
+  create_table "client_companies", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "email1"
+    t.string   "email2"
+    t.integer  "plan"
+    t.text     "company_notes"
+    t.string   "company_domain"
+    t.datetime "created_at",     null: false
+    t.datetime "updated_at",     null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -105,8 +117,11 @@ ActiveRecord::Schema.define(version: 20180306084811) do
     t.datetime "updated_at"
     t.string   "name"
     t.integer  "role"
+    t.integer  "client_company_id"
+    t.index ["client_company_id"], name: "index_users_on_client_company_id", using: :btree
     t.index ["email"], name: "index_users_on_email", unique: true, using: :btree
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "users", "client_companies"
 end

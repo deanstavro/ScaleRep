@@ -17,6 +17,8 @@ gem 'high_voltage'
 gem 'better_errors'
 gem 'rails_layout'
 gem 'ahoy_matey'
+gem 'chartkick'
+gem 'groupdate'
 
 
 
@@ -33,7 +35,7 @@ end
 group :development, :test do
   gem 'byebug', platform: :mri
   gem 'sqlite3'
-  gem 'factory_girl_rails', :require => false
+  gem 'factory_girl_rails', :require => true
   gem 'faker'
   gem 'rspec-rails'
 end
