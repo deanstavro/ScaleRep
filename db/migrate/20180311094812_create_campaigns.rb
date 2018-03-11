@@ -6,6 +6,9 @@ class CreateCampaigns < ActiveRecord::Migration[5.0]
       t.string :email1
       t.string :email2
       t.string :industry
+      t.datetime :campaign_start
+      t.datetime :campaign_end
+
 
       t.timestamps
     end

@@ -13,6 +13,7 @@ class CreateLeads < ActiveRecord::Migration[5.0]
       t.string :potential_deal_size
       t.string :email_in_contact_with
       t.string :industry
+      t.datetime :date_sourced
 
       t.timestamps
     end

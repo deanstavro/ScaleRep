@@ -1,8 +1,9 @@
 <div class="user-page">
+	
 	<h3>Metrics for <%= @user.client_company.name if @user.client_company %></h3>
 	<p>Account Owner: <%= @user.name if @user.name %></p>
 	<p>Email: <%= @user.email if @user.email %></p>
 
-	<%= line_chart User.group_by_day(:created_at).count %>
+	<%= line_chart Lead.group_by_week(:date_sourced).count %>
 
 </div>

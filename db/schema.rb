@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180311095737) do
+ActiveRecord::Schema.define(version: 20180311205859) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,11 +96,11 @@ ActiveRecord::Schema.define(version: 20180311095737) do
     t.string   "email1"
     t.string   "email2"
     t.string   "industry"
+    t.datetime "campaign_start"
+    t.datetime "campaign_end"
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.integer  "client_company_id"
-    t.integer  "campaign_id"
-    t.index ["campaign_id"], name: "index_campaigns_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_campaigns_on_client_company_id", using: :btree
   end
 
@@ -116,6 +116,18 @@ ActiveRecord::Schema.define(version: 20180311095737) do
     t.datetime "updated_at",     null: false
   end
 
+  create_table "client_reports", force: :cascade do |t|
+    t.datetime "week_of"
+    t.integer  "warm_generated_leads"
+    t.integer  "qualified_leads"
+    t.text     "report"
+    t.string   "potential_deal_sizes"
+    t.datetime "created_at",           null: false
+    t.datetime "updated_at",           null: false
+    t.integer  "client_company_id"
+    t.index ["client_company_id"], name: "index_client_reports_on_client_company_id", using: :btree
+  end
+
   create_table "leads", force: :cascade do |t|
     t.string   "name"
     t.string   "company"
@@ -129,9 +141,12 @@ ActiveRecord::Schema.define(version: 20180311095737) do
     t.string   "potential_deal_size"
     t.string   "email_in_contact_with"
     t.string   "industry"
+    t.datetime "date_sourced"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.integer  "client_company_id"
+    t.integer  "campaign_id"
+    t.index ["campaign_id"], name: "index_leads_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_leads_on_client_company_id", using: :btree
   end
 
@@ -156,8 +171,9 @@ ActiveRecord::Schema.define(version: 20180311095737) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  add_foreign_key "campaigns", "campaigns"
   add_foreign_key "campaigns", "client_companies"
+  add_foreign_key "client_reports", "client_companies"
+  add_foreign_key "leads", "campaigns"
   add_foreign_key "leads", "client_companies"
   add_foreign_key "users", "client_companies"
 end

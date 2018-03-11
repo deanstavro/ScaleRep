@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'client_reports/index'
+
+  get 'reports/index'
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
   

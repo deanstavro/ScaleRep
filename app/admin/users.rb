@@ -2,14 +2,18 @@ ActiveAdmin.register User do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :client_company_id, :email, :encrypted_password, :name, :role
+permit_params :client_company_id, :email, :encrypted_password, :name, :role, :password, :password_confirmation
 
 form do |f|                         
   f.inputs "Admin Details" do       
-    f.input :email
-    f.input :client_company
     f.input :name
+    f.input :email
     f.input :role
+    f.input :client_company
+    f.input :password
+    f.input :password_confirmation
+    
+    
 
 
   end                               
