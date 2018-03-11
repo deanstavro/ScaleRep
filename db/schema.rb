@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180311072142) do
+ActiveRecord::Schema.define(version: 20180311095737) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,20 @@ ActiveRecord::Schema.define(version: 20180311072142) do
     t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true, using: :btree
   end
 
+  create_table "campaigns", force: :cascade do |t|
+    t.string   "name"
+    t.text     "description"
+    t.string   "email1"
+    t.string   "email2"
+    t.string   "industry"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "client_company_id"
+    t.integer  "campaign_id"
+    t.index ["campaign_id"], name: "index_campaigns_on_campaign_id", using: :btree
+    t.index ["client_company_id"], name: "index_campaigns_on_client_company_id", using: :btree
+  end
+
   create_table "client_companies", force: :cascade do |t|
     t.string   "name"
     t.text     "description"
@@ -100,6 +114,25 @@ ActiveRecord::Schema.define(version: 20180311072142) do
     t.string   "company_domain"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+  end
+
+  create_table "leads", force: :cascade do |t|
+    t.string   "name"
+    t.string   "company"
+    t.string   "position"
+    t.boolean  "decision_maker"
+    t.boolean  "timeline"
+    t.boolean  "project_scope"
+    t.boolean  "large_potential_deal"
+    t.text     "description"
+    t.text     "notes"
+    t.string   "potential_deal_size"
+    t.string   "email_in_contact_with"
+    t.string   "industry"
+    t.datetime "created_at",            null: false
+    t.datetime "updated_at",            null: false
+    t.integer  "client_company_id"
+    t.index ["client_company_id"], name: "index_leads_on_client_company_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -123,5 +156,8 @@ ActiveRecord::Schema.define(version: 20180311072142) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "campaigns", "campaigns"
+  add_foreign_key "campaigns", "client_companies"
+  add_foreign_key "leads", "client_companies"
   add_foreign_key "users", "client_companies"
 end
