@@ -1,2 +1,18 @@
-<h1>ClientReports#index</h1>
-<p>Find me in app/views/client_reports/index.html.erb</p>
+
+<div class="user-page">
+<h1><%= @user.client_company.name if @user.client_company %> Reports</h1>
+<br>
+<div class="column">
+      <table class="table">
+        <tbody>
+          <% @reports.each do |f| %>
+
+            <tr>
+              <%= f.report %>
+            </tr>
+          <% end %>
+
+        </tbody>
+      </table>
+    </div>
+</div>
