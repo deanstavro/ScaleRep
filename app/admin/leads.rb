@@ -2,7 +2,7 @@ ActiveAdmin.register Lead do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :client_company_id, :date_sourced, :campaign_id, :name, :company, :position, :decision_maker, :timeline, :project_scope, :large_potential_deal, :description, :notes, :potential_deal_size, :email_in_contact_with, :industry
+permit_params :qualified_lead, :client_company_id, :date_sourced, :campaign_id, :name, :company, :position, :decision_maker, :timeline, :project_scope, :large_potential_deal, :description, :notes, :potential_deal_size, :email_in_contact_with, :industry
 #
 # or
 #
@@ -11,8 +11,9 @@ permit_params :client_company_id, :date_sourced, :campaign_id, :name, :company, 
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-form do |f|                         
-  f.inputs "Admin Details" do       
+form do |f|
+  f.inputs "Admin Details" do
+    f.input :qualified_lead
     f.input :client_company
     f.input :campaign
     f.input :date_sourced
@@ -30,8 +31,8 @@ form do |f|
     f.input :industry
 
 
-  end                               
-  f.actions                         
+  end
+  f.actions
 end
 
 

@@ -1,4 +1,8 @@
 Rails.application.routes.draw do
+  get 'lead_list/index'
+
+  get 'lead_list/edit'
+
   get 'client_reports/index'
 
   get 'reports/index'

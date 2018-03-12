@@ -118,8 +118,6 @@ ActiveRecord::Schema.define(version: 20180311205859) do
 
   create_table "client_reports", force: :cascade do |t|
     t.datetime "week_of"
-    t.integer  "warm_generated_leads"
-    t.integer  "qualified_leads"
     t.text     "report"
     t.string   "potential_deal_sizes"
     t.datetime "created_at",           null: false
@@ -142,6 +140,7 @@ ActiveRecord::Schema.define(version: 20180311205859) do
     t.string   "email_in_contact_with"
     t.string   "industry"
     t.datetime "date_sourced"
+    t.boolean  "qualified_lead"
     t.datetime "created_at",            null: false
     t.datetime "updated_at",            null: false
     t.integer  "client_company_id"

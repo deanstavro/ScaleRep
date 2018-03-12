@@ -11,6 +11,6 @@ ActiveAdmin.register ClientReport do
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
-permit_params :client_company_id, :week_of, :warm_generated_leads, :qualified_leads, :report, :potential_deal_sizes
+permit_params :client_company_id, :week_of, :report, :potential_deal_sizes
 
 end
