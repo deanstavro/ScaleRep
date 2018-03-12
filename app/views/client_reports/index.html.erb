@@ -12,7 +12,7 @@
   <% @reports.each do |f| %>
     <div class = "report_section">
       <div class="report_header">
-        <h2>Week of <%= f.week_of.strftime("%m-%d-%Y") %></h2>
+        <h2>Week of <%= f.week_of.strftime("%m-%d-%Y") %> to <%= f.week_of.next_week.strftime("%m-%d-%Y") %> </h2>
 
         <% if false %>
         <h3> Qualified Leads: <%= @leads.where("date_sourced >= ? AND date_sourced < ?", f.week_of, f.week_of.next_week).count%></h3>
