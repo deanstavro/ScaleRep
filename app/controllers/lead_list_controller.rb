@@ -7,7 +7,7 @@ class LeadListController < ApplicationController
   	puts @company
 
     # grab reports and grab leads for every week for a report
-    @leads = Lead.where("client_company_id =?", @company).reverse
+    @leads = Lead.where("client_company_id =?", @company).order('date_sourced DESC')
 
   end
 
