@@ -4,3 +4,33 @@
     <h1><%= @user.client_company.name if @user.client_company %> Lead List</h1>
   </div>
 </div>
+
+
+<div class="container">
+  <table class="table table-striped">
+    <thead class="thead-light">
+      <tr>
+        <th scope="col">Date Sourced</th>
+        <th scope="col">Lead Name</th>
+        <th scope="col">Company</th>
+        <th scope="col">Sequence</th>
+        <th scope="col">Qualified?</th>
+        <th scope="col">Quick Note</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @leads.each do |lead| %>
+        <tr>
+          <td><%= lead.date_sourced.strftime("%m-%d-%Y") %></td>
+          <td><%= lead.name %></td>
+          <td><%= lead.company %></td>
+          <td><%= lead.campaign.name %></td>
+          <td><%= lead.qualified_lead %></td>
+          <td><%= lead.notes %></td>
+        </tr>
+
+      <% end %>
+    </tbody>
+  </table>
+</div>

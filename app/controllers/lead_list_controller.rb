@@ -7,8 +7,7 @@ class LeadListController < ApplicationController
   	puts @company
 
     # grab reports and grab leads for every week for a report
-    @qualified_leads = Lead.where("client_company_id =? AND qualified_lead = TRUE" , @company)
-    @warm_leads = Lead.where("client_company_id =? AND qualified_lead = FALSE" , @company)
+    @leads = Lead.where("client_company_id =?", @company).reverse
 
   end
 

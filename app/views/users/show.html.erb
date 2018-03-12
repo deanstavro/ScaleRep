@@ -1,9 +1,15 @@
-<div class="user-page">
-	
-	<h3>Metrics for <%= @user.client_company.name if @user.client_company %></h3>
-	<p>Account Owner: <%= @user.name if @user.name %></p>
-	<p>Email: <%= @user.email if @user.email %></p>
+<div id="title" class="jumbotron">
+  <div class = "container">
+    <br/>
+    <h1>Metrics for <%= @user.client_company.name if @user.client_company %></h1>
+		<h2>Account Owner: <%= @user.name if @user.name %></h2>
+		<p>Email: <%= @user.email if @user.email %></p>
+  </div>
+</div>
 
-	<%= line_chart Lead.group_by_week(:date_sourced).count %>
-
+<div class="container">
+	<div class = "data_section">
+		<h3>Leads sourced by week</h3><br/>
+		<%= line_chart Lead.group_by_week(:date_sourced).count %>
+	</div>
 </div>
