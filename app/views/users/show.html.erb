@@ -10,10 +10,7 @@
 <div class="container">
 	<div class = "data_section">
 		<h3>Qualified Leads by Week</h3><br/>
-		<%= line_chart @warm_leads.group_by_week(:date_sourced).count %>
-
-		<h3>Warm Leads by Week</h3><br/>
-		<%= line_chart @qualified_leads.group_by_week(:date_sourced).count %>
+		<%= line_chart @leads.group_by_week(:date_sourced).count %>
 
 		
 	</div>

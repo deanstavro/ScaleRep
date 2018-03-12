@@ -11,8 +11,7 @@ class UsersController < ApplicationController
 
     @company = ClientCompany.find_by(id: @user.client_company_id)
 
-    @qualified_leads = Lead.where("client_company_id =? AND qualified_lead = TRUE" , @company)
-    @warm_leads = Lead.where("client_company_id =? AND qualified_lead = FALSE" , @company)
+    @leads = Lead.where("client_company_id =? " , @company)
 
 
     unless current_user.admin?
