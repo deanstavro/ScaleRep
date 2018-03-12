@@ -8,6 +8,13 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
+
+    @company = ClientCompany.find_by(id: @user.client_company_id)
+
+    @qualified_leads = Lead.where("client_company_id =? AND qualified_lead = TRUE" , @company)
+    @warm_leads = Lead.where("client_company_id =? AND qualified_lead = FALSE" , @company)
+
+
     unless current_user.admin?
       unless @user == current_user
         redirect_to root_path, :alert => "Access denied."
