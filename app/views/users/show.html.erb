@@ -13,7 +13,7 @@
 		<h3>Aggregated Revenue</h3><br/>
 		<p> Data Range: <%= @weekly_amount_qual_rev_array.keys[0] %> TO <%=@weekly_amount_qual_rev_array.keys[-1] %></p>
 			<%= line_chart [ 
-							 {name: "Expected Deal Size", data: @weekly_amount_cont_array},
+							 {name: "Proposed Deal Size", data: @weekly_amount_cont_array},
 							 {name: "Realized Revenue", data: @weekly_amount_won_array}], prefix: "$", thousands: ",", colors: ['blue','green'] %>
 
 		<br>
