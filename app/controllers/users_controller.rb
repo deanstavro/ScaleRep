@@ -10,8 +10,48 @@ class UsersController < ApplicationController
     @user = User.find(params[:id])
 
     @company = ClientCompany.find_by(id: @user.client_company_id)
-
     @leads = Lead.where("client_company_id =? " , @company)
+    
+    @contracts_given = @leads.where("contract_sent =?", 'yes')
+    @contracts_count = @contracts_given.count
+    @leads_count = @leads.count
+    @unconverted = @leads.count - @contracts_given.count
+
+
+    @weekly_amount_cont_array = @leads.group_by_week(:date_sourced).sum(:contract_amount)
+    @weekly_amount_qual_rev_array = @leads.group_by_week(:date_sourced).sum(:potential_deal_size)
+    @weekly_amount_won_array = @leads.group_by_week(:date_sourced).sum(:deal_size)
+
+    
+    total_qua_rev = 0
+    @weekly_amount_cont_array.each { |key, value|
+
+      total_qua_rev += value
+      puts "#{key} #{value}"
+      @weekly_amount_cont_array[key] = total_qua_rev
+       }
+
+
+
+
+    total_qua_rev = 0
+    @weekly_amount_qual_rev_array.each { |key, value|
+
+      total_qua_rev += value
+      puts "#{key} #{value}"
+      @weekly_amount_qual_rev_array[key] = total_qua_rev
+       }
+
+    total_qua_rev = 0
+    @weekly_amount_won_array.each { |key, value|
+
+      total_qua_rev += value
+      puts "#{key} #{value}"
+      @weekly_amount_won_array[key] = total_qua_rev
+       }
+
+
+
 
 
     unless current_user.admin?

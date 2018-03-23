@@ -3,15 +3,38 @@
     <br/>
     <h1>Metrics for <%= @user.client_company.name if @user.client_company %></h1>
 		<h2>Account Owner: <%= @user.name if @user.name %></h2>
-		<p>Email: <%= @user.email if @user.email %></p>
+		<h2>Email: <%= @user.email if @user.email %></h2>
   </div>
 </div>
 
 <div class="container">
 	<div class = "data_section">
-		<h3>Qualified Leads by Week</h3><br/>
-		<%= line_chart @leads.group_by_week(:date_sourced).count %>
 
+		<h3>Aggregated Revenue</h3><br/>
+		<p> Data Range: <%= @weekly_amount_qual_rev_array.keys[0] %> TO <%=@weekly_amount_qual_rev_array.keys[-1] %></p>
+			<%= line_chart [ {name: "Expected Revenue", data: @weekly_amount_qual_rev_array, },
+							 {name: "Proposed Deal Size", data: @weekly_amount_cont_array},
+							 {name: "Realized Revenue", data: @weekly_amount_won_array}], prefix: "$" %>
+
+		<br>
+		<br>
+
+		<% if false %>
+
+			<h3>Leads Qualified: <%= @leads_count %> </h3>
+			<h3>Contracts Sent: <%= @contracts_count %></h3>
+			<h3>Lead Converted: <%= @contracts_count %></h3>
+
+			<%= pie_chart({"Contracts Sent" => @contracts_count, "Lead Not Converted" => @unconverted }) %>
+
+		<% end %>
+
+
+		<br><br>
+		<h3>Qualified Leads by Week</h3><br/>
+			<%= column_chart @leads.group_by_week(:date_sourced).count %>
+
+		
 		
 	</div>
 </div>
