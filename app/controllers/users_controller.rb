@@ -57,7 +57,7 @@ class UsersController < ApplicationController
 
     #Create line chart value for aggregated contract deal sizes
     @lead_contract_dictionary = {}
-    @contracts_given.each do |lead|
+    @ordered_leads.each do |lead|
 
       puts lead[:name]
       puts lead[:contract_amount]
