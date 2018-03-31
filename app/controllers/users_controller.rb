@@ -8,47 +8,83 @@ class UsersController < ApplicationController
 
   def show
     @user = User.find(params[:id])
-
     @company = ClientCompany.find_by(id: @user.client_company_id)
     @leads = Lead.where("client_company_id =? " , @company)
-    
-    @contracts_given = @leads.where("contract_sent =?", 'yes')
-    @contracts_count = @contracts_given.count
+    @ordered_leads = @leads.sort_by &:date_sourced
     @leads_count = @leads.count
+
+    @contracts = @leads.where(contract_amount: 1..Float::INFINITY)
+    @contracts_given = @contracts.sort_by &:date_sourced
+    @contracts_count = @contracts_given.count
     @unconverted = @leads.count - @contracts_given.count
 
 
-    @weekly_amount_cont_array = @leads.group_by_week(:date_sourced).sum(:contract_amount)
-    @weekly_amount_qual_rev_array = @leads.group_by_week(:date_sourced).sum(:potential_deal_size)
-    @weekly_amount_won_array = @leads.group_by_week(:date_sourced).sum(:deal_size)
-
     
+    #Create line chart value for aggregated proposed deal sizes
+    @lead_proposed_dictionary = {}
+    @ordered_leads.each do |lead|
+
+      puts lead[:name]
+      puts lead[:potential_deal_size]
+      puts lead[:date_sourced]
+
+      #key, value of all leads and deals
+
+      if @lead_proposed_dictionary.has_key?(lead[:date_sourced])
+        @lead_proposed_dictionary[lead[:date_sourced]] += lead[:potential_deal_size]        
+
+
+      else
+      @lead_proposed_dictionary[lead[:date_sourced]] = lead[:potential_deal_size]
+
+      end
+
+    end
+
+
     total_qua_rev = 0
-    @weekly_amount_cont_array.each { |key, value|
+    @lead_proposed_dictionary.each { |key, value|
 
       total_qua_rev += value
       puts "#{key} #{value}"
-      @weekly_amount_cont_array[key] = total_qua_rev
+      @lead_proposed_dictionary[key] = total_qua_rev
        }
 
 
 
 
+
+
+    #Create line chart value for aggregated contract deal sizes
+    @lead_contract_dictionary = {}
+    @contracts_given.each do |lead|
+
+      puts lead[:name]
+      puts lead[:contract_amount]
+      puts lead[:date_sourced]
+
+      #key, value of all leads and deals
+
+      if @lead_contract_dictionary.has_key?(lead[:date_sourced])
+        @lead_contract_dictionary[lead[:date_sourced]] += lead[:contract_amount]        
+
+
+      else
+      @lead_contract_dictionary[lead[:date_sourced]] = lead[:contract_amount]
+
+      end
+
+    end
+
+
     total_qua_rev = 0
-    @weekly_amount_qual_rev_array.each { |key, value|
+    @lead_contract_dictionary.each { |key, value|
 
       total_qua_rev += value
       puts "#{key} #{value}"
-      @weekly_amount_qual_rev_array[key] = total_qua_rev
+      @lead_contract_dictionary[key] = total_qua_rev
        }
 
-    total_qua_rev = 0
-    @weekly_amount_won_array.each { |key, value|
-
-      total_qua_rev += value
-      puts "#{key} #{value}"
-      @weekly_amount_won_array[key] = total_qua_rev
-       }
 
 
 
