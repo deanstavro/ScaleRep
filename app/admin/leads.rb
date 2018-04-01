@@ -31,7 +31,7 @@ form do |f|
     f.input :expected_recurrence_period
     f.input :internal_notes
     f.input :external_notes
-    f.input :contract_sent
+    f.input :contract_sent, :as => :select, :collection =>  [:yes, :no]
     f.input :contract_amount
     f.input :deal_won
     f.input :deal_size

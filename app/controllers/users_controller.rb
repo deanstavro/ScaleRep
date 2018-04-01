@@ -7,9 +7,11 @@ class UsersController < ApplicationController
   end
 
   def show
+
     @user = User.find(params[:id])
     @company = ClientCompany.find_by(id: @user.client_company_id)
     @leads = Lead.where("client_company_id =? " , @company)
+    
     @ordered_leads = @leads.sort_by &:date_sourced
     @leads_count = @leads.count
 
@@ -35,7 +37,7 @@ class UsersController < ApplicationController
 
 
       else
-      @lead_proposed_dictionary[lead[:date_sourced]] = lead[:potential_deal_size]
+        @lead_proposed_dictionary[lead[:date_sourced]] = lead[:potential_deal_size]
 
       end
 
