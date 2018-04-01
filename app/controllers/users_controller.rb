@@ -26,15 +26,10 @@ class UsersController < ApplicationController
     @lead_proposed_dictionary = {}
     @ordered_leads.each do |lead|
 
-      puts lead[:name]
-      puts lead[:potential_deal_size]
-      puts lead[:date_sourced]
-
       #key, value of all leads and deals
 
       if @lead_proposed_dictionary.has_key?(lead[:date_sourced])
         @lead_proposed_dictionary[lead[:date_sourced]] += lead[:potential_deal_size]        
-
 
       else
         @lead_proposed_dictionary[lead[:date_sourced]] = lead[:potential_deal_size]
@@ -44,26 +39,23 @@ class UsersController < ApplicationController
     end
 
 
-    total_qua_rev = 0
-    @lead_proposed_dictionary.each { |key, value|
+    if @lead_proposed_dictionary.count > 1
+      total_qua_rev = 0
+    
 
-      total_qua_rev += value
-      puts "#{key} #{value}"
-      @lead_proposed_dictionary[key] = total_qua_rev
-       }
+      @lead_proposed_dictionary.each { |key, value|
 
-
-
-
+        total_qua_rev += value
+        puts "#{key} #{value}"
+        @lead_proposed_dictionary[key] = total_qua_rev
+        }
+    end
 
 
     #Create line chart value for aggregated contract deal sizes
     @lead_contract_dictionary = {}
     @ordered_leads.each do |lead|
 
-      puts lead[:name]
-      puts lead[:contract_amount]
-      puts lead[:date_sourced]
 
       #key, value of all leads and deals
 
@@ -79,14 +71,15 @@ class UsersController < ApplicationController
     end
 
 
-    total_qua_rev = 0
-    @lead_contract_dictionary.each { |key, value|
+    if @lead_contract_dictionary.count > 1
+      total_qua_rev = 0
+      @lead_contract_dictionary.each { |key, value|
 
-      total_qua_rev += value
-      puts "#{key} #{value}"
-      @lead_contract_dictionary[key] = total_qua_rev
-       }
-
+        total_qua_rev += value
+        puts "#{key} #{value}"
+        @lead_contract_dictionary[key] = total_qua_rev
+        }
+    end
 
 
 
