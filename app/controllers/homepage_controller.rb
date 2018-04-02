@@ -3,7 +3,7 @@ class HomepageController < ApplicationController
 
   def index
 
-  	ahoy.track_visit
+  	#ahoy.track_visit
 
   	if user_signed_in?
   		@user = current_user
