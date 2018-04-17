@@ -46,50 +46,6 @@ ActiveRecord::Schema.define(version: 20180322205714) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  create_table "agentrails", force: :cascade do |t|
-    t.string   "s"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
-  end
-
-  create_table "ahoy_events", force: :cascade do |t|
-    t.integer  "visit_id"
-    t.integer  "user_id"
-    t.string   "name"
-    t.jsonb    "properties"
-    t.datetime "time"
-    t.index "properties jsonb_path_ops", name: "index_ahoy_events_on_properties_jsonb_path_ops", using: :gin
-    t.index ["name", "time"], name: "index_ahoy_events_on_name_and_time", using: :btree
-    t.index ["user_id"], name: "index_ahoy_events_on_user_id", using: :btree
-    t.index ["visit_id"], name: "index_ahoy_events_on_visit_id", using: :btree
-  end
-
-  create_table "ahoy_visits", force: :cascade do |t|
-    t.string   "visit_token"
-    t.string   "visitor_token"
-    t.integer  "user_id"
-    t.string   "ip"
-    t.text     "user_agent"
-    t.text     "referrer"
-    t.string   "referring_domain"
-    t.string   "search_keyword"
-    t.text     "landing_page"
-    t.string   "browser"
-    t.string   "os"
-    t.string   "device_type"
-    t.string   "country"
-    t.string   "region"
-    t.string   "city"
-    t.string   "utm_source"
-    t.string   "utm_medium"
-    t.string   "utm_term"
-    t.string   "utm_content"
-    t.string   "utm_campaign"
-    t.datetime "started_at"
-    t.index ["user_id"], name: "index_ahoy_visits_on_user_id", using: :btree
-    t.index ["visit_token"], name: "index_ahoy_visits_on_visit_token", unique: true, using: :btree
-  end
-
   create_table "campaigns", force: :cascade do |t|
     t.string   "name"
     t.text     "description"

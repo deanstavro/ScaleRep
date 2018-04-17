@@ -16,9 +16,10 @@ gem 'devise'
 gem 'high_voltage'
 gem 'better_errors'
 gem 'rails_layout'
-gem 'ahoy_matey'
 gem 'chartkick'
 gem 'groupdate'
+
+#gem 'ahoy_matey'
 
 
 
@@ -38,6 +39,7 @@ group :development, :test do
   gem 'factory_girl_rails', :require => true
   gem 'faker'
   gem 'rspec-rails'
+  gem 'rails-erd'
 end
 
 group :development do
