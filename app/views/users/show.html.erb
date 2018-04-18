@@ -2,7 +2,7 @@
   <div class = "container">
     <br/>
     <h1>Metrics for <%= @user.client_company.name if @user.client_company %></h1>
-		<h2>Account Owner: <%= @user.name if @user.name %></h2>
+		<h2>Account Owner: <%= @user.first_name if @user.first_name %></h2>
 		<h2>Email: <%= @user.email if @user.email %></h2>
   </div>
 </div>
