@@ -3,5 +3,6 @@ class ClientCompany < ApplicationRecord
 	has_many :leads
 	has_many :client_reports
 
-	enum plan: [:data_source, :lead_generate, :qualify, :custom]
+	validates :name, presence: true
+	validates :company_domain, presence: true
 end

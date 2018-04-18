@@ -5,7 +5,7 @@ ActiveAdmin.register User do
 permit_params :client_company_id, :email, :encrypted_password, :name, :role, :password, :password_confirmation
 
 form do |f|                         
-  f.inputs "Admin Details" do       
+  f.inputs "User Details" do       
     f.input :name
     f.input :email
     f.input :role

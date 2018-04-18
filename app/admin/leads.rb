@@ -12,7 +12,7 @@ permit_params :contract_sent, :deal_won, :deal_size, :expected_recurring_deal, :
 #   permitted
 # end
 form do |f|
-  f.inputs "Admin Details" do
+  f.inputs "Lead Details" do
 
     f.input :client_company
     f.input :campaign
