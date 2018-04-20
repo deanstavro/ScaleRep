@@ -5,6 +5,9 @@
   </div>
 </div>
 
+<div class="hi">
+  <%= @qualified_opps %>
+</div>
 
 <div class="container">
   <table class="table table-striped">
@@ -18,7 +21,7 @@
         <th scope="col">Scope</th>
         <th scope="col">Other Notes</th>
         <th scope="col">Predicted Deal Size</th>
-        
+
         <th scope="col">Contract Sent?</th>
         <th scope="col">Contract Amount</th>
 
@@ -36,7 +39,7 @@
           <td><%= lead.project_scope %></td>
           <td><%= lead.external_notes %></td>
           <td>$<%= lead.potential_deal_size %></td>
-          
+
           <td><%= lead.contract_sent %></td>
           <td>$<%= lead.contract_amount %></td>
 
