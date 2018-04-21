@@ -5,48 +5,60 @@
   </div>
 </div>
 
-<div class="hi">
-  <%= @qualified_opps %>
-</div>
 
-<div class="container">
-  <table class="table table-striped">
-    <thead class="thead-light">
-      <tr>
-        <th scope="col">Date Sourced</th>
-        <th scope="col">Handed To:</th>
-        <th scope="col">Name</th>
-        <th scope="col">Company</th>
-        <th scope="col">Timeline</th>
-        <th scope="col">Scope</th>
-        <th scope="col">Other Notes</th>
-        <th scope="col">Predicted Deal Size</th>
+<div class = 'thin_margins'>
+  <h2> Qualified Leads</h2>
+  <div class = "qualified_leads" style="overflow: auto;">
+    <table class = " airtable_data table table-striped">
+        <thead class = "thead-dark">
+          <tr>
+            <% @qualified_opps[0].column_mappings.values.each do |column_map| %>
+              <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "last_touchpoint" %>
+                <th scope = 'col'><%= column_map %></th>
+              <% end %>
+            <% end %>
+          </tr>
+        </thead>
 
-        <th scope="col">Contract Sent?</th>
-        <th scope="col">Contract Amount</th>
-
-      </tr>
-    </thead>
-
-    <tbody>
-      <% @leads.each do |lead| %>
-        <tr>
-          <td><%= lead.date_sourced.strftime("%m-%d-%Y") %></td>
-          <td><%= lead.email_handed_off_too %></td>
-          <td><%= lead.name %></td>
-          <td><%= lead.company %></td>
-          <td><%= lead.timeline %></td>
-          <td><%= lead.project_scope %></td>
-          <td><%= lead.external_notes %></td>
-          <td>$<%= lead.potential_deal_size %></td>
-
-          <td><%= lead.contract_sent %></td>
-          <td>$<%= lead.contract_amount %></td>
+        <tbody>
+          <% @qualified_opps.each do |lead| %>
+            <tr>
+              <% lead.fields.each do |field| %>
+                <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "last_touchpoint" %>
+                  <td> <%= field[1] %></td>
+                <% end %>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+    </table>
+  </div>
 
 
-        </tr>
+  <h2> Pending Leads</h2>
+  <div class = "pending_leads" style="overflow: auto;">
+    <table class = " airtable_data table table-striped">
+        <thead class = "thead-dark">
+          <tr>
+            <% @pending_opps[0].column_mappings.values.each do |column_map| %>
+              <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "handed_off_to" && column_map !="predicted_deal_size" && column_map !="contract_stage" %>
+                <th scope = 'col'><%= column_map %></th>
+              <% end %>
+            <% end %>
+          </tr>
+        </thead>
 
-      <% end %>
-    </tbody>
-  </table>
+        <tbody>
+          <% @pending_opps.each do |lead| %>
+            <tr>
+              <% lead.fields.each do |field| %>
+                <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "handed_off_to" && field[0] !="predicted_deal_size" && field[0] !="contract_stage" %>
+                  <td> <%= field[1] %></td>
+                <% end %>
+              <% end %>
+            </tr>
+          <% end %>
+        </tbody>
+    </table>
+  </div>
 </div>

@@ -14,7 +14,7 @@ class LeadListController < ApplicationController
     #authenticate
     Airrecord.api_key = "keyvWvtDSd5MDiIBZ"
     #grab view
-    @discover_needs_opps= Opportunity.all(filter: '{lead_status} = "discover_needs"')
+    @pending_opps= Opportunity.all(filter: '{lead_status} = "discover_needs"')
     @qualified_opps= Opportunity.all(filter: '{lead_status} = "qualified"')
 
   end
