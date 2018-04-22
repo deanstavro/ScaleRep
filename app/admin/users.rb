@@ -9,7 +9,7 @@ permit_params :client_company_id, :email, :encrypted_password, :first_name, :las
 
 
 
-orm do |f|                         
+form do |f|                         
     f.inputs "User Details" do       
     f.input :first_name
     f.input :last_name
