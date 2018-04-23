@@ -18,7 +18,7 @@ gem 'better_errors'
 gem 'rails_layout'
 gem 'chartkick'
 gem 'groupdate'
-
+gem 'airrecord'
 #gem 'ahoy_matey'
 
 
