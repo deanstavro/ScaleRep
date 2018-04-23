@@ -1,11 +1,9 @@
 class User < ApplicationRecord
+  
   belongs_to :client_company, optional: true
   enum role: [:user, :vip, :admin]
   after_initialize :set_default_role, :if => :new_record?
-
-  def set_default_role
-    self.role ||= :user
-  end
+  after_create :generate_key
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -17,5 +15,18 @@ class User < ApplicationRecord
   validates :last_name, presence: true
   validates :email, presence: true
   validates :client_company, presence: true
+
+  def set_default_role
+    self.role ||= :user
+  end
+
+  def generate_key
+    begin
+      self.api_key = SecureRandom.hex
+    end while self.class.exists?(api_key: api_key)
+    self.save!
+  end
+
+  
 
 end
