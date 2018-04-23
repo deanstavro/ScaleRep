@@ -5,4 +5,7 @@ class ClientCompany < ApplicationRecord
 
 	validates :name, presence: true
 	validates :company_domain, presence: true
+
+	serialize :airtable_keys
+	serialize :replyio_keys
 end

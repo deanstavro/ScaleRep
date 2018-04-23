@@ -12,20 +12,19 @@ class LeadListController < ApplicationController
 
     #airrecord work
     #authenticate
-    Airrecord.api_key = "keyvWvtDSd5MDiIBZ"
+    airtable = @company.airtable_keys
+
+    airtable_dic = eval(airtable)
+    puts airtable_dic["AIRTABLE"]
+
+
+    table = Airrecord.table(airtable_dic["AIRTABLE"],airtable_dic["MOFU"],"MOFU")
     #grab view
-    @pending_opps= Opportunity.all(filter: '{lead_status} = "discover_needs"')
-    @qualified_opps= Opportunity.all(filter: '{lead_status} = "qualified"')
+    @pending_opps= table.all(filter: '{lead_status} = "discover_needs"')
+    @qualified_opps= table.all(filter: '{lead_status} = "qualified"')
 
   end
 
   def edit
   end
-end
-
-
-# create Opportunity class
-class Opportunity < Airrecord::Table
-  self.base_key = "appBop3EYUrma7W4E"
-  self.table_name = "MOFU"
 end

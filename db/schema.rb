@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180418003306) do
+ActiveRecord::Schema.define(version: 20180423021555) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -67,6 +67,8 @@ ActiveRecord::Schema.define(version: 20180418003306) do
     t.string   "company_domain"
     t.datetime "created_at",     null: false
     t.datetime "updated_at",     null: false
+    t.text     "airtable_keys"
+    t.text     "replyio_keys"
   end
 
   create_table "client_reports", force: :cascade do |t|

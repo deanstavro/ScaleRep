@@ -2,7 +2,7 @@ ActiveAdmin.register ClientCompany do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :name, :description, :company_domain, :company_notes
+permit_params :name, :description, :company_domain, :company_notes, :replyio_keys, :airtable_keys
 #
 # or
 #
@@ -19,6 +19,8 @@ form do |f|
     f.input :company_domain
     f.input :description
     f.input :company_notes
+    f.input :replyio_keys
+    f.input :airtable_keys
 
 
   end
