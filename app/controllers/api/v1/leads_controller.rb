@@ -1,4 +1,4 @@
-class Api::V1::MetricsController < Api::V1::BaseController
+class Api::V1::LeadsController < Api::V1::BaseController
 
   # CampaignsController - post campaigns to Calltend system
 
@@ -6,7 +6,7 @@ class Api::V1::MetricsController < Api::V1::BaseController
   # api/v1/all_metrics - POST campaign to calltend system
   # Required Fields:
 
-  def all_metrics
+  def new_lead
 
   @client_company = ClientCompany.find_by(api_key: params[:api_key])
 

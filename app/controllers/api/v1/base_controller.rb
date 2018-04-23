@@ -20,7 +20,7 @@ class Api::V1::BaseController < ActionController::API
 
     # Check api key of any external service calling api/v1 route
     def check_api_key
-      User.exists?(api_key: params["api_key"])
+      ClientCompany.exists?(api_key: params["api_key"])
     end
 
 end
