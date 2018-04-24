@@ -26,7 +26,7 @@ end
 private
 
 def model_params
-  params.require(:client_company).permit(:number_of_seats, :emails_to_use, :notable_clients, :description)
+  params.require(:client_company).permit(:number_of_seats, :emails_to_use, :notable_clients, :products, :description)
 end
 
 end
