@@ -2,10 +2,11 @@
 
 <div id="title" class="jumbotron">
   <div class = "container">
+
     <br/>
-    <h1>User Account for <%= @user.first_name if @user.client_company %></h1>
-    <h2>Account Owner: <%= @user.first_name if @user.first_name %></h2>
-    <h2>Email: <%= @user.email if @user.email %></h2>
+    <h1>Account Settings</h1>
+    <h2>Account Name: <%= @user.client_company.name if @user.client_company %></h2>
+
   </div>
 </div>
 

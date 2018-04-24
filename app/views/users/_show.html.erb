@@ -1,17 +1,15 @@
-<div id="title" class="jumbotron">
+	<div id="title" class="jumbotron">
   		<div class = "container">
     	<br/>
-   		 <h1>Account Setup for <%= @user.client_company.name %></h1>
-		<h2>Account Owner: <%= @user.first_name if @user.first_name %> <%= @user.last_name if @user.last_name %></h2>
-		<h2>Email: <%= @user.email if @user.email %></h2>
+   		 <h1><%= @user.client_company.name %> Onboarding</h1>
+		 <h2>User E-mail: <%= @user.email if @user.email %></h2>
   		</div>
 	</div>
 
 	<div class="container">
 
 			
-
-		<h3>1. <%= link_to "Setup Account Seating and E-mails (10 min.)", { controller: "client_companies", action: "edit", id: @user.id} %>
+		<h3>1. <%= link_to "Setup Account Seating and E-mails (10 min.)", edit_client_company_path(@client_company.id) %>
 			<% if @user.client_company.profile_setup == true  %> 
 				<span style="color:green">-- Completed --</span>
 			<% else %>

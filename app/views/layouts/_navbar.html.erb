@@ -11,7 +11,7 @@
 
             <% if user_signed_in? %>
 
-                <%= link_to 'ScaleRep', user_path(@user), :class => "navbar-brand page-scroll"%>
+                <%= link_to 'ScaleRep', root_path, :class => "navbar-brand page-scroll"%>
             <% else %>
                 <a class="navbar-brand page-scroll" href="">ScaleRep</a>
             <%end %>

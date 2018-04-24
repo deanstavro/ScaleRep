@@ -50,14 +50,15 @@ Rails.application.routes.draw do
 
 
   authenticated :user do
-    root 'users#show'
+    root 'users#home'
   end
 
   root to: 'homepage#index' #'visitors#index'
 
   devise_for :users
   resources :users
-    resources :client_companies
+    
+  resources :client_companies
 
 
 

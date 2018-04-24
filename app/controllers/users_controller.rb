@@ -1,93 +1,20 @@
 class UsersController < ApplicationController
   before_action :authenticate_user!
-  before_action :admin_only, :except => :show
+  before_action :admin_only, :except => :home
 
   def index
     @users = User.all
   end
 
-  def show
+  
+  def home
 
     @user = User.find(current_user.id)
     @company = @user.client_company_id
 
     @client_company = ClientCompany.find(@company)
     
-    @leads = Lead.where("client_company_id =? " , @company)
-    @ordered_leads = @leads.sort_by &:date_sourced
     
-    #Create line chart value for aggregated proposed deal sizes
-    lead_proposed_dictionary = {}
-    @ordered_leads.each do |lead|
-
-      #key, value of all leads and deals
-
-      if lead_proposed_dictionary.has_key?(lead[:date_sourced])
-        lead_proposed_dictionary[lead[:date_sourced]] += lead[:potential_deal_size]        
-
-      else
-        lead_proposed_dictionary[lead[:date_sourced]] = lead[:potential_deal_size]
-
-      end
-
-    end
-
-    
-
-
-    if lead_proposed_dictionary.count > 1
-      total_qua_rev = 0
-    
-
-      lead_proposed_dictionary.each { |key, value|
-
-        total_qua_rev += value
-        puts "#{key} #{value}"
-        lead_proposed_dictionary[key] = total_qua_rev
-        }
-    end
-
-    @lead_proposed_dictionary = lead_proposed_dictionary
-
-
-    #Create line chart value for aggregated contract deal sizes
-    lead_contract_dictionary = {}
-    @ordered_leads.each do |lead|
-
-
-      #key, value of all leads and deals
-
-      if lead_contract_dictionary.has_key?(lead[:date_sourced])
-        lead_contract_dictionary[lead[:date_sourced]] += lead[:contract_amount]        
-
-
-      else
-      lead_contract_dictionary[lead[:date_sourced]] = lead[:contract_amount]
-
-      end
-
-    end
-
-
-    if lead_contract_dictionary.count > 1
-      total_qua_rev = 0
-      lead_contract_dictionary.each { |key, value|
-
-        total_qua_rev += value
-        puts "#{key} #{value}"
-        lead_contract_dictionary[key] = total_qua_rev
-        }
-    end
-
-    @lead_contract_dictionary = lead_contract_dictionary
-
-
-
-    unless current_user.admin?
-      unless @user == current_user
-        redirect_to root_path, :alert => "Access denied."
-      end
-    end
   end
 
   def update
