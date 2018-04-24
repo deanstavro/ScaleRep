@@ -1,0 +1,39 @@
+<div id="title" class="jumbotron">
+  <div class = "container">
+    <br/>
+    <h1><%= @user.client_company.name if @user.client_company %> Campaign List</h1>
+  </div>
+</div>
+
+<div class="container">
+<a href="#contact" class="btn btn-primary btn-xl page-scroll">+ Add Campaign</a>
+</div>
+
+<div class="container">
+  <h2> Campaigns</h2>
+
+
+  <table class="table table-striped">
+    <thead class="thead-light">
+      <tr>
+
+        <th scope="col">Name</th>
+
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @campaigns.each do |campaign| %>
+        <tr>
+
+          <td><%= campaign.name %></td>
+
+
+
+        </tr>
+
+      <% end %>
+    </tbody>
+  </table>
+</div>

@@ -1,0 +1,71 @@
+<div id="title" class="jumbotron">
+  <div class = "container">
+    <br/>
+    <h1>Metrics for <%= @user.client_company.name if @user.client_company %></h1>
+		<h2>Account Owner: <%= @user.first_name if @user.first_name %></h2>
+		<h2>Email: <%= @user.email if @user.email %></h2>
+  </div>
+</div>
+
+<div class="container">
+	<div class = "data_section">
+
+
+		<h3>Aggregated Revenue</h3><br/>
+
+
+		<%if false%>
+		<p> Data Range:  <b><%= @lead_proposed_dictionary.keys[0].strftime("%Y-%d-%m") %></b>  TO  <b><%= @lead_contract_dictionary.keys[-1].strftime("%Y-%d-%m") %></b></p>
+		<% end %>
+
+
+
+			
+		<%= line_chart [{name: "Estimated Sourced Amount To Date", data: @lead_proposed_dictionary}, {name: "Realizeable Amount To Date", data: @lead_contract_dictionary}], prefix: "$", thousands: ",", colors: ['blue','green'], xtitle: "Date Range", ytitle: "Dollar Amount", messages: {empty: "No data"} %>
+
+
+
+	</div>
+</div>
+
+
+
+<br><br><br>
+
+
+<div class="container">
+	<div class = "data_section">
+
+
+		<h3>Qualified Leads by Week</h3><br/>
+			<%= column_chart @leads.group_by_week(:date_sourced).count, name: "Leads Per Week", xtitle: "Week Of", ytitle: "# of Leads", messages: {empty: "No data"} %>
+
+	</div>
+</div>
+
+
+
+<br><br><br>
+
+
+
+<% if false %>
+
+
+<div class="container">
+	<div class = "data_section">
+
+			<h3>Lead Conversion Rate</h3>
+			<p> * Calculated using the number of leads who have received proposals.
+			<%= pie_chart({"Proposal Sent" => @contracts_count, "Proposal Not Sent" => @unconverted }, colors: ['green','red'], messages: {empty: "No data"}) %>
+
+	</div>
+</div>
+
+
+<% end %>
+
+
+		
+		
+

@@ -36,13 +36,16 @@ Rails.application.routes.draw do
 
   get 'reports/index'
 
+  get 'campaigns/index'
+  get 'campaigns/new'
+
+  get 'metrics/index'
+
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
 
   root to: 'homepage#index' #'visitors#index'
 
-  # get '/loreta', to: 'localmarket#index'
-  # get '/agent', to: 'homepage#agent'
   devise_for :users
   resources :users
 

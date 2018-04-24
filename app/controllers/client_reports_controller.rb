@@ -1,4 +1,5 @@
 class ClientReportsController < ApplicationController
+  before_action :authenticate_user!
   def index
   	@user = User.find(current_user.id)
   	@company = ClientCompany.find_by(id: @user.client_company_id)
