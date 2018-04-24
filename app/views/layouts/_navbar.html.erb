@@ -29,7 +29,9 @@
                         <% end %>
                     <% end %>
 
-                    <li><%= link_to 'Campaigns', campaigns_index_path %></li>
+                    <% if false %>
+                      <li><%= link_to 'Campaigns', campaigns_index_path %></li>
+                    <% end %>
 
                     <li><%= link_to 'Reports', client_reports_index_path %></li>
 
@@ -37,7 +39,9 @@
 
                     <li><%= link_to 'Leads', lead_list_index_path %></li>
 
-                    <li><%= link_to 'Edit account', edit_user_registration_path %></li>
+                    <li><%= link_to 'Edit User', edit_user_registration_path %></li>
+
+                    <li><%= link_to 'Edit Account', edit_client_company_path(@user)%> </li>
 
                     <li><%= link_to 'Sign out', destroy_user_session_path, :method=>'delete' %></li>
 

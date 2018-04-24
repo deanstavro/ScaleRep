@@ -41,9 +41,9 @@ Rails.application.routes.draw do
 
   get 'metrics/index'
 
-  get 'client_companies/edit'
+  #get 'client_companies/edit'
 
-  patch 'client_companies/update'
+  #patch 'client_companies/update'
 
   devise_for :admin_users, ActiveAdmin::Devise.config
   ActiveAdmin.routes(self)
@@ -57,6 +57,7 @@ Rails.application.routes.draw do
 
   devise_for :users
   resources :users
+    resources :client_companies
 
 
 
