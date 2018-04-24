@@ -65,8 +65,8 @@ ActiveRecord::Schema.define(version: 20180424004148) do
     t.text     "description"
     t.text     "company_notes"
     t.string   "company_domain"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
+    t.datetime "created_at",                      null: false
+    t.datetime "updated_at",                      null: false
     t.text     "airtable_keys"
     t.text     "replyio_keys"
     t.string   "api_key"
@@ -74,7 +74,8 @@ ActiveRecord::Schema.define(version: 20180424004148) do
     t.text     "emails_to_use"
     t.text     "products"
     t.text     "notable_clients"
-    t.boolean  "profile_setup"
+    t.boolean  "profile_setup",   default: false
+    t.boolean  "account_live",    default: false
   end
 
   create_table "client_reports", force: :cascade do |t|

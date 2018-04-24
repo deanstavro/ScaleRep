@@ -1,41 +1,27 @@
-<div id="title" class="jumbotron">
-  <div class = "container">
+
+<% if @user.client_company.account_live == false %>
+
+	<%= render 'users/show' %>
+<% else %>
+
+	<div id="title" class="jumbotron">
+  	<div class = "container">
     <br/>
-    <h1>User Account for <%= @user.first_name if @user.client_company %></h1>
-		<h2>Account Owner: <%= @user.first_name if @user.first_name %></h2>
+    <h1>Welcome Home, <%= @user.first_name %></h1>
+		<h2>Account Owner: <%= @user.first_name if @user.first_name %> <%= @user.last_name if @user.last_name %></h2>
 		<h2>Email: <%= @user.email if @user.email %></h2>
   </div>
 </div>
 
-<div class="container">
 
-			
-
-		<h3>1. <%= link_to "Setup Account Seating and E-mails (10 min.)", { controller: "client_companies", action: "edit", id: @user.id} %></h3>
-		<br>
-		<br>
-
-
-			
-
-	    <h3> 2. <a target="_blank" href="https://calendly.com/scalerep_consultation/30min"> Schedule a meeting with us to verify account details (2 min.)</a></h3>
-	    <br>
-	    <br>
-
-	    	
-
-	    <h3> 3. <%= link_to "Setup Your Campaigns! (8 mins.)", { controller: "client_companies", action: "edit", id: @user.id} %></h3>
-
-
-	    <br>
-	    <br>
-	    <h3> ...very soon, you'll be off to a great start!</h3>
-	    	
+	<div class="container">
+		<h3><span style="color:green"> Your Account Is Live </span></h3>
+	</div>
 
 
 
 
-</div>
+<% end %>
 
 
 

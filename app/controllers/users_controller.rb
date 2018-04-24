@@ -16,15 +16,6 @@ class UsersController < ApplicationController
     @leads = Lead.where("client_company_id =? " , @company)
     @ordered_leads = @leads.sort_by &:date_sourced
     
-
-    #@leads_count = @leads.count
-    #@contracts = @leads.where(contract_amount: 1..Float::INFINITY).sort_by &:date_sourced
-    #@contracts_given = @contracts.sort_by &:date_sourced
-    #@contracts_count = @contracts_given.count
-    #@unconverted = @leads.count - @contracts_given.count
-
-
-    
     #Create line chart value for aggregated proposed deal sizes
     lead_proposed_dictionary = {}
     @ordered_leads.each do |lead|
