@@ -1,0 +1,56 @@
+
+
+<div id="title" class="jumbotron">
+  <div class = "container">
+    <br/>
+    <h1>User Account for <%= @user.first_name if @user.client_company %></h1>
+    <h2>Account Owner: <%= @user.first_name if @user.first_name %></h2>
+    <h2>Email: <%= @user.email if @user.email %></h2>
+  </div>
+</div>
+
+<div class="container">
+
+    <div>
+      
+      <%=   form_for @client_company, url: {action: 'update'} do |f| %> 
+        
+          <h3>Seating Setup</h3>
+    
+
+        
+          <div class="form-group">
+            <%= f.label :number_of_seats, 'How e-mail seats would you like? (Each seat can contact ~500 new contacts weekly' %>
+            <%= f.number_field :number_of_seats, class: 'form-control' %>
+
+            <%= f.label :emails_to_use, 'Enter the e-mail per seat, seperated by a comma. This should be tied to a new available domain that is similar to the domain of you company' %>
+            <%= f.text_field :emails_to_use, class: 'form-control' %>
+
+          <br>
+
+            <%= f.label :description, 'Describe your company in a paragraph. How is your company different than similar companies?' %>
+            <%= f.text_field :description, class: 'form-control' %>
+
+            <%= f.label :notable_clients, 'Describe your different product offerings' %>
+            <%= f.text_field :notable_clients, class: 'form-control' %>
+
+
+            <%= f.label :products, 'What are some of your most notable clients?' %>
+            <%= f.text_field :products, class: 'form-control' %>
+
+
+          </div>
+        
+          <%= f.submit 'Update Account', :class => 'button right' %>
+
+        <% end %>
+    </div>
+
+
+
+
+
+
+
+</div>
+

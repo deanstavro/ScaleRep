@@ -8,8 +8,10 @@ class UsersController < ApplicationController
 
   def show
 
-    @user = User.find(params[:id])
+    @user = User.find(current_user.id)
     @company = @user.client_company_id
+
+    @client_company = ClientCompany.find(@company)
     
     @leads = Lead.where("client_company_id =? " , @company)
     @ordered_leads = @leads.sort_by &:date_sourced

@@ -8,32 +8,40 @@
 </div>
 
 <div class="container">
-	<h1> Setup <h1>
 
-		<h3> Seating Setup </h3>
+			
 
-			<p> Choose an e-mail domain that is available on namecheap.com </p>
+		<h3> 1. Setup Your Account (10 min.)</h3>
 
-			<p> How many e-mails would you like to set-up under the domain? (Each e-mail will be able to outreach to 500 unique emailsweekly) </p>
-
-	    	<p> What are the emails and email names you would like to use?</p>
-
-	    <h3> Company Information </h3>
-
-	    	<p> What does your company do in a paragraph </p>
-
-	    	<p> What products do you provide </p>
-
-	    	<p> What are some notable clients that you work with </p>
-
-	    	<p> Do you have data available for retargeting campaigns? </p>
+			<%= link_to "Set-up account seating and e-mails", { controller: "client_companies", action: "edit", id: @user.id} %>
 
 
+			
+
+	    <h3> 2. Schedule a Consultation With Us (2 min.)</h3>
+
+
+	    	<%= link_to "Schedule a meeting with us to verify account details", { controller: "client_companies", action: "edit", id: @user.id} %>
+
+	    <h3> 3. Setup Your First Campaigns! (8 min.)</h3>
+
+
+	    	<%= link_to "Setup Your Campaigns!", { controller: "client_companies", action: "edit", id: @user.id} %>
+
+	    <br>
+	    <h3> ...very soon, you'll be off to a great start!</h3>
+	    	
 
 
 
 
 </div>
+
+
+
+		
+		
+
 
 
 		
