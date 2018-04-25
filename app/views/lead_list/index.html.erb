@@ -6,6 +6,7 @@
 </div>
 
 
+<% if false %>
 <div class="container">
   <h2> Qualified Leads</h2>
   <table class="table table-striped">
@@ -19,7 +20,7 @@
         <th scope="col">Scope</th>
         <th scope="col">Other Notes</th>
         <th scope="col">Predicted Deal Size</th>
-        
+
         <th scope="col">Contract Sent?</th>
         <th scope="col">Contract Amount</th>
 
@@ -37,7 +38,7 @@
           <td><%= lead.project_scope %></td>
           <td><%= lead.external_notes %></td>
           <td>$<%= lead.potential_deal_size %></td>
-          
+
           <td><%= lead.contract_sent %></td>
           <td>$<%= lead.contract_amount %></td>
 
@@ -48,11 +49,9 @@
     </tbody>
   </table>
 </div>
+<% end %>
 
 
-
-
-<% if false %>
 <div class = 'thin_margins'>
   <h2> Qualified Leads</h2>
   <div class = "qualified_leads" style="overflow: auto;">
@@ -80,7 +79,6 @@
         </tbody>
     </table>
   </div>
-  <% end %>
 
 
   <h2> Pending Leads</h2>
