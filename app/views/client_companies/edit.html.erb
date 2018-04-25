@@ -22,19 +22,21 @@
 
         
           <div class="form-group">
-            <%= f.label :number_of_seats, 'How e-mail seats would you like? (Each seat can reach ~500 new contacts weekly)' %>
-            <%= f.number_field :number_of_seats, class: 'form-control' %>
 
-            <%= f.label :emails_to_use, 'Enter the e-mail per seat, seperated by a comma. This should be tied to a new available domain that is similar to the domain of your company.' %>
+            <%= f.label :emails_to_use, 'Enter three e-mails, seperated by commas. These will be the e-mails used to for outreach. E-mails should be available on namecheap, and look similar to the domain of your company.' %>
             <%= f.text_field :emails_to_use, class: 'form-control' %>
 
           <br>
 
-            <%= f.label :description, 'Describe your company in a paragraph. How is your company different than similar companies?' %>
-            <%= f.text_field :description, class: 'form-control' %>
+            <%= f.label :description, 'Describe your company in a paragraph. How are you different? What do your customers love about your product?' %>
+            <%= f.text_area :description, :rows => 10, :col => 10, class: 'form-control' %>
 
-            <%= f.label :products, 'Describe your different product offerings' %>
-            <%= f.text_field :products, class: 'form-control' %>
+          <br>
+
+            <%= f.label :products, 'Describe your different product offerings.' %>
+            <%= f.text_area :products, :rows => 10, :col => 10, class: 'form-control' %>
+
+          <br>
 
 
             <%= f.label :notable_clients, 'What are some of your most notable clients?' %>
