@@ -52,59 +52,81 @@
 <% end %>
 
 
+
 <div class = 'thin_margins'>
   <h2> Qualified Leads</h2>
-  <div class = "qualified_leads" style="overflow: auto;">
-    <table class = " airtable_data table table-striped">
-        <thead class = "thead-dark">
-          <tr>
-            <% @qualified_opps[0].column_mappings.values.each do |column_map| %>
-              <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "last_touchpoint" %>
-                <th scope = 'col'><%= column_map %></th>
-              <% end %>
-            <% end %>
-          </tr>
-        </thead>
 
-        <tbody>
-          <% @qualified_opps.each do |lead| %>
+  <% if @qualified_opps.count > 0 %>
+
+  
+    <div class = "qualified_leads" style="overflow: auto;">
+      <table class = " airtable_data table table-striped">
+          <thead class = "thead-dark">
             <tr>
-              <% lead.fields.each do |field| %>
-                <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "last_touchpoint" %>
-                  <td> <%= field[1] %></td>
+              <% @qualified_opps[0].column_mappings.values.each do |column_map| %>
+                <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "last_touchpoint" %>
+                  <th scope = 'col'><%= column_map %></th>
                 <% end %>
               <% end %>
             </tr>
-          <% end %>
-        </tbody>
-    </table>
-  </div>
+          </thead>
+
+          <tbody>
+            <% @qualified_opps.each do |lead| %>
+              <tr>
+                <% lead.fields.each do |field| %>
+                  <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "last_touchpoint" %>
+                    <td> <%= field[1] %></td>
+                  <% end %>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+      </table>
+
+    </div>
+  <% else %>
+
+    <p> No qualified leads </p>
+    
+  <% end %>
+
+
 
 
   <h2> Pending Leads</h2>
-  <div class = "pending_leads" style="overflow: auto;">
-    <table class = " airtable_data table table-striped">
-        <thead class = "thead-dark">
-          <tr>
-            <% @pending_opps[0].column_mappings.values.each do |column_map| %>
-              <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "handed_off_to" && column_map !="predicted_deal_size" && column_map !="contract_stage" %>
-                <th scope = 'col'><%= column_map %></th>
-              <% end %>
-            <% end %>
-          </tr>
-        </thead>
 
-        <tbody>
-          <% @pending_opps.each do |lead| %>
+  <% if @pending_opps.count > 0 %>
+
+    <div class = "pending_leads" style="overflow: auto;">
+      <table class = " airtable_data table table-striped">
+          <thead class = "thead-dark">
             <tr>
-              <% lead.fields.each do |field| %>
-                <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "handed_off_to" && field[0] !="predicted_deal_size" && field[0] !="contract_stage" %>
-                  <td> <%= field[1] %></td>
+              <% @pending_opps[0].column_mappings.values.each do |column_map| %>
+                <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "handed_off_to" && column_map !="predicted_deal_size" && column_map !="contract_stage" %>
+                  <th scope = 'col'><%= column_map %></th>
                 <% end %>
               <% end %>
             </tr>
-          <% end %>
-        </tbody>
-    </table>
-  </div>
+          </thead>
+
+          <tbody>
+            <% @pending_opps.each do |lead| %>
+              <tr>
+                <% lead.fields.each do |field| %>
+                  <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "handed_off_to" && field[0] !="predicted_deal_size" && field[0] !="contract_stage" %>
+                    <td> <%= field[1] %></td>
+                  <% end %>
+                <% end %>
+              </tr>
+            <% end %>
+          </tbody>
+      </table>
+    </div>
+
+  <% else %>
+
+    <p> No pending leads </p>
+    
+  <% end %>
 </div>
