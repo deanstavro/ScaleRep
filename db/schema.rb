@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180424004148) do
+ActiveRecord::Schema.define(version: 20180425223923) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -89,7 +89,6 @@ ActiveRecord::Schema.define(version: 20180424004148) do
   end
 
   create_table "leads", force: :cascade do |t|
-    t.string   "name"
     t.string   "company"
     t.string   "position"
     t.boolean  "decision_maker"
@@ -98,8 +97,8 @@ ActiveRecord::Schema.define(version: 20180424004148) do
     t.string   "email_in_contact_with"
     t.string   "industry"
     t.datetime "date_sourced"
-    t.datetime "created_at",                 null: false
-    t.datetime "updated_at",                 null: false
+    t.datetime "created_at",                                 null: false
+    t.datetime "updated_at",                                 null: false
     t.integer  "client_company_id"
     t.integer  "campaign_id"
     t.string   "expected_recurring_deal"
@@ -112,6 +111,14 @@ ActiveRecord::Schema.define(version: 20180424004148) do
     t.string   "timeline"
     t.string   "project_scope"
     t.string   "email_handed_off_too"
+    t.boolean  "meeting_set",                default: false
+    t.datetime "meeting_time"
+    t.string   "email"
+    t.string   "company_domain"
+    t.string   "first_name"
+    t.string   "last_name"
+    t.integer  "hunter_score"
+    t.datetime "hunter_date"
     t.index ["campaign_id"], name: "index_leads_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_leads_on_client_company_id", using: :btree
   end

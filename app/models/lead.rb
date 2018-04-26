@@ -4,14 +4,21 @@ class Lead < ApplicationRecord
 
 	after_initialize :init
 
-	validates :potential_deal_size, presence: true
-	validates :date_sourced, presence: true
+	validates :email, presence: true
+	validates :client_company, presence: true
+	validates_uniqueness_of :email, scope: :client_company
+	
+	validates :first_name, presence: true
+	validates :last_name, presence: true
+	
 
 
 
     def init
       self.contract_amount ||= 0           #will set the default value only if it's nil
       self.contract_sent ||= :no
+
+
     end
 
 end
