@@ -6,6 +6,7 @@ Rails.application.routes.draw do
 
 
       resources :leads do
+        collection { post :import}
         collection do
           post :new_lead
           #post :all_metrics
@@ -27,6 +28,8 @@ Rails.application.routes.draw do
 
     end
   end
+
+
 
   get 'lead_list/index'
 
@@ -59,6 +62,11 @@ Rails.application.routes.draw do
   resources :users
     
   resources :client_companies
+  
+  resources :leads do
+    collection { post :import}
+  end
+
 
 
 

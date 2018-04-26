@@ -91,6 +91,7 @@ GEM
       execjs
     coffee-script-source (1.12.2)
     concurrent-ruby (1.0.5)
+    country-select (1.1.1)
     crass (1.0.3)
     database_cleaner (1.6.2)
     devise (4.4.0)
@@ -208,6 +209,7 @@ GEM
       rails_serve_static_assets
       rails_stdout_logging
     rails_layout (1.0.41)
+    rails_refactor (1.4.2)
     rails_serve_static_assets (0.0.5)
     rails_stdout_logging (0.0.5)
     railties (5.0.6)
@@ -314,6 +316,7 @@ DEPENDENCIES
   capybara
   chartkick
   coffee-rails (~> 4.2)
+  country-select
   database_cleaner
   devise
   factory_girl_rails
@@ -331,6 +334,7 @@ DEPENDENCIES
   rails-erd
   rails_12factor
   rails_layout
+  rails_refactor
   rspec-rails
   sass-rails (~> 5.0)
   selenium-webdriver

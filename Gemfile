@@ -19,6 +19,10 @@ gem 'rails_layout'
 gem 'chartkick'
 gem 'groupdate'
 gem 'airrecord'
+gem 'rails_refactor'
+gem 'country-select'
+
+
 #gem 'ahoy_matey'
 
 

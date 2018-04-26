@@ -1,5 +1,5 @@
-class LeadListController < ApplicationController
-  before_action :authenticate_user!
+class LeadsController < ApplicationController
+before_action :authenticate_user!
   
   def index
     @user = User.find(current_user.id)
@@ -27,6 +27,24 @@ class LeadListController < ApplicationController
 
   end
 
+  def import
+    @user = User.find(current_user.id)
+    @company = ClientCompany.find_by(id: @user.client_company_id)
+    @leads = Lead.where(client_company: @company)
+
+
+    upload_message = Lead.import(params[:file], @company, @leads)
+
+    flash[:notice] = upload_message
+    redirect_to leads_path
+  end
+
+
   def edit
   end
+
+  private
+
+
+
 end

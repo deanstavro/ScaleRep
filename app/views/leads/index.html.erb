@@ -6,6 +6,17 @@
 </div>
 
 
+<div class="thin-margins">
+  <h2> Upload Leads</h2>
+  <h3> * duplicates will not be uploaded
+    <p id="notice"><%= notice %></p>
+    <%= form_tag import_leads_path, multipart: true do %>
+
+    <%= file_field_tag :file %>
+    <%= submit_tag "Import CSV" %>
+  <% end %>
+</div>
+
 <% if false %>
 <div class="container">
   <h2> Qualified Leads</h2>

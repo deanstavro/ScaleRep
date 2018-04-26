@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180425223923) do
+ActiveRecord::Schema.define(version: 20180426221039) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,7 +90,6 @@ ActiveRecord::Schema.define(version: 20180425223923) do
 
   create_table "leads", force: :cascade do |t|
     t.string   "company"
-    t.string   "position"
     t.boolean  "decision_maker"
     t.text     "internal_notes"
     t.text     "external_notes"
@@ -119,6 +118,17 @@ ActiveRecord::Schema.define(version: 20180425223923) do
     t.string   "last_name"
     t.integer  "hunter_score"
     t.datetime "hunter_date"
+    t.string   "title"
+    t.string   "phone_type"
+    t.string   "phone_number"
+    t.string   "city"
+    t.string   "state"
+    t.string   "country"
+    t.string   "linkedin"
+    t.string   "campaign_name"
+    t.string   "timezone"
+    t.string   "address"
+    t.boolean  "meeting_taken",              default: false
     t.index ["campaign_id"], name: "index_leads_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_leads_on_client_company_id", using: :btree
   end
