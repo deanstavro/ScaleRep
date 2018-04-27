@@ -30,11 +30,11 @@ class Lead < ApplicationRecord
 
 			begin
 				if leads.where(:email => email).count == 0
-					puts "NO"
+
 					one_hash[:client_company] = company
 					lead = Lead.create!(one_hash)
 				else
-					puts "HI"
+					
 					duplicates = duplicates + 1 
 				end
 			rescue Exception => e
@@ -54,5 +54,7 @@ class Lead < ApplicationRecord
       self.contract_amount ||= 0           #will set the default value only if it's nil
       self.contract_sent ||= :no
     end
+
+
 
 end

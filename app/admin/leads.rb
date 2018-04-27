@@ -19,6 +19,7 @@ index do
     column :hunter_score
     column :phone_type
     column :phone_number
+    column :linkedin
     column :timezone
     column :address
     column :city
@@ -29,7 +30,7 @@ index do
     column :industry
     column :internal_notes
     column :external_notes
-    column :linkedin
+    
 
 
     column :email_in_contact_with
@@ -72,6 +73,7 @@ form do |f|
     f.input :client_company
     f.input :email
     f.input :title
+    f.input :linkedin
     f.input :campaign
     f.input :campaign_name
     f.input :hunter_date
@@ -91,7 +93,7 @@ form do |f|
     f.input :internal_notes
     f.input :external_notes
 
-    f.input :linkedin
+    
 
 
     f.input :email_in_contact_with
