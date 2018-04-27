@@ -21,6 +21,7 @@ gem 'groupdate'
 gem 'airrecord'
 gem 'rails_refactor'
 gem 'country-select'
+gem 'rest-client'
 
 
 #gem 'ahoy_matey'
