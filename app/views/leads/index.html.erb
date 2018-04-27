@@ -10,23 +10,15 @@
   <h2> Upload CSV Lead List</h2>
   <p class="notice"><%= notice %></p>
 
-  <h3> * duplicates will not be uploaded </h3>
 
-  <p> Use these fields when uploading:
-  <br>- first_name -> first name of lead*
-  <br>- last_name -> last name of lead*
-  <br>- email -> email name of lead*
-  <br>- campaign_name -> reply ID of campaign
-  <br>- title -> title or position of the lead in company
-  <br>- company -> company lead works on behalf of
-  <br>
-  <br>- company_domain -> website of company
-  <br>- phone_type -> whether included number is direct or of headquarters
-  <br>- phone_number -> phone number of contact
-  <br>- linkedin -> linkedIn of lead
-  <br>- timezone -> timezone of person
-
-</p>
+  <h3> Use these exact fields in your csv header:</h3>
+  <p>
+    first_name, last_name, email, campaign_name, title, company, company_domain, phone_type, phone_number, linkedin, timezone
+    <br>
+    <br> * first_name, last_name, email, and campaign_name are required
+    <br> * Your csv file should not have any other headers than the ones above
+    <br> * duplicates in the system will not be uploaded
+  </p>
 
 
 
