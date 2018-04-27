@@ -27,6 +27,7 @@ form do |f|
     f.input :notable_clients
     f.input :profile_setup
     f.input :account_live
+    f.input :api_key
 
 
   end
