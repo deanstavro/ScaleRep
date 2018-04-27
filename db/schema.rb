@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180426221039) do
+ActiveRecord::Schema.define(version: 20180427202405) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -96,8 +96,8 @@ ActiveRecord::Schema.define(version: 20180426221039) do
     t.string   "email_in_contact_with"
     t.string   "industry"
     t.datetime "date_sourced"
-    t.datetime "created_at",                                 null: false
-    t.datetime "updated_at",                                 null: false
+    t.datetime "created_at",                                  null: false
+    t.datetime "updated_at",                                  null: false
     t.integer  "client_company_id"
     t.integer  "campaign_id"
     t.string   "expected_recurring_deal"
@@ -110,7 +110,7 @@ ActiveRecord::Schema.define(version: 20180426221039) do
     t.string   "timeline"
     t.string   "project_scope"
     t.string   "email_handed_off_too"
-    t.boolean  "meeting_set",                default: false
+    t.boolean  "meeting_set",                 default: false
     t.datetime "meeting_time"
     t.string   "email"
     t.string   "company_domain"
@@ -128,7 +128,9 @@ ActiveRecord::Schema.define(version: 20180426221039) do
     t.string   "campaign_name"
     t.string   "timezone"
     t.string   "address"
-    t.boolean  "meeting_taken",              default: false
+    t.boolean  "meeting_taken",               default: false
+    t.boolean  "in_campaign",                 default: false
+    t.date     "last_added_to_campaign_date"
     t.index ["campaign_id"], name: "index_leads_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_leads_on_client_company_id", using: :btree
   end

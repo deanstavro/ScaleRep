@@ -24,37 +24,21 @@ class Lead < ApplicationRecord
 	def self.import(file, company, leads)
 		not_imported = 0
 		duplicates = 0
+		imported = 0
+		all_hash = []
 
 		CSV.foreach(file.path, headers: true) do |row|
 			one_hash = row.to_hash
 
-			puts one_hash
-			email = one_hash["email"]
+			all_hash << one_hash
 
+			email = one_hash["email"]
 			begin
 				if leads.where(:email => email).count == 0
 
 					one_hash[:client_company] = company
 					lead = Lead.create!(one_hash)
-
-
-					#Reply::NewContacts.new(company, lead).fetch()
-
-					begin
-
-						payload = { "campaignId": one_hash["campaign_name"], "email": one_hash["email"], "firstName": one_hash["first_name"], "lastName": one_hash["last_name"], "title": one_hash["title"], "company": one_hash["company"], "domain": one_hash["company_domain"], "linkedin": one_hash["linkedin"],"timezone": one_hash["timezone"] }
-
-						response = RestClient::Request.execute(
-							:method => :post,
-							:url => 'https://api.reply.io/v1/actions/addandpushtocampaign?apiKey='+company.replyio_keys,
-							:payload => payload
-
-						)
-	    				puts response
-	    			rescue
-	    				puts "did not input into reply"
-
-	    			end
+					imported = imported + 1
 
 
 				else
@@ -65,13 +49,14 @@ class Lead < ApplicationRecord
 				not_imported = not_imported + 1
 			end		
 
-			
-		
+		puts all_hash
 
-		
+		AddContactsToReplyJob.perform_later(all_hash,company.replyio_keys)
+
 
 		end
-		return duplicates.to_s + " duplicates ignored, " + not_imported.to_s + " contacts not imported due to error. Check column names."
+
+		return imported.to_s + " imported successfully, "+ duplicates.to_s + " duplicates, " + not_imported.to_s + " contacts not imported"
 	end
 
 

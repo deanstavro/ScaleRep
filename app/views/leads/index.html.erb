@@ -7,9 +7,30 @@
 
 
 <div class="thin-margins">
-  <h2> Upload Leads</h2>
-  <h3> * duplicates will not be uploaded
-    <p id="notice"><%= notice %></p>
+  <h2> Upload CSV Lead List</h2>
+  <p class="notice"><%= notice %></p>
+
+  <h3> * duplicates will not be uploaded </h3>
+
+  <p> Use these fields when uploading:
+  <br>- first_name -> first name of lead*
+  <br>- last_name -> last name of lead*
+  <br>- email -> email name of lead*
+  <br>- campaign_name -> reply ID of campaign
+  <br>- title -> title or position of the lead in company
+  <br>- company -> company lead works on behalf of
+  <br>
+  <br>- company_domain -> website of company
+  <br>- phone_type -> whether included number is direct or of headquarters
+  <br>- phone_number -> phone number of contact
+  <br>- linkedin -> linkedIn of lead
+  <br>- timezone -> timezone of person
+
+</p>
+
+
+
+    
     <%= form_tag import_leads_path, multipart: true do %>
 
     <%= file_field_tag :file %>
