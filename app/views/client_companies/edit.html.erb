@@ -23,12 +23,12 @@
         
           <div class="form-group">
 
-            <%= f.label :emails_to_use, 'Enter three e-mails, seperated by commas, that will be the e-mails used to for outreach. E-mails should be available on namecheap, and look similar to the domain of your company.' %>
+            <%= f.label :emails_to_use, 'Enter the new e-mails, seperated by commas, used for outreach. The domain should be available on namecheap, and look similar to the domain of your company.' %>
             <%= f.text_field :emails_to_use, class: 'form-control' %>
 
           <br>
 
-            <%= f.label :description, 'Describe your company in a paragraph. How are you different? What do your customers love about your product?' %>
+            <%= f.label :description, 'Describe your company mission in a paragraph. What do your customers love about your product?' %>
             <%= f.text_area :description, :rows => 10, :col => 10, class: 'form-control' %>
 
           <br>
@@ -39,7 +39,7 @@
           <br>
 
 
-            <%= f.label :notable_clients, 'What are some of your most notable clients?' %>
+            <%= f.label :notable_clients, 'What are some of your clients?' %>
             <%= f.text_field :notable_clients, class: 'form-control' %>
 
 
