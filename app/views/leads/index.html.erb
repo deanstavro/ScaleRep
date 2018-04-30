@@ -11,8 +11,6 @@
   <div id="upload" class="collapse">
     <h2> Upload CSV Lead List</h2>
     <p class="notice"><%= notice %></p>
-
-
     <h3> Use these exact fields in your csv header:</h3>
     <p>
       first_name, last_name, email, campaign_name, title, company, company_domain, phone_type, phone_number, linkedin, timezone
@@ -22,11 +20,11 @@
       <br> * duplicates in the system will not be uploaded
     </p>
 
-
-      <%= form_tag import_leads_path, multipart: true do %>
-        <%= file_field_tag :file %>
-        <%= submit_tag "Import CSV" %>
-      <% end %>
+    <%= form_tag import_leads_path, multipart: true do %>
+      <%= file_field_tag :file %>
+      <%= submit_tag "Import CSV" %>
+    <% end %>
+    
   </div>
 </div>
 
@@ -36,12 +34,14 @@
   <div id="accordion">
     <div class="card">
       <div class="card-header" id="warmLeadsHeader">
-        <h3 class="mb-0 accordion-header" data-toggle="collapse" data-target="#warmLeads" aria-expanded="true" aria-controls="warmLeads">
+        <h5 class="mb-0">
+          <button class="btn btn-link" data-toggle="collapse" data-target="#warmLeads" aria-expanded="true" aria-controls="warmLeads">
             Warm Leads
-        </h3>
+          </button>
+        </h5>
       </div>
 
-      <div id="warmLeads" class="collapse" aria-labelledby="warmLeadsHeader">
+      <div id="warmLeads" class="collapse show" aria-labelledby="warmLeadsHeader">
         <div class="card-body">
           <% if @warm_opps.count == 0 %>
             <p> No warm leads </p>
@@ -78,9 +78,11 @@
 
     <div class="card">
       <div class="card-header" id="qualifiedLeadsHeader">
-        <h3 class="mb-0 accordion-header" data-toggle="collapse" data-target="#qualifiedLeads" aria-expanded="true" aria-controls="qualifiedLeads">
+        <h5 class="mb-0">
+          <button class= "btn btn-link" data-toggle="collapse" data-target="#qualifiedLeads" aria-expanded="true" aria-controls="qualifiedLeads">
             Qualified Leads
-        </h3>
+          </button>
+        </h5>
       </div>
 
       <div id="qualifiedLeads" class="collapse" aria-labelledby="qualifiedLeadsHeader">
@@ -120,9 +122,11 @@
 
     <div class="card">
       <div class="card-header" id="pendingLeadsHeader">
-        <h3 class="mb-0 accordion-header" data-toggle="collapse" data-target="#pendingLeads" aria-expanded="true" aria-controls="pendingLeads">
+        <h3 class="mb-0">
+          <button class="btn btn-link" data-toggle="collapse" data-target="#pendingLeads" aria-expanded="true" aria-controls="pendingLeads">
             Pending Leads
-        </h3>
+          </button>
+        </h5>
       </div>
 
       <div id="pendingLeads" class="collapse" aria-labelledby="pendingLeadsHeader">
