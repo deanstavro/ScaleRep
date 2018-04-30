@@ -7,7 +7,7 @@
 
 
 <div class = 'thin_margins'>
-  <button class="primary" data-toggle="collapse" data-target="#upload">Upload Leads</button>
+  <button class="btn btn-outline-primary" data-toggle="collapse" data-target="#upload">Upload Leads</button>
   <div id="upload" class="collapse">
     <h2> Upload CSV Lead List</h2>
     <p class="notice"><%= notice %></p>
@@ -41,7 +41,7 @@
         </h3>
       </div>
 
-      <div id="warmLeads" class="collapse show" aria-labelledby="warmLeadsHeader">
+      <div id="warmLeads" class="collapse" aria-labelledby="warmLeadsHeader">
         <div class="card-body">
           <% if @warm_opps.count == 0 %>
             <p> No warm leads </p>
@@ -93,7 +93,7 @@
                 <thead class = "thead-dark">
                   <tr>
                     <% @qualified_opps[0].column_mappings.values.each do |column_map| %>
-                      <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "last_touchpoint" %>
+                      <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "last_touchpoint" && column_map != "lead_status" && column_map != "follow_up_date" && column_map != "follow_up_aciton" && column_map != "interest_signal" && column_map != "follow_up_date" && column_map != "follow_up_action" %>
                         <th scope = 'col'><%= column_map %></th>
                       <% end %>
                     <% end %>
@@ -104,7 +104,7 @@
                   <% @qualified_opps.each do |lead| %>
                     <tr>
                       <% lead.fields.each do |field| %>
-                        <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "last_touchpoint" %>
+                        <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "last_touchpoint" && field[0] != "lead_status" && field[0] != "follow_up_date" && field[0] != "interest_signal" && field[0] != "follow_up_date" && field[0] != "follow_up_action"%>
                           <td> <%= field[1] %></td>
                         <% end %>
                       <% end %>
@@ -136,7 +136,7 @@
                   <thead class = "thead-dark">
                     <tr>
                       <% @pending_opps[0].column_mappings.values.each do |column_map| %>
-                        <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "handed_off_to" && column_map !="predicted_deal_size" && column_map !="contract_stage" %>
+                        <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "handed_off_to" && column_map !="predicted_deal_size" && column_map !="contract_stage" && column_map != "lead_status" %>
                           <th scope = 'col'><%= column_map %></th>
                         <% end %>
                       <% end %>
@@ -147,7 +147,7 @@
                     <% @pending_opps.each do |lead| %>
                       <tr>
                         <% lead.fields.each do |field| %>
-                          <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "handed_off_to" && field[0] !="predicted_deal_size" && field[0] !="contract_stage" %>
+                          <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "handed_off_to" && field[0] !="predicted_deal_size" && field[0] !="contract_stage"  && field[0] != "lead_status"%>
                             <td> <%= field[1] %></td>
                           <% end %>
                         <% end %>
