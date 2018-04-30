@@ -1,6 +1,6 @@
 class LeadsController < ApplicationController
 before_action :authenticate_user!
-  
+
   def index
     @user = User.find(current_user.id)
   	@company = ClientCompany.find_by(id: @user.client_company_id)
@@ -19,8 +19,9 @@ before_action :authenticate_user!
 
     table = Airrecord.table(airtable_dic["AIRTABLE"],airtable_dic["MOFU"],"MOFU")
     #grab view
-    @pending_opps= table.all(filter: '{lead_status} = "discover_needs"')
-    @qualified_opps= table.all(filter: '{lead_status} = "qualified"')
+    @pending_opps = table.all(filter: '{lead_status} = "discover_needs"', sort: {follow_up_date: "desc"})
+    @qualified_opps = table.all(filter: '{lead_status} = "qualified"', sort: {follow_up_date: "desc"})
+    @warm_opps = table.all(filter: '{lead_status} = "warm_lead"', sort: {follow_up_date: "desc"})
 
   end
 
