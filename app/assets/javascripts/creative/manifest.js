@@ -1,3 +1,8 @@
+//= require jquery
+//= require jquery_ujs
+//= require turbolinks
+//= require popper
+//= require bootstrap
 //= require creative/cbpAnimatedHeader
 //= require creative/classie
 //= require creative/jquery.easing.min
