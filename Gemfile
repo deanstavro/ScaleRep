@@ -24,7 +24,6 @@ gem 'rails_refactor'
 gem 'country-select'
 gem 'rest-client'
 gem 'sidekiq'
-gem 'font-awesome-rails'
 
 
 #gem 'ahoy_matey'
