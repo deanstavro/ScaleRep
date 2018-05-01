@@ -2,44 +2,61 @@
   		<div class = "container">
     	<br/>
    		 <h1><%= @user.client_company.name %> Onboarding</h1>
-		 <h2>User E-mail: <%= @user.email if @user.email %></h2>
+			 <h2><%= @user.email if @user.email %></h2>
   		</div>
 	</div>
 
 	<div class="container">
 
-			
-		<h3>1. Setup<%= link_to " Account Seating and E-mails ", edit_client_company_path(@client_company.id) %>(10 min.)"
-			<% if @user.client_company.profile_setup == true  %> 
-				<span style="color:green">-- Completed --</span>
-			<% else %>
-			    <span style="color:red">-- Action Pending - Complete all fields --</span>
-			<% end %>
-		</h3>
+		<h3>Welcome to ScaleRep!</h3>
+		<p>ScaleRep is a plug-and-play solution for top-of-the-funnel customer outreach processes. We help your team focus on the core competencies of their job by managing all aspects of the top part of their outreach workflows.</p>
+
+		<p style="margin-bottom:40px;">
+			Below are the necessary steps to complete the ScaleRep onboarding process.<br/>
+			Email info@scalerep.com with any questions!
+		</p>
+
+		<ul class="list-group list-group-flush">
+			<li class="list-group-item">
+				<h3>
+					Complete <%= link_to " Account Seating and E-mails ", edit_client_company_path(@client_company.id) %>(10 min.)
+
+					<% if @user.client_company.profile_setup == true  %>
+						&nbsp; <span class="badge badge-secondary">Completed</span>
+					<% else %>
+					  &nbsp; <span class="badge badge-secondary">Pending</span>
+					<% end %>
+				</h3>
+			</li>
+
+			<li class="list-group-item">
+		    <h3>
+					Add dean@scalerep.com to your <a target="_blank" href="https://slack.com">slack team</a> to get help and ask questions</a>
+
+					<% if @user.client_company.profile_setup == true  %>
+						&nbsp; <span class="badge badge-secondary">Completed</span>
+					<% else %>
+						&nbsp; <span class="badge badge-secondary">Pending</span>
+					<% end %>
+				</h3>
+			</li>
 
 
+			<li class="list-group-item">
+				<h3>ScaleRep finishes setting up your domain and e-mail accounts
 
-		
+					<% if @user.client_company.profile_setup == true  %>
+						&nbsp; <span class="badge badge-secondary">Completed</span>
+					<% else %>
+						&nbsp; <span class="badge badge-secondary">Pending</span>
+					<% end %>
+				</h3>
+			</li>
+		</ul>
 
-	    <h3> 2. Add dean@scalerep.com to your <a target="_blank" href="https://slack.com">slack team</a> to get help and ask questions! (5 mins.)</a></h3>
-
-
-	    <h3> 3. Once ScaleRep sets up your domain and e-mails, your account will be live! (24 hrs.)</h3>
-	    <br>
-
-	    	
-	    <% if false %>
+    <% if false %>
 	    <h3> 3. <%= link_to "Setup Your Campaigns! (8 mins.)", { controller: "campaigns", action: "index", id: @user.id} %></h3>
 	    <br>
 	    <br>
-	    <% end %>
-
-
-	    
-
-	    <br>
-	    <br>
-	    <h3> ...very soon, you'll be off to a great start!</h3>
-	    	
-
+    <% end %>
 	</div>
