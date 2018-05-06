@@ -9,17 +9,16 @@
 	<div class="container">
 
 		<h3>Welcome to ScaleRep!</h3>
-		<p>ScaleRep is a plug-and-play solution for top-of-the-funnel customer outreach processes. We help your team focus on the core competencies of their job by managing all aspects of the top part of their outreach workflows.</p>
 
 		<p style="margin-bottom:40px;">
 			Below are the necessary steps to complete the ScaleRep onboarding process.<br/>
-			Email info@scalerep.com with any questions!
+			E-mail your account manager, dean@scalerep.com, with any questions!
 		</p>
 
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item">
 				<h3>
-					Complete <%= link_to " Account Seating and E-mails ", edit_client_company_path(@client_company.id) %>(10 min.)
+					Complete <%= link_to " Account Information ", edit_client_company_path(@client_company.id) %>(10 min.)
 
 					<% if @user.client_company.profile_setup == true  %>
 						&nbsp; <span class="badge badge-secondary">Completed</span>
@@ -43,7 +42,7 @@
 
 
 			<li class="list-group-item">
-				<h3>ScaleRep finishes setting up your domain and e-mail accounts
+				<h3>Domain and e-mail account set up. Contact your accout manager for updates.
 
 					<% if @user.client_company.profile_setup == true  %>
 						&nbsp; <span class="badge badge-secondary">Completed</span>

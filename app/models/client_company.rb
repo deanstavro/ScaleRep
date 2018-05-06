@@ -2,6 +2,7 @@ class ClientCompany < ApplicationRecord
 	has_many :users
 	has_many :leads
 	has_many :client_reports
+	has_many :campaigns
 	
 
 	validates :name, presence: true
@@ -11,6 +12,8 @@ class ClientCompany < ApplicationRecord
 	serialize :replyio_keys
 
 	after_create :generate_key
+
+	attr_accessor :campaign_id
 
 	def generate_key
     begin

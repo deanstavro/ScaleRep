@@ -39,8 +39,7 @@ Rails.application.routes.draw do
 
   get 'reports/index'
 
-  get 'campaigns/index'
-  get 'campaigns/new'
+  
 
   get 'metrics/index'
 
@@ -65,7 +64,10 @@ Rails.application.routes.draw do
   
   resources :leads do
     collection { post :import}
+    collection { post :import_to_campaign}
   end
+
+  resources :campaigns
 
 
 

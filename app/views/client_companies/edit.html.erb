@@ -23,6 +23,9 @@
         
           <div class="form-group">
 
+            <%= f.label :new_domain, 'Enter a new domain. This domain should be available to buy, and similar to the domain of your company'  %>
+            <%= f.text_field :emails_to_use, class: 'form-control' %>
+
             <%= f.label :emails_to_use, 'Enter the new e-mails, seperated by commas, used for outreach. The domain should be available on namecheap, and look similar to the domain of your company.' %>
             <%= f.text_field :emails_to_use, class: 'form-control' %>
 

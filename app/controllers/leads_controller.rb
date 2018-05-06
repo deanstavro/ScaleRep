@@ -37,6 +37,21 @@ before_action :authenticate_user!
     redirect_to leads_path
   end
 
+  def import_to_campaign
+ 
+    puts "CAMPAIGN"
+    puts params[:campaign]  
+    @user = User.find(current_user.id)
+    @company = ClientCompany.find_by(id: @user.client_company_id)
+    @leads = Lead.where(client_company: @company)
+
+
+    upload_message = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign])
+
+    flash[:notice] = upload_message
+    redirect_to campaigns_path
+  end
+
 
   def edit
   end
