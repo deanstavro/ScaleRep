@@ -61,7 +61,7 @@ class Lead < ApplicationRecord
 
 
 
-	def self.import_to_campaign(file, company, leads, campaign)
+	def self.import_to_campaign(file, company, leads,campaign)
 		not_imported = 0
 		duplicates = 0
 		imported = 0
@@ -77,7 +77,7 @@ class Lead < ApplicationRecord
 				if leads.where(:email => email).count == 0
 
 					one_hash[:client_company] = company
-					one_hash[:campaign] = campaign
+					one_hash[:campaign_id] = campaign
 					lead = Lead.create!(one_hash)
 					imported = imported + 1
 

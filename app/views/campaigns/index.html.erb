@@ -6,7 +6,7 @@
 </div>
 
 <div class="container">
-  <%= link_to '+ Add Campaign', new_campaign_path, :class=>"btn btn-primary btn-xl page-scroll" %>
+  <%= link_to '+ Add Campaign', new_client_company_campaign_path, :class=>"btn btn-primary btn-xl page-scroll" %>
 </div>
 
 <div class="container">
@@ -18,21 +18,22 @@
       <tr>
 
         <th scope="col">Name</th>
-        <th scope="col"># of contacts</th>
+        <th scope="col">Email</th>
+        <th scope="col">Status</th>
         <th scope="col">Add Leads</th>
-
-
-
 
       </tr>
     </thead>
 
     <tbody>
-      <% @campaigns.each do |campaign| %>
+
+      <% @reply_campaigns.each do |campaign| %>
         <tr>
-          <
-          <td><%= campaign.name %></td>
-          <td><%= campaign.leads.count %></td>
+
+          <td><%= campaign["name"] %></td>
+          <td><%= campaign["emailAccount"] %></td>
+          <td><%= campaign["status"] %></td>
+
           <td>
             <%= form_tag import_to_campaign_leads_path(:campaign => campaign), multipart: true do %>
               <%= file_field_tag :file %>
@@ -48,5 +49,6 @@
 
       <% end %>
     </tbody>
+
   </table>
 </div>

@@ -6,7 +6,7 @@
 </div>
 
 <div class="container">
-  <%= form_for @campaign, :html => {:class => "form-horizontal center"} do |f| %>
+  <%= form_for [@client_company,@campaign], :html => {:class => "form-horizontal center"} do |f| %>
       <div class="form-group">
         <%= f.label :name, "Campaign name:", class: "col-md-4 control-label" %>
         <div class="col-md-8">

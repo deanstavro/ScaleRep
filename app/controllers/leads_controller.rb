@@ -37,6 +37,8 @@ before_action :authenticate_user!
     redirect_to leads_path
   end
 
+  
+
   def import_to_campaign
  
     puts "CAMPAIGN"
@@ -49,7 +51,7 @@ before_action :authenticate_user!
     upload_message = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign])
 
     flash[:notice] = upload_message
-    redirect_to campaigns_path
+    redirect_to client_company_campaigns_path(@user.client_company)
   end
 
 

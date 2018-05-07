@@ -60,14 +60,16 @@ Rails.application.routes.draw do
   devise_for :users
   resources :users
     
-  resources :client_companies
+  resources :client_companies do
+    resources :campaigns
+  end
   
   resources :leads do
     collection { post :import}
     collection { post :import_to_campaign}
   end
 
-  resources :campaigns
+  
 
 
 
