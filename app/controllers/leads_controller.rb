@@ -40,9 +40,7 @@ before_action :authenticate_user!
   
 
   def import_to_campaign
- 
-    puts "CAMPAIGN"
-    puts params[:campaign]  
+  
     @user = User.find(current_user.id)
     @company = ClientCompany.find_by(id: @user.client_company_id)
     @leads = Lead.where(client_company: @company)

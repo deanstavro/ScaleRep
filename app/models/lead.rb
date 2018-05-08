@@ -61,7 +61,7 @@ class Lead < ApplicationRecord
 
 
 
-	def self.import_to_campaign(file, company, leads,campaign)
+	def self.import_to_campaign(file, company, leads, campaign)
 		not_imported = 0
 		duplicates = 0
 		imported = 0
@@ -90,9 +90,9 @@ class Lead < ApplicationRecord
 				not_imported = not_imported + 1
 			end		
 
-		puts all_hash
+		#get the correct key
 
-		AddContactsToReplyJob.perform_later(all_hash,company.replyio_keys)
+		AddContactsToReplyJob.perform_later(all_hash,campaign)
 
 
 		end

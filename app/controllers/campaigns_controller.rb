@@ -1,6 +1,7 @@
 class CampaignsController < ApplicationController
 	before_action :authenticate_user!
 	require 'rest-client'
+	require 'json'
 
 	def index
     	@user = User.find(current_user.id)
@@ -8,15 +9,27 @@ class CampaignsController < ApplicationController
     	@campaigns = Campaign.where("client_company_id =?", @company).order('created_at DESC')
 
     	keys = JSON.parse(@company.replyio_keys)
-    	api_key = keys["api_key"]["key"]
 
-    	@reply_campaigns = JSON.parse(get_campaigns(api_key))
-    	create_campaign(@reply_campaigns, @campaigns)
+    	@reply_campaigns = []
+    	for accounts in keys["accounts"]
+    		@reply_campaigns << JSON.parse(get_campaigns(accounts[1]["key"]))
+    	end
 
-
+    	@campaign_array = []
+    	for accounts in @reply_campaigns
+    		for campaign in accounts
+    			if campaign["isArchived"] == false
+    				@campaign_array << campaign
+    				puts "new"
+    				puts campaign
+    			end
+    		end
+    	end
 
 
   	end
+
+
 
 
   	def new
@@ -28,54 +41,48 @@ class CampaignsController < ApplicationController
   	end
 
 
+
+
   	def create
     	@user = User.find(current_user.id)
   		@company = ClientCompany.find_by(id: @user.client_company_id)
 
   		@campaign = @company.campaigns.build(campaign_params)
 
+  		'''
   		if @campaign.valid?
+
+  			@campaign_array = []
+    		for accounts in @reply_campaigns
+    			for campaign in accounts
+    				if campaign["isArchived"] == false
+    					@campaign_array << campaign
+    					puts "new"
+    				puts campaign
+    			end
+    		end
+    	end
+
+  			response = get_emails(company_key)
+  			pu
+  			#### HERE, DETERMINE WHERE TO CREATE THIS and store KEY and EMAIL #######
+  		'''
   			
+
+
+
+
 
   			if @campaign.save
 
-
-
-  				objArray = JSON.parse(@company.replyio_keys)
-
-      			api_key = objArray["api_key"]["key"]
-	      			puts "API_KEY"
-	      			puts api_key
-	      			puts "CAMPAIGNNN"
-	      			puts @campaign.name
-
-				payload = { "name": "test 10",
-        		"steps": [
-   					{
-   					"templates": [
-     					{ 
-     						"body": "Hello World!",
-     						"subject": "I'm here!"
-     					}
-    					]
-   					}
-  				]
-				}
-
-
 				begin
 
-					puts "LEY"
-					puts api_key
-					puts payload
-					response = RestClient::Request.execute(
-						:method => :post,
-						:url => 'https://api.reply.io/v2/campaigns?apiKey='+ api_key,
-						:payload => payload
+					response = RestClient.post "https://api.reply.io/v2/campaigns?apiKey=EeLPuf3EUR3YvKxnatkDLg2", {"name": @campaign.persona, "settings": { "EmailsCountPerDay": 200, "daysToFinishProspect": 7, "daysFromLastProspectContact": 15, "emailSendingDelaySeconds": 55, "emailPriorityType": "Equally divided between", "disableOpensTracking": false, "repliesHandlingType": "Mark person as finished", "enableLinksTracking": false }, "steps": [{ "number": "1", "InMinutesCount": "25", "templates": [{ "body": "Hello World!", "subject": "Im here!"}]}]}.to_json, :content_type => "application/json"
+					data_hash = JSON.parse(response)
 
-						)
 
-					puts response
+					@campaign.update_attribute(:reply_id, data_hash["id"])
+					@campaign.update_attribute(:reply_key, 'EeLPuf3EUR3YvKxnatkDLg2')
 
 				rescue RestClient::ExceptionWithResponse => e
 
@@ -84,14 +91,9 @@ class CampaignsController < ApplicationController
 
 				end
 
-
-
-
-
-  				#AddCampaignToReplyJob.perform_later(@campaign,@company.replyio_keys)
   				redirect_to client_company_campaigns_path, :notice => "Campaign created"
     		else
-      			redirect_to client_company_campaigns_path, :alert => "Campaign not updated"
+      			redirect_to client_company_campaigns_path, :alert => "Campaign not valid and not updated"
 
     		end
     	else
@@ -132,34 +134,20 @@ class CampaignsController < ApplicationController
 	end
 
 
-
-	def create_campaign(reply_campaigns, scalerep_campaigns)
-
-		reply_campaigns.each do |reply_campaign|
-			match = false
-			scalerep_campaigns.each do |scalerep_campaign|
-				if reply_campaign.id == scalerep_campaign.reply_id
-					match = true
-
-				end
-
-				if match == false
-
-
-					#create campaign
-
-				
-
-
-
-
-
-
-
-		if campaign.id
-
-
+	def get_emails(company_key)
+		begin
+			response = RestClient::Request.execute(
+            	:method => :get,
+            	:url => 'https://api.reply.io/v1/emailAccounts?apiKey='+ company_key,
+            )
+        	return response
+		rescue RestClient::ExceptionWithResponse => e
+			return e
+		end
 	end
+
+
+
 
 
 

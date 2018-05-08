@@ -17,7 +17,7 @@
     <thead class="thead-light">
       <tr>
 
-        <th scope="col">Name</th>
+        <th scope="col">Persona</th>
         <th scope="col">Email</th>
         <th scope="col">Status</th>
         <th scope="col">Add Leads</th>
@@ -27,7 +27,7 @@
 
     <tbody>
 
-      <% @reply_campaigns.each do |campaign| %>
+      <% @campaign_array.each do |campaign| %>
         <tr>
 
           <td><%= campaign["name"] %></td>
