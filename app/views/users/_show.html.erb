@@ -30,13 +30,9 @@
 
 			<li class="list-group-item">
 		    <h3>
-					Add dean@scalerep.com to your <a target="_blank" href="https://slack.com">slack team</a> to get help and ask questions</a>
+					Add <%= @user.client_company.account_manager %> to your <a target="_blank" href="https://slack.com">slack team</a> to get help and ask questions</a>
 
-					<% if @user.client_company.profile_setup == true  %>
-						&nbsp; <span class="badge badge-secondary">Completed</span>
-					<% else %>
-						&nbsp; <span class="badge badge-secondary">Pending</span>
-					<% end %>
+					
 				</h3>
 			</li>
 
@@ -44,11 +40,7 @@
 			<li class="list-group-item">
 				<h3>Domain and e-mail account set up. Contact your accout manager for updates.
 
-					<% if @user.client_company.profile_setup == true  %>
-						&nbsp; <span class="badge badge-secondary">Completed</span>
-					<% else %>
-						&nbsp; <span class="badge badge-secondary">Pending</span>
-					<% end %>
+					
 				</h3>
 			</li>
 		</ul>

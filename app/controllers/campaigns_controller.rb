@@ -73,32 +73,32 @@ class CampaignsController < ApplicationController
 
 
 
-  			if @campaign.save
+  		if @campaign.save
 
-				begin
+			begin
 
-					response = RestClient.post "https://api.reply.io/v2/campaigns?apiKey=EeLPuf3EUR3YvKxnatkDLg2", {"name": @campaign.persona, "settings": { "EmailsCountPerDay": 200, "daysToFinishProspect": 7, "daysFromLastProspectContact": 15, "emailSendingDelaySeconds": 55, "emailPriorityType": "Equally divided between", "disableOpensTracking": false, "repliesHandlingType": "Mark person as finished", "enableLinksTracking": false }, "steps": [{ "number": "1", "InMinutesCount": "25", "templates": [{ "body": "Hello World!", "subject": "Im here!"}]}]}.to_json, :content_type => "application/json"
-					data_hash = JSON.parse(response)
-
-
-					@campaign.update_attribute(:reply_id, data_hash["id"])
-					@campaign.update_attribute(:reply_key, 'EeLPuf3EUR3YvKxnatkDLg2')
-
-				rescue RestClient::ExceptionWithResponse => e
+				response = RestClient.post "https://api.reply.io/v2/campaigns?apiKey=EeLPuf3EUR3YvKxnatkDLg2", {"name": @campaign.persona, "settings": { "EmailsCountPerDay": 200, "daysToFinishProspect": 7, "daysFromLastProspectContact": 15, "emailSendingDelaySeconds": 55, "emailPriorityType": "Equally divided between", "disableOpensTracking": false, "repliesHandlingType": "Mark person as finished", "enableLinksTracking": false }, "steps": [{ "number": "1", "InMinutesCount": "25", "templates": [{ "body": "Hello World!", "subject": "Im here!"}]}]}.to_json, :content_type => "application/json"
+				data_hash = JSON.parse(response)
 
 
-					puts e
+				@campaign.update_attribute(:reply_id, data_hash["id"])
+				@campaign.update_attribute(:reply_key, 'EeLPuf3EUR3YvKxnatkDLg2')
 
-				end
+			rescue RestClient::ExceptionWithResponse => e
 
-  				redirect_to client_company_campaigns_path, :notice => "Campaign created"
-    		else
-      			redirect_to client_company_campaigns_path, :alert => "Campaign not valid and not updated"
 
-    		end
+				puts e
+
+			end
+
+  			redirect_to client_company_campaigns_path, :notice => "Campaign created"
     	else
-    		redirect_to client_company_campaigns_path, :alert => "Campaign not updated. Campaign not valid"
-    	end
+      		redirect_to client_company_campaigns_path, :alert => "Campaign not valid and not updated"
+
+   		end
+   	#else
+    #	redirect_to client_company_campaigns_path, :alert => "Campaign not updated. Campaign not valid"
+    #end
 
 
 

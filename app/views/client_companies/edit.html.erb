@@ -16,37 +16,35 @@
       
       <%=   form_for @client_company, url: {action: 'update'} do |f| %> 
         
-          <h3>Seating Setup</h3>
+          <h3><%= @user.client_company.name if @user.client_company %> Account Details</h3>
           <br>
     
 
         
           <div class="form-group">
 
-            <%= f.label :new_domain, 'Enter a new domain. This domain should be available to buy, and similar to the domain of your company'  %>
-            <%= f.text_field :emails_to_use, class: 'form-control' %>
-
-            <%= f.label :emails_to_use, 'Enter the new e-mails, seperated by commas, used for outreach. The domain should be available on namecheap, and look similar to the domain of your company.' %>
-            <%= f.text_field :emails_to_use, class: 'form-control' %>
+          <p> Every touchpoint sent using ScaleRep is catered by a ScaleRep representative.<br>Providing the below insights into <%= @user.client_company.name if @user.client_company %> allows ScaleRep representatives to create the best possible messaging!
+          </p>
 
           <br>
 
-            <%= f.label :description, 'Describe your company mission in a paragraph. What do your customers love about your product?' %>
-            <%= f.text_area :description, :rows => 10, :col => 10, class: 'form-control' %>
+            <%= f.label :description, 'Describe your company mission in a paragraph. What do your customers love about your product?*' %>
+            <%= f.text_area :description, :rows => 10, :col => 10, :required => true, class: 'form-control' %>
 
           <br>
 
-            <%= f.label :products, 'Describe your different product offerings.' %>
-            <%= f.text_area :products, :rows => 10, :col => 10, class: 'form-control' %>
+            <%= f.label :products, 'Describe your different product offerings.*' %>
+            <%= f.text_area :products, :rows => 10, :col => 10, :required => true, class: 'form-control' %>
 
           <br>
 
 
-            <%= f.label :notable_clients, 'What are some of your clients?' %>
-            <%= f.text_field :notable_clients, class: 'form-control' %>
+            <%= f.label :notable_clients, 'Who are some of your former/current clients?*' %>
+            <%= f.text_field :notable_clients, :required => true, class: 'form-control' %>
 
 
           </div>
+
         
           <%= f.submit 'Update Account', :class => 'button center' %>
 
