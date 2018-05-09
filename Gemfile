@@ -24,7 +24,6 @@ gem 'rails_refactor'
 gem 'country-select'
 gem 'rest-client'
 gem 'sidekiq'
-gem "paperclip", "~> 6.0.0"
 
 
 #gem 'ahoy_matey'

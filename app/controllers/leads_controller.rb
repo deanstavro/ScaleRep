@@ -33,22 +33,34 @@ before_action :authenticate_user!
     @leads = Lead.where(client_company: @company)
     
 
-    if (params[:file].content_type).to_s == 'text/csv'
-      
-      upload_message = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign])
+    begin
+        if (params[:file].content_type).to_s == 'text/csv'
+          if (params[:file].size).to_i < 1000000
 
-      flash[:notice] = upload_message
-      redirect_to client_company_campaigns_path(@company)
-    else
+          
+          upload_message = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign])
 
-      redirect_to client_company_campaigns_path(@company), :flash => { :error => "The file was not uploaded. Please Upload a CSV!" }
+          flash[:notice] = upload_message
+          redirect_to client_company_campaigns_path(@company)
+          else
+            redirect_to client_company_campaigns_path(@company), :flash => { :error => "The CSV is too large. Please upload a shorter CSV!" }
+          end
+
+        else
+
+          redirect_to client_company_campaigns_path(@company), :flash => { :error => "The file was not uploaded. Please Upload a CSV!" }
+
+        end
+    rescue
+        redirect_to client_company_campaigns_path(@company), :flash => { :error => "No file chosen. Please upload a CSV!" }
 
     end
   end
 
 
-  def edit
-  end
+
+
+
 
   private
 

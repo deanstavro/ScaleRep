@@ -25,7 +25,11 @@ class Lead < ApplicationRecord
 		imported = 0
 		all_hash = []
 
+
+		#ignore cases for fields
+
 		CSV.foreach(file.path, headers: true) do |row|
+
 			one_hash = row.to_hash
 
 			all_hash << one_hash
@@ -36,7 +40,9 @@ class Lead < ApplicationRecord
 
 					one_hash[:client_company] = company
 					one_hash[:campaign_id] = campaign
+
 					lead = Lead.create!(one_hash)
+					
 					imported = imported + 1
 				else
 
@@ -46,7 +52,7 @@ class Lead < ApplicationRecord
 				not_imported = not_imported + 1
 			end		
 
-		AddContactsToReplyJob.perform_later(all_hash,campaign)
+		#AddContactsToReplyJob.perform_later(all_hash,campaign)
 
 		end
 

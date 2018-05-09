@@ -66,6 +66,7 @@ Rails.application.routes.draw do
   
   resources :leads do
     collection { post :import_to_campaign}
+    collection { get :fields}
   end
 
   
