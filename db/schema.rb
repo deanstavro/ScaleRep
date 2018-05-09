@@ -76,6 +76,7 @@ ActiveRecord::Schema.define(version: 20180507235902) do
     t.text     "notable_clients"
     t.boolean  "profile_setup",   default: false
     t.boolean  "account_live",    default: false
+    t.string   "account_manager"
   end
 
   create_table "client_reports", force: :cascade do |t|
