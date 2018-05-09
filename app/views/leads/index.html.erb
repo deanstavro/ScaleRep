@@ -4,30 +4,7 @@
     <h1><%= @user.client_company.name if @user.client_company %> Lead List</h1>
   </div>
 </div>
-
-
-<div class = 'thin_margins'>
-  <button class="btn btn-outline-primary" data-toggle="collapse" data-target="#upload">Upload Leads</button>
-  <div id="upload" class="collapse">
-    <h2> Upload CSV Lead List</h2>
-    <p class="notice"><%= notice %></p>
-    <h3> Use these exact fields in your csv header:</h3>
-    <p>
-      first_name, last_name, email, campaign_name, title, company, company_domain, phone_type, phone_number, linkedin, timezone
-      <br>
-      <br> * first_name, last_name, email, and campaign_name are required
-      <br> * Your csv file should not have any other headers than the ones above
-      <br> * duplicates in the system will not be uploaded
-    </p>
-
-    <%= form_tag import_leads_path, multipart: true do %>
-      <%= file_field_tag :file %>
-      <%= submit_tag "Import CSV" %>
-    <% end %>
-
-  </div>
-</div>
-
+    
 
 
 <div class = 'thin_margins'>

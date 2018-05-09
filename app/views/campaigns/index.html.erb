@@ -5,6 +5,10 @@
   </div>
 </div>
 
+<center><p id="error"><%= flash[:error] %></p>
+<p id="notice"><%= flash[:notice] %></p></center>
+
+
 <div class="container">
   <%= link_to '+ Add Campaign', new_client_company_campaign_path, :class=>"btn btn-primary btn-xl page-scroll" %>
 </div>
@@ -35,6 +39,8 @@
           <td><%= campaign["status"] %></td>
 
           <td>
+
+
             <%= form_tag import_to_campaign_leads_path(:campaign => campaign), multipart: true do %>
               <%= file_field_tag :file %>
               <%= submit_tag "Import CSV" %>

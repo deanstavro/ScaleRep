@@ -56,62 +56,39 @@ class CampaignsController < ApplicationController
 
   			puts "EMAIL ARRAY"
   			puts email_array
+  			puts "Campaign ARRAY"
+  			puts campaign_array
 
 
-  			count_dict = Hash.new
-    		for email in email_array
-    			count_dict[email["emailAddress"]] = 0
-    		end
-
-
-    		for email in campaign_array
-    			for reply_email in email_array
-    				if email["emailAccount"] == reply_email["emailAddress"]
-
-    					if count_dict[email["emailAccount"]]
-    						count_dict[email["emailAccount"]] = count_dict[email["emailAccount"]] + 1
-    					else
-    						count_dict[email["emailAccount"]] = 1
-    					end
-    				end
-    			end
-    		end
-
+  			count_dict = email_count(email_array, campaign_array)
 
     		puts "COUNT_DICT"
     		puts count_dict
 
+    		email_to_use = choose_email(count_dict)
+
+    		puts "EMAIL TO USE"
+    		puts email_to_use
     		
     		
-    		current_value = 1000
-    		current_email = ""
-    		count_dict.each do |key, value|
-
-    			if value < current_value
-    				current_value = value
-    				current_email = key
-    			end
-    		end
-
-    		email_to_use = current_email
 
     		for email in email_array
 
-    			if current_email == email["emailAddress"]
+    			if email_to_use == email["emailAddress"]
     				reply_key = email["key"]
 
     				break
     			end
     		end
 
-    		puts email_to_use + "  " + current_value.to_s + "  " + reply_key + "  " + params[:campaign][:persona]
+    		puts email_to_use + "  " + reply_key + "  " + params[:campaign][:persona]
 
 
 
   			if @campaign.save
 
   				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, params[:campaign][:persona]))
-
+  				puts "RESPONSE FROM POSTING CAMPIGN INTO REPLY"
   				puts post_campaign
 
 				
@@ -141,6 +118,51 @@ class CampaignsController < ApplicationController
   	def campaign_params
   		params.require(:campaign).permit(:name, :persona, :user_notes)
   	end	
+
+
+
+
+  	def email_count(email_array, campaign_array)
+
+  		count_dic = Hash.new
+		for email in email_array
+			count_dic[email["emailAddress"]] = 0
+		end
+
+
+		for email in campaign_array
+			for reply_email in email_array
+				if email["emailAccount"] == reply_email["emailAddress"]
+
+					if count_dic[email["emailAccount"]]
+						count_dic[email["emailAccount"]] = count_dic[email["emailAccount"]] + 1
+					else
+						count_dic[email["emailAccount"]] = 1
+					end
+				end
+			end
+		end
+
+		return count_dic
+
+  	end
+
+
+  	def choose_email(count_dict= count_dict)
+  		
+  		current_value = 1000
+    		current_email = ""
+    		count_dict.each do |key, value|
+
+    			if value < current_value
+    				current_value = value
+    				current_email = key
+    			end
+    		end
+
+    		return current_email
+
+  	end
 
 
   

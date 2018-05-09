@@ -18,48 +18,6 @@ class Lead < ApplicationRecord
 
 
 
-	
-
-
-	def self.import(file, company, leads)
-		not_imported = 0
-		duplicates = 0
-		imported = 0
-		all_hash = []
-
-		CSV.foreach(file.path, headers: true) do |row|
-			one_hash = row.to_hash
-
-			all_hash << one_hash
-
-			email = one_hash["email"]
-			begin
-				if leads.where(:email => email).count == 0
-
-					one_hash[:client_company] = company
-					lead = Lead.create!(one_hash)
-					imported = imported + 1
-
-
-				else
-
-					duplicates = duplicates + 1 
-				end
-			rescue Exception => e
-				not_imported = not_imported + 1
-			end		
-
-		puts all_hash
-
-		AddContactsToReplyJob.perform_later(all_hash,company.replyio_keys)
-
-
-		end
-
-		return imported.to_s + " imported successfully, "+ duplicates.to_s + " duplicates, " + not_imported.to_s + " contacts not imported"
-	end
-
-
 
 	def self.import_to_campaign(file, company, leads, campaign)
 		not_imported = 0
@@ -80,8 +38,6 @@ class Lead < ApplicationRecord
 					one_hash[:campaign_id] = campaign
 					lead = Lead.create!(one_hash)
 					imported = imported + 1
-
-
 				else
 
 					duplicates = duplicates + 1 
@@ -90,15 +46,14 @@ class Lead < ApplicationRecord
 				not_imported = not_imported + 1
 			end		
 
-		#get the correct key
-
 		AddContactsToReplyJob.perform_later(all_hash,campaign)
-
 
 		end
 
 		return imported.to_s + " imported successfully, "+ duplicates.to_s + " duplicates, " + not_imported.to_s + " contacts not imported"
 	end
+
+
 
 
 

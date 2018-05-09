@@ -24,32 +24,26 @@ before_action :authenticate_user!
     @warm_opps = table.all(filter: '{lead_status} = "warm_lead"', sort: {follow_up_date: "desc"})
 
   end
-
-  def import
-    @user = User.find(current_user.id)
-    @company = ClientCompany.find_by(id: @user.client_company_id)
-    @leads = Lead.where(client_company: @company)
-
-
-    upload_message = Lead.import(params[:file], @company, @leads)
-
-    flash[:notice] = upload_message
-    redirect_to leads_path
-  end
-
   
 
   def import_to_campaign
-  
+
     @user = User.find(current_user.id)
     @company = ClientCompany.find_by(id: @user.client_company_id)
     @leads = Lead.where(client_company: @company)
+    
 
+    if (params[:file].content_type).to_s == 'text/csv'
+      
+      upload_message = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign])
 
-    upload_message = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign])
+      flash[:notice] = upload_message
+      redirect_to client_company_campaigns_path(@company)
+    else
 
-    flash[:notice] = upload_message
-    redirect_to client_company_campaigns_path(@user.client_company)
+      redirect_to client_company_campaigns_path(@company), :flash => { :error => "The file was not uploaded. Please Upload a CSV!" }
+
+    end
   end
 
 
