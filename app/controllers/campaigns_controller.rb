@@ -11,7 +11,7 @@ class CampaignsController < ApplicationController
 	Campaigns are grabbed from one or multiple reply.io systems using the key(s)
 	'''
 	def index
-    	
+
     	@user = User.find(current_user.id)
   		@company = ClientCompany.find_by(id: @user.client_company_id)
     	@campaigns = Campaign.where("client_company_id =?", @company).order('created_at DESC')
@@ -26,7 +26,7 @@ class CampaignsController < ApplicationController
     		#Push the response into a hash
     		# save in a global variable for display in the index.html.erb
     	##################
-    	
+
   	end
 
 
@@ -69,8 +69,8 @@ class CampaignsController < ApplicationController
 
     		puts "EMAIL TO USE"
     		puts email_to_use
-    		
-    		
+
+
 
     		for email in email_array
 
@@ -91,13 +91,13 @@ class CampaignsController < ApplicationController
   				puts "RESPONSE FROM POSTING CAMPIGN INTO REPLY"
   				puts post_campaign
 
-				
+
   				redirect_to client_company_campaigns_path, :notice => "Campaign created"
   			else
   				redirect_to client_company_campaigns_path, :alert => "Campaign not valid and not updated"
 
   			end
-  			
+
 
 
     	else
@@ -112,12 +112,12 @@ class CampaignsController < ApplicationController
 
   	private
 
-  	
-  	
+
+
 
   	def campaign_params
   		params.require(:campaign).permit(:name, :persona, :user_notes)
-  	end	
+  	end
 
 
 
@@ -149,7 +149,7 @@ class CampaignsController < ApplicationController
 
 
   	def choose_email(count_dict= count_dict)
-  		
+
   		current_value = 1000
     		current_email = ""
     		count_dict.each do |key, value|
@@ -165,7 +165,7 @@ class CampaignsController < ApplicationController
   	end
 
 
-  
+
 
 
 

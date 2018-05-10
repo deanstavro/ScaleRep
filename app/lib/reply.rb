@@ -75,7 +75,7 @@ module Reply
               email["key"] = accounts["key"]
             end
 
-            
+
             email_accounts << un
 
 
@@ -101,7 +101,7 @@ module Reply
 
     def post_campaign(key, email_to_use, persona_name)
 
-        
+
       begin
 
           payload = {"name": persona_name, "emailAccount": email_to_use, "settings": { "EmailsCountPerDay": 200, "daysToFinishProspect": 7, "daysFromLastProspectContact": 15, "emailSendingDelaySeconds": 55, "emailPriorityType": "Equally divided between", "disableOpensTracking": false, "repliesHandlingType": "Mark person as finished", "enableLinksTracking": false }, "steps": [{ "number": "1", "InMinutesCount": "25", "templates": [{ "body": "Hello World!", "subject": "Im here!"}]}]}.to_json
@@ -115,7 +115,7 @@ module Reply
           return response
 
       rescue RestClient::ExceptionWithResponse => e
-            
+
           puts e
           return e
       end
