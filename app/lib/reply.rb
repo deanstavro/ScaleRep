@@ -1,53 +1,68 @@
+# frozen_string_literal: true
+
 require 'rest-client'
 require 'json'
 
-
 module Reply
+  API_V1 = 'https://api.reply.io/v1'
+  API_V2 = 'https://api.reply.io/v2'
 
+  def v1_get_campaigns(key)
+    keys = JSON.parse(key, symbolize_names: true)
+    unparsed_campaigns = []
+    keys[:accounts].each do |account|
+      response = RestClient::Request.execute(
+        method: :get, url: "#{API_V1}/campaigns?apiKey=#{account[:key]}"
+      )
+      campaigns = JSON.parse(response, symbolize_names: true)
+      unparsed_campaigns << campaigns
+    end
+    unparsed_campaigns
+  end
 
+  def v1_get_campaign(id, key)
+    response = RestClient::Request.execute(
+      method: :get, url: "#{API_V1}/campaigns/#{id}?apiKey=#{key}"
+    )
+    JSON.parse(response, symbolize_names: true)
+  end
 
-  	def get_campaigns(company_key)
+  def get_campaigns(company_key)
+    keys = JSON.parse(company_key, symbolize_names: true)
+    unparsed_campaigns = []
+    metrics = v1_get_campaigns(@company.replyio_keys)&.flatten
 
-      keys = JSON.parse(company_key)
-
-      # Get the correct reply keys, and call API to retrieve
-      unparsed_campaigns = []
-      un = []
-      for accounts in keys["accounts"]
-
-        begin
-            response = RestClient::Request.execute(
-              :method => :get,
-              :url => 'https://api.reply.io/v2/campaigns?apiKey='+ accounts["key"],
-            )
-
-            #add reply key to the response
-            un = JSON.parse(response)
-            for campaign in un
-              campaign["key"] = accounts["key"]
-            end
-
-
-            unparsed_campaigns << un
-
-        rescue RestClient::ExceptionWithResponse => e
-            return e
+    for accounts in keys[:accounts]
+      begin
+        response = RestClient::Request.execute(
+          method: :get,
+          url: 'https://api.reply.io/v2/campaigns?apiKey=' + accounts[:key]
+        )
+        # add reply key to the response
+        un = JSON.parse(response)
+        for campaign in un
+          campaign['key'] = accounts[:key]
         end
+        unparsed_campaigns << un
+      rescue RestClient::ExceptionWithResponse => e
+        return e
       end
-
-      # Loop through response to grab campaigns
-      campaign_arr = []
-      for accounts in unparsed_campaigns
-        for campaign in accounts
-          # Dont grab any archived campaigns
-          if campaign["isArchived"] == false
-            campaign_arr << campaign
+    end
+    # Loop through response to grab campaigns
+    campaign_arr = []
+    for accounts in unparsed_campaigns
+      for campaign in accounts
+        # Dont grab any archived campaigns
+        if campaign['isArchived'] == false
+          campaign[:metrics] = metrics.find do |metric|
+            metric[:id] == campaign['id']
           end
+          campaign_arr << campaign
         end
       end
-
-      return campaign_arr
-	  end
+    end
+    campaign_arr
+  end
 
 
 

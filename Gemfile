@@ -24,13 +24,7 @@ gem 'rails_refactor'
 gem 'country-select'
 gem 'rest-client'
 gem 'sidekiq'
-
-
-#gem 'ahoy_matey'
-
-
-
-
+# gem 'ahoy_matey'
 
 group :test do
   gem 'sqlite3'
@@ -57,6 +51,7 @@ group :development do
   gem 'spring-watcher-listen', '~> 2.0.0'
   gem 'tzinfo-data', platforms: [:mingw, :mswin, :x64_mingw, :jruby]
   gem 'spring-commands-rspec'
+  gem "binding_of_caller"
 end
 
 group :production do

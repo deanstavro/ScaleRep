@@ -4,20 +4,18 @@ class CampaignsController < ApplicationController
 	require 'json'
 	include Reply
 
-
 	'''
 	Index shows all the campaigns running for a client_company
 	Campaigns are grabbed from reply.io using the reply keys
 	Campaigns are grabbed from one or multiple reply.io systems using the key(s)
 	'''
 	def index
-
     	@user = User.find(current_user.id)
   		@company = ClientCompany.find_by(id: @user.client_company_id)
     	@campaigns = Campaign.where("client_company_id =?", @company).order('created_at DESC')
 
     	# Call app/lib/reply.get_campaigns module to get all campaigns from reply.io
-    	@campaign_array = get_campaigns(@company.replyio_keys)
+			@campaign_array = get_campaigns(@company.replyio_keys)
 
     	#################
     	#TO DO
@@ -26,7 +24,6 @@ class CampaignsController < ApplicationController
     		#Push the response into a hash
     		# save in a global variable for display in the index.html.erb
     	##################
-
   	end
 
 
