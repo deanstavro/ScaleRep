@@ -1,22 +1,29 @@
 <div id="title" class="jumbotron">
   <div class = "container">
     <br/>
-    <h1><%= @user.client_company.name if @user.client_company %> Campaign List</h1>
+    <h1><%= @user.client_company.name if @user.client_company %> Persona List</h1>
   </div>
 </div>
 
 <center><p id="error"><%= flash[:error] %></p>
 <p id="notice"><%= flash[:notice] %></p></center>
 
+<div class="container">
+  <p> Personas are specific types of customers you'd like to outreach to.<br>
+  ScaleRep helps you increase you persona conversion by seperating personas<br>
+  by different targetting methods. This allows you to track what messaging<br>
+  and which sequences yield the best conversions.
+  </p>
+</div>
 
 <div class="container">
-  <%= link_to '+ Add Campaign', new_client_company_campaign_path, :class=>"btn btn-primary btn-xl page-scroll" %>
+  <%= link_to '+ Add Persona', new_client_company_campaign_path, :class=>"btn btn-primary btn-xl page-scroll" %>
 </div>
 
 
 
 <div class="container">
-  <h2> Campaigns</h2>
+  <h2> Targeted Personas </h2>
 
 
   <table class="table table-striped">
