@@ -132,6 +132,13 @@ ActiveRecord::Schema.define(version: 20180507235902) do
     t.boolean  "meeting_taken",               default: false
     t.boolean  "in_campaign",                 default: false
     t.date     "last_added_to_campaign_date"
+    t.string   "company_description"
+    t.string   "number_of_employees"
+    t.string   "last_funding_type"
+    t.string   "last_funding_date"
+    t.string   "last_funding_amount"
+    t.string   "total_funding_amount"
+    t.string   "email_snippet"
     t.index ["campaign_id"], name: "index_leads_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_leads_on_client_company_id", using: :btree
   end
