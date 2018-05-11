@@ -8,13 +8,6 @@
 <center><p id="error"><%= flash[:error] %></p>
 <p id="notice"><%= flash[:notice] %></p></center>
 
-<div class="container">
-  <p> Personas are specific types of customers you'd like to outreach to.<br>
-  ScaleRep helps you increase you persona conversion by seperating personas<br>
-  by different targetting methods. This allows you to track what messaging<br>
-  and which sequences yield the best conversions.
-  </p>
-</div>
 
 <div class="container">
   <%= link_to '+ Add Persona', new_client_company_campaign_path, :class=>"btn btn-primary btn-xl page-scroll" %>
@@ -27,12 +20,13 @@
     <thead class="thead-light">
       <tr>
         <th scope="col">Persona</th>
-        <th scope="col"><%= link_to 'Add Leads', fields_leads_path, :remote => true %></th>
+        <th scope="col">Add Leads</th>
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
         <th scope="col">Bouncee</th>
+        <th scope="col">Replies</th>
         <th scope="col">Open Rate</th>
-        <th scope="col">Reply Rate</th>
+        
         <th scope="col">Start Date</th>
       </tr>
     </thead>
@@ -49,13 +43,14 @@
           <td><%= campaign[:metrics][:peopleCount] %></td>
           <td><%= campaign[:metrics][:deliveriesCount] %></td>
           <td><%= campaign[:metrics][:bouncesCount] %></td>
+          <td><%=   campaign[:metrics][:repliesCount] %></td>
           <td><%= campaign[:metrics][:opensCount] %></td>
 
           <% if false %>
           <td><%= reply_rate_calculator(campaign[:metrics][:repliesCount], campaign[:metrics][:deliveriesCount]) %></td>
           <% end %>
 
-          <td><%=   campaign[:metrics][:repliesCount] %></td>
+          
 
           <td><%= campaign[:metrics][:created].to_time.strftime('%m/%d/%Y') %></td>
         </tr>
