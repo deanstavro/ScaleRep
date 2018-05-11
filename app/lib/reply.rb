@@ -125,7 +125,7 @@ module Reply
 
 
           @campaign.update_attribute(:reply_id, data_hash["id"])
-          @campaign.update_attribute(:reply_key, "EeLPuf3EUR3YvKxnatkDLg2")
+          @campaign.update_attribute(:reply_key, key)
 
           return response
 
