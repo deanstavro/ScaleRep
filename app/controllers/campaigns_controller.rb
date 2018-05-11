@@ -88,9 +88,10 @@ class CampaignsController < ApplicationController
   				puts "RESPONSE FROM POSTING CAMPIGN INTO REPLY"
   				puts post_campaign
 
-
+          sleep 10
   				redirect_to client_company_campaigns_path, :notice => "Campaign created"
   			else
+          sleep 10
   				redirect_to client_company_campaigns_path, :alert => "Campaign not valid and not updated"
 
   			end
@@ -98,6 +99,7 @@ class CampaignsController < ApplicationController
 
 
     	else
+          sleep 10
       		redirect_to client_company_campaigns_path, :alert => "Campaign not valid and not updated"
 
    		end

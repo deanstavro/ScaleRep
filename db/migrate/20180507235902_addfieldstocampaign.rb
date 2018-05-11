@@ -13,6 +13,6 @@ class Addfieldstocampaign < ActiveRecord::Migration[5.0]
   	add_column :campaigns, :personalized, :boolean, default: false
   	add_column :campaigns, :name, :string
   	add_column :leads, :sent_to_reply, :boolean
-  	add column :leads, :personalized, :boolean
+  	add_column :leads, :personalized, :boolean
   end
 end

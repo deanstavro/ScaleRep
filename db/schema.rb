@@ -50,13 +50,15 @@ ActiveRecord::Schema.define(version: 20180507235902) do
     t.string   "industry"
     t.datetime "campaign_start"
     t.datetime "campaign_end"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                        null: false
+    t.datetime "updated_at",                        null: false
     t.integer  "client_company_id"
     t.string   "user_notes"
     t.string   "persona"
     t.string   "reply_id"
     t.string   "reply_key"
+    t.boolean  "personalized",      default: false
+    t.string   "name"
     t.index ["client_company_id"], name: "index_campaigns_on_client_company_id", using: :btree
   end
 
@@ -139,6 +141,8 @@ ActiveRecord::Schema.define(version: 20180507235902) do
     t.string   "last_funding_amount"
     t.string   "total_funding_amount"
     t.string   "email_snippet"
+    t.boolean  "sent_to_reply"
+    t.boolean  "personalized"
     t.index ["campaign_id"], name: "index_leads_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_leads_on_client_company_id", using: :btree
   end
