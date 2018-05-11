@@ -2,7 +2,7 @@ ActiveAdmin.register Lead do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :contract_sent, :deal_won, :deal_size, :expected_recurring_deal, :expected_recurrence_period, :internal_notes, :external_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :company, :decision_maker, :timeline, :project_scope, :potential_deal_size, :email_in_contact_with, :industry, :meeting_set, :meeting_time, :meeting_taken, :company_domain, :email, :hunter_date, :hunter_score, :title, :phone_type, :phone_number, :address, :city, :state, :country, :linkedin, :campaign_name, :timezone, :last_added_to_campaign_date, :in_campaign, :company_description, :number_of_employees, :last_funding_date, :last_funding_amount, :total_funding_amount, :email_snippet
+permit_params :contract_sent, :deal_won, :deal_size, :expected_recurring_deal, :expected_recurrence_period, :internal_notes, :external_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :company, :decision_maker, :timeline, :project_scope, :potential_deal_size, :email_in_contact_with, :industry, :meeting_set, :meeting_time, :meeting_taken, :company_domain, :email, :hunter_date, :hunter_score, :title, :phone_type, :phone_number, :address, :city, :state, :country, :linkedin, :campaign_name, :timezone, :last_added_to_campaign_date, :in_campaign, :company_description, :number_of_employees, :last_funding_date, :last_funding_amount, :total_funding_amount, :email_snippet, :sent_to_reply, :personalized
 
 index do
     selectable_column
@@ -14,6 +14,8 @@ index do
     column :email
     column :title
 
+    column :sent_to_reply
+    column :personalized
     column :campaign
     column :campaign_name
     column :last_added_to_campaign_date
@@ -107,6 +109,9 @@ form do |f|
     f.input :industry
     f.input :internal_notes
     f.input :external_notes
+
+    f.input :sent_to_reply
+    f.input :personalized
 
 
     f.input :last_funding_date

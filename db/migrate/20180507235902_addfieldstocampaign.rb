@@ -10,6 +10,9 @@ class Addfieldstocampaign < ActiveRecord::Migration[5.0]
   	add_column :leads, :last_funding_amount, :string
   	add_column :leads, :total_funding_amount, :string
   	add_column :leads, :email_snippet, :string
-
+  	add_column :campaigns, :personalized, :boolean, default: false
+  	add_column :campaigns, :name, :string
+  	add_column :leads, :sent_to_reply, :boolean
+  	add column :leads, :personalized, :boolean
   end
 end

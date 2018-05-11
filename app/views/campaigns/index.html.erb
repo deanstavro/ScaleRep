@@ -50,7 +50,13 @@
           <td><%= campaign[:metrics][:deliveriesCount] %></td>
           <td><%= campaign[:metrics][:bouncesCount] %></td>
           <td><%= campaign[:metrics][:opensCount] %></td>
-          <td><%= reply_rate_calcularor(campaign[:metrics][:repliesCount], campaign[:metrics][:deliveriesCount]) %></td>
+
+          <% if false %>
+          <td><%= reply_rate_calculator(campaign[:metrics][:repliesCount], campaign[:metrics][:deliveriesCount]) %></td>
+          <% end %>
+
+          <td><%=   campaign[:metrics][:repliesCount] %></td>
+
           <td><%= campaign[:metrics][:created].to_time.strftime('%m/%d/%Y') %></td>
         </tr>
       <% end %>
