@@ -29,6 +29,9 @@ Rails.application.routes.draw do
     end
   end
 
+  resources :personas do
+    resources :campaigns
+  end
 
 
   get 'lead_list/index'

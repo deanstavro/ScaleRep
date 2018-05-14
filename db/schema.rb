@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180507235902) do
+ActiveRecord::Schema.define(version: 20180514215038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -54,12 +54,14 @@ ActiveRecord::Schema.define(version: 20180507235902) do
     t.datetime "updated_at",                        null: false
     t.integer  "client_company_id"
     t.string   "user_notes"
-    t.string   "persona"
     t.string   "reply_id"
     t.string   "reply_key"
     t.boolean  "personalized",      default: false
     t.string   "name"
+    t.integer  "persona_id"
+    t.string   "campaign_name"
     t.index ["client_company_id"], name: "index_campaigns_on_client_company_id", using: :btree
+    t.index ["persona_id"], name: "index_campaigns_on_persona_id", using: :btree
   end
 
   create_table "client_companies", force: :cascade do |t|
@@ -147,6 +149,12 @@ ActiveRecord::Schema.define(version: 20180507235902) do
     t.index ["client_company_id"], name: "index_leads_on_client_company_id", using: :btree
   end
 
+  create_table "personas", force: :cascade do |t|
+    t.string   "name"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
   create_table "users", force: :cascade do |t|
     t.string   "email",                  default: "", null: false
     t.string   "encrypted_password",     default: "", null: false
@@ -171,6 +179,7 @@ ActiveRecord::Schema.define(version: 20180507235902) do
   end
 
   add_foreign_key "campaigns", "client_companies"
+  add_foreign_key "campaigns", "personas"
   add_foreign_key "client_reports", "client_companies"
   add_foreign_key "leads", "campaigns"
   add_foreign_key "leads", "client_companies"
