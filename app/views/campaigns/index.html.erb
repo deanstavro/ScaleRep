@@ -15,12 +15,11 @@
 
 <div class="container">
   <h2> Targeted Campaigns </h2>
-
   <table class="table table-striped">
     <thead class="thead-light">
       <tr>
         <th scope="col">Campaign</th>
-        <th scope="col">Add Leads</th>
+        <th scope="col">Add Leads <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="a"></i></th>
         <th scope="col">Persona</th>
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
@@ -41,7 +40,11 @@
               <%= submit_tag "Import CSV" %>
             <% end %>
           </td>
-          <td><%= campaign.persona.name %></td>
+          <% if @campaigns.where(reply_key: campaign["key"]).present? %>
+            <td><%= @campaigns.where(reply_key: campaign["key"]).first.persona.name %></td>
+          <% else %>
+            <td>Unassigned</td>
+          <% end %>
           <td><%= campaign[:metrics][:peopleCount] %></td>
           <td><%= campaign[:metrics][:deliveriesCount] %></td>
           <td><%= campaign[:metrics][:bouncesCount] %></td>
