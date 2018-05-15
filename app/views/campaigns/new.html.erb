@@ -9,9 +9,9 @@
   <%= form_for [@client_company,@campaign], :html => {:class => "form-horizontal center"} do |f| %>
 
       <div class="form-group">
-        <%= f.label :persona, "Persona", class: "col-md-4 control-label" %>
+        <%= f.label :campaign_name, "Campaign Name", class: "col-md-4 control-label" %>
         <div class="col-md-8">
-          <%= f.text_field :persona, class: "form-control" %>
+          <%= f.text_field :campaign_name, class: "form-control" %>
         </div>
       </div>
 
@@ -22,6 +22,19 @@
         </div>
       </div>
 
+      <div class="form-group">
+        <%= f.label :persona_id, "Persona", class: "col-md-4 control-label" %>
+        <div class="col-md-8">
+          <%= select_tag :persona_id, options_for_select(@personas.collect{|p| [p.name, p.id]}), {include_blank: true, class: "form-control"} %>
+        </div>
+      </div>
+
+      <div class="form-group">
+        <%= label :create_persona, "Create Persona", class: "col-md-4 control-label" %>
+        <div class="col-md-8">
+          <%= text_field_tag :create_persona, nil, class: "form-control" %>
+        </div>
+      </div>
 
       <%= f.submit "Submit", class: "btn btn-default btn-primary" %>  
   <% end %>

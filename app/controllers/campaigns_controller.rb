@@ -12,10 +12,10 @@ class CampaignsController < ApplicationController
 	def index
     	@user = User.find(current_user.id)
   		@company = ClientCompany.find_by(id: @user.client_company_id)
-    	@campaigns = Campaign.where("client_company_id =?", @company).order('created_at DESC')
+    	@campaigns = Campaign.includes(:persona).where("client_company_id =?", @company).order('created_at DESC')
 
     	# Call app/lib/reply.get_campaigns module to get all campaigns from reply.io
-			@campaign_array = get_campaigns(@company.replyio_keys)
+      @campaign_array = get_campaigns(@company.replyio_keys)
 
     	#################
     	#TO DO
@@ -30,7 +30,7 @@ class CampaignsController < ApplicationController
 
   	def new
     	@user = User.find(current_user.id)
-
+      @personas = Persona.all
   		@client_company = ClientCompany.find_by(id: @user.client_company_id)
   		@campaign = @client_company.campaigns.build
 
@@ -42,8 +42,12 @@ class CampaignsController < ApplicationController
   	def create
     	@user = User.find(current_user.id)
   		@company = ClientCompany.find_by(id: @user.client_company_id)
-  		@campaign = @company.campaigns.build(campaign_params)
+      @campaign = @company.campaigns.build(campaign_params)
 
+      if params[:create_persona].present?
+        persona = Persona.create(name: params[:create_persona])
+        @campaign.persona = persona
+      end
 
   		if @campaign.valid?
 
@@ -115,7 +119,7 @@ class CampaignsController < ApplicationController
 
 
   	def campaign_params
-  		params.require(:campaign).permit(:name, :persona, :user_notes)
+      params.require(:campaign).permit(:persona_id, :user_notes, :create_persona, :campaign_name)
   	end
 
 

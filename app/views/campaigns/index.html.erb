@@ -1,7 +1,7 @@
 <div id="title" class="jumbotron">
   <div class = "container">
     <br/>
-    <h1><%= @user.client_company.name if @user.client_company %> Persona List</h1>
+    <h1><%= @user.client_company.name if @user.client_company %> Campaign List</h1>
   </div>
 </div>
 
@@ -10,17 +10,18 @@
 
 
 <div class="container">
-  <%= link_to '+ Add Persona', new_client_company_campaign_path, :class=>"btn btn-primary btn-xl page-scroll" %>
+  <%= link_to '+ Add Campaign', new_client_company_campaign_path, :class=>"btn btn-primary btn-xl page-scroll" %>
 </div>
 
 <div class="container">
-  <h2> Targeted Personas </h2>
+  <h2> Targeted Campaigns </h2>
 
   <table class="table table-striped">
     <thead class="thead-light">
       <tr>
-        <th scope="col">Persona</th>
+        <th scope="col">Campaign</th>
         <th scope="col">Add Leads</th>
+        <th scope="col">Persona</th>
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
         <th scope="col">Bouncee</th>
@@ -40,6 +41,7 @@
               <%= submit_tag "Import CSV" %>
             <% end %>
           </td>
+          <td><%= campaign.persona.name %></td>
           <td><%= campaign[:metrics][:peopleCount] %></td>
           <td><%= campaign[:metrics][:deliveriesCount] %></td>
           <td><%= campaign[:metrics][:bouncesCount] %></td>
