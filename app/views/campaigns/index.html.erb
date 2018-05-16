@@ -39,11 +39,23 @@
               <%= submit_tag "Import CSV" %>
             <% end %>
           </td>
-          <% if @campaigns.where(reply_key: campaign["key"]).present? %>
-            <td><%= @campaigns.where(reply_key: campaign["key"]).first.persona.name %></td>
+
+          <% if false %>
+            <% if @campaigns.where(reply_key: campaign["key"]).present? %>
+              <td><%= @campaigns.where(reply_key: campaign["key"]).first.persona.name %></td>
           <% else %>
             <td>Unassigned</td>
+
+          
           <% end %>
+
+          <% end %>
+
+
+
+
+
+          
           <td><%= campaign[:metrics][:peopleCount] %></td>
           <td><%= campaign[:metrics][:deliveriesCount] %></td>
           <td><%= campaign[:metrics][:bouncesCount] %></td>

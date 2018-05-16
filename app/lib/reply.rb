@@ -21,8 +21,9 @@ module Reply
   end
 
   def v1_get_campaign(id, key)
+
     response = RestClient::Request.execute(
-      method: :get, url: "#{API_V1}/campaigns/#{id}?apiKey=#{key}"
+      method: :get, url: "#{API_V1}/campaigns/"+id.to_s+"?apiKey="+key.to_s
     )
     JSON.parse(response, symbolize_names: true)
   end
