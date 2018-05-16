@@ -20,7 +20,11 @@
       <tr>
         <th scope="col">Campaign</th>
         <th scope="col">Add Leads <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="a"></i></th>
+        
+        <% if false %>
         <th scope="col">Persona</th>
+        <% end %>
+
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
         <th scope="col">Bounce</th>
@@ -41,10 +45,13 @@
             <% end %>
           </td>
 
+
+          <% if false %>
           <% if @campaigns.where(reply_key: campaign["key"]).present? %>
               <td><%= @campaigns.where(reply_key: campaign["key"]).first.persona.name %></td>
           <% else %>
             <td>Unassigned</td>
+          <% end %>
           <% end %>
  
           <td><%= campaign.peopleCount %></td>
