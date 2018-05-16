@@ -12,7 +12,7 @@ class CampaignsController < ApplicationController
 	def index
     	@user = User.find(current_user.id)
   		@company = ClientCompany.find_by(id: @user.client_company_id)
-    	@campaigns = Campaign.includes(:persona).where("client_company_id =?", @company).order('created_at DESC')
+    	@campaigns = Campaign.where("client_company_id =?", @company).order('created_at DESC')
      
 
     	# Call app/lib/reply.get_campaigns module to get all campaigns from reply.io
@@ -45,81 +45,62 @@ class CampaignsController < ApplicationController
     	@user = User.find(current_user.id)
   		@company = ClientCompany.find_by(id: @user.client_company_id)
       @campaign = @company.campaigns.build(campaign_params)
+      @campaigns = Campaign.where("client_company_id =?", @company).order('created_at DESC')
 
+
+      # Determine Whether to Create A persona
       if params[:create_persona].present?
-        puts "CREATE PERSONA PRESENT BRO  "
+
         persona = Persona.create(name: params[:create_persona], client_company: @company)
         @campaign.persona = persona
-        puts "CAMPIGN"
-        puts @campaign.persona
+
       else
         persona = Persona.find_by(id: params[:persona_id].to_i)
         @campaign.persona = persona
       end
 
-      puts "IS CAMPAIGN VALID"
-      puts @campaign.valid?.to_s
-  		
-      if @campaign.valid?
+      # Get Array of all emails
+  		email_array = get_email_accounts(@company.replyio_keys)
+      count_dict = email_count(email_array, @campaigns)
 
+    	puts "COUNT_DICT"
+    	puts count_dict
 
-  			campaign_array = get_campaigns(@company.replyio_keys)
-  			email_array = get_email_accounts(@company.replyio_keys)
+    	email_to_use = choose_email(count_dict)
 
-  			puts "EMAIL ARRAY"
-  			puts email_array
-  			puts "Campaign ARRAY"
-  			puts campaign_array
-
-
-  			count_dict = email_count(email_array, campaign_array)
-
-    		puts "COUNT_DICT"
-    		puts count_dict
-
-    		email_to_use = choose_email(count_dict)
-
-    		puts "EMAIL TO USE"
-    		puts email_to_use
+    	puts "EMAIL TO USE"
+    	puts email_to_use
 
 
 
-    		for email in email_array
+  		for email in email_array
 
-    			if email_to_use == email["emailAddress"]
-    				reply_key = email["key"]
-            puts "I GOT KEYS"
-            puts reply_key
+  			if email_to_use == email["emailAddress"]
+  				reply_key = email["key"]
+          puts "I GOT KEYS"
+          puts reply_key
 
-    				break
-    			end
-    		end
-
-    		puts email_to_use.to_s + "  " + reply_key + "  "
-
-
-
-  			if @campaign.save
-
-  				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, params[:campaign][:campaign_name]))
-  				puts "RESPONSE FROM POSTING CAMPIGN INTO REPLY"
-  				puts post_campaign
-
-          sleep 10
-  				redirect_to client_company_campaigns_path, :notice => "Campaign created"
-  			else
-          sleep 10
-  				redirect_to client_company_campaigns_path, :alert => "Campaign not valid and not updated"
-
+  				break
   			end
+  		end
+
+  		puts email_to_use.to_s + "  " + reply_key + "  "
 
 
 
-    	else
-          sleep 10
-      		redirect_to client_company_campaigns_path, :alert => "Campaign not valid and not updated"
+			if @campaign.save
 
-   		end
+				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, params[:campaign][:campaign_name]))
+				puts "RESPONSE FROM POSTING CAMPIGN INTO REPLY"
+				puts post_campaign
+
+				redirect_to client_company_campaigns_path, :notice => "Campaign created"
+			else
+				redirect_to client_company_campaigns_path, :alert => "Campaign not valid and not updated"
+
+			end
+
+
    	end
 
 
@@ -146,14 +127,15 @@ class CampaignsController < ApplicationController
 		end
 
 
-		for email in campaign_array
+		for campaign in campaign_array
 			for reply_email in email_array
-				if email["emailAccount"] == reply_email["emailAddress"]
 
-					if count_dic[email["emailAccount"]]
-						count_dic[email["emailAccount"]] = count_dic[email["emailAccount"]] + 1
+				if campaign.emailAccount == reply_email["emailAddress"]
+
+					if count_dic[campaign.emailAccount]
+						count_dic[campaign.emailAccount] = count_dic[campaign.emailAccount] + 1
 					else
-						count_dic[email["emailAccount"]] = 1
+						count_dic[campaign.emailAccount] = 1
 					end
 				end
 			end
