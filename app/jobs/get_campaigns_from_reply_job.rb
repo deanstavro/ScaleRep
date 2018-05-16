@@ -39,7 +39,7 @@ class GetCampaignsFromReplyJob < ApplicationJob
 
 
 
-                    sleep 60
+                    sleep 30
                 rescue
                     puts "COULD NOT PULL METRICS FOR CAMPAIGN " + campaign.campaign_name
                 end

@@ -9,32 +9,47 @@
   <%= form_for [@client_company,@campaign], :html => {:class => "form-horizontal center"} do |f| %>
 
       <div class="form-group">
-        <%= f.label :campaign_name, "Campaign Name", class: "col-md-4 control-label" %>
-        <div class="col-md-8">
+        <%= f.label :campaign_name, "Campaign Name", class: "control-label" %>
+
           <%= f.text_field :campaign_name, class: "form-control" %>
-        </div>
+
       </div>
 
+      <br>
+
       <div class="form-group">
-        <%= f.label :user_notes, "Extra Notes", class: "col-md-4 control-label" %>
-        <div class="col-md-8">
+        <%= f.label :persona_id, "Persona Tag", class: "control-label" %>
+
+        <%= select_tag :persona_id, options_for_select(@company_personas.collect{|p| [p.name, p.id]}), {include_blank: true, class: "form-control"} %>
+
+
+        <%= label :create_persona, "OR Create Persona", class: "control-label" %>
+
+        <%= text_field_tag :create_persona, nil, class: "form-control" %>
+
+      </div>
+
+      <br>
+
+      <div class="form-group">
+        <%= f.label :user_notes, "Extra Notes", class: "control-label" %>
+
           <%= f.text_field :user_notes, class: "form-control" %>
-        </div>
+
       </div>
 
-      <div class="form-group">
-        <%= f.label :persona_id, "Persona", class: "col-md-4 control-label" %>
-        <div class="col-md-8">
-          <%= select_tag :persona_id, options_for_select(@company_personas.collect{|p| [p.name, p.id]}), {include_blank: true, class: "form-control"} %>
-        </div>
+      <br>
+
+       <div class="form-group">
+        <%= f.label :personalized, "High Target customers ", class: "control-label" %>
+ 
+          <%= f.check_box :personalized, class: "form-control" %>
+
       </div>
 
-      <div class="form-group">
-        <%= label :create_persona, "Create Persona", class: "col-md-4 control-label" %>
-        <div class="col-md-8">
-          <%= text_field_tag :create_persona, nil, class: "form-control" %>
-        </div>
-      </div>
+      
+
+      
 
       <%= f.submit "Submit", class: "btn btn-default btn-primary" %>  
   <% end %>
