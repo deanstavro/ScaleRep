@@ -23,10 +23,9 @@
         <th scope="col">Persona</th>
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
-        <th scope="col">Bouncee</th>
-        <th scope="col">Replies</th>
+        <th scope="col">Bounce</th>
+        <th scope="col">Reply Rate</th>
         <th scope="col">Open Rate</th>
-        
         <th scope="col">Start Date</th>
       </tr>
     </thead>
@@ -48,12 +47,10 @@
           <td><%= campaign[:metrics][:peopleCount] %></td>
           <td><%= campaign[:metrics][:deliveriesCount] %></td>
           <td><%= campaign[:metrics][:bouncesCount] %></td>
-          <td><%=   campaign[:metrics][:repliesCount] %></td>
-          <td><%= campaign[:metrics][:opensCount] %></td>
-
-          <% if false %>
           <td><%= reply_rate_calculator(campaign[:metrics][:repliesCount], campaign[:metrics][:deliveriesCount]) %></td>
-          <% end %>
+          <td><%= reply_rate_calculator(campaign[:metrics][:opensCount], campaign[:metrics][:deliveriesCount]) %></td>
+
+
 
           
 

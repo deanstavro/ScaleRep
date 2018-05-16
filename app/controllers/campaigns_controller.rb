@@ -45,10 +45,18 @@ class CampaignsController < ApplicationController
       @campaign = @company.campaigns.build(campaign_params)
 
       if params[:create_persona].present?
+        puts "CREATE PERSONA PRESENT BRO  "
         persona = Persona.create(name: params[:create_persona])
+        @campaign.persona = persona
+        puts "CAMPIGN"
+        puts @campaign.persona
+      else
+        persona = Persona.find_by(id: params[:persona_id].to_i)
         @campaign.persona = persona
       end
 
+      puts "IS CAMPAIGN VALID"
+      puts @campaign.valid?.to_s
   		if @campaign.valid?
 
 
@@ -77,18 +85,20 @@ class CampaignsController < ApplicationController
 
     			if email_to_use == email["emailAddress"]
     				reply_key = email["key"]
+            puts "I GOT KEYS"
+            puts reply_key
 
     				break
     			end
     		end
 
-    		puts email_to_use + "  " + reply_key + "  " + params[:campaign][:persona]
+    		puts email_to_use.to_s + "  " + reply_key + "  "
 
 
 
   			if @campaign.save
 
-  				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, params[:campaign][:persona]))
+  				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, params[:campaign][:campaign_name]))
   				puts "RESPONSE FROM POSTING CAMPIGN INTO REPLY"
   				puts post_campaign
 
