@@ -16,7 +16,7 @@ class CampaignsController < ApplicationController
      
 
     	# Call app/lib/reply.get_campaigns module to get all campaigns from reply.io
-      @campaign_array = get_campaigns(@company.replyio_keys)
+      #@campaign_array = get_campaigns(@company.replyio_keys)
 
     	#################
     	#TO DO
@@ -59,7 +59,8 @@ class CampaignsController < ApplicationController
 
       puts "IS CAMPAIGN VALID"
       puts @campaign.valid?.to_s
-  		if @campaign.valid?
+  		
+      if @campaign.valid?
 
 
   			campaign_array = get_campaigns(@company.replyio_keys)

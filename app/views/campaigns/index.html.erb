@@ -30,9 +30,10 @@
       </tr>
     </thead>
     <tbody>
-      <% @campaign_array.each do |campaign| %>
+      <% @campaigns.each do |campaign| %>
         <tr>
-          <td><%= campaign["name"] %></td>
+          <td><%= campaign.campaign_name %></td>
+          
           <td>
             <%= form_tag import_to_campaign_leads_path(:campaign => campaign), multipart: true do %>
               <%= file_field_tag :file %>
@@ -40,33 +41,29 @@
             <% end %>
           </td>
 
-          <% if false %>
-            <% if @campaigns.where(reply_key: campaign["key"]).present? %>
+          <% if @campaigns.where(reply_key: campaign["key"]).present? %>
               <td><%= @campaigns.where(reply_key: campaign["key"]).first.persona.name %></td>
           <% else %>
             <td>Unassigned</td>
+          <% end %>
+ 
+          <td><%= campaign.peopleCount %></td>
+          <td><%= campaign.deliveriesCount %></td>
+          <td><%= campaign.bouncesCount %></td>
 
-          
+          <% if (campaign.repliesCount).to_i > 0 %>
+            <td><%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount) %></td>
+          <% else %>
+            <td>0</td>
           <% end %>
 
+          <% if (campaign.opensCount).to_i > 0 %>
+            <td><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %></td>
+          <% else %>
+            <td>0</td>
           <% end %>
 
-
-
-
-
-          
-          <td><%= campaign[:metrics][:peopleCount] %></td>
-          <td><%= campaign[:metrics][:deliveriesCount] %></td>
-          <td><%= campaign[:metrics][:bouncesCount] %></td>
-          <td><%= reply_rate_calculator(campaign[:metrics][:repliesCount], campaign[:metrics][:deliveriesCount]) %></td>
-          <td><%= reply_rate_calculator(campaign[:metrics][:opensCount], campaign[:metrics][:deliveriesCount]) %></td>
-
-
-
-          
-
-          <td><%= campaign[:metrics][:created].to_time.strftime('%m/%d/%Y') %></td>
+          <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
         </tr>
       <% end %>
     </tbody>
