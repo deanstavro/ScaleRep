@@ -151,8 +151,10 @@ ActiveRecord::Schema.define(version: 20180514215038) do
 
   create_table "personas", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "client_company_id"
+    t.index ["client_company_id"], name: "index_personas_on_client_company_id", using: :btree
   end
 
   create_table "users", force: :cascade do |t|
@@ -183,5 +185,6 @@ ActiveRecord::Schema.define(version: 20180514215038) do
   add_foreign_key "client_reports", "client_companies"
   add_foreign_key "leads", "campaigns"
   add_foreign_key "leads", "client_companies"
+  add_foreign_key "personas", "client_companies"
   add_foreign_key "users", "client_companies"
 end

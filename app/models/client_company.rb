@@ -3,6 +3,7 @@ class ClientCompany < ApplicationRecord
 	has_many :leads
 	has_many :client_reports
 	has_many :campaigns
+	has_many :personas
 	
 
 	validates :name, presence: true

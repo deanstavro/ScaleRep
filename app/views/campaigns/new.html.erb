@@ -25,7 +25,7 @@
       <div class="form-group">
         <%= f.label :persona_id, "Persona", class: "col-md-4 control-label" %>
         <div class="col-md-8">
-          <%= select_tag :persona_id, options_for_select(@personas.collect{|p| [p.name, p.id]}), {include_blank: true, class: "form-control"} %>
+          <%= select_tag :persona_id, options_for_select(@company_personas.collect{|p| [p.name, p.id]}), {include_blank: true, class: "form-control"} %>
         </div>
       </div>
 

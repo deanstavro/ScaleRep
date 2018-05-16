@@ -2,33 +2,23 @@ class GetCampaignsFromReplyJob < ApplicationJob
 	queue_as :default
 
 	def perform()
-    puts "WE here"
+    puts "Pulling Reply Campaign Metrics for All Companies"
 
     # Loop through all companies
-    
     ClientCompany.find_each do |company|
       company.campaigns.find_each do |campaign|
         puts campaign.name
-      end
-    end
+
+        # Use Reply key and reply id to call campaign
+
+        # Get the response
 
 
-
-
-    
-      # Loop through all the campaigns
-
-    # For each campaign
-
-      # Use Reply key and reply id to call campaign
-
-      # Get the response
-
-
-      # For each metric
-
+        # For each metric
 
         # Update the campaign in the local database
+      end
+    end
 
 
 	end

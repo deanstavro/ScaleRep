@@ -12,7 +12,8 @@ class CampaignsController < ApplicationController
 	def index
     	@user = User.find(current_user.id)
   		@company = ClientCompany.find_by(id: @user.client_company_id)
-    	@campaigns = Campaign.includes(:persona).where("client_company_id =?", @company).order('created_at DESC')
+    	#@campaigns = Campaign.includes(:persona).where("client_company_id =?", @company).order('created_at DESC')
+     
 
     	# Call app/lib/reply.get_campaigns module to get all campaigns from reply.io
       @campaign_array = get_campaigns(@company.replyio_keys)
@@ -32,6 +33,7 @@ class CampaignsController < ApplicationController
     	@user = User.find(current_user.id)
       @personas = Persona.all
   		@client_company = ClientCompany.find_by(id: @user.client_company_id)
+      @company_personas = @client_company.personas
   		@campaign = @client_company.campaigns.build
 
   	end

@@ -29,10 +29,6 @@ Rails.application.routes.draw do
     end
   end
 
-  resources :personas do
-    resources :campaigns
-  end
-
 
   get 'lead_list/index'
 
@@ -64,6 +60,7 @@ Rails.application.routes.draw do
   resources :users
     
   resources :client_companies do
+    resource :personas
     resources :campaigns
   end
   
