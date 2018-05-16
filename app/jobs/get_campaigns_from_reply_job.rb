@@ -19,6 +19,8 @@ class GetCampaignsFromReplyJob < ApplicationJob
             response = v1_get_campaign(campaign.reply_id.to_i, campaign.reply_key)
             
             response[:last_poll_from_reply] = response[:created]
+            response[:campaign_name] = response[:name]
+            response.delete(:name)
             response.delete(:id)
             response.delete(:created)
             puts response

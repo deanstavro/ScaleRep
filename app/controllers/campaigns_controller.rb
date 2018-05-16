@@ -48,7 +48,7 @@ class CampaignsController < ApplicationController
 
       if params[:create_persona].present?
         puts "CREATE PERSONA PRESENT BRO  "
-        persona = Persona.create(name: params[:create_persona])
+        persona = Persona.create(name: params[:create_persona], client_company: @company)
         @campaign.persona = persona
         puts "CAMPIGN"
         puts @campaign.persona

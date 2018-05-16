@@ -15,5 +15,7 @@ class AddFieldsToCampaigns < ActiveRecord::Migration[5.0]
   	add_column :campaigns, :peopleActive, :integer
   	add_column :campaigns, :peoplePaused, :integer
 
+    remove_column :campaigns, :name, :string
+
   end
 end
