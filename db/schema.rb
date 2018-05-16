@@ -57,7 +57,6 @@ ActiveRecord::Schema.define(version: 20180516185626) do
     t.string   "reply_id"
     t.string   "reply_key"
     t.boolean  "personalized",         default: false
-    t.string   "name"
     t.integer  "persona_id"
     t.string   "campaign_name"
     t.string   "last_poll_from_reply"
