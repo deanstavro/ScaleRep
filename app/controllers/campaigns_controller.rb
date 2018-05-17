@@ -14,29 +14,17 @@ class CampaignsController < ApplicationController
   		@company = ClientCompany.find_by(id: @user.client_company_id)
     	@campaigns = Campaign.where("client_company_id =?", @company).order('created_at DESC')
      
-
-    	# Call app/lib/reply.get_campaigns module to get all campaigns from reply.io
-      #@campaign_array = get_campaigns(@company.replyio_keys)
-
-    	#################
-    	#TO DO
-    	#For all campaigns in the @campaign_array
-    		# Call the campaign metrics api using the correct api key to get campaign metrics
-    		#Push the response into a hash
-    		# save in a global variable for display in the index.html.erb
-    	##################
-  	end
+  end
 
 
 
-  	def new
+  def new
     	@user = User.find(current_user.id)
       @personas = Persona.all
   		@client_company = ClientCompany.find_by(id: @user.client_company_id)
       @company_personas = @client_company.personas
   		@campaign = @client_company.campaigns.build
-
-  	end
+  end
 
 
 
@@ -71,20 +59,18 @@ class CampaignsController < ApplicationController
     	puts "EMAIL TO USE"
     	puts email_to_use
 
-
-
   		for email in email_array
 
   			if email_to_use == email["emailAddress"]
   				reply_key = email["key"]
-          puts "I GOT KEYS"
+          puts "REPLY KEYS"
           puts reply_key
 
   				break
   			end
   		end
 
-  		puts email_to_use.to_s + "  " + reply_key + "  "
+  		puts email_to_use.to_s + "  " + reply_key
       @campaign[:emailAccount] = email_to_use.to_s
 
 
