@@ -54,12 +54,14 @@ class CampaignsController < ApplicationController
     	puts "COUNT_DICT"
     	puts count_dict
 
+      # Choose correct email based on which email is running the least campaigns
     	email_to_use = choose_email(count_dict)
 
     	puts "EMAIL TO USE"
     	puts email_to_use
-
-  		for email in email_array
+  		
+      # Find the correct keys for that email to upload the campaign to that email
+      for email in email_array
 
   			if email_to_use == email["emailAddress"]
   				reply_key = email["key"]
@@ -70,15 +72,17 @@ class CampaignsController < ApplicationController
   			end
   		end
 
+      # Add the email account we will use to the local campaign object
   		puts email_to_use.to_s + "  " + reply_key
       @campaign[:emailAccount] = email_to_use.to_s
 
 
+      # Save the campaign locally
 			if @campaign.save
 
+        # If the campaign saves, post the campaign to reply
 				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, params[:campaign][:campaign_name]))
-				puts "RESPONSE FROM POSTING CAMPIGN INTO REPLY"
-				puts post_campaign
+				puts "RESPONSE FROM POSTING CAMPIGN INTO REPLY " + post_campaign
 
 				redirect_to client_company_campaigns_path, :notice => "Campaign created"
 			else

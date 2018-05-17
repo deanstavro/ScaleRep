@@ -15,9 +15,7 @@ class GetCampaignsFromReplyJob < ApplicationJob
             if campaign.reply_id.to_i > 0
               if campaign.reply_key.length > 0
                 begin
-                    puts "CAMPAIGN CREDENTIALS"
-                    puts campaign.reply_id
-                    puts campaign.reply_key
+                    puts "CAMPAIGN CREDENTIALS" + campaign.reply_id + " " + campaign.reply_key
 
                     response = v1_get_campaign(campaign.reply_id.to_i, campaign.reply_key)
                     
@@ -26,16 +24,9 @@ class GetCampaignsFromReplyJob < ApplicationJob
                     response.delete(:name)
                     response.delete(:id)
                     response.delete(:created)
-                    puts response
-
-                    
-                    
-                    campaign.update_attributes(response)
-
-                    puts campaign.last_poll_from_reply
-
-
+   
                     # Update the campaign in the local database
+                    campaign.update_attributes(response)
 
 
 
@@ -45,14 +36,6 @@ class GetCampaignsFromReplyJob < ApplicationJob
                 end
               end
             end
-
-                #call correct API to retrieve metrics
-
-
-            # Get the response
-
-
-            # For each metric
 
             
         end

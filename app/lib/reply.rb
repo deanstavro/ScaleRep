@@ -20,6 +20,8 @@ module Reply
     unparsed_campaigns
   end
 
+  
+
   def v1_get_campaign(id, key)
 
     response = RestClient::Request.execute(
@@ -27,6 +29,8 @@ module Reply
     )
     JSON.parse(response, symbolize_names: true)
   end
+
+  
 
   def get_campaigns(company_key)
     keys = JSON.parse(company_key, symbolize_names: true)
@@ -70,7 +74,7 @@ module Reply
 
 
 
-    def get_email_accounts(company_key)
+  def get_email_accounts(company_key)
 
 
       keys = JSON.parse(company_key)
@@ -111,11 +115,13 @@ module Reply
 
       return email_arr
 
-    end
+  end
 
 
 
-    def post_campaign(key, email_to_use, persona_name)
+
+
+  def post_campaign(key, email_to_use, persona_name)
 
 
       begin
@@ -136,8 +142,7 @@ module Reply
           return e
       end
 
-    end
-
+  end
 
 
 

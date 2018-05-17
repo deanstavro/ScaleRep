@@ -6,8 +6,7 @@ class AddCampaignToReplyJob < ApplicationJob
       objArray = JSON.parse(keys)
 
       api_key = obj_Array["api_key"]
-      puts "CAMPAIGNNN"
-      puts campaign.name
+      puts "CAMPAIGN NAME TO ADD " + campaign.name
 
 			payload = { "name": campaign.name, "emailAccount": obj_Array["emails"][0], 
         "settings": {
@@ -31,7 +30,7 @@ class AddCampaignToReplyJob < ApplicationJob
 
 					)
 
-				puts response
+				puts "RESPSONE FROM REPLY FROM ADDING CAMPAIGN " + response
 
 			rescue
 

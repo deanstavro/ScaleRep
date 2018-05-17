@@ -8,41 +8,41 @@ class AddContactsToReplyJob < ApplicationJob
 
 
 
-        @reply_campaigns = []
-        for accounts in keys["accounts"]
-          @reply_campaigns << JSON.parse(get_campaigns(accounts[1]["key"]))
-        end
-
-        @campaign_array = []
-        for accounts in @reply_campaigns
-          for campaign in accounts
-            @campaign_array << campaign
+          @reply_campaigns = []
+          for accounts in keys["accounts"]
+              @reply_campaigns << JSON.parse(get_campaigns(accounts[1]["key"]))
           end
-        end
+
+          @campaign_array = []
+          for accounts in @reply_campaigns
+              for campaign in accounts
+                  @campaign_array << campaign
+              end
+          end
 
 
-  			begin
+    			begin
 
-          payload = { "campaignId": campaign.reply_id, "email": one_hash["email"], "firstName": one_hash["first_name"], "lastName": one_hash["last_name"], "title": one_hash["title"], "company": one_hash["company"], "domain": one_hash["company_domain"], "linkedin": one_hash["linkedin"],"timezone": one_hash["timezone"] }
-
-
-  				response = RestClient::Request.execute(
-							:method => :post,
-							:url => 'https://api.reply.io/v1/actions/addandpushtocampaign?apiKey='+ 'EeLPuf3EUR3YvKxnatkDLg2',
-							:payload => payload
-
-						)
-
-          sleep(5)
-
-  				puts response
-
-  			rescue
+              payload = { "campaignId": campaign.reply_id, "email": one_hash["email"], "firstName": one_hash["first_name"], "lastName": one_hash["last_name"], "title": one_hash["title"], "company": one_hash["company"], "domain": one_hash["company_domain"], "linkedin": one_hash["linkedin"],"timezone": one_hash["timezone"] }
 
 
-  				puts "did not input into reply"
+    				  response = RestClient::Request.execute(
+  							 :method => :post,
+  							 :url => 'https://api.reply.io/v1/actions/addandpushtocampaign?apiKey='+ 'EeLPuf3EUR3YvKxnatkDLg2',
+  							 :payload => payload
 
-  			end
+  						)
+
+              sleep(5)
+
+    				  puts response
+
+    			rescue
+
+
+    				  puts "did not input into reply"
+
+    			end
 
   		end
 
