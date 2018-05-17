@@ -85,7 +85,7 @@ class CampaignsController < ApplicationController
   		end
 
   		puts email_to_use.to_s + "  " + reply_key + "  "
-
+      @campaign[:emailAccount] = email_to_use.to_s
 
 
 			if @campaign.save

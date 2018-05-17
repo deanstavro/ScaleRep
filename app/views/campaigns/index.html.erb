@@ -19,7 +19,9 @@
     <thead class="thead-light">
       <tr>
         <th scope="col">Campaign</th>
+        
         <th scope="col">Add Leads <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="a"></i></th>
+        <th scope="col">email Account</th>
         <th scope="col">Persona</th>
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
@@ -33,6 +35,8 @@
       <% @campaigns.each do |campaign| %>
         <tr>
           <td><%= campaign.campaign_name %></td>
+
+          
           
           <td>
             <%= form_tag import_to_campaign_leads_path(:campaign => campaign), multipart: true do %>
@@ -40,6 +44,8 @@
               <%= submit_tag "Import CSV" %>
             <% end %>
           </td>
+
+          <td><%= campaign.emailAccount %></td>
 
 
   
