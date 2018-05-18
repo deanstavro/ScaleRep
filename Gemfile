@@ -24,6 +24,7 @@ gem 'rails_refactor'
 gem 'country-select'
 gem 'rest-client'
 gem 'sidekiq'
+gem 'rails_12factor'
 # gem 'ahoy_matey'
 
 group :test do
