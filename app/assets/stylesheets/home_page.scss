@@ -26,6 +26,17 @@ copied from our larger bootstrap file of old
   margin-right: auto;
 }
 
+.btn-primary:hover,
+.btn-primary:focus,
+.btn-primary.focus,
+.btn-primary:active,
+.btn-primary.active,
+.open > .dropdown-toggle.btn-primary {
+    border-color: #ed431f;
+    color: #fff;
+    background-color: #ee4b28;
+}
+
 
 
 
