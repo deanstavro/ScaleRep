@@ -27,7 +27,7 @@ Rails.application.configure do
   config.assets.js_compressor = :uglifier
   # config.assets.css_compressor = :sass
 
-  config.assets.precompile = ['*.js', '*.css', '*.css.erb', '*.scss']
+  #config.assets.precompile = ['*.js', '*.css', '*.css.erb', '*.scss']
 
   # `config.assets.precompile` and `config.assets.version` have moved to config/initializers/assets.rb
 
