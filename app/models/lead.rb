@@ -20,44 +20,71 @@ class Lead < ApplicationRecord
 
 
 
-	def self.import_to_campaign(file, company, leads, campaign)
+	def self.import_to_campaign(file, company, leads, campaign, column_names)
+		puts "WE HERE"
 		not_imported = 0
 		duplicates = 0
 		imported = 0
+		rows_email_not_present = 0
 		all_hash = []
 
 
 		#ignore cases for fields
 
 		CSV.foreach(file.path, headers: true) do |row|
+			puts "GOING THROUGH EACH ROW"
 
-			one_hash = row.to_hash
 
-			all_hash << one_hash
+  			new_hash = {}
+  			row.to_hash.each_pair do |k,v|
+ 	  			new_hash.merge!({k.downcase => v})
+ 	  			new_hash.keep_if {|k,_| column_names.include? k }
+  			end
 
-			email = one_hash["email"]
-			begin
-				if leads.where(:email => email).count == 0
+			one_hash = new_hash.to_hash
+			
+			if one_hash["email"].present?
 
-					one_hash[:client_company] = company
-					one_hash[:campaign_id] = campaign
 
-					lead = Lead.create!(one_hash)
-					
-					imported = imported + 1
-				else
 
-					duplicates = duplicates + 1 
-				end
-			rescue Exception => e
-				not_imported = not_imported + 1
-			end		
+					all_hash << one_hash
+
+					email = one_hash["email"]
+
+					begin
+						if leads.where(:email => email).count == 0
+
+							one_hash[:client_company] = company
+							one_hash[:campaign_id] = campaign
+
+							lead = Lead.create!(one_hash)
+							
+							imported = imported + 1
+						else
+
+							duplicates = duplicates + 1 
+						end
+					rescue Exception => e
+						not_imported = not_imported + 1
+					end	
+			else
+				rows_email_not_present = rows_email_not_present + 1
+			end
+
 
 		#AddContactsToReplyJob.perform_later(all_hash,campaign)
 
 		end
 
-		return imported.to_s + " imported successfully, "+ duplicates.to_s + " duplicates, " + not_imported.to_s + " contacts not imported"
+		return imported.to_s + " imported successfully, "+ duplicates.to_s + " duplicates, " + not_imported.to_s + " contacts not imported, " + rows_email_not_present.to_s + " rows with email not present"
+	end
+
+	private
+
+
+	def one_hash
+		one_hash.require(:lead).permit(:company, :industry, :email, :company_domain, :first_name, :last_name, :hunter_score, :hunter_date, :title, :phone_type, :phone_number, :city, :state, :country, :linkedin, :client_company, :campaign_id, :timezone, :address, :company_description, :number_of_employees, :last_funding_type, :last_funding_date, :last_funding_amount, :email_snippet)
+
 	end
 
 

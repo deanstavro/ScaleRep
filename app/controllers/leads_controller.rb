@@ -31,15 +31,17 @@ before_action :authenticate_user!
     @user = User.find(current_user.id)
     @company = ClientCompany.find_by(id: @user.client_company_id)
     @leads = Lead.where(client_company: @company)
+
+    col =  Lead.column_names
     
 
     begin
         if (params[:file].content_type).to_s == 'text/csv'
           if (params[:file].size).to_i < 1000000
 
-          
-          upload_message = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign])
-
+          puts "HI"
+          upload_message = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign], col)
+          puts "HELLO"
           flash[:notice] = upload_message
           redirect_to client_company_campaigns_path(@company)
           else
