@@ -3,6 +3,32 @@ css for our navbar
 copied from our larger bootstrap file of old
 */
 
+/* css appended for home page before big file dump */
+.steps {
+  float: left;
+  width: 50%;
+  margin-top:30px;
+}
+
+.step_space {
+  margin-top:60px;
+}
+
+.image_section {
+    float: right;
+    width:50%;
+    margin-top: 60px;
+}
+
+.img-howitworks {
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
+}
+
+
+
+
 /*!
  * Bootstrap v3.3.7 (http://getbootstrap.com)
  * Copyright 2011-2016 Twitter, Inc.
