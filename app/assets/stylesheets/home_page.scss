@@ -4,21 +4,27 @@ copied from our larger bootstrap file of old
 */
 
 /* css appended for home page before big file dump */
-.steps {
-  float: left;
-  width: 50%;
-  margin-top:30px;
-}
-
 .step_space {
   margin-top:60px;
 }
-
-.image_section {
-    float: right;
-    width:50%;
-    margin-top: 60px;
+.steps {
+  text-align: center;
 }
+
+@media (min-width: 768px) {
+  .steps {
+    float: left;
+    width: 50%;
+    margin-top:30px;
+    text-align:left;
+  }
+  .image_section {
+      float: right;
+      width:50%;
+      margin-top: 60px;
+  }
+}
+
 
 .img-howitworks {
   display: block;
