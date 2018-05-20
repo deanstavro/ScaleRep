@@ -1,8 +1,3 @@
-/*
-css for our navbar
-copied from our larger bootstrap file of old
-*/
-
 /* css appended for home page before big file dump */
 .step_space {
   margin-top:60px;
@@ -43,7 +38,22 @@ copied from our larger bootstrap file of old
     background-color: #ee4b28;
 }
 
+.btn-primary {
+    border-color: #fff;
+    color: #0069d9;
+    background-color: #eee;
+    border: 0;
+    border-radius: 10px;
+    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+    font-weight: 700;
+    -webkit-transition: all .35s;
+    -moz-transition: all .35s;
+    transition: all .35s;
+}
 
+.btn-xl {
+    padding: 15px 30px;
+}
 
 
 /*!
@@ -170,12 +180,7 @@ img {
 .img-circle {
   border-radius: 50%;
 }
-hr {
-  margin-top: 20px;
-  margin-bottom: 20px;
-  border: 0;
-  border-top: 1px solid #eee;
-}
+
 .sr-only {
   position: absolute;
   width: 1px;
@@ -349,6 +354,7 @@ p {
     width: 1170px;
   }
 }
+
 .container-fluid {
   padding-right: 15px;
   padding-left: 15px;

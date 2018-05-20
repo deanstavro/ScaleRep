@@ -41,12 +41,14 @@ body {
 }
 
 body {
-    font-family: Merriweather,'Helvetica Neue',Arial,sans-serif;
+    font-family: 'Helvetica Neue',Arial,sans-serif;
 }
 
 hr {
     max-width: 50px;
+    border: 0;
     border-color: #f05f40;
+    border-top: 1px solid #f05f40;
     border-width: 3px;
 }
 
@@ -55,7 +57,6 @@ hr.light {
 }
 
 a {
-    color: #f05f40;
     -webkit-transition: all .35s;
     -moz-transition: all .35s;
     transition: all .35s;
@@ -432,16 +433,6 @@ fieldset[disabled] .btn-default.active {
     background-color: #222;
 }
 
-
-.btn-primary {
-    border-color: #fff;
-    color: #0069d9;
-    background-color: #eee;
-    -webkit-transition: all .35s;
-    -moz-transition: all .35s;
-    transition: all .35s;
-}
-
 .btn-primary:active,
 .btn-primary.active,
 .open > .dropdown-toggle.btn-primary {
@@ -468,18 +459,6 @@ fieldset[disabled] .btn-primary:active,
 fieldset[disabled] .btn-primary.active {
     border-color: #f05f40;
     background-color: #f05f40;
-}
-
-.btn {
-    border: 0;
-    border-radius: 10px;
-
-    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
-    font-weight: 700;
-}
-
-.btn-xl {
-    padding: 15px 30px;
 }
 
 ::-moz-selection {
