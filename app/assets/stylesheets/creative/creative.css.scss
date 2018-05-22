@@ -353,8 +353,16 @@ header .header-content .header-content-inner p {
     }
 }
 
-.call-to-action h2 {
-    margin: 0 auto 20px;
+.call-to-action {
+
+    display: block;
+    margin-left: 20%;
+    margin-right: 20%;
+    text-decoration: none;
+    text-color: blue;
+    text-align: center;
+
+    
 }
 
 .text-primary {
