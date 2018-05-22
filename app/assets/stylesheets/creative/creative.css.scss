@@ -218,6 +218,8 @@ header .header-content {
     text-align: center;
 }
 
+
+
 header .header-content .header-content-inner h1 {
     margin-top: 0;
     margin-bottom: 0;
@@ -243,7 +245,7 @@ header .header-content .header-content-inner p {
 }
 @media(min-width:768px) {
     header {
-      height: 80%;
+      height: 85%;
     }
 
     header .header-content {
@@ -271,7 +273,7 @@ header .header-content .header-content-inner p {
 
 .header-pic-content {
     width: 100%;
-    height: 120px;
+    height: 100px;
     background-position: center;
     background-image: image-url("web-development-s.png")
 
