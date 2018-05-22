@@ -63,6 +63,8 @@ Rails.application.routes.draw do
     resource :personas
     resources :campaigns
   end
+
+  resources :demos, only: [:new, :create]
   
   resources :leads do
     collection { post :import_to_campaign}

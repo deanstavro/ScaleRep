@@ -2,10 +2,57 @@
     <div class="container">
         <div class="row">
             <div class="col-lg-8 col-lg-offset-2 text-center">
-                <h2 class="section-heading-2">Contact Us</h2>
+                <h2 class="section-heading-2">Request Demo</h2>
                 <hr class="primary">
 
             </div>
+
+
+            <div class="demo">
+                <%= form_for [@demo], :html => {:class => "form-horizontal center"} do |f| %>
+
+                  <div class="form-group">
+                    <%= f.label :name, "name*", class: "control-label" %>
+
+                      <%= f.text_field :name, :required => true, class: "form-control" %>
+
+                  </div>
+
+
+
+                  <div class="form-group">
+                    <%= f.label :email, "e-mail*", class: "control-label" %>
+
+                     <%= f.text_field :email, :required => true, class: "form-control" %>
+
+                  </div>
+
+
+
+                  <div class="form-group">
+                    <%= f.label :phone_number, "phone number*", class: "control-label" %>
+
+                     <%= f.text_field :phone_number, :required => true, class: "form-control" %>
+
+                  </div>
+
+
+
+                   <div class="form-group">
+                    <%= f.label :comments, "comments (optional)", class: "control-label" %>
+
+                     <%= f.text_area :comments, :rows => 5, :col => 5, class: "form-control" %>
+
+                  </div>
+
+                  <%= f.submit "Request Demo", class: "btn btn-primary btn-xl page-scroll header-text-space" %> 
+
+                <% end %>
+            </div>
+
+
+            <br><br><br><br>
+
             <div class="alt col-lg-4 col-lg-offset-2 text-center">
                 <p>General Info: </p>
                 <i class=" fa fa-envelope-o fa-3x wow bounceIn"></i>

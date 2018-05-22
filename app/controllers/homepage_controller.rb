@@ -8,10 +8,10 @@ class HomepageController < ApplicationController
   	if user_signed_in?
   		@user = current_user
   		redirect_to user_path(@user)
+    else
+      @demo = Demo.new
   	end
   end
 
-  def agent
-  end
   
 end
