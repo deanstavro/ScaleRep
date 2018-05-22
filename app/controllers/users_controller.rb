@@ -7,12 +7,26 @@ class UsersController < ApplicationController
   end
 
   
-  def home
+  def home   
 
-    @user = User.find(current_user.id)
-    @company = @user.client_company_id
 
-    @client_company = ClientCompany.find(@company)
+    if user_signed_in?
+
+      @user = User.find(current_user.id)
+      @company = @user.client_company_id
+      @client_company = ClientCompany.find(@company)
+
+ 
+      if @client_company.account_live == true
+        puts "YES"
+        redirect_to client_company_campaigns_path(@user.client_company)
+      else
+        render 'home'
+
+      end
+    else
+      render 'home'
+    end
     
     
   end

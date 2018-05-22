@@ -9,6 +9,7 @@ class CampaignsController < ApplicationController
 	Campaigns are grabbed from reply.io using the reply keys
 	Campaigns are grabbed from one or multiple reply.io systems using the key(s)
 	'''
+  
 	def index
     	@user = User.find(current_user.id)
   		@company = ClientCompany.find_by(id: @user.client_company_id)
