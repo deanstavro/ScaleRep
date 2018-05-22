@@ -235,7 +235,7 @@ header .header-content .header-content-inner p {
     margin-bottom: 50px;
     font-size: 16px;
     font-weight: 300;
-    color: rgba(255,255,255,.7);
+    color: #fff;
 }
 
 @media(max-width:7676px) {
@@ -282,6 +282,15 @@ header .header-content .header-content-inner p {
 
 .section-heading {
     margin-top: 0;
+}
+
+.section-heading-2 {
+    margin-top: 0;
+    color: white;
+}
+
+.alt {
+    color: white;
 }
 
 @media(min-width:390px) {
