@@ -18,7 +18,7 @@ class UsersController < ApplicationController
 
  
       if @client_company.account_live == true
-        redirect_to client_company_campaigns_path(@user.client_company)
+        redirect_to personas_path
       else
         render 'home'
 
