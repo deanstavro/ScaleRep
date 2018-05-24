@@ -61,25 +61,31 @@ class PersonasController < ApplicationController
 
   # GET /personas/new
   def new
+    @user = User.find(current_user.id)
     @persona = Persona.new
   end
 
   # GET /personas/1/edit
   def edit
     @user = User.find(current_user.id)
-
     @persona = Persona.find_by(id: params[:id])
   end
 
   # POST /personas
   # POST /personas.json
   def create
+    @user = User.find(current_user.id)
+    @company = ClientCompany.find_by(id: @user.client_company_id)
+    
+
     @persona = Persona.new(persona_params)
+    @persona.client_company = @company
+
 
     respond_to do |format|
       if @persona.save
-        format.html { redirect_to @persona, notice: 'Persona was successfully created.' }
-        format.json { render :show, status: :created, location: @persona }
+        format.html { redirect_to personas_path, notice: 'Persona was successfully created.' }
+        format.json { render :index, status: :created}
       else
         format.html { render :new }
         format.json { render json: @persona.errors, status: :unprocessable_entity }
@@ -90,6 +96,7 @@ class PersonasController < ApplicationController
   # PATCH/PUT /personas/1
   # PATCH/PUT /personas/1.json
   def update
+    @user = User.find(current_user.id)
     @persona = Persona.find_by(id: params[:id])
     respond_to do |format|
       if @persona.update(persona_params)
