@@ -13,77 +13,67 @@
   <p id="notice" class="container text-warning"><%= flash[:notice] %></p>
 </center>
 
-<div class="table-display">
+<div class="table-display clickable-row">
 
   <table class="table table-hover">
     <thead class="thead-dark">
       <tr>
-        
         <th scope="col">Persona</th>
-
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
         <th scope="col">Bounce</th>
-
-        
         <th scope="col">Reply Rate</th>
         <th scope="col">Open Rate</th>
         <th scope="col">Number of Campaigns</th>
-
         <th scope="col">Show Campaigns </th>
         <th scope="col">Edit </th>
         <th scope="col">Delete Persona</th>
-
-
       </tr>
     </thead>
     <tbody>
       <% @personas.each do |persona| %>
-        <tr data-link="<%= persona_path(persona) %>"> 
+        <tr data-link="<%= persona_path(persona) %>">
           <td><%= persona.name %></td>
 
           <%  if @metrics_hash[persona] && @metrics_hash[persona][0] %>
              <td><%= @metrics_hash[persona][0] %></td>
           <% else %>
-              <td>N/A</td>        
+              <td>N/A</td>
           <% end %>
 
           <%  if @metrics_hash[persona] && @metrics_hash[persona][1] %>
              <td><%= @metrics_hash[persona][1] %></td>
           <% else %>
-              <td>N/A</td>        
+              <td>N/A</td>
           <% end %>
 
           <%  if @metrics_hash[persona] && @metrics_hash[persona][2] %>
              <td><%= @metrics_hash[persona][2] %></td>
           <% else %>
-              <td>N/A</td>        
+              <td>N/A</td>
           <% end %>
 
           <%  if @metrics_hash[persona] && @metrics_hash[persona][3] %>
              <td><%= @metrics_hash[persona][3] %></td>
           <% else %>
-              <td>N/A</td>        
+              <td>N/A</td>
           <% end %>
 
           <%  if @metrics_hash[persona] && @metrics_hash[persona][4] %>
              <td><%= @metrics_hash[persona][4] %></td>
           <% else %>
-              <td>N/A</td>        
+              <td>N/A</td>
           <% end %>
 
           <%  if @metrics_hash[persona] && @metrics_hash[persona][5] %>
              <td><%= @metrics_hash[persona][5] %></td>
           <% else %>
-              <td>0</td>        
+              <td>0</td>
           <% end %>
 
           <td><%= link_to 'Show Campaigns', persona_path(persona) %></td>
           <td><%= link_to 'Edit', edit_persona_path(persona) %></td>
           <td><%= link_to 'Destroy',  persona,  method: :delete, data: { confirm: 'Are you sure?' } %></td>
-
-
-
         </tr>
       <% end %>
     </tbody>
@@ -94,4 +84,4 @@
 $("tr[data-link]").click(function() {
   window.location = $(this).data("link")
 })
-</script> 
+</script>
