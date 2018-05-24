@@ -19,8 +19,8 @@
     text-align:left;
   }
   .image_section {
-      float: right;
-      width:50%;
+      //float: right;
+      //width:50%;
       margin-top: 60px;
   }
 }
@@ -47,9 +47,7 @@
 
 
 .img-howitworks {
-  display: block;
-  margin-left: auto;
-  margin-right: auto;
+  width:100%;
 }
 
 .btn-primary:hover,
@@ -1047,7 +1045,6 @@ label {
   display: inline-block;
   max-width: 100%;
   margin-bottom: 5px;
-  font-weight: bold;
 }
 input[type="search"] {
   -webkit-box-sizing: border-box;
