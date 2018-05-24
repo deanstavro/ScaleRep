@@ -9,7 +9,10 @@
     <ul class="navbar-nav ml-auto nav-fill w-50">
       <% if user_signed_in? %>
         <li class="nav-item active"> <%= link_to 'Personas', personas_path %></li>
+
+        <% if false %>
         <li class="nav-item active"> <%= link_to 'Campaigns', client_company_campaigns_path(@user.client_company) %></li>
+        <% end %>
         <li class="nav-item active"> <%= link_to 'Leads', leads_path %></li>
         <li class="nav-item active"> <%= link_to 'Reports', client_reports_index_path %></li>
         <li class="nav-item active"> <%= link_to 'Metrics', metrics_index_path %></li>

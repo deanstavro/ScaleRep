@@ -56,6 +56,12 @@ class PersonasController < ApplicationController
   # GET /personas/1
   # GET /personas/1.json
   def show
+    @user = User.find(current_user.id)
+    @company = ClientCompany.find_by(id: @user.client_company_id)
+    
+    @persona = Persona.find_by(id: params[:id])
+    @campaigns = @persona.campaigns.where("client_company_id =?", @company).order('created_at DESC')
+
       
   end
 

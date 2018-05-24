@@ -1,9 +1,80 @@
-<p id="notice"><%= notice %></p>
+<div id="title" class="jumbotron">
+  <div class = "container">
+    <br/>
+    <h1><%= @user.client_company.name if @user.client_company %> Campaign List</h1>
+    <div class="container">
+      <%= link_to '+ Add Campaign', new_client_company_campaign_path(@user.client_company), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+    </div>
+  </div>
+</div>
 
-<p>
-  <strong>Name:</strong>
-  <%= @persona.name %>
-</p>
+<center>
+  <p id="error" class="container text-danger"><%= flash[:error] %></p>
+  <p id="notice" class="container text-warning"><%= flash[:notice] %></p>
+</center>
 
-<%= link_to 'Edit', edit_persona_path(@persona) %> |
-<%= link_to 'Back', personas_path %>
+<div class="table-display">
+
+  <table class="table table-hover">
+    <thead class="thead-dark">
+      <tr>
+        <th scope="col">Campaign</th>
+
+        <th scope="col">Add Leads <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="a"></i></th>
+        <th scope="col">email Account</th>
+        <th scope="col">Persona</th>
+        <th scope="col">People</th>
+        <th scope="col">Delivered</th>
+        <th scope="col">Bounce</th>
+        <th scope="col">Reply Rate</th>
+        <th scope="col">Open Rate</th>
+        <th scope="col">Start Date</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% @campaigns.each do |campaign| %>
+        <tr>
+          <td><%= campaign.campaign_name %></td>
+
+
+
+          <td>
+            <%= form_tag import_to_campaign_leads_path(:campaign => campaign), multipart: true do %>
+              <%= file_field_tag :file %>
+              <%= submit_tag "Import CSV" %>
+            <% end %>
+          </td>
+
+          <td><%= campaign.emailAccount %></td>
+
+
+
+          <% if campaign.persona.present? %>
+              <td><%= campaign.persona.name %></td>
+          <% else %>
+              <td>Unassigned</td>
+          <% end %>
+
+
+          <td><%= campaign.peopleCount %></td>
+          <td><%= campaign.deliveriesCount %></td>
+          <td><%= campaign.bouncesCount %></td>
+
+          <% if (campaign.repliesCount).to_i > 0 %>
+            <td><%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount) %></td>
+          <% else %>
+            <td>0</td>
+          <% end %>
+
+          <% if (campaign.opensCount).to_i > 0 %>
+            <td><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %></td>
+          <% else %>
+            <td>0</td>
+          <% end %>
+
+          <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>

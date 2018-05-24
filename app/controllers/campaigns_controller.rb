@@ -83,7 +83,7 @@ class CampaignsController < ApplicationController
 
         # If the campaign saves, post the campaign to reply
 				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, params[:campaign][:campaign_name]))
-				puts "RESPONSE FROM POSTING CAMPIGN INTO REPLY " + post_campaign
+
 
 				redirect_to client_company_campaigns_path, :notice => "Campaign created"
 			else
