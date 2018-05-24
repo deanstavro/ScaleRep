@@ -32,7 +32,7 @@
     </thead>
     <tbody>
       <% @personas.each do |persona| %>
-        <tr data-link="<%= persona_path(persona) %>">
+        <tr>
           <td><%= persona.name %></td>
 
           <%  if @metrics_hash[persona] && @metrics_hash[persona][0] %>
