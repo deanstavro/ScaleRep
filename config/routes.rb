@@ -60,9 +60,11 @@ Rails.application.routes.draw do
   resources :users
     
   resources :client_companies do
-    resource :personas
+    
     resources :campaigns
   end
+
+  resources :personas
 
   resources :demos, only: [:new, :create]
   

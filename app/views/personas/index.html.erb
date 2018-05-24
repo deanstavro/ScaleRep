@@ -1,27 +1,83 @@
-<p id="notice"><%= notice %></p>
+<div id="title" class="jumbotron">
+  <div class = "container">
+    <br/>
+    <h1><%= @user.client_company.name if @user.client_company %> Personas </h1>
+    <div class="container">
+      <%= link_to '+ Add Persona', new_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+    </div>
+  </div>
+</div>
 
-<h1>Personas</h1>
+<center>
+  <p id="error" class="container text-danger"><%= flash[:error] %></p>
+  <p id="notice" class="container text-warning"><%= flash[:notice] %></p>
+</center>
 
-<table>
-  <thead>
-    <tr>
-      <th>Name</th>
-      <th colspan="3"></th>
-    </tr>
-  </thead>
-
-  <tbody>
-    <% @personas.each do |persona| %>
+<div class="table-display">
+  <h2> Personas </h2>
+  <table class="table table-hover">
+    <thead class="thead-dark">
       <tr>
-        <td><%= persona.name %></td>
-        <td><%= link_to 'Show', persona %></td>
-        <td><%= link_to 'Edit', edit_persona_path(persona) %></td>
-        <td><%= link_to 'Destroy', persona, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+        
+        <th scope="col">Persona</th>
+
+        <th scope="col">People</th>
+        <th scope="col">Delivered</th>
+        <th scope="col">Bounce</th>
+
+        
+        <th scope="col">Reply Rate</th>
+        <th scope="col">Open Rate</th>
+        <th scope="col">Number of Campaigns</th>
+
+
       </tr>
-    <% end %>
-  </tbody>
-</table>
+    </thead>
+    <tbody>
+      <% @personas.each do |persona| %>
+        <tr>
+          <td><%= persona.name %></td>
 
-<br>
+          <%  if @metrics_hash[persona] && @metrics_hash[persona][0] %>
+             <td><%= @metrics_hash[persona][0] %></td>
+          <% else %>
+              <td>N/A</td>        
+          <% end %>
 
-<%= link_to 'New Persona', new_persona_path %>
+          <%  if @metrics_hash[persona] && @metrics_hash[persona][1] %>
+             <td><%= @metrics_hash[persona][1] %></td>
+          <% else %>
+              <td>N/A</td>        
+          <% end %>
+
+          <%  if @metrics_hash[persona] && @metrics_hash[persona][2] %>
+             <td><%= @metrics_hash[persona][2] %></td>
+          <% else %>
+              <td>N/A</td>        
+          <% end %>
+
+          <%  if @metrics_hash[persona] && @metrics_hash[persona][3] %>
+             <td><%= @metrics_hash[persona][3] %></td>
+          <% else %>
+              <td>N/A</td>        
+          <% end %>
+
+          <%  if @metrics_hash[persona] && @metrics_hash[persona][4] %>
+             <td><%= @metrics_hash[persona][4] %></td>
+          <% else %>
+              <td>N/A</td>        
+          <% end %>
+
+          <%  if @metrics_hash[persona] && @metrics_hash[persona][5] %>
+             <td><%= @metrics_hash[persona][5] %></td>
+          <% else %>
+              <td>N/A</td>        
+          <% end %>
+
+
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+</div>
