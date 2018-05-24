@@ -66,6 +66,9 @@ class PersonasController < ApplicationController
 
   # GET /personas/1/edit
   def edit
+    @user = User.find(current_user.id)
+
+    @persona = Persona.find_by(id: params[:id])
   end
 
   # POST /personas
@@ -87,10 +90,11 @@ class PersonasController < ApplicationController
   # PATCH/PUT /personas/1
   # PATCH/PUT /personas/1.json
   def update
+    @persona = Persona.find_by(id: params[:id])
     respond_to do |format|
       if @persona.update(persona_params)
-        format.html { redirect_to @persona, notice: 'Persona was successfully updated.' }
-        format.json { render :show, status: :ok, location: @persona }
+        format.html { redirect_to personas_path, notice: 'Persona was successfully updated.' }
+        format.json { render :index, status: :ok }
       else
         format.html { render :edit }
         format.json { render json: @persona.errors, status: :unprocessable_entity }
@@ -101,12 +105,27 @@ class PersonasController < ApplicationController
   # DELETE /personas/1
   # DELETE /personas/1.json
   def destroy
-    @persona.destroy
-    respond_to do |format|
-      format.html { redirect_to personas_url, notice: 'Persona was successfully destroyed.' }
-      format.json { head :no_content }
+    persona = Persona.find_by(id: params[:id])
+
+    begin
+
+        persona.destroy
+        respond_to do |format|
+          format.html { redirect_to personas_url, notice: 'Persona was successfully destroyed.' }
+          format.json { head :no_content }
+        end
+
+    rescue
+
+        respond_to do |format|
+          format.html { redirect_to personas_url, notice: 'Delete associated campaigns before deleting persona!' }
+          format.json { head :no_content }
+        end
     end
-  end
+
+    
+
+    end
 
   private
     # Use callbacks to share common setup or constraints between actions.
