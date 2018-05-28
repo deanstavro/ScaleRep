@@ -67,7 +67,7 @@
           <% end %>
 
           <% if (campaign.opensCount).to_i > 0 %>
-            <td><%= campaign.opensCount %><br><%= reply_rate_calculator(campaign.opensCount, campaign.peopleCount) %></td>
+            <td><%= campaign.opensCount %><br><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %></td>
           <% else %>
             <td>0</td>
           <% end %>
