@@ -25,9 +25,9 @@
         <th scope="col">Persona</th>
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
-        <th scope="col">Bounce</th>
-        <th scope="col">Reply Rate</th>
-        <th scope="col">Open Rate</th>
+        <th scope="col">Bounces</th>
+        <th scope="col">Replies</th>
+        <th scope="col">Opens</th>
         <th scope="col">Start Date</th>
       </tr>
     </thead>
@@ -61,13 +61,13 @@
           <td><%= campaign.bouncesCount %></td>
 
           <% if (campaign.repliesCount).to_i > 0 %>
-            <td><%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount) %></td>
+            <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount) %></td>
           <% else %>
             <td>0</td>
           <% end %>
 
           <% if (campaign.opensCount).to_i > 0 %>
-            <td><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %></td>
+            <td><%= campaign.opensCount %><br><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %></td>
           <% else %>
             <td>0</td>
           <% end %>

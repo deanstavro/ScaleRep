@@ -5,12 +5,10 @@ module CampaignsHelper
   	puts "DEL"
   	puts deliveries_count
     percentage = if deliveries_count.zero?
-    				puts "NO"
                    0
                  else
-                 	puts "ES"
-                   ((replies_count.round(1) / deliveries_count)*100).round(1)
+                   Float((replies_count.to_f)*100 / deliveries_count).round(2)
                  end
-    number_to_percentage percentage
+   percentage
   end
 end
