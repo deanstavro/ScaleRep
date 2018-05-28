@@ -54,13 +54,13 @@
           <% end %>
 
           <%  if @metrics_hash[persona] && @metrics_hash[persona][3] %>
-             <td><%= @metrics_hash[persona][3] %><br><%= reply_rate_calculator(@metrics_hash[persona][3], @metrics_hash[persona][1]) %>%</td>
+             <td><%= @metrics_hash[persona][3] %><br><%= reply_rate_calculator(@metrics_hash[persona][3], @metrics_hash[persona][0]) %>%</td>
           <% else %>
               <td>N/A</td>
           <% end %>
 
           <%  if @metrics_hash[persona] && @metrics_hash[persona][4] %>
-             <td><%= @metrics_hash[persona][4] %><br><%= reply_rate_calculator(@metrics_hash[persona][4], @metrics_hash[persona][2]) %>%</td>
+             <td><%= @metrics_hash[persona][4] %><br><%= reply_rate_calculator(@metrics_hash[persona][4], @metrics_hash[persona][1]) %>%</td>
           <% else %>
               <td>N/A</td>
           <% end %>
