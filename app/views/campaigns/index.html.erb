@@ -61,13 +61,13 @@
           <td><%= campaign.bouncesCount %></td>
 
           <% if (campaign.repliesCount).to_i > 0 %>
-            <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount) %></td>
+            <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount) %></td>
           <% else %>
             <td>0</td>
           <% end %>
 
           <% if (campaign.opensCount).to_i > 0 %>
-            <td><%= campaign.opensCount %><br><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %></td>
+            <td><%= campaign.opensCount %><br><%= reply_rate_calculator(campaign.opensCount, campaign.peopleCount) %></td>
           <% else %>
             <td>0</td>
           <% end %>
