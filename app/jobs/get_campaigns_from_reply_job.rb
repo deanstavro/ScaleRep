@@ -25,6 +25,13 @@ class GetCampaignsFromReplyJob < ApplicationJob
                     response.delete(:id)
                     response.delete(:created)
 
+                    puts "RESPONSE BEFORE"
+                    puts response
+
+                    response.delete_if { |k, v| v.nil? }
+
+                    puts "RESPONSE"
+                    puts response
                     puts "EMAIL"
                     puts response[:emailAccount]
    
