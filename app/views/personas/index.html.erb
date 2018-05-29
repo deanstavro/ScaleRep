@@ -2,6 +2,20 @@
   <div class = "container">
     <br/>
     <h1><%= @user.client_company.name if @user.client_company %> Personas </h1>
+    <br>
+    <p> Personas group outreach campaigns into customer types.</p>
+
+
+    <p> ex. <br>
+
+    <i>Marketing Directors at Universities in California, Arizona, and Utah </i><br>
+    <i>VP of Engineering working at financial companies with 11-50 employees</i><br>
+    <i>Sales managers working at internet companies size 50-200 with open sales positions </i>
+    
+
+    </p>
+
+
     <div class="container">
       <%= link_to '+ Add Persona', new_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
     </div>
@@ -18,22 +32,21 @@
   <table class="table table-hover">
     <thead class="thead-dark">
       <tr>
-        <th scope="col">Persona</th>
-        <th scope="col">People</th>
-        <th scope="col">Delivered</th>
-        <th scope="col">Bounces</th>
-        <th scope="col">Replies</th>
-        <th scope="col">Opens</th>
-        <th scope="col">Number of Campaigns</th>
-        <th scope="col">Show Campaigns </th>
-        <th scope="col">Edit </th>
-        <th scope="col">Delete Persona</th>
+        <th scope="col">persona</th>
+        <th scope="col">people</th>
+        <th scope="col">delivered</th>
+        <th scope="col">bounces</th>
+        <th scope="col">replies</th>
+        <th scope="col">opens</th>
+        <th scope="col"># campaigns</th>
+        <th scope="col">edit </th>
+        <th scope="col">delete</th>
       </tr>
     </thead>
     <tbody>
       <% @personas.each do |persona| %>
-        <tr>
-          <td><%= persona.name %></td>
+        <tr >
+          <td><%= link_to persona.name, persona_path(persona) %></td>
 
           <%  if @metrics_hash[persona] && @metrics_hash[persona][0] %>
              <td><%= @metrics_hash[persona][0] %></td>
@@ -79,9 +92,8 @@
               <td>0</td>
           <% end %>
 
-          <td><%= link_to 'Show Campaigns', persona_path(persona) %></td>
-          <td><%= link_to 'Edit', edit_persona_path(persona) %></td>
-          <td><%= link_to 'Destroy',  persona,  method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td><%= link_to '+', edit_persona_path(persona) %></td>
+          <td><%= link_to '--',  persona,  method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>
       <% end %>
     </tbody>

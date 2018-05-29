@@ -6,6 +6,11 @@
   		</div>
 	</div>
 
+	<center>
+ 		 <p id="error" class="container text-danger"><%= flash[:error] %></p>
+ 		 <p id="notice" class="container text-warning"><%= flash[:notice] %></p>
+	</center>
+
 	<div class="container">
 
 		<h3>Welcome to ScaleRep!</h3>
@@ -46,7 +51,7 @@
 
 			<li class="list-group-item">
 				<h3>
-					3. Start setting up your <%= link_to "campaigns" , client_company_campaigns_path(@user.client_company) %>
+					3. Start setting up your <%= link_to "persona campaigns" , personas_path(@user.client_company) %>
 						
 				</h3>
 			</li>
