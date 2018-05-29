@@ -24,15 +24,19 @@ class GetCampaignsFromReplyJob < ApplicationJob
                     response.delete(:name)
                     response.delete(:id)
                     response.delete(:created)
+
+                    puts "EMAIL"
+                    puts response[:emailAccount]
    
                     # Update the campaign in the local database
                     campaign.update_attributes(response)
 
 
 
-                    sleep 30
+                    sleep 10
                 rescue
                     puts "COULD NOT PULL METRICS FOR CAMPAIGN " + campaign.campaign_name
+                    sleep 10
                 end
               end
             end
