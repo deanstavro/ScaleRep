@@ -32,49 +32,45 @@
       </tr>
     </thead>
     <tbody>
-      <% @campaigns.each do |campaign| %>
-        <tr>
-          <td><%= campaign.campaign_name %></td>
+        <% @campaigns.each do |campaign| %>
+            <tr>
 
+                <td><%= campaign.campaign_name %></td>
 
+                <td>
+                    <%= form_tag import_to_campaign_leads_path(:campaign => campaign), multipart: true do %>
+                        <%= file_field_tag :file %>
+                        <%= submit_tag "Import CSV" %>
+                    <% end %>
+                </td>
 
-          <td>
-            <%= form_tag import_to_campaign_leads_path(:campaign => campaign), multipart: true do %>
-              <%= file_field_tag :file %>
-              <%= submit_tag "Import CSV" %>
-            <% end %>
-          </td>
+                <td><%= campaign.emailAccount %></td>
 
-          <td><%= campaign.emailAccount %></td>
+                <% if campaign.persona.present? %>
+                    <td><%= campaign.persona.name %></td>
+                <% else %>
+                    <td>Unassigned</td>
+                <% end %>
 
+                <td><%= campaign.peopleCount %></td>
+                <td><%= campaign.deliveriesCount %></td>
+                <td><%= campaign.bouncesCount %></td>
 
+                <% if (campaign.repliesCount).to_i > 0 %>
+                    <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount) %></td>
+                <% else %>
+                    <td>0</td>
+                <% end %>
 
-          <% if campaign.persona.present? %>
-              <td><%= campaign.persona.name %></td>
-          <% else %>
-              <td>Unassigned</td>
-          <% end %>
+                <% if (campaign.opensCount).to_i > 0 %>
+                    <td><%= campaign.opensCount %><br><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %></td>
+                <% else %>
+                    <td>0</td>
+                <% end %>
 
-
-          <td><%= campaign.peopleCount %></td>
-          <td><%= campaign.deliveriesCount %></td>
-          <td><%= campaign.bouncesCount %></td>
-
-          <% if (campaign.repliesCount).to_i > 0 %>
-            <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount) %></td>
-          <% else %>
-            <td>0</td>
-          <% end %>
-
-          <% if (campaign.opensCount).to_i > 0 %>
-            <td><%= campaign.opensCount %><br><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %></td>
-          <% else %>
-            <td>0</td>
-          <% end %>
-
-          <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
-        </tr>
-      <% end %>
+                <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
+            </tr>
+        <% end %>
     </tbody>
   </table>
 </div>

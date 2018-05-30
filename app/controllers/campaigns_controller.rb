@@ -21,7 +21,7 @@ class CampaignsController < ApplicationController
 
   def new
     	@user = User.find(current_user.id)
-      @personas = Persona.all
+      @persona_name = params[:persona_name]
   		@client_company = ClientCompany.find_by(id: @user.client_company_id)
       @company_personas = @client_company.personas
   		@campaign = @client_company.campaigns.build
