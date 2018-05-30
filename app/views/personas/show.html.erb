@@ -1,7 +1,20 @@
 <div id="title" class="jumbotron">
   <div class = "container">
     <br/>
-    <h1><%= @user.client_company.name if @user.client_company %> Campaign List</h1>
+    <h1><%= @persona.name if @persona.name %> Campaigns</h1>
+
+    <br>
+    <p> Campaigns track messaging and e-mail order to improve overall persona metrics.</p>
+    <p> ex. <br>
+    <i>Shorter messaging, using our website as reference</i><br>
+    <i>Same as above, using calendly</i><br>
+    <i>Links included to site, more overall information on product offering</i>
+    <br>
+
+  
+    </p>
+
+
     <div class="container">
       <%= link_to '+ Add Campaign', new_client_company_campaign_path(@user.client_company), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
     </div>
