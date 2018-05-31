@@ -22,8 +22,10 @@ class CampaignsController < ApplicationController
   def new
     	@user = User.find(current_user.id)
       @persona_name = params[:persona_name]
+      @persona_id = params[:persona_id]
+
   		@client_company = ClientCompany.find_by(id: @user.client_company_id)
-      @company_personas = @client_company.personas
+      @personas = @client_company.personas.find_by(id: params[:persona_id])
   		@campaign = @client_company.campaigns.build
   end
 
@@ -37,16 +39,8 @@ class CampaignsController < ApplicationController
       @campaigns = Campaign.where("client_company_id =?", @company).order('created_at DESC')
 
 
-      # Determine Whether to Create A persona
-      if params[:create_persona].present?
-
-        persona = Persona.create(name: params[:create_persona], client_company: @company)
-        @campaign.persona = persona
-
-      else
-        persona = Persona.find_by(id: params[:persona_id].to_i)
-        @campaign.persona = persona
-      end
+      persona = Persona.find_by(id: params[:subaction].to_i)
+      @campaign.persona = persona
 
       # Get Array of all emails
   		email_array = get_email_accounts(@company.replyio_keys)
@@ -87,7 +81,7 @@ class CampaignsController < ApplicationController
 
 				redirect_to client_company_campaigns_path, :notice => "Campaign created"
 			else
-				redirect_to client_company_campaigns_path, :alert => "Campaign not valid and not updated"
+				redirect_to client_company_campaigns_path, :notice => @campaign.errors.full_messages
 
 			end
 
@@ -104,7 +98,7 @@ class CampaignsController < ApplicationController
 
 
   	def campaign_params
-      params.require(:campaign).permit(:persona_id, :user_notes, :create_persona, :campaign_name)
+      params.require(:campaign).permit(:persona_id, :user_notes, :create_persona, :campaign_name, :minimum_email_score, :has_minimum_email_score)
   	end
 
 

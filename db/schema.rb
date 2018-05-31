@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180524041928) do
+ActiveRecord::Schema.define(version: 20180531003630) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -50,13 +50,13 @@ ActiveRecord::Schema.define(version: 20180524041928) do
     t.string   "industry"
     t.datetime "campaign_start"
     t.datetime "campaign_end"
-    t.datetime "created_at",                           null: false
-    t.datetime "updated_at",                           null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.integer  "client_company_id"
     t.string   "user_notes"
     t.string   "reply_id"
     t.string   "reply_key"
-    t.boolean  "personalized",         default: false
+    t.boolean  "personalized",            default: false
     t.integer  "persona_id"
     t.string   "campaign_name"
     t.string   "last_poll_from_reply"
@@ -71,6 +71,8 @@ ActiveRecord::Schema.define(version: 20180524041928) do
     t.integer  "peopleFinished"
     t.integer  "peopleActive"
     t.integer  "peoplePaused"
+    t.integer  "minimum_email_score"
+    t.boolean  "has_minimum_email_score"
     t.index ["client_company_id"], name: "index_campaigns_on_client_company_id", using: :btree
     t.index ["persona_id"], name: "index_campaigns_on_persona_id", using: :btree
   end
