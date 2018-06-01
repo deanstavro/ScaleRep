@@ -24,7 +24,7 @@ before_action :authenticate_user!
     @warm_opps = table.all(filter: '{lead_status} = "warm_lead"', sort: {follow_up_date: "desc"})
 
   end
-  
+
 
   def import_to_campaign
 
@@ -33,7 +33,7 @@ before_action :authenticate_user!
     @leads = Lead.where(client_company: @company)
 
     col =  Lead.column_names
-    
+
 
     begin
         if (params[:file].content_type).to_s == 'text/csv'
