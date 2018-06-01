@@ -1,21 +1,17 @@
 <div id="title" class="jumbotron">
-  <div class = "container">
-    <br/>
-    <h1><%= @user.client_company.name if @user.client_company %> Personas </h1>
-    <br>
-    <p> Personas group outreach campaigns into customer types.</p>
-    <p> ex. <br>
-    <i>Marketing Directors at financial companies with 11-50 employees with open sales positions</i><br>
-    <i>Inbound leads from website form</i><br>
-    <i>LinkedIn and Facebook inbound leads</i>
-  
-    </p>
 
+  <br/>
+  <h1><%= @user.client_company.name if @user.client_company %> Personas </h1>
+  <br>
+  <p> Personas group outreach campaigns into customer types.</p>
+  <p> ex. <br>
+  <i>Marketing Directors at financial companies with 11-50 employees with open sales positions</i><br>
+  <i>Inbound leads from website form</i><br>
+  <i>LinkedIn and Facebook inbound leads</i>
 
-    <div class="container">
-      <%= link_to '+ Add Persona', new_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
-    </div>
-  </div>
+  </p>
+
+  <%= link_to '+ Add Persona', new_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
 </div>
 
 <center>

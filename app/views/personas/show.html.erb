@@ -1,24 +1,16 @@
 <div id="title" class="jumbotron">
-  <div class = "container">
-    <br/>
-    <h1>Campaigns</h1>
-    <h3>for <%= @persona.name if @persona.name %></h3>
+  <br/>
+  <h1>Campaigns</h1>
+  <h3>for <%= @persona.name if @persona.name %></h3>
 
-    <br>
-    <p> Campaigns track messaging and e-mail order to improve overall persona metrics.</p>
-    <p> ex. <br>
+  <br>
+  <p> Campaigns track messaging and e-mail order to improve overall persona metrics.</p>
+  <p> ex. <br>
     <i>Baseline campaign</i><br>
     <i>Shorter outbound campaign, using website messaging as reference</i><br>
     <i>General Facebook inbound lead campaign</i><br>
-
-  
-    </p>
-
-
-    <div class="container">
-      <%= link_to '+ Add Campaign', new_client_company_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
-    </div>
-  </div>
+  </p>
+  <%= link_to '+ Add Campaign', new_client_company_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
 </div>
 
 <center>

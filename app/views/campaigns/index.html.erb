@@ -1,11 +1,8 @@
 <div id="title" class="jumbotron">
-  <div class = "container">
-    <br/>
-    <h1><%= @user.client_company.name if @user.client_company %> Campaign List</h1>
-    <div class="container">
-      <%= link_to '+ Add Campaign', new_client_company_campaign_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
-    </div>
-  </div>
+  <br/>
+  <h1><%= @user.client_company.name if @user.client_company %> Campaign List</h1>
+
+  <%= link_to '+ Add Campaign', new_client_company_campaign_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
 </div>
 
 <center>
