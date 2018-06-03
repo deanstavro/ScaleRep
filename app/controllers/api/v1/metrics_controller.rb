@@ -1,9 +1,9 @@
 class Api::V1::MetricsController < Api::V1::BaseController
 
-  # CampaignsController - post campaigns to Calltend system
+  # CampaignsController - post campaigns to scalerep system
 
 
-  # api/v1/all_metrics - POST campaign to calltend system
+  # api/v1/all_metrics - POST campaign to scalerep system
   # Required Fields:
 
   def all_metrics
@@ -22,4 +22,3 @@ class Api::V1::MetricsController < Api::V1::BaseController
 
 
 end
-
