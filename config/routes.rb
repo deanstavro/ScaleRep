@@ -1,5 +1,5 @@
 Rails.application.routes.draw do
-  
+
   # V1 of API
   namespace :api do
     namespace :v1 do
@@ -19,6 +19,13 @@ Rails.application.routes.draw do
         end
       end
 
+      resources :auto_reply do
+        collection do
+          post :new
+        end
+      end
+
+      
       #resources :campaigns, except: [:new, :edit] do
       #  collection do
       #    post :new_campaigns
@@ -38,7 +45,7 @@ Rails.application.routes.draw do
 
   get 'reports/index'
 
-  
+
 
   get 'metrics/index'
 
@@ -58,22 +65,22 @@ Rails.application.routes.draw do
 
   devise_for :users
   resources :users
-    
+
   resources :client_companies do
-    
+
     resources :campaigns
   end
 
   resources :personas
 
   resources :demos, only: [:new, :create]
-  
+
   resources :leads do
     collection { post :import_to_campaign}
     collection { get :fields}
   end
 
-  
+
 
 
 

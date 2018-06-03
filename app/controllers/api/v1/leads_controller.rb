@@ -8,13 +8,13 @@ class Api::V1::LeadsController < Api::V1::BaseController
 
   def new_lead
 
-  @client_company = ClientCompany.find_by(api_key: params[:api_key])
+    @client_company = ClientCompany.find_by(api_key: params[:api_key])
 
 
 
 
-  puts @client_company.name
-  puts "all_metrics completed"
+    puts @client_company.name
+    puts "all_metrics completed"
 
   end
 

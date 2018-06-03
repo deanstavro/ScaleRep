@@ -1,0 +1,2 @@
+class AutoReply < ApplicationRecord
+end
