@@ -19,13 +19,13 @@ Rails.application.routes.draw do
         end
       end
 
-      resources :auto_reply do
+      resources :autoreply do
         collection do
-          post :new
+          post :new_reply
         end
       end
 
-      
+
       #resources :campaigns, except: [:new, :edit] do
       #  collection do
       #    post :new_campaigns
