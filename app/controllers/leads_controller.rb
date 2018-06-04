@@ -16,8 +16,8 @@ before_action :authenticate_user!
     airtable_dic = eval(airtable)
     puts airtable_dic["AIRTABLE"]
 
-
     table = Airrecord.table(airtable_dic["AIRTABLE"],airtable_dic["MOFU"],"MOFU")
+    
     #grab view
     @pending_opps = table.all(filter: '{lead_status} = "discover_needs"', sort: {follow_up_date: "desc"})
     @qualified_opps = table.all(filter: '{lead_status} = "qualified"', sort: {follow_up_date: "desc"})

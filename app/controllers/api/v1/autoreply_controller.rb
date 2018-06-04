@@ -15,14 +15,17 @@ class Api::V1::AutoreplyController < ApplicationController
 
     # Remove all fields that are not to be saved
     @params_content.delete("company_api_key")
-    puts "2nd beez"
-    puts @params_content
-
-
     @auto_reply = AutoReply.new(auto_reply_params)
+
+    # finish filling out information --> campaign and company_api_key
+    @params_content.client_company = @client_company
+
+    # find campaign for company that IS an auto_reply campaign
+    
+
     @auto_reply.save
 
-    # finish filling out information
+
     #@auto_reply.client_company = @client_company
 
 
