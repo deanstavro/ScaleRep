@@ -5,7 +5,7 @@ class Lead < ApplicationRecord
 	belongs_to :client_company, optional: false
 	belongs_to :campaign, optional: true
 
-	
+
 
 	validates :email, presence: true
 	validates :client_company, presence: true
@@ -42,7 +42,7 @@ class Lead < ApplicationRecord
   			end
 
 			one_hash = new_hash.to_hash
-			
+
 			if one_hash["email"].present?
 
 
@@ -58,21 +58,21 @@ class Lead < ApplicationRecord
 							one_hash[:campaign_id] = campaign
 
 							lead = Lead.create!(one_hash)
-							
+
 							imported = imported + 1
 						else
 
-							duplicates = duplicates + 1 
+							duplicates = duplicates + 1
 						end
 					rescue Exception => e
 						not_imported = not_imported + 1
-					end	
+					end
 			else
 				rows_email_not_present = rows_email_not_present + 1
 			end
 
 
-		#AddContactsToReplyJob.perform_later(all_hash,campaign)
+		AddContactsToReplyJob.perform_later(all_hash,campaign)
 
 		end
 

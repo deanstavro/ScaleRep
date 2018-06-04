@@ -33,7 +33,7 @@ class AddContactsToReplyJob < ApplicationJob
 
   						)
 
-              sleep(5)
+              sleep(15)
 
     				  puts response
 
@@ -48,4 +48,3 @@ class AddContactsToReplyJob < ApplicationJob
 
   	end
 end
-
