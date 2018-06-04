@@ -55,8 +55,8 @@ ActiveRecord::Schema.define(version: 20180603235458) do
     t.datetime "created_at",        null: false
     t.datetime "updated_at",        null: false
     t.integer  "client_company_id"
-    t.integer  "campaigns_id"
-    t.index ["campaigns_id"], name: "index_auto_replies_on_campaigns_id", using: :btree
+    t.integer  "campaign_id"
+    t.index ["campaign_id"], name: "index_auto_replies_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_auto_replies_on_client_company_id", using: :btree
   end
 
@@ -218,7 +218,7 @@ ActiveRecord::Schema.define(version: 20180603235458) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  add_foreign_key "auto_replies", "campaigns", column: "campaigns_id"
+  add_foreign_key "auto_replies", "campaigns"
   add_foreign_key "auto_replies", "client_companies"
   add_foreign_key "campaigns", "client_companies"
   add_foreign_key "campaigns", "personas"
