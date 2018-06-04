@@ -5,5 +5,5 @@ class Campaign < ApplicationRecord
   belongs_to :persona
 
 	# enum
-	enum campaign_type: [ :standard, :auto_reply, :direct_referral, :auto_reply_referral ]
+	enum campaign_type: [ :standard, :auto_reply, :direct_referral, :auto_reply_referrall]
 end
