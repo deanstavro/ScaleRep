@@ -73,6 +73,45 @@ module Reply
 
 
 
+  def add_contact(reply_key, reply_id, contact)
+
+    begin
+
+        puts reply_key
+        puts reply_id
+        puts contact["lead_email"]
+        puts contact["first_name"]
+        puts contact ["last_name"]
+        
+        payload = { "campaignId": reply_id, "email": contact["lead_email"], "firstName": contact["first_name"], "lastName": contact["last_name"]}
+
+
+        response = RestClient::Request.execute(
+           :method => :post,
+           :url => 'https://api.reply.io/v1/actions/addandpushtocampaign?apiKey='+ reply_key,
+           :payload => payload
+
+        )
+
+        sleep(15)
+
+        puts response
+        return response
+
+    rescue
+
+
+        puts "did not input into reply"
+        return "did not input into reply"
+
+    end
+
+  end
+
+
+
+
+
 
   def get_email_accounts(company_key)
 

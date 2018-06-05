@@ -1,20 +1,36 @@
 class AutoRepliesToReplyIoJob < ApplicationJob
   queue_as :default
+  include Reply
 
   def perform(*args)
     puts "grabbing all auto-replies from today"
 
     # grab all replies marked as today
-    @auto_replies = AutoReply.where(:follow_up_date =>Date.today)
-    puts @auto_replies
 
-    # now, need to go from auto_replies to campaigns and contacts
+    begin
+        @auto_replies = AutoReply.where(:follow_up_date => Date.today)
 
-    # call job to send to the correct campaign
-    # loop through each auto_reply and call to_campaign information
-    @auto_replies.each do |auto_reply|
+
+        begin
+
+
+            @auto_replies.each do |auto_reply|
+
+                response = add_contact('dB55wd_oObuQofMmwc93lw2','149275', auto_reply)
+                sleep 10
+            end
+
+        rescue
+
+          puts "ERROR"
+          return "ERROR"
+
+        end
+    rescue
+        puts "No auto replies exist!"
 
     end
-
+        
+    
   end
 end
