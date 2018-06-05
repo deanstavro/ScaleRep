@@ -1,9 +1,10 @@
-class Api::V1::AutoreplyController < ApplicationController
-
+class Api::V1::AutoreplyController < Api::V1::BaseController
   def new_reply
 
     # get information from params and print somewhere
     #@client_company = ClientCompany.find_by(api_key: params[:company_api_key])
+    
+
     @params_content = params["autoreply"]
 
     # grab all relevant information and put into auto_reply database
