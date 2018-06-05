@@ -1,4 +1,4 @@
 class AutoReply < ApplicationRecord
-  belongs_to :campaign
-  belongs_to :client_company
+  belongs_to :campaign, optional: true
+  belongs_to :client_company, optional: true
 end
