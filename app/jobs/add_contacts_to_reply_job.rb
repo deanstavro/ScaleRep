@@ -3,11 +3,12 @@ class AddContactsToReplyJob < ApplicationJob
 
 	def perform(all_contacts,campaign,keys)
 
+     puts all_contacts
+		 puts campaign
+		 puts keys
+
+		 
   		all_contacts.each do |one_hash|
-
-
-
-
           @reply_campaigns = []
           for accounts in keys["accounts"]
               @reply_campaigns << JSON.parse(get_campaigns(accounts[1]["key"]))
