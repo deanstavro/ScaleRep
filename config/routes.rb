@@ -1,5 +1,7 @@
 Rails.application.routes.draw do
 
+  resources :contacts
+  resources :accounts
   # V1 of API
   namespace :api do
     namespace :v1 do

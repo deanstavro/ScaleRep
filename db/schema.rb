@@ -10,10 +10,33 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180604060101) do
+ActiveRecord::Schema.define(version: 20180605234313) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
+
+  create_table "accounts", force: :cascade do |t|
+    t.string   "name"
+    t.string   "phone_number"
+    t.string   "website"
+    t.string   "industry"
+    t.text     "description"
+    t.text     "internal_notes"
+    t.boolean  "do_not_contact",       default: false
+    t.string   "number_of_employees"
+    t.string   "address"
+    t.string   "city"
+    t.string   "state"
+    t.string   "country"
+    t.string   "zipcode"
+    t.string   "timezone"
+    t.string   "last_funding_type"
+    t.string   "last_funding_amount"
+    t.string   "total_funding_raised"
+    t.string   "last_funding_date"
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
+  end
 
   create_table "active_admin_comments", force: :cascade do |t|
     t.string   "namespace"
@@ -131,20 +154,14 @@ ActiveRecord::Schema.define(version: 20180604060101) do
   end
 
   create_table "leads", force: :cascade do |t|
-    t.string   "company"
     t.boolean  "decision_maker"
     t.text     "internal_notes"
-    t.text     "external_notes"
     t.string   "email_in_contact_with"
-    t.string   "industry"
     t.datetime "date_sourced"
     t.datetime "created_at",                                  null: false
     t.datetime "updated_at",                                  null: false
     t.integer  "client_company_id"
     t.integer  "campaign_id"
-    t.string   "expected_recurring_deal"
-    t.string   "expected_recurrence_period"
-    t.integer  "potential_deal_size"
     t.string   "contract_sent"
     t.integer  "contract_amount"
     t.string   "deal_won"
@@ -155,7 +172,6 @@ ActiveRecord::Schema.define(version: 20180604060101) do
     t.boolean  "meeting_set",                 default: false
     t.datetime "meeting_time"
     t.string   "email"
-    t.string   "company_domain"
     t.string   "first_name"
     t.string   "last_name"
     t.integer  "hunter_score"
@@ -174,14 +190,10 @@ ActiveRecord::Schema.define(version: 20180604060101) do
     t.boolean  "in_campaign",                 default: false
     t.date     "last_added_to_campaign_date"
     t.string   "company_description"
-    t.string   "number_of_employees"
-    t.string   "last_funding_type"
-    t.string   "last_funding_date"
-    t.string   "last_funding_amount"
-    t.string   "total_funding_amount"
     t.string   "email_snippet"
     t.boolean  "sent_to_reply"
     t.boolean  "personalized"
+    t.string   "full_name"
     t.index ["campaign_id"], name: "index_leads_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_leads_on_client_company_id", using: :btree
   end
