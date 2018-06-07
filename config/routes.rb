@@ -13,18 +13,13 @@ Rails.application.routes.draw do
 
             resources :reply do
                 collection do
+                    post :new_reply
                     post :auto_reply_referral
-                    post :out_of_office
+                    post :auto_reply
                     post :referral
                     post :interested
                     post :not_interested
                     post :do_not_contact
-                end
-            end
-
-            resources :referral do
-                collection do
-                    post :new
                 end
             end
 

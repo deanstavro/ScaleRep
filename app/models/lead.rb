@@ -10,6 +10,7 @@ class Lead < ApplicationRecord
 	#validates :email, presence: true
 	
 	#validates_uniqueness_of :email, scope: :client_company
+	validates :email, presence: true
 	#validates :first_name, presence: true
 	#validates :last_name, presence: true
 	after_initialize :init
