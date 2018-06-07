@@ -11,7 +11,7 @@
 
   </p>
 
-  <%= link_to '+ Add Persona', new_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+  <%= link_to '+ Add Persona', new_client_companies_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
 </div>
 
 <center>
@@ -38,7 +38,7 @@
     <tbody>
       <% @personas.each do |persona| %>
         <tr >
-          <td><%= link_to persona.name, persona_path(persona) %></td>
+          <td><%= link_to persona.name, client_companies_campaigns_path(persona) %></td>
 
           <%  if @metrics_hash[persona] && @metrics_hash[persona][0] %>
              <td><%= @metrics_hash[persona][0] %></td>
@@ -84,8 +84,8 @@
               <td>0</td>
           <% end %>
 
-          <td><%= link_to '+', edit_persona_path(persona) %></td>
-          <td><%= link_to '--',  persona,  method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td><%= link_to '+', edit_client_companies_persona_path(persona) %></td>
+          <td><%= link_to '--',  client_companies_persona_path(persona),  method: :delete, data: { confirm: 'Are you sure?' } %></td>
         </tr>
       <% end %>
     </tbody>

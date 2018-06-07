@@ -4,16 +4,18 @@ class CampaignsController < ApplicationController
 	require 'json'
 	include Reply
 
-	'''
-	Index shows all the campaigns running for a client_company
-	Campaigns are grabbed from reply.io using the reply keys
-	Campaigns are grabbed from one or multiple reply.io systems using the key(s)
-	'''
-  
 	def index
-    	@user = User.find(current_user.id)
-  		@company = ClientCompany.find_by(id: @user.client_company_id)
-    	@campaigns = Campaign.where("client_company_id =?", @company).order('created_at DESC')
+    	@user = get_user
+      @client_company = get_company(@user)
+      @persona = get_persona(params)
+
+      if wrong_campaign(@persona, @client_company)
+          flash[:notice] = "Campaign does not exist"
+          redirect_to client_companies_personas_path
+        return
+      end
+
+      @campaigns = get_campaign(@persona, @client_company)
      
   end
 
@@ -32,7 +34,7 @@ class CampaignsController < ApplicationController
 
 
 
-  	def create
+  def create
     	@user = User.find(current_user.id)
   		@company = ClientCompany.find_by(id: @user.client_company_id)
       @campaign = @company.campaigns.build(campaign_params)
@@ -79,22 +81,49 @@ class CampaignsController < ApplicationController
 				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, params[:campaign][:campaign_name]))
 
 
-				redirect_to client_company_campaigns_path, :notice => "Campaign created"
+				redirect_to client_companies_campaigns_path(persona), :notice => "Campaign created"
 			else
-				redirect_to client_company_campaigns_path, :notice => @campaign.errors.full_messages
+				redirect_to client_companies_campaigns_path(persona), :notice => @campaign.errors.full_messages
 
 			end
 
 
-   	end
+  end
 
 
 
+  private
 
 
-  	private
+    def get_user
+      return User.find(current_user.id)
+    end
 
+    def get_company(user)
+      return ClientCompany.find_by(id: user.client_company_id)
+    end
 
+    def get_persona(params)
+      return Persona.find_by(id: params[:format])
+    end
+
+    def get_campaign(persona, client_company)
+      return persona.campaigns.where("client_company_id =?", client_company).order('created_at DESC')
+    end
+
+    def wrong_campaign(persona, company)
+
+        begin
+            if persona.client_company != company
+              return true
+            else
+              return false
+            end
+        rescue
+            puts "persona does not exist for that user"
+            return true
+        end
+    end
 
 
   	def campaign_params
@@ -146,13 +175,6 @@ class CampaignsController < ApplicationController
     		return current_email
 
   	end
-
-
-
-
-
-
-
 
 
 end

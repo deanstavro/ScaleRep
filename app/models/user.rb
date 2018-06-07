@@ -1,7 +1,7 @@
 class User < ApplicationRecord
   
   belongs_to :client_company, optional: true
-  enum role: [:user, :vip, :admin]
+  enum role: [:user, :scalerep, :admin]
   after_initialize :set_default_role, :if => :new_record?
   after_create :generate_key
 

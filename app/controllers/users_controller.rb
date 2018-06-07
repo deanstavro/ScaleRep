@@ -13,18 +13,17 @@ class UsersController < ApplicationController
     if user_signed_in?
 
       @user = User.find(current_user.id)
-      @company = @user.client_company_id
-      @client_company = ClientCompany.find(@company)
-
+      @client_company = ClientCompany.find(@user.client_company_id)
  
       if @client_company.account_live == true
-        redirect_to personas_path
+        redirect_to client_companies_personas_path
       else
         render 'home'
 
       end
+    
     else
-      render 'home'
+      render 'homepage#index'
     end
     
     

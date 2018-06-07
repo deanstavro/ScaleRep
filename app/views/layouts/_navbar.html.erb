@@ -8,7 +8,7 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto nav-fill w-50">
       <% if user_signed_in? %>
-        <li class="nav-item active"> <%= link_to 'Personas', personas_path %></li>
+        <li class="nav-item active"> <%= link_to 'Personas', client_companies_personas_path() %></li>
 
         <% if false %>
         <li class="nav-item active"> <%= link_to 'Campaigns', client_company_campaigns_path(@user.client_company) %></li>
@@ -22,7 +22,7 @@
           <li class="nav-item active"> <%= link_to 'Metrics', metrics_index_path %></li>
         <% end %>
         <li class="nav-item active"> <%= link_to 'Edit User', edit_user_registration_path %></li>
-        <li class="nav-item active"> <%= link_to 'Edit Account', edit_client_company_path(@user)%> </li>
+        <li class="nav-item active"> <%= link_to 'Edit Account', edit_client_companies_path()%> </li>
         <li class="nav-item active"> <%= link_to 'Sign out', destroy_user_session_path, :method=>'delete' %></li>
       <% end %>
     </ul>

@@ -1,90 +1,56 @@
 Rails.application.routes.draw do
 
-  resources :contacts
-  resources :accounts
-  # V1 of API
-  namespace :api do
-    namespace :v1 do
+    # V1 of API
+    namespace :api do
+        namespace :v1 do
 
+            resources :leads do
+                collection { post :import}
+                collection do
+                    post :new_lead
+                end
+            end
 
-      resources :leads do
-        collection { post :import}
-        collection do
-          post :new_lead
-          #post :all_metrics
+            resources :autoreply do
+                collection do
+                    post :new_reply
+                end
+            end
+
         end
-      end
-
-      resources :metrics do
-        collection do
-          post :all_metrics
-        end
-      end
-
-      resources :autoreply do
-        collection do
-          post :new_reply
-        end
-      end
-
-
-      #resources :campaigns, except: [:new, :edit] do
-      #  collection do
-      #    post :new_campaigns
-      #  end
-      #end
-
-
     end
-  end
 
+    # Set Root Url
+    authenticated :user do
+        root 'users#home'
+    end 
+    root to: 'homepage#index'
 
-  get 'lead_list/index'
+    # All routes when not signed in 
+    devise_for :admin_users, ActiveAdmin::Devise.config
+    ActiveAdmin.routes(self)
+    resources :demos, only: [:new, :create]
+    devise_for :users
 
-  get 'lead_list/edit'
+    #All Routes for Signed In User
 
-  get 'client_reports/index'
+        get 'client_reports/index'
+        get 'metrics/index'
+        
+        resources :users
 
-  get 'reports/index'
+        # Nested In Client Companies
+        resource :client_companies, path: '', only: [:edit, :update, :delete] do  
+            resources :personas
+            resources :campaigns
+        end
 
-
-
-  get 'metrics/index'
-
-  #get 'client_companies/edit'
-
-  #patch 'client_companies/update'
-
-  devise_for :admin_users, ActiveAdmin::Devise.config
-  ActiveAdmin.routes(self)
-
-
-  authenticated :user do
-    root 'users#home'
-  end
-
-  root to: 'homepage#index' #'visitors#index'
-
-  devise_for :users
-  resources :users
-
-  resources :client_companies do
-
-    resources :campaigns
-  end
-
-  resources :personas
-
-  resources :demos, only: [:new, :create]
-
-  resources :leads do
-    collection { post :import_to_campaign}
-    collection { get :fields}
-  end
-
-
-
-
+        resources :leads do
+            collection { post :import_to_campaign}
+            collection { get :fields}
+        end
+        resources :contacts
+        resources :accounts
 
 
 end

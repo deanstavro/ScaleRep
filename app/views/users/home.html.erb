@@ -1,27 +1,8 @@
 
-<% if @user.client_company.account_live == false %>
 
-	<%= render 'users/show' %>
-<% else %>
-
-	<div id="title" class="jumbotron">
-  	<div class = "container">
-    <br/>
-    <h1>Welcome Home, <%= @user.first_name %></h1>
-		<h2>Account Owner: <%= @user.first_name if @user.first_name %> <%= @user.last_name if @user.last_name %></h2>
-		<h2>Email: <%= @user.email if @user.email %></h2>
-  </div>
-</div>
+<%= render 'users/onboard' %>
 
 
-	<div class="container">
-		<h3><span style="color:green"> Your Account Is Live </span></h3>
-	</div>
-
-
-
-
-<% end %>
 
 
 

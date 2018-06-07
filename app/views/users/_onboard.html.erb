@@ -23,7 +23,7 @@
 		<ul class="list-group list-group-flush">
 			<li class="list-group-item">
 				<h3>
-					1. * Complete your <%= link_to " account information ", edit_client_company_path(@client_company.id) %>(10 min.)
+					1. * Complete your <%= link_to " account information ", edit_client_companies_path(@client_company.id) %>(10 min.)
 
 					<% if @user.client_company.profile_setup == true  %>
 						&nbsp; <span class="badge badge-secondary">Completed</span>
@@ -51,7 +51,7 @@
 
 			<li class="list-group-item">
 				<h3>
-					3. Start setting up your <%= link_to "persona campaigns" , personas_path(@user.client_company) %>
+					3. Start setting up your <%= link_to "persona campaigns" , client_companies_personas_path(@user.client_company) %>
 						
 				</h3>
 			</li>

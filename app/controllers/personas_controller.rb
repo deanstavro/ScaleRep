@@ -1,9 +1,12 @@
 class PersonasController < ApplicationController
   #before_action :set_persona, only: [:show, :edit, :update, :destroy]
+  before_action :authenticate_user!
+
 
   # GET /personas
   # GET /personas.json
   def index
+
       @user = User.find(current_user.id)
       @company = ClientCompany.find_by(id: @user.client_company_id)
       @personas = Persona.where("client_company_id =?", @company).order('created_at DESC')
@@ -53,17 +56,13 @@ class PersonasController < ApplicationController
           # add metrics and store in array
   end
 
+
+
+
   # GET /personas/1
   # GET /personas/1.json
-  def show
-    @user = User.find(current_user.id)
-    @company = ClientCompany.find_by(id: @user.client_company_id)
-    
-    @persona = Persona.find_by(id: params[:id])
-    @campaigns = @persona.campaigns.where("client_company_id =?", @company).order('created_at DESC')
-
-      
-  end
+  #def show   
+  #end
 
   # GET /personas/new
   def new
@@ -74,6 +73,7 @@ class PersonasController < ApplicationController
   # GET /personas/1/edit
   def edit
     @user = User.find(current_user.id)
+    @client_company = ClientCompany.find_by(id: @user.client_company_id)
     @persona = Persona.find_by(id: params[:id])
   end
 
@@ -82,15 +82,13 @@ class PersonasController < ApplicationController
   def create
     @user = User.find(current_user.id)
     @company = ClientCompany.find_by(id: @user.client_company_id)
-    
-
     @persona = Persona.new(persona_params)
     @persona.client_company = @company
 
 
     respond_to do |format|
       if @persona.save
-        format.html { redirect_to personas_path, notice: 'Persona was successfully created.' }
+        format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully created.' }
         format.json { render :index, status: :created}
       else
         format.html { render :new }
@@ -106,7 +104,7 @@ class PersonasController < ApplicationController
     @persona = Persona.find_by(id: params[:id])
     respond_to do |format|
       if @persona.update(persona_params)
-        format.html { redirect_to personas_path, notice: 'Persona was successfully updated.' }
+        format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully updated.' }
         format.json { render :index, status: :ok }
       else
         format.html { render :edit }
@@ -124,14 +122,14 @@ class PersonasController < ApplicationController
 
         persona.destroy
         respond_to do |format|
-          format.html { redirect_to personas_url, notice: 'Persona was successfully destroyed.' }
+          format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully destroyed.' }
           format.json { head :no_content }
         end
 
     rescue
 
         respond_to do |format|
-          format.html { redirect_to personas_url, notice: 'Delete associated campaigns before deleting persona!' }
+          format.html { redirect_to client_companies_personas_path, notice: 'Delete associated campaigns before deleting persona!' }
           format.json { head :no_content }
         end
     end
@@ -141,6 +139,8 @@ class PersonasController < ApplicationController
     end
 
   private
+
+
     # Use callbacks to share common setup or constraints between actions.
     def set_persona
       @persona = Persona.find(params[:id])

@@ -7,7 +7,8 @@
 </div>
 
 <div class="container">
-  <%= form_for [@client_company,@campaign], :html => {:class => "form-horizontal center"} do |f| %>
+
+  <%= form_for @campaign, url: client_companies_campaigns_path, :html => {:class => "form-horizontal center"} do |f| %>
 
       <div class="form-group">
           <%= f.label :campaign_name, "Campaign Name*", class: "control-label" %>

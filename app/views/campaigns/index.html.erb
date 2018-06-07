@@ -1,8 +1,16 @@
 <div id="title" class="jumbotron">
   <br/>
-  <h1><%= @user.client_company.name if @user.client_company %> Campaign List</h1>
+  <h1>Campaigns</h1>
+  <h3>for <%= @persona.name if @persona.name %></h3>
 
-  <%= link_to '+ Add Campaign', new_client_company_campaign_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+  <br>
+  <p> Campaigns track messaging and e-mail order to improve overall persona metrics.</p>
+  <p> ex. <br>
+    <i>Baseline campaign</i><br>
+    <i>Shorter outbound campaign, using website messaging as reference</i><br>
+    <i>General Facebook inbound lead campaign</i><br>
+  </p>
+  <%= link_to '+ Add Campaign', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
 </div>
 
 <center>
@@ -12,7 +20,7 @@
 
 <div class="table-display">
 
-  <table class="table table-hover">
+  <table class="table table-hover"> 
     <thead class="thead-dark">
       <tr>
         <th scope="col">Campaign</th>
@@ -29,45 +37,54 @@
       </tr>
     </thead>
     <tbody>
-        <% @campaigns.each do |campaign| %>
-            <tr>
+      <% @campaigns.each do |campaign| %>
+        <tr>
+          <td><%= campaign.campaign_name %></td>
 
-                <td><%= campaign.campaign_name %></td>
 
-                <td>
-                    <%= form_tag import_to_campaign_leads_path(:campaign => campaign), multipart: true do %>
-                        <%= file_field_tag :file %>
-                        <%= submit_tag "Import CSV" %>
-                    <% end %>
-                </td>
 
-                <td><%= campaign.emailAccount %></td>
+          <td>
+            <%= form_tag import_to_campaign_leads_path(:campaign => campaign), multipart: true do %>
+              <%= file_field_tag :file %>
+              <%= submit_tag "Import CSV" %>
+            <% end %>
+          </td>
 
-                <% if campaign.persona.present? %>
-                    <td><%= campaign.persona.name %></td>
-                <% else %>
-                    <td>Unassigned</td>
-                <% end %>
+          <td><%= campaign.emailAccount %></td>
 
-                <td><%= campaign.peopleCount %></td>
-                <td><%= campaign.deliveriesCount %></td>
-                <td><%= campaign.bouncesCount %></td>
 
-                <% if (campaign.repliesCount).to_i > 0 %>
-                    <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount) %></td>
-                <% else %>
-                    <td>0</td>
-                <% end %>
 
-                <% if (campaign.opensCount).to_i > 0 %>
-                    <td><%= campaign.opensCount %><br><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %></td>
-                <% else %>
-                    <td>0</td>
-                <% end %>
+          <% if campaign.persona.present? %>
+              <td><%= campaign.persona.name %></td>
+          <% else %>
+              <td>Unassigned</td>
+          <% end %>
 
-                <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
-            </tr>
-        <% end %>
+
+          <td><%= campaign.peopleCount %></td>
+          <td><%= campaign.deliveriesCount %></td>
+          <td><%= campaign.bouncesCount %></td>
+
+          <% if (campaign.repliesCount).to_i > 0 %>
+
+            <% if (campaign.deliveriesCount).to_i > (campaign.peopleCount).to_i %>
+                <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount) %>%</td>
+            <% else %>
+                <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount) %>%</td>
+            <% end %>
+          <% else %>
+            <td>0</td>
+          <% end %>
+
+          <% if (campaign.opensCount).to_i > 0 %>
+            <td><%= campaign.opensCount %><br><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %>%</td>
+          <% else %>
+            <td>0</td>
+          <% end %>
+
+          <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
+        </tr>
+      <% end %>
     </tbody>
   </table>
 </div>

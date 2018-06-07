@@ -6,6 +6,7 @@ permit_params :name, :website, :industry, :description, :internal_notes, :do_not
 #
 # or
 #
+
 # permit_params do
 #   permitted = [:permitted, :attributes]
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
@@ -14,7 +15,7 @@ permit_params :name, :website, :industry, :description, :internal_notes, :do_not
 
 form do |f|
   f.inputs "Lead Details" do
-s
+
 
 	f.input :name
     f.input :phone_number
