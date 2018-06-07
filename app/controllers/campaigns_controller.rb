@@ -22,7 +22,7 @@ class CampaignsController < ApplicationController
 
 
   def new
-    	@user = User.find(current_user.id)
+    	@user = get_user
       @persona_name = params[:persona_name]
       @persona_id = params[:persona_id]
 
@@ -35,7 +35,7 @@ class CampaignsController < ApplicationController
 
 
   def create
-    	@user = User.find(current_user.id)
+    	@user = get_user
   		@company = ClientCompany.find_by(id: @user.client_company_id)
       @campaign = @company.campaigns.build(campaign_params)
       @campaigns = Campaign.where("client_company_id =?", @company).order('created_at DESC')

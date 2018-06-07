@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180605234313) do
+ActiveRecord::Schema.define(version: 20180607033124) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -194,6 +194,9 @@ ActiveRecord::Schema.define(version: 20180605234313) do
     t.boolean  "sent_to_reply"
     t.boolean  "personalized"
     t.string   "full_name"
+    t.integer  "status"
+    t.string   "last_conversation_subject"
+    t.text     "last_conversation_summary"
     t.index ["campaign_id"], name: "index_leads_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_leads_on_client_company_id", using: :btree
   end

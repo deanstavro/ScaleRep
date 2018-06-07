@@ -11,7 +11,7 @@ class Api::V1::AutoreplyController < Api::V1::BaseController
         # grab all relevant information and put into auto_reply database
         # Remove all fields that are not to be saved
         #t.delete("company_api_key")
-        @auto_reply = AutoReply.new(auto_reply_params)
+        @lead = Lead.new(auto_reply_params)
 
         # finish filling out information --> campaign and company_api_key
         #@auto_reply.client_company = @client_company
@@ -23,7 +23,7 @@ class Api::V1::AutoreplyController < Api::V1::BaseController
         #puts company_auto_reply_campaign
 
         #@auto_reply.campaign = company_auto_reply_campaign
-        @auto_reply.save
+        @lead.save
 
 
         #@auto_reply.client_company = @client_company
