@@ -33,7 +33,7 @@ class Api::V1::AutoreplyController < Api::V1::BaseController
 
 
     def referral
-        @params_content = params["referral"]
+        @params_content = params["autoreply"]
         @lead = Lead.new(auto_reply_params)
         @lead.save
     end
