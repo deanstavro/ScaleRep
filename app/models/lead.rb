@@ -6,7 +6,7 @@ class Lead < ApplicationRecord
 	#validates :client_company, presence: true
 
 	belongs_to :campaign, optional: true
-	enum status: [:not_interested, :do_not_contact, :opt_out, :interested, :auto_reply, :referral, :auto_reply_referral]
+	enum status: [:cold, :in_campaign, :not_interested, :do_not_contact, :opt_out, :interested, :auto_reply, :referral, :auto_reply_referral, :meeting_set]
 	#validates :email, presence: true
 	
 	#validates_uniqueness_of :email, scope: :client_company
