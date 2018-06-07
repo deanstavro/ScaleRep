@@ -120,7 +120,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             # grab reply params, with the json content
             @params_content = params[controller_name.to_s]
             
-            begin
+           begin
                 # Create new lead with secured params
                 @lead = Lead.new(auto_reply_params)
             rescue
@@ -139,7 +139,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             begin
                 @lead.save!
                 puts "saved"
-                render json: {error: "Reply uploaded", :status => 200}, status: 200
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
 
             rescue
                 puts "did not save"
@@ -150,6 +150,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             puts "params empty"
             render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
         end
+
     end
 
 
@@ -159,7 +160,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             # grab reply params, with the json content
             @params_content = params[controller_name.to_s]
             
-            begin
+           begin
                 # Create new lead with secured params
                 @lead = Lead.new(auto_reply_params)
             rescue
@@ -178,7 +179,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             begin
                 @lead.save!
                 puts "saved"
-                render json: {error: "Reply uploaded", :status => 200}, status: 200
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
 
             rescue
                 puts "did not save"
@@ -189,6 +190,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             puts "params empty"
             render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
         end
+
     end
 
 
@@ -217,7 +219,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             begin
                 @lead.save!
                 puts "saved"
-                render json: {error: "Reply uploaded", :status => 200}, status: 200
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
 
             rescue
                 puts "did not save"
@@ -237,7 +239,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             # grab reply params, with the json content
             @params_content = params[controller_name.to_s]
             
-            begin
+           begin
                 # Create new lead with secured params
                 @lead = Lead.new(auto_reply_params)
             rescue
@@ -256,7 +258,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             begin
                 @lead.save!
                 puts "saved"
-                render json: {error: "Reply uploaded", :status => 200}, status: 200
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
 
             rescue
                 puts "did not save"
@@ -267,6 +269,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             puts "params empty"
             render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
         end
+
     end
 
 
@@ -295,7 +298,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             begin
                 @lead.save!
                 puts "saved"
-                render json: {error: "Reply uploaded", :status => 200}, status: 200
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
 
             rescue
                 puts "did not save"
