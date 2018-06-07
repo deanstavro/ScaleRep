@@ -13,16 +13,11 @@ class Api::V1::AutoreplyController < Api::V1::BaseController
         #t.delete("company_api_key")
         @lead = Lead.new(auto_reply_params)
 
-        # finish filling out information --> campaign and company_api_key
-        #@auto_reply.client_company = @client_company
 
-        # find campaign for company that IS an auto_reply campaign
-        #company_auto_reply_campaign = Campaign.where(:client_company => @client_company, :campaign_type => "auto_reply").first
+        @client_company = ClientCompany.find_by(api_key: params["api_key"])
+        @lead.update_attribute(:client_company, @client_company)
 
-        #puts "company_auto_reply_campaign!"
-        #puts company_auto_reply_campaign
 
-        #@auto_reply.campaign = company_auto_reply_campaign
         @lead.save
 
 
@@ -35,6 +30,8 @@ class Api::V1::AutoreplyController < Api::V1::BaseController
     def referral
         @params_content = params["autoreply"]
         @lead = Lead.new(auto_reply_params)
+        @client_company = ClientCompany.find_by(api_key: params["api_key"])
+        @lead.update_attribute(:client_company, @client_company)
         @lead.save
     end
 
