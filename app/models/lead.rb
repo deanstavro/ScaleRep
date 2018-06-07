@@ -3,13 +3,15 @@ class Lead < ApplicationRecord
 	require 'rest-client'
 
 	belongs_to :client_company, optional: false
+	#validates :client_company, presence: true
+
 	belongs_to :campaign, optional: true
 	enum status: [:not_interested, :do_not_contact, :opt_out, :interested, :auto_reply, :referral, :auto_reply_referral]
-	validates :email, presence: true
-	validates :client_company, presence: true
-	validates_uniqueness_of :email, scope: :client_company
-	validates :first_name, presence: true
-	validates :last_name, presence: true
+	#validates :email, presence: true
+	
+	#validates_uniqueness_of :email, scope: :client_company
+	#validates :first_name, presence: true
+	#validates :last_name, presence: true
 	after_initialize :init
 
 
