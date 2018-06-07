@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180607033124) do
+ActiveRecord::Schema.define(version: 20180607212924) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -69,18 +69,25 @@ ActiveRecord::Schema.define(version: 20180607033124) do
     t.index ["reset_password_token"], name: "index_admin_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  create_table "auto_replies", force: :cascade do |t|
+  create_table "campaign_replies", force: :cascade do |t|
     t.string   "first_name"
     t.string   "last_name"
+    t.string   "full_name"
+    t.string   "last_conversation_subject"
+    t.string   "last_conversation_summary"
+    t.integer  "status"
+    t.string   "company"
+    t.string   "email"
+    t.text     "notes"
+    t.string   "reply_io_id"
+    t.string   "reply_io_key"
     t.date     "follow_up_date"
-    t.string   "lead_status"
-    t.string   "lead_email"
-    t.datetime "created_at",        null: false
-    t.datetime "updated_at",        null: false
+    t.datetime "created_at",                null: false
+    t.datetime "updated_at",                null: false
     t.integer  "client_company_id"
-    t.integer  "campaign_id"
-    t.index ["campaign_id"], name: "index_auto_replies_on_campaign_id", using: :btree
-    t.index ["client_company_id"], name: "index_auto_replies_on_client_company_id", using: :btree
+    t.integer  "lead_id"
+    t.index ["client_company_id"], name: "index_campaign_replies_on_client_company_id", using: :btree
+    t.index ["lead_id"], name: "index_campaign_replies_on_lead_id", using: :btree
   end
 
   create_table "campaigns", force: :cascade do |t|
@@ -234,8 +241,8 @@ ActiveRecord::Schema.define(version: 20180607033124) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
-  add_foreign_key "auto_replies", "campaigns"
-  add_foreign_key "auto_replies", "client_companies"
+  add_foreign_key "campaign_replies", "client_companies"
+  add_foreign_key "campaign_replies", "leads"
   add_foreign_key "campaigns", "client_companies"
   add_foreign_key "campaigns", "personas"
   add_foreign_key "client_reports", "client_companies"

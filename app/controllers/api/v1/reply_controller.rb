@@ -11,7 +11,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             
            begin
                 # Create new lead with secured params
-                @lead = Lead.new(auto_reply_params)
+                @campaign_reply = CampaignReply.new(auto_reply_params)
             rescue
                 puts "wrong status"
                 render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400
@@ -20,13 +20,13 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             # Update lead to the correct company
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
-            update_lead(:client_company,@client_company)
+            update_reply(:client_company,@client_company)
 
             #Update lead status
-            update_lead(:status, __method__.to_s)
+            update_reply(:status, __method__.to_s)
 
             begin
-                @lead.save!
+                @campaign_reply.save!
                 puts "saved"
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
 
@@ -52,7 +52,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             
             begin
                 # Create new lead with secured params
-                @lead = Lead.new(auto_reply_params)
+                @campaign_reply = CampaignReply.new(auto_reply_params)
             rescue
                 puts "wrong status"
                 render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400
@@ -61,7 +61,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             # Update lead to the correct company
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
-            update_lead(:client_company,@client_company)
+            update_reply(:client_company, @client_company)
 
 
 
@@ -69,16 +69,18 @@ class Api::V1::ReplyController < Api::V1::BaseController
             if @params_content.key?(:status)
 
                 #get all lead status enums
-                statuses = get_lead_statuses
+                statuses = get_reply_statuses
 
                 for status in statuses
+                    puts "YUP"
+                    puts status
 
                     if status[0].to_s == @params_content[:status].to_s
 
                         puts "updating " + __method__.to_s
-                        update_lead(:status, @params_content[:status].to_s)
+                        update_reply(:status, @params_content[:status].to_s)
                         puts "updated"
-                        break
+
                     end
                     puts status[0]+ " not found"
 
@@ -93,7 +95,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
 
             begin
-                @lead.save!
+                @campaign_reply.save!
                 puts "saved"
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
                 return
@@ -122,7 +124,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             
            begin
                 # Create new lead with secured params
-                @lead = Lead.new(auto_reply_params)
+                @campaign_reply = CampaignReply.new(auto_reply_params)
             rescue
                 puts "wrong status"
                 render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400
@@ -131,13 +133,13 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             # Update lead to the correct company
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
-            update_lead(:client_company,@client_company)
+            update_reply(:client_company,@client_company)
 
             #Update lead status
-            update_lead(:status, __method__.to_s)
+            update_reply(:status, __method__.to_s)
 
             begin
-                @lead.save!
+                @campaign_reply.save!
                 puts "saved"
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
 
@@ -162,7 +164,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             
            begin
                 # Create new lead with secured params
-                @lead = Lead.new(auto_reply_params)
+                @campaign_reply = CampaignReply.new(auto_reply_params)
             rescue
                 puts "wrong status"
                 render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400
@@ -171,13 +173,13 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             # Update lead to the correct company
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
-            update_lead(:client_company,@client_company)
+            update_reply(:client_company,@client_company)
 
             #Update lead status
-            update_lead(:status, __method__.to_s)
+            update_reply(:status, __method__.to_s)
 
             begin
-                @lead.save!
+                @campaign_reply.save!
                 puts "saved"
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
 
@@ -200,9 +202,9 @@ class Api::V1::ReplyController < Api::V1::BaseController
             # grab reply params, with the json content
             @params_content = params[controller_name.to_s]
             
-            begin
+           begin
                 # Create new lead with secured params
-                @lead = Lead.new(auto_reply_params)
+                @campaign_reply = CampaignReply.new(auto_reply_params)
             rescue
                 puts "wrong status"
                 render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400
@@ -211,13 +213,13 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             # Update lead to the correct company
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
-            update_lead(:client_company,@client_company)
+            update_reply(:client_company,@client_company)
 
             #Update lead status
-            update_lead(:status, __method__.to_s)
+            update_reply(:status, __method__.to_s)
 
             begin
-                @lead.save!
+                @campaign_reply.save!
                 puts "saved"
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
 
@@ -230,6 +232,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             puts "params empty"
             render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
         end
+
     end
 
 
@@ -241,7 +244,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             
            begin
                 # Create new lead with secured params
-                @lead = Lead.new(auto_reply_params)
+                @campaign_reply = CampaignReply.new(auto_reply_params)
             rescue
                 puts "wrong status"
                 render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400
@@ -250,13 +253,13 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             # Update lead to the correct company
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
-            update_lead(:client_company,@client_company)
+            update_reply(:client_company,@client_company)
 
             #Update lead status
-            update_lead(:status, __method__.to_s)
+            update_reply(:status, __method__.to_s)
 
             begin
-                @lead.save!
+                @campaign_reply.save!
                 puts "saved"
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
 
@@ -269,6 +272,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             puts "params empty"
             render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
         end
+
 
     end
 
@@ -279,9 +283,9 @@ class Api::V1::ReplyController < Api::V1::BaseController
             # grab reply params, with the json content
             @params_content = params[controller_name.to_s]
             
-            begin
+           begin
                 # Create new lead with secured params
-                @lead = Lead.new(auto_reply_params)
+                @campaign_reply = CampaignReply.new(auto_reply_params)
             rescue
                 puts "wrong status"
                 render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400
@@ -290,13 +294,13 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             # Update lead to the correct company
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
-            update_lead(:client_company,@client_company)
+            update_reply(:client_company,@client_company)
 
             #Update lead status
-            update_lead(:status, __method__.to_s)
+            update_reply(:status, __method__.to_s)
 
             begin
-                @lead.save!
+                @campaign_reply.save!
                 puts "saved"
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
 
@@ -309,6 +313,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             puts "params empty"
             render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
         end
+
     end
 
 
@@ -321,12 +326,12 @@ class Api::V1::ReplyController < Api::V1::BaseController
         @params_content.permit(:first_name, :last_name, :full_name, :last_conversation_subject, :last_conversation_summary, :email, :date_sourced, :status)
     end
     
-    def get_lead_statuses
-        return Lead.statuses
+    def get_reply_statuses
+        return CampaignReply.statuses
     end
 
-    def update_lead(field, value)
-        @lead.update_attribute(field, value)
+    def update_reply(field, value)
+        @campaign_reply.update_attribute(field, value)
     end
 
 end

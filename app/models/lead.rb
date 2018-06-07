@@ -3,6 +3,7 @@ class Lead < ApplicationRecord
 	require 'rest-client'
 
 	belongs_to :client_company, optional: true
+	has_many :campaign_replies
 	#validates :client_company, presence: true
 
 	belongs_to :campaign, optional: true
@@ -14,6 +15,7 @@ class Lead < ApplicationRecord
 	#validates :first_name, presence: true
 	#validates :last_name, presence: true
 	after_initialize :init
+
 
 
 
