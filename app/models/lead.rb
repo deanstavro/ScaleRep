@@ -2,7 +2,7 @@ class Lead < ApplicationRecord
 	require 'csv'
 	require 'rest-client'
 
-	belongs_to :client_company, optional: false
+	belongs_to :client_company, optional: true
 	#validates :client_company, presence: true
 
 	belongs_to :campaign, optional: true
