@@ -13,7 +13,15 @@ Rails.application.routes.draw do
 
             resources :autoreply do
                 collection do
+                    post :out_of_office
+                    post :referral
+                end
+            end
+
+            resources :referral do
+                collection do
                     post :new_reply
+                    post :referral
                 end
             end
 

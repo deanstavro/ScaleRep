@@ -1,6 +1,6 @@
 class Api::V1::AutoreplyController < Api::V1::BaseController
   
-    def new_reply
+    def out_of_office
 
         # get information from params and print somewhere
         #@client_company = ClientCompany.find_by(api_key: params[:company_api_key])
@@ -32,13 +32,20 @@ class Api::V1::AutoreplyController < Api::V1::BaseController
     end
 
 
+    def referral
+        @params_content = params["referral"]
+        @lead = Lead.new(auto_reply_params)
+        @lead.save
+    end
+
+
     private
 
 
     # Never trust parameters from the scary internet,
     # only allow the white list through.
     def auto_reply_params
-        @params_content.permit(:first_name, :last_name, :lead_email, :follow_up_date, :lead_status)
+        @params_content.permit(:first_name, :last_name, :full_name, :last_conversation_subject, :last_conversation_summary, :email, :date_sourced, :status)
     end
     
 end
