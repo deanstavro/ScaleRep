@@ -12,7 +12,7 @@ ActiveAdmin.register Lead do
 #   permitted
 # end
 
-permit_params :contract_sent, :deal_won, :deal_size, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :meeting_set, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :campaign_name, :timezone, :address, :meeting_taken, :last_added_to_campaign_date, :in_campaign, :company_description, :email_snippet, :sent_to_reply, :personalized, :full_name, :status, :last_conversation_subject, :last_conversation_summary
+permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :meeting_set, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :campaign_name, :timezone, :address, :meeting_taken, :last_added_to_campaign_date, :in_campaign, :company_description, :sent_to_reply, :personalized, :full_name, :status
 
 index do
     selectable_column
@@ -25,8 +25,6 @@ index do
     column :client_company
     column :email
     column :title
-    column :last_conversation_subject
-    column :last_conversation_summary
 
     column :sent_to_reply
     column :personalized
@@ -46,7 +44,7 @@ index do
     column :city
     column :state
     column :country
-    column :company_description
+
     column :internal_notes
     column :email_snippet
     column :email_in_contact_with
@@ -60,8 +58,7 @@ index do
     column :decision_maker
     column :contract_sent
     column :contract_amount
-    column :deal_won
-    column :deal_size
+
 
 
     actions
@@ -82,7 +79,7 @@ form do |f|
     f.input :last_name
     f.input :full_name
     f.input :status
-    f.input :client_company
+    f.input :client_company 
     f.input :email
     f.input :title
     f.input :last_conversation_subject
@@ -103,14 +100,12 @@ form do |f|
     f.inputs do 
         f.input :country, as: :select, collection: country_dropdown
     end
-    f.input :company_description
     f.input :internal_notes
     f.input :sent_to_reply
     f.input :personalized
     f.input :email_snippet
     f.input :email_in_contact_with
     f.input :email_handed_off_too
-    f.input :meeting_set
     f.input :meeting_time
     f.input :meeting_taken
     f.input :project_scope
@@ -119,8 +114,7 @@ form do |f|
     f.input :decision_maker
     f.input :contract_sent
     f.input :contract_amount
-    f.input :deal_won
-    f.input :deal_size
+
 
   end
   f.actions
