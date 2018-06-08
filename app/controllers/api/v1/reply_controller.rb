@@ -94,17 +94,38 @@ class Api::V1::ReplyController < Api::V1::BaseController
             end
 
 
-            begin
-                @campaign_reply.save!
+            #begin
+                
                 puts "saved"
+
+                if @params_content[:status].to_s == "opt_out" or @params_content[:status].to_s == "do_not_contact"
+
+                    @lead = Lead.where(:client_company => @client_company, :email => @campaign_reply.email)
+
+
+                    if @lead.empty?
+                        @new_lead = @lead.create!(:email => @campaign_reply.email, :status => "blacklist")
+                        @campaign_reply.update_attribute(:lead, @new_lead)
+                        @campaign_reply.save!
+                    else
+
+                        @lead.update(status: "blacklist")
+                        #@campaign_reply.update_attribute(:lead, @lead)
+                        @campaign_reply.save!
+
+                        #####################
+                        #Here, update the lead with the reply task
+                    end
+                end
+
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
                 return
 
-            rescue
+            #rescue
                 puts "did not save"
                 render json: {error: "Reply was not uploaded. E-mail required fields missing (email)", :status => 400}, status: 400
                 return
-            end
+            #end
 
         else
             puts "params empty"
@@ -303,15 +324,18 @@ class Api::V1::ReplyController < Api::V1::BaseController
                 @campaign_reply.save!
                 puts "saved"
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
+                return
 
             rescue
                 puts "did not save"
                 render json: {error: "Reply was not uploaded. E-mail required fields missing (email)", :status => 400}, status: 400
+                return
             end
 
         else
             puts "params empty"
             render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
+            return
         end
 
     end
@@ -333,5 +357,6 @@ class Api::V1::ReplyController < Api::V1::BaseController
     def update_reply(field, value)
         @campaign_reply.update_attribute(field, value)
     end
+
 
 end
