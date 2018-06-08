@@ -46,7 +46,6 @@ index do
     column :country
 
     column :internal_notes
-    column :email_snippet
     column :email_in_contact_with
     column :email_handed_off_too
     column :meeting_set
@@ -103,7 +102,6 @@ form do |f|
     f.input :internal_notes
     f.input :sent_to_reply
     f.input :personalized
-    f.input :email_snippet
     f.input :email_in_contact_with
     f.input :email_handed_off_too
     f.input :meeting_time
