@@ -12,7 +12,7 @@ ActiveAdmin.register Lead do
 #   permitted
 # end
 
-permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :meeting_set, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :company_description, :personalized, :full_name, :status
+permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :meeting_set, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :company_description, :full_name, :status
 
 index do
     selectable_column
@@ -26,7 +26,6 @@ index do
     column :email
     column :title
 
-    column :personalized
     column :campaign
 
     column :hunter_date
@@ -44,7 +43,6 @@ index do
     column :internal_notes
     column :email_in_contact_with
     column :email_handed_off_too
-    column :meeting_set
     column :meeting_time
     column :meeting_taken
     column :project_scope
@@ -91,7 +89,6 @@ form do |f|
         f.input :country, as: :select, collection: country_dropdown
     end
     f.input :internal_notes
-    f.input :personalized
     f.input :email_in_contact_with
     f.input :email_handed_off_too
     f.input :meeting_time
