@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180608193821) do
+ActiveRecord::Schema.define(version: 20180608200852) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -165,8 +165,8 @@ ActiveRecord::Schema.define(version: 20180608193821) do
     t.text     "internal_notes"
     t.string   "email_in_contact_with"
     t.datetime "date_sourced"
-    t.datetime "created_at",                                  null: false
-    t.datetime "updated_at",                                  null: false
+    t.datetime "created_at",                            null: false
+    t.datetime "updated_at",                            null: false
     t.integer  "client_company_id"
     t.integer  "campaign_id"
     t.string   "contract_sent"
@@ -187,14 +187,9 @@ ActiveRecord::Schema.define(version: 20180608193821) do
     t.string   "state"
     t.string   "country"
     t.string   "linkedin"
-    t.string   "campaign_name"
     t.string   "timezone"
     t.string   "address"
-    t.boolean  "meeting_taken",               default: false
-    t.boolean  "in_campaign",                 default: false
-    t.date     "last_added_to_campaign_date"
-    t.boolean  "sent_to_reply"
-    t.boolean  "personalized"
+    t.boolean  "meeting_taken",         default: false
     t.string   "full_name"
     t.integer  "status"
     t.index ["campaign_id"], name: "index_leads_on_campaign_id", using: :btree

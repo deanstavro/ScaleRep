@@ -11,36 +11,47 @@
       <div class="card-header" id="warmLeadsHeader">
         <h5 class="mb-0">
           <button class="btn btn-link" data-toggle="collapse" data-target="#warmLeads" aria-expanded="true" aria-controls="warmLeads">
-            Warm Leads
+            Meetings Set
           </button>
         </h5>
       </div>
 
       <div id="warmLeads" class="collapse show" aria-labelledby="warmLeadsHeader">
         <div class="card-body">
-          <% if @warm_opps.count == 0 %>
-            <p> No warm leads </p>
+          <% if @meeting_set.count == 0 %>
+            <p> No Meetings Set </p>
           <% else %>
             <div class = "warm_leads" style="overflow: auto;">
               <table class = " airtable_data table table-striped">
                 <thead class = "thead-dark">
                   <tr>
-                    <% @warm_opps[0].column_mappings.values.each do |column_map| %>
-                      <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "last_touchpoint" && column_map != "lead_status" %>
-                        <th scope = 'col'><%= column_map %></th>
-                      <% end %>
+                    <% @meeting_set.each do |lead| %>
+                        <th scope = 'col'>date sourced</th>
+                        <th scope = 'col'>first_name</th>
+                        <th scope = 'col'>last_name</th>
+                        <th scope = 'col'>email</th>
+                        <th scope = 'col'>handed off to:</th>
+                        <th scope = 'col'>email used</th>
+                        <th scope = 'col'>meeting date</th>
+
                     <% end %>
                   </tr>
                 </thead>
 
                 <tbody>
-                  <% @warm_opps.each do |lead| %>
+                  <% @meeting_set.each do |lead| %>
                     <tr>
-                      <% lead.fields.each do |field| %>
-                        <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "last_touchpoint" && field[0] != "lead_status" %>
-                          <td> <%= field[1] %></td>
-                        <% end %>
-                      <% end %>
+
+                          <td> <%= lead.date_sourced %></td>
+                          <td> <%= lead.first_name %></td>
+                          <td> <%= lead.last_name %></td>
+                          <td> <%= lead.email %></td>
+                          <td> <%= lead.email_handed_off_too %></td>
+                          <td> <%= lead.email_in_contact_with %></td>
+                          <td> <%= lead.meeting_time %></td>
+
+
+
                     </tr>
                   <% end %>
                 </tbody>
@@ -51,40 +62,52 @@
       </div>
     </div>
 
+
     <div class="card">
       <div class="card-header" id="qualifiedLeadsHeader">
         <h5 class="mb-0">
           <button class= "btn btn-link" data-toggle="collapse" data-target="#qualifiedLeads" aria-expanded="true" aria-controls="qualifiedLeads">
-            Qualified Leads
+            Interested Leads
           </button>
         </h5>
       </div>
 
       <div id="qualifiedLeads" class="collapse" aria-labelledby="qualifiedLeadsHeader">
         <div class="card-body">
-          <% if @qualified_opps.count == 0 %>
-            <p> No qualified leads </p>
+          <% if @interested_leads.count == 0 %>
+            <p> No Interested Leads </p>
           <% else %>
-            <div class = "qualified_leads" style="overflow: auto;">
+            <div class = "warm_leads" style="overflow: auto;">
               <table class = " airtable_data table table-striped">
                 <thead class = "thead-dark">
                   <tr>
-                    <% @qualified_opps[0].column_mappings.values.each do |column_map| %>
-                      <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "last_touchpoint" && column_map != "lead_status" && column_map != "follow_up_date" && column_map != "follow_up_aciton" && column_map != "interest_signal" && column_map != "follow_up_date" && column_map != "follow_up_action" %>
-                        <th scope = 'col'><%= column_map %></th>
-                      <% end %>
+                    <% @meeting_set.each do |lead| %>
+                        <th scope = 'col'>date sourced</th>
+                        <th scope = 'col'>first_name</th>
+                        <th scope = 'col'>last_name</th>
+                        <th scope = 'col'>email</th>
+                        <th scope = 'col'>handed off to:</th>
+                        <th scope = 'col'>email used</th>
+                        <th scope = 'col'>meeting date</th>
+
                     <% end %>
                   </tr>
                 </thead>
 
                 <tbody>
-                  <% @qualified_opps.each do |lead| %>
+                  <% @meeting_set.each do |lead| %>
                     <tr>
-                      <% lead.fields.each do |field| %>
-                        <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "last_touchpoint" && field[0] != "lead_status" && field[0] != "follow_up_date" && field[0] != "interest_signal" && field[0] != "follow_up_date" && field[0] != "follow_up_action"%>
-                          <td> <%= field[1] %></td>
-                        <% end %>
-                      <% end %>
+
+                          <td> <%= lead.date_sourced %></td>
+                          <td> <%= lead.first_name %></td>
+                          <td> <%= lead.last_name %></td>
+                          <td> <%= lead.email %></td>
+                          <td> <%= lead.email_handed_off_too %></td>
+                          <td> <%= lead.email_in_contact_with %></td>
+                          <td> <%= lead.meeting_time %></td>
+
+
+
                     </tr>
                   <% end %>
                 </tbody>
@@ -99,45 +122,58 @@
       <div class="card-header" id="pendingLeadsHeader">
         <h3 class="mb-0">
           <button class="btn btn-link" data-toggle="collapse" data-target="#pendingLeads" aria-expanded="true" aria-controls="pendingLeads">
-            Pending Leads
+            Blacklist
           </button>
         </h5>
       </div>
 
       <div id="pendingLeads" class="collapse" aria-labelledby="pendingLeadsHeader">
         <div class="card-body">
-          <% if @pending_opps.count == 0 %>
-            <p> No pending leads </p>
+          <% if @blacklist.count == 0 %>
+            <p> No Blacklist </p>
 
           <% else %>
-            <div class = "pending_leads" style="overflow: auto;">
+            <div class = "warm_leads" style="overflow: auto;">
               <table class = " airtable_data table table-striped">
-                  <thead class = "thead-dark">
-                    <tr>
-                      <% @pending_opps[0].column_mappings.values.each do |column_map| %>
-                        <% if column_map != "campaign" && column_map != "Product" && column_map != "notes" && column_map != "handed_off_to" && column_map !="predicted_deal_size" && column_map !="contract_stage" && column_map != "lead_status" %>
-                          <th scope = 'col'><%= column_map %></th>
-                        <% end %>
-                      <% end %>
-                    </tr>
-                  </thead>
+                <thead class = "thead-dark">
+                  <tr>
+                    <% @meeting_set.each do |lead| %>
+                        <th scope = 'col'>date sourced</th>
+                        <th scope = 'col'>first_name</th>
+                        <th scope = 'col'>last_name</th>
+                        <th scope = 'col'>email</th>
+                        <th scope = 'col'>handed off to:</th>
+                        <th scope = 'col'>email used</th>
+                        <th scope = 'col'>meeting date</th>
 
-                  <tbody>
-                    <% @pending_opps.each do |lead| %>
-                      <tr>
-                        <% lead.fields.each do |field| %>
-                          <% if field[0] != "campaign" && field[0] != "Product" && field[0] != "notes" && field[0] != "handed_off_to" && field[0] !="predicted_deal_size" && field[0] !="contract_stage"  && field[0] != "lead_status"%>
-                            <td> <%= field[1] %></td>
-                          <% end %>
-                        <% end %>
-                      </tr>
                     <% end %>
-                  </tbody>
+                  </tr>
+                </thead>
+
+                <tbody>
+                  <% @meeting_set.each do |lead| %>
+                    <tr>
+
+                          <td> <%= lead.date_sourced %></td>
+                          <td> <%= lead.first_name %></td>
+                          <td> <%= lead.last_name %></td>
+                          <td> <%= lead.email %></td>
+                          <td> <%= lead.email_handed_off_too %></td>
+                          <td> <%= lead.email_in_contact_with %></td>
+                          <td> <%= lead.meeting_time %></td>
+
+
+
+                    </tr>
+                  <% end %>
+                </tbody>
               </table>
             </div>
           <% end %>
         </div>
       </div>
+
+
     </div>
   </div>
 </div>
