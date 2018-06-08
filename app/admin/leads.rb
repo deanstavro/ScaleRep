@@ -81,8 +81,6 @@ form do |f|
     f.input :client_company 
     f.input :email
     f.input :title
-    f.input :last_conversation_subject
-    f.input :last_conversation_summary
     f.input :linkedin
     f.input :campaign
     f.input :campaign_name
