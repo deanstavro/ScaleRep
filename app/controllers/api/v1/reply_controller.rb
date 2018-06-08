@@ -2,47 +2,6 @@ class Api::V1::ReplyController < Api::V1::BaseController
   
     
 
-    def auto_reply
-
-        unless params[controller_name.to_s].empty?
-
-            # grab reply params, with the json content
-            @params_content = params[controller_name.to_s]
-            
-           begin
-                # Create new lead with secured params
-                @campaign_reply = CampaignReply.new(auto_reply_params)
-            rescue
-                puts "wrong status"
-                render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400
-                return
-            end
-
-            # Update lead to the correct company
-            @client_company = ClientCompany.find_by(api_key: params["api_key"])
-            update_reply(:client_company,@client_company)
-
-            #Update lead status
-            update_reply(:status, __method__.to_s)
-
-            begin
-                @campaign_reply.save!
-                puts "saved"
-                render json: {response: "Reply uploaded", :status => 200}, status: 200
-
-            rescue
-                puts "did not save"
-                render json: {error: "Reply was not uploaded. E-mail required fields missing (email)", :status => 400}, status: 400
-            end
-
-        else
-            puts "params empty"
-            render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
-        end
-
-    end
-
-
     def new_reply
         
         unless params[controller_name.to_s].empty?
@@ -96,30 +55,25 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             #begin
                 
-                puts "saved"
+
 
                 if @params_content[:status].to_s == "opt_out" or @params_content[:status].to_s == "do_not_contact"
-
-                    @lead = Lead.where(:client_company => @client_company, :email => @campaign_reply.email)
-
+                    update_lead(@params_content, @client_company, @campaign_reply, "blacklist")
+                    render json: {response: "Reply uploaded", :status => 200}, status: 200
+                    return
+                elsif @params_content[:status].to_s == "interested" or @params_content[:status].to_s == "not_interested"
+                    update_lead(@params_content, @client_company, @campaign_reply, @params_content[:status].to_s)
+                    render json: {response: "Reply uploaded", :status => 200}, status: 200
+                    return
+                else
+                    update_lead(@params_content, @client_company, @campaign_reply, "in_campaign")
+                    render json: {response: "Reply uploaded", :status => 200}, status: 200
+                    return
                     
-                    if @lead.empty?
-                        @new_lead = @lead.create!(:email => @campaign_reply.email, :status => "blacklist")
-                        @campaign_reply.update_attribute(:lead, @new_lead)
-                        @campaign_reply.save!
-                    else
-
-                        @lead.update(status: "blacklist")
-                        #@campaign_reply.update_attribute(:lead, @lead)
-                        @campaign_reply.save!
-
-                        #####################
-                        #Here, update the lead with the reply task
-                    end
                 end
 
-                render json: {response: "Reply uploaded", :status => 200}, status: 200
-                return
+
+                
 
             #rescue
                 puts "did not save"
@@ -135,6 +89,55 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
 
     end
+
+
+
+
+
+
+
+    def auto_reply
+
+        unless params[controller_name.to_s].empty?
+
+            # grab reply params, with the json content
+            @params_content = params[controller_name.to_s]
+            
+           begin
+                # Create new lead with secured params
+                @campaign_reply = CampaignReply.new(auto_reply_params)
+            rescue
+                puts "wrong status"
+                render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400
+                return
+            end
+
+            # Update lead to the correct company
+            @client_company = ClientCompany.find_by(api_key: params["api_key"])
+            update_reply(:client_company,@client_company)
+
+            #Update lead status
+            update_reply(:status, __method__.to_s)
+
+            begin
+                @campaign_reply.save!
+                puts "saved"
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
+
+            rescue
+                puts "did not save"
+                render json: {error: "Reply was not uploaded. E-mail required fields missing (email)", :status => 400}, status: 400
+            end
+
+        else
+            puts "params empty"
+            render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
+        end
+
+    end
+
+
+
 
 
     def referral
@@ -356,6 +359,29 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
     def update_reply(field, value)
         @campaign_reply.update_attribute(field, value)
+    end
+
+    def update_lead(params_content, client_company, campaign_reply, status)
+
+                    @lead = Lead.where(:client_company => client_company, :email => campaign_reply.email)
+
+
+                    if @lead.empty?
+                        @new_lead = @lead.create!(:email => campaign_reply.email, :status => status)
+                        campaign_reply.update_attribute(:lead, @new_lead)
+                        campaign_reply.save!
+                    else
+                        for lead in @lead
+                            lead.update(status: status)
+                            campaign_reply.update_attribute(:lead, lead)
+                            campaign_reply.save!
+                        end
+
+                        #####################
+                        #Here, update the lead with the reply task
+                    end
+
+
     end
 
 
