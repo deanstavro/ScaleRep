@@ -12,7 +12,7 @@ ActiveAdmin.register Lead do
 #   permitted
 # end
 
-permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :meeting_set, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :campaign_name, :timezone, :address, :meeting_taken, :last_added_to_campaign_date, :in_campaign, :company_description, :sent_to_reply, :personalized, :full_name, :status
+permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :meeting_set, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :company_description, :personalized, :full_name, :status
 
 index do
     selectable_column
@@ -26,12 +26,8 @@ index do
     column :email
     column :title
 
-    column :sent_to_reply
     column :personalized
     column :campaign
-    column :campaign_name
-    column :last_added_to_campaign_date
-    column :in_campaign
 
     column :hunter_date
     column :hunter_score
@@ -83,9 +79,6 @@ form do |f|
     f.input :title
     f.input :linkedin
     f.input :campaign
-    f.input :campaign_name
-    f.input :last_added_to_campaign_date
-    f.input :in_campaign
     f.input :hunter_date
     f.input :hunter_score
     f.input :phone_type
@@ -98,7 +91,6 @@ form do |f|
         f.input :country, as: :select, collection: country_dropdown
     end
     f.input :internal_notes
-    f.input :sent_to_reply
     f.input :personalized
     f.input :email_in_contact_with
     f.input :email_handed_off_too
