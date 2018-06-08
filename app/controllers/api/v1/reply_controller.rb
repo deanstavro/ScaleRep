@@ -102,7 +102,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
                     @lead = Lead.where(:client_company => @client_company, :email => @campaign_reply.email)
 
-
+                    
                     if @lead.empty?
                         @new_lead = @lead.create!(:email => @campaign_reply.email, :status => "blacklist")
                         @campaign_reply.update_attribute(:lead, @new_lead)

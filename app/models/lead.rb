@@ -10,7 +10,7 @@ class Lead < ApplicationRecord
 	enum status: [:cold, :in_campaign, :not_interested, :blacklist, :interested, :meeting_set]
 	#validates :email, presence: true
 	
-	#validates_uniqueness_of :email, scope: :client_company
+	validates_uniqueness_of :email, scope: :client_company
 	validates :email, presence: true
 	#validates :first_name, presence: true
 	#validates :last_name, presence: true
