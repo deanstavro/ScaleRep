@@ -74,9 +74,8 @@ class Lead < ApplicationRecord
 			end
 
 
-		AddContactsToReplyJob.perform_later(all_hash,campaign)
-
 		end
+		AddContactsToReplyJob.perform_later(all_hash,campaign)
 
 		return imported.to_s + " imported successfully, "+ duplicates.to_s + " duplicates, " + not_imported.to_s + " contacts not imported, " + rows_email_not_present.to_s + " rows with email not present"
 	end
