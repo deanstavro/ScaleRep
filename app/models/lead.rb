@@ -18,7 +18,7 @@ class Lead < ApplicationRecord
 	after_initialize :init
 
 
-	def self.import_to_campaign(file, company, leads, campaign, column_names)
+	def self.import_to_campaign(file, company, leads, campaign_id, column_names)
 		
 		puts "Starting importing to campaign"
 		not_imported = 0
@@ -54,7 +54,7 @@ class Lead < ApplicationRecord
 						if leads.where(:email => email).count == 0
 
 							one_hash[:client_company] = company
-							one_hash[:campaign_id] = campaign
+							one_hash[:campaign_id] = campaign_id
 
 							#This is where the account will get updated
 
@@ -75,7 +75,7 @@ class Lead < ApplicationRecord
 
 
 		end
-		AddContactsToReplyJob.perform_later(all_hash,campaign)
+		AddContactsToReplyJob.perform_later(all_hash,campaign_id)
 
 		return imported.to_s + " imported successfully, "+ duplicates.to_s + " duplicates, " + not_imported.to_s + " contacts not imported, " + rows_email_not_present.to_s + " rows with email not present"
 	end

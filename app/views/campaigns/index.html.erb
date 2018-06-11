@@ -27,7 +27,6 @@
 
         <th scope="col">Add Leads <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="a"></i></th>
         <th scope="col">email Account</th>
-        <th scope="col">Persona</th>
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
         <th scope="col">Bounces</th>
@@ -51,14 +50,6 @@
           </td>
 
           <td><%= campaign.emailAccount %></td>
-
-
-
-          <% if campaign.persona.present? %>
-              <td><%= campaign.persona.name %></td>
-          <% else %>
-              <td>Unassigned</td>
-          <% end %>
 
 
           <td><%= campaign.peopleCount %></td>
