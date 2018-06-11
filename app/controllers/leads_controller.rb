@@ -7,8 +7,8 @@ class LeadsController < ApplicationController
 
     # grab reports and grab leads for every week for a report
     @interested_leads = Lead.where(client_company_id: @company.id, status: "interested").order('date_sourced DESC')
-    @blacklist = Lead.where(client_company_id: @company.id, status: "blacklist").order('date_sourced DESC')
-    @meeting_set = Lead.where(client_company_id: @company.id, status: "meeting_set").order('date_sourced DESC')
+    @blacklist = Lead.where(client_company_id: @company.id, status: "blacklist").order('updated_at DESC')
+    @meeting_set = Lead.where(client_company_id: @company.id, status: "meeting_set").order('updated_at DESC')
 
 
     #airrecord work

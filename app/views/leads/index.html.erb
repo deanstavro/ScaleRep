@@ -93,7 +93,7 @@
                 </thead>
 
                 <tbody>
-                  <% @meeting_set.each do |lead| %>
+                  <% @interested_leads.each do |lead| %>
                     <tr>
 
                           <td> <%= lead.date_sourced %></td>
@@ -147,7 +147,7 @@
                 </thead>
 
                 <tbody>
-                  <% @meeting_set.each do |lead| %>
+                  <% @blacklist.each do |lead| %>
                     <tr>
 
                           <td> <%= lead.date_sourced %></td>
