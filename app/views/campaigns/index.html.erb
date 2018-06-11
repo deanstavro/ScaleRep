@@ -40,8 +40,6 @@
         <tr>
           <td><%= campaign.campaign_name %></td>
 
-
-
           <td>
             <%= form_tag import_to_campaign_leads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true do %>
               <%= file_field_tag :file %>
@@ -51,13 +49,13 @@
 
           <td><%= campaign.emailAccount %></td>
 
-
           <td><%= campaign.peopleCount %></td>
+
           <td><%= campaign.deliveriesCount %></td>
+
           <td><%= campaign.bouncesCount %></td>
 
           <% if (campaign.repliesCount).to_i > 0 %>
-
             <% if (campaign.deliveriesCount).to_i > (campaign.peopleCount).to_i %>
                 <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount) %>%</td>
             <% else %>
@@ -74,6 +72,7 @@
           <% end %>
 
           <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
+
         </tr>
       <% end %>
     </tbody>

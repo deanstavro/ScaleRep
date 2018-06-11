@@ -48,23 +48,19 @@ class CampaignsController < ApplicationController
   		email_array = get_email_accounts(@company.replyio_keys)
       count_dict = email_count(email_array, @campaigns)
 
-    	puts "COUNT_DICT"
+    	puts "email count_dict"
     	puts count_dict
 
       # Choose correct email based on which email is running the least campaigns
     	email_to_use = choose_email(count_dict)
 
-    	puts "EMAIL TO USE"
+    	puts "email to use: "
     	puts email_to_use
   		
       # Find the correct keys for that email to upload the campaign to that email
       for email in email_array
-
   			if email_to_use == email["emailAddress"]
   				reply_key = email["key"]
-          puts "REPLY KEYS"
-          puts reply_key
-
   				break
   			end
   		end
