@@ -12,7 +12,7 @@ ActiveAdmin.register Lead do
 #   permitted
 # end
 
-permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :meeting_set, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :company_description, :full_name, :status
+permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :meeting_set, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :company_description, :full_name, :status, :account_id, :company_name, :company_website
 
 index do
     selectable_column
@@ -23,8 +23,12 @@ index do
     column :full_name
     column :status
     column :client_company
+    column :account
     column :email
     column :title
+    column :account
+    column :company_name
+    column :company_website
 
     column :campaign
 
@@ -76,6 +80,10 @@ form do |f|
     f.input :email
     f.input :title
     f.input :linkedin
+    f.input :account
+    f.input :company_name
+    f.input :company_website
+    
     f.input :campaign
     f.input :hunter_date
     f.input :hunter_score

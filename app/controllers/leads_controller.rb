@@ -34,6 +34,8 @@ class LeadsController < ApplicationController
     @company = ClientCompany.find_by(id: @user.client_company_id)
     @leads = Lead.where(client_company: @company)
 
+    persona = params[:persona]
+
     col =  Lead.column_names
 
 
@@ -41,22 +43,27 @@ class LeadsController < ApplicationController
         if (params[:file].content_type).to_s == 'text/csv'
           if (params[:file].size).to_i < 1000000
 
-          puts "HI"
+          puts "Starting upload method"
           upload_message = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign], col)
-          puts "HELLO"
+          puts "Finished uploading. Redirecting!"
           flash[:notice] = upload_message
-          redirect_to client_company_campaigns_path(@company)
+          redirect_to client_companies_campaigns_path(persona)
           else
-            redirect_to client_company_campaigns_path(@company), :flash => { :error => "The CSV is too large. Please upload a shorter CSV!" }
+
+            redirect_to client_companies_campaigns_path(persona), :flash => { :error => "The CSV is too large. Please upload a shorter CSV!" }
+            return
           end
+
 
         else
 
-          redirect_to client_company_campaigns_path(@company), :flash => { :error => "The file was not uploaded. Please Upload a CSV!" }
+          redirect_to client_companies_campaigns_path(persona), :flash => { :error => "The file was not uploaded. Please Upload a CSV!" }
+          return
 
         end
     rescue
-        redirect_to client_company_campaigns_path(@company), :flash => { :error => "No file chosen. Please upload a CSV!" }
+        redirect_to client_companies_campaigns_path(persona), :flash => { :error => "No file chosen. Please upload a CSV!" }
+        return
 
     end
   end

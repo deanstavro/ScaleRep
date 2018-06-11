@@ -44,7 +44,7 @@
 
 
           <td>
-            <%= form_tag import_to_campaign_leads_path(:campaign => campaign), multipart: true do %>
+            <%= form_tag import_to_campaign_leads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true do %>
               <%= file_field_tag :file %>
               <%= submit_tag "Import CSV" %>
             <% end %>

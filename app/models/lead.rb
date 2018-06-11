@@ -3,6 +3,7 @@ class Lead < ApplicationRecord
 	require 'rest-client'
 
 	belongs_to :client_company, optional: true
+	belongs_to :account, optional: true
 	has_many :campaign_replies
 	#validates :client_company, presence: true
 
@@ -18,43 +19,47 @@ class Lead < ApplicationRecord
 
 
 	def self.import_to_campaign(file, company, leads, campaign, column_names)
-		puts "WE HERE"
+		
+		puts "Starting importing to campaign"
 		not_imported = 0
 		duplicates = 0
 		imported = 0
 		rows_email_not_present = 0
+		
+		#Hash of all rows that will be inputted to reply
 		all_hash = []
 
-
-		#ignore cases for fields
-
 		CSV.foreach(file.path, headers: true) do |row|
-			puts "GOING THROUGH EACH ROW"
+			puts "looping through each row"
 
-
+			#Take row, convert keys to lowercase, put in key,value hash
   			new_hash = {}
   			row.to_hash.each_pair do |k,v|
  	  			new_hash.merge!({k.downcase => v})
  	  			new_hash.keep_if {|k,_| column_names.include? k }
   			end
 
-			one_hash = new_hash.to_hash
 
+			one_hash = new_hash.to_hash
+			# If e-mail field is included
 			if one_hash["email"].present?
 
-
-
-					all_hash << one_hash
+					puts one_hash
+					
 
 					email = one_hash["email"]
 
 					begin
+						# check for duplicates
 						if leads.where(:email => email).count == 0
 
 							one_hash[:client_company] = company
 							one_hash[:campaign_id] = campaign
 
+							#This is where the account will get updated
+
 							lead = Lead.create!(one_hash)
+							all_hash << one_hash
 
 							imported = imported + 1
 						else
