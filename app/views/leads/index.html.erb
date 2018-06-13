@@ -25,7 +25,7 @@
       </div>
 
 
-      <% if @current_table == "meetingsSet" %>
+      <% if @current_table == "meetings_set" %>
         <div id="meetingsSet" class="show" aria-labelledby="meetingsSetHeader">
       <% else %>
         <div id="meetingsSet" class="collapse" aria-labelledby="meetingsSetHeader">
@@ -71,7 +71,7 @@
                     <div class="page_info">
                       <%= page_entries_info @meetings_set %>
                     </div>
-                    <%= will_paginate @meetings_set, :params => { :table_id => :blacklist }, :container => false %>
+                    <%= will_paginate @meetings_set, :params => { :table_id => :meetings_set }, :container => false %>
                 </div>
                 
               </div>
@@ -91,7 +91,7 @@
         </h5>
       </div>
 
-      <% if @current_table == "interestedLeads" %>
+      <% if @current_table == "interested_leads" %>
         <div id="interestedLeads" class="show" aria-labelledby="interestedLeadsHeader">
       <% else %>
         <div id="interestedLeads" class="collapse" aria-labelledby="interestedLeadsHeader">
@@ -137,7 +137,7 @@
                     <div class="page_info">
                       <%= page_entries_info @interested_leads %>
                     </div>
-                    <%= will_paginate @interested_leads, :params => { :table_id => :blacklist }, :container => false %>
+                    <%= will_paginate @interested_leads, :params => { :table_id => :interested_leads }, :container => false %>
                 </div>
               </div>
           <% end %>
@@ -231,7 +231,7 @@
           </h5>
         </div>
 
-        <% if @current_table == "customer_accounts" %>
+        <% if @current_table == "accounts" %>
           <div id="customer_accounts" class="show" aria-labelledby="qualifiedLeadsHeader">
         <% else %>
           <div id="customer_accounts" class="collapse" aria-labelledby="qualifiedLeadsHeader">
@@ -272,7 +272,7 @@
                   <div class="page_info">
                     <%= page_entries_info @accounts %>
                   </div>
-                  <%= will_paginate @accounts, :params => { :table_id => :customer_accounts }, :container => false %>
+                  <%= will_paginate @accounts, :params => { :table_id => :accounts }, :container => false %>
                 </div>
 
             <% end %>
