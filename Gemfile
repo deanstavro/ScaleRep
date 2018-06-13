@@ -25,7 +25,7 @@ gem 'country-select'
 gem 'rest-client'
 gem 'sidekiq'
 gem 'rails_12factor'
-# gem 'ahoy_matey'
+gem 'will_paginate', '~> 3.1.0'
 
 group :test do
   gem 'sqlite3'

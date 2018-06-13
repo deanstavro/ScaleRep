@@ -8,20 +8,25 @@
 <div class = 'thin_margins'>
   <div id="accordion">
     <div class="card">
-      <div class="card-header" id="warmLeadsHeader">
+      <div class="card-header" id="meetingsSetHeader">
         <h5 class="mb-0">
-          <button class="btn btn-link" data-toggle="collapse" data-target="#warmLeads" aria-expanded="true" aria-controls="warmLeads">
+          <button class="btn btn-link" data-toggle="collapse" data-target="#meetingsSet" aria-expanded="true" aria-controls="meetingsSet">
             Meetings Set
           </button>
         </h5>
       </div>
 
-      <div id="warmLeads" class="collapse show" aria-labelledby="warmLeadsHeader">
+
+      <% if @current_table == "blacklist" %>
+        <div id="meetingsSet" class="collapse show" aria-labelledby="meetingsSetHeader">
+      <% else %>
+        <div id="meetingsSet" class="collapse" aria-labelledby="meetingsSetHeader">
+      <% end %>
         <div class="card-body">
           <% if @meeting_set.count == 0 %>
             <p> No Meetings Set </p>
           <% else %>
-            <div class = "warm_leads" style="overflow: auto;">
+            <div style="overflow: auto;">
               <table class = " airtable_data table table-striped">
                 <thead class = "thead-dark">
                   <tr>
@@ -56,6 +61,7 @@
                   <% end %>
                 </tbody>
               </table>
+              <%= will_paginate @accounts, :params => { :table_id => :meetingsSet }%>
             </div>
           <% end %>
         </div>
@@ -64,20 +70,25 @@
 
 
     <div class="card">
-      <div class="card-header" id="qualifiedLeadsHeader">
+      
+      <div class="card-header" id="interestedLeadsHeader">
         <h5 class="mb-0">
-          <button class= "btn btn-link" data-toggle="collapse" data-target="#qualifiedLeads" aria-expanded="true" aria-controls="qualifiedLeads">
+          <button class= "btn btn-link" data-toggle="collapse" data-target="#interestedLeads" aria-expanded="true" aria-controls="interestedLeads">
             Interested Leads
           </button>
         </h5>
       </div>
 
-      <div id="qualifiedLeads" class="collapse" aria-labelledby="qualifiedLeadsHeader">
+      <% if @current_table == "blacklist" %>
+        <div id="interestedLeads" class="collapse show" aria-labelledby="interestedLeadsHeader">
+      <% else %>
+        <div id="interestedLeads" class="collapse" aria-labelledby="interestedLeadsHeader">
+      <% end %>
         <div class="card-body">
           <% if @interested_leads.count == 0 %>
             <p> No Interested Leads </p>
           <% else %>
-            <div class = "warm_leads" style="overflow: auto;">
+            <div style="overflow: auto;">
               <table class = " airtable_data table table-striped">
                 <thead class = "thead-dark">
                   <tr>
@@ -110,6 +121,7 @@
                   <% end %>
                 </tbody>
               </table>
+              <%= will_paginate @accounts, :params => { :table_id => :interestedLeads }%>
             </div>
           <% end %>
         </div>
@@ -117,21 +129,25 @@
     </div>
 
     <div class="card">
-      <div class="card-header" id="pendingLeadsHeader">
+      <div class="card-header" id="blacklistHeader">
         <h3 class="mb-0">
-          <button class="btn btn-link" data-toggle="collapse" data-target="#pendingLeads" aria-expanded="true" aria-controls="pendingLeads">
+          <button class="btn btn-link" data-toggle="collapse" data-target="#blacklist" aria-expanded="true" aria-controls="blacklist">
             Blacklist
           </button>
         </h5>
       </div>
 
-      <div id="pendingLeads" class="collapse" aria-labelledby="pendingLeadsHeader">
+      <% if @current_table == "blacklist" %>
+        <div id="blacklist" class="collapse show" aria-labelledby="blacklistHeader">
+      <% else %>
+        <div id="blacklist" class="collapse" aria-labelledby="blacklistHeader">
+      <% end %>
         <div class="card-body">
           <% if @blacklist.count == 0 %>
             <p> No Blacklist </p>
 
           <% else %>
-            <div class = "warm_leads" style="overflow: auto;">
+            <div style="overflow: auto;">
               <table class = " airtable_data table table-striped">
                 <thead class = "thead-dark">
                   <tr>
@@ -164,56 +180,69 @@
                   <% end %>
                 </tbody>
               </table>
+              <%= will_paginate @accounts, :params => { :table_id => :blacklist }%>
             </div>
           <% end %>
         </div>
+
       </div>
 
 
 
 
       <div class="card">
-      <div class="card-header" id="qualifiedLeadsHeader">
-        <h5 class="mb-0">
-          <button class= "btn btn-link" data-toggle="collapse" data-target="#customer_accounts" aria-expanded="true" aria-controls="qualifiedLeads">
-            Client Accounts
-          </button>
-        </h5>
-      </div>
+        <div class="card-header" id="qualifiedLeadsHeader">
+          <h5 class="mb-0">
+            <button class= "btn btn-link" data-toggle="collapse" data-target="#customer_accounts" aria-expanded="true" aria-controls="qualifiedLeads">
+              Client Accounts
+            </button>
+          </h5>
+        </div>
 
-      <div id="customer_accounts" class="collapse" aria-labelledby="qualifiedLeadsHeader">
-        <div class="card-body">
-          <% if @accounts.count == 0 %>
-            <p> No Client Accounts </p>
-          <% else %>
-            <div class = "warm_leads" style="overflow: auto;">
-              <table class = " airtable_data table table-striped">
-                <thead class = "thead-dark">
-                  <tr>
-                        <th scope = 'col'>name</th>
-                        <th scope = 'col'>website</th>
-                        <th scope = 'col'>do not contact?</th>
+        <% if @current_table == "customer_accounts" %>
+          <div id="customer_accounts" class="collapse show" aria-labelledby="qualifiedLeadsHeader">
+        <% else %>
+          <div id="customer_accounts" class="collapse" aria-labelledby="qualifiedLeadsHeader">
+        <% end %>
+          <div class="card-body">
+            <% if @accounts.count == 0 %>
+              <p> No Client Accounts </p>
+            <% else %>
+              <div style="overflow: auto;">
+                
 
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <% @accounts.each do |account| %>
+                <table class = " airtable_data table table-striped">
+                  <thead class = "thead-dark">
                     <tr>
-
-                          <td> <%= account.name %></td>
-                          <td> <%= account.website %></td>
-                          <td> <%= account.do_not_contact.to_s %></td>
+                          <th scope = 'col'>name</th>
+                          <th scope = 'col'>website</th>
+                          <th scope = 'col'>do not contact?</th>
 
                     </tr>
-                  <% end %>
-                </tbody>
-              </table>
-            </div>
-          <% end %>
-        </div>
+                  </thead>
+
+                  <tbody>
+                    <% @accounts.each do |account| %>
+                      <tr>
+
+                            <td> <%= account.name %></td>
+                            <td> <%= account.website %></td>
+                            <td> <%= account.do_not_contact.to_s %></td>
+
+                      </tr>
+                    <% end %>
+                  </tbody>
+
+                </table>
+
+                <%= will_paginate @accounts, :params => { :table_id => :customer_accounts }%>
+
+              </div>
+
+            <% end %>
+
+          </div>
       </div>
-    </div>
 
 
 
