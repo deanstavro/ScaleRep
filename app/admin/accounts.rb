@@ -2,7 +2,7 @@ ActiveAdmin.register Account do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :name, :website, :industry, :description, :internal_notes, :do_not_contact,  :number_of_employees, :address, :city, :state, :country, :zipcode, :timezone, :last_funding_type, :last_funding_amount, :total_funding_raised, :last_funding_date
+permit_params :name, :website, :status, :industry, :description, :internal_notes, :do_not_contact,  :number_of_employees, :address, :city, :state, :country, :zipcode, :timezone, :last_funding_type, :last_funding_amount, :total_funding_raised, :last_funding_date, :client_company_id
 #
 # or
 #
@@ -14,12 +14,14 @@ permit_params :name, :website, :industry, :description, :internal_notes, :do_not
 # end
 
 form do |f|
-  f.inputs "Lead Details" do
+  f.inputs "Accounts" do
 
 
 	f.input :name
-    f.input :phone_number
     f.input :website
+    f.input :status
+    f.input :phone_number
+    f.input :client_company
     f.input :industry
     f.input :description
     f.input :internal_notes

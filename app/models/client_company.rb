@@ -5,6 +5,7 @@ class ClientCompany < ApplicationRecord
 	has_many :campaigns
 	has_many :personas
 	has_many :campaign_replies
+	has_many :accounts
 
 
 	validates :name, presence: true

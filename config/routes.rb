@@ -4,6 +4,16 @@ Rails.application.routes.draw do
     namespace :api do
         namespace :v1 do
 
+            resources :accounts do
+
+                collection do
+                    post :upload
+                    post 'account' => 'accounts#create'
+                    get 'account/:p1', to: 'accounts#index', constraints: { p1: /[^\/]+/ }
+
+                end
+            end
+
             resources :leads do
                 collection { post :import}
                 collection do

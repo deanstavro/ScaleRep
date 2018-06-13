@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180611164541) do
+ActiveRecord::Schema.define(version: 20180613003200) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -36,6 +36,9 @@ ActiveRecord::Schema.define(version: 20180611164541) do
     t.string   "last_funding_date"
     t.datetime "created_at",                           null: false
     t.datetime "updated_at",                           null: false
+    t.integer  "status"
+    t.integer  "client_company_id"
+    t.index ["client_company_id"], name: "index_accounts_on_client_company_id", using: :btree
   end
 
   create_table "active_admin_comments", force: :cascade do |t|
@@ -233,6 +236,7 @@ ActiveRecord::Schema.define(version: 20180611164541) do
     t.index ["reset_password_token"], name: "index_users_on_reset_password_token", unique: true, using: :btree
   end
 
+  add_foreign_key "accounts", "client_companies"
   add_foreign_key "campaign_replies", "client_companies"
   add_foreign_key "campaign_replies", "leads"
   add_foreign_key "campaigns", "client_companies"
