@@ -7,9 +7,9 @@ class LeadsController < ApplicationController
     @accounts = Account.where(client_company_id: @company.id).paginate(:page => params[:page], :per_page => 30)
 
     # grab reports and grab leads for every week for a report
-    @interested_leads = Lead.where(client_company_id: @company.id, status: "interested").order('date_sourced DESC').paginate(:page => params[:page], :per_page => 30)
-    @blacklist = Lead.where(client_company_id: @company.id, status: "blacklist").order('updated_at DESC').paginate(:page => params[:page], :per_page => 30)
-    @meeting_set = Lead.where(client_company_id: @company.id, status: "meeting_set").order('updated_at DESC').paginate(:page => params[:page], :per_page => 30)
+    @interested_leads = Lead.where(client_company_id: @company.id, status: "interested").order('updated_at DESC').paginate(:page => params[:page], :per_page => 25)
+    @blacklist = Lead.where(client_company_id: @company.id, status: "blacklist").order('updated_at DESC').paginate(:page => params[:page], :per_page => 25)
+    @meeting_set = Lead.where(client_company_id: @company.id, status: "meeting_set").order('date_sourced DESC').paginate(:page => params[:page], :per_page => 25)
 
     @current_table = params[:table_id]
 
