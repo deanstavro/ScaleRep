@@ -6,29 +6,31 @@ class UsersController < ApplicationController
     @users = User.all
   end
 
-  
+  # Action when user signs in
   def home   
-
 
     if user_signed_in?
 
-      @user = User.find(current_user.id)
-      @client_company = ClientCompany.find(@user.client_company_id)
- 
-      if @client_company.account_live == true
-        redirect_to client_companies_personas_path
-      else
-        render 'home'
+      @user = find_user
+      @client_company = find_company
 
-      end
+      redirect_to client_companies_personas_path
+
+      # Direct to personas if account is live
+      #if account_live
+        #redirect_to client_companies_personas_path
+      #else
+        # Direct to onboarding if account is not live
+        #render 'home'
+      #end
     
     else
       render 'homepage#index'
     end
     
-    
   end
 
+  # Update user action
   def update
     @user = User.find(params[:id])
     if @user.update_attributes(secure_params)
@@ -38,12 +40,14 @@ class UsersController < ApplicationController
     end
   end
 
+  # Destroy user account
   def destroy
     user = User.find(params[:id])
     user.destroy
-    redirect_to users_path, :notice => "User deleted."
+    redirect_to 'homepage#index', :notice => "Your account has been deleted"
   end
 
+  
   private
 
   def admin_only
@@ -54,6 +58,18 @@ class UsersController < ApplicationController
 
   def secure_params
     params.require(:user).permit(:role)
+  end
+
+  def find_user
+    return User.find(current_user.id)
+  end
+
+  def find_company
+    ClientCompany.find(@user.client_company_id)
+  end
+
+  def account_live
+    return @client_company.account_live == true
   end
 
 end
