@@ -9,7 +9,7 @@ gem 'coffee-rails', '~> 4.2'
 gem 'jquery-rails'
 gem 'turbolinks', '~> 5'
 gem 'jbuilder', '~> 2.5'
-gem 'activeadmin'
+gem "activeadmin", git: "https://github.com/gregbell/active_admin"
 gem 'frontend-generators'
 gem 'bootstrap', '~> 4.1.0'
 gem 'autoprefixer-rails'
