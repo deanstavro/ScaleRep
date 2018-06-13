@@ -155,7 +155,7 @@
       <div class="card-header" id="blacklistHeader">
         <h3 class="mb-0">
           <button class="btn btn-link" data-toggle="collapse" data-target="#blacklist" aria-expanded="true" aria-controls="blacklist">
-            Blacklist
+            Blacklisted Lead
           </button>
         </h5>
       </div>
@@ -167,7 +167,7 @@
       <% end %>
         <div class="card-body">
           <% if @blacklist.count == 0 %>
-            <p> No Blacklist </p>
+            <p> No Blacklisted Leads </p>
 
           <% else %>
             <div style="overflow: auto;">
@@ -226,7 +226,7 @@
         <div class="card-header" id="qualifiedLeadsHeader">
           <h5 class="mb-0">
             <button class= "btn btn-link" data-toggle="collapse" data-target="#customer_accounts" aria-expanded="true" aria-controls="qualifiedLeads">
-              Client Accounts
+              Current Customers
             </button>
           </h5>
         </div>
@@ -238,7 +238,7 @@
         <% end %>
           <div class="card-body">
             <% if @accounts.count == 0 %>
-              <p> No Client Accounts </p>
+              <p> No Customer Accounts </p>
             <% else %>
               <div style="overflow: auto;">
                 

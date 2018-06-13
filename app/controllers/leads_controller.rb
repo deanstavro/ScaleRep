@@ -4,12 +4,12 @@ class LeadsController < ApplicationController
   def index
     @user = User.find(current_user.id)
   	@company = ClientCompany.find_by(id: @user.client_company_id)
-    @accounts = Account.where(client_company_id: @company.id).paginate(:page => params[:page], :per_page => 15)
+    @accounts = Account.where(client_company_id: @company.id).paginate(:page => params[:page], :per_page => 5)
 
     # grab reports and grab leads for every week for a report
-    @interested_leads = Lead.where(client_company_id: @company.id, status: "interested").order('updated_at DESC').paginate(:page => params[:page], :per_page => 15)
-    @blacklist = Lead.where(client_company_id: @company.id, status: "blacklist").order('updated_at DESC').paginate(:page => params[:page], :per_page => 15)
-    @meetings_set = Lead.where(client_company_id: @company.id, status: "meeting_set").paginate(:page => params[:page], :per_page => 15)
+    @interested_leads = Lead.where(client_company_id: @company.id, status: "interested").order('updated_at DESC').paginate(:page => params[:page], :per_page => 5)
+    @blacklist = Lead.where(client_company_id: @company.id, status: "blacklist").order('updated_at DESC').paginate(:page => params[:page], :per_page => 5)
+    @meetings_set = Lead.where(client_company_id: @company.id, status: "meeting_set").paginate(:page => params[:page], :per_page => 5)
 
     @current_table = params[:table_id]
 
