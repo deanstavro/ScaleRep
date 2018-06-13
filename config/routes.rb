@@ -4,13 +4,11 @@ Rails.application.routes.draw do
     namespace :api do
         namespace :v1 do
 
-            resources :accounts do
-
+            resources :account do
                 collection do
                     post :upload
-                    post 'account' => 'accounts#create'
-                    get 'account/:p1', to: 'accounts#index', constraints: { p1: /[^\/]+/ }
-
+                    post 'new' => 'account#create'
+                    get ':p1', to: 'account#index', constraints: { p1: /[^\/]+/ }
                 end
             end
 
@@ -24,12 +22,6 @@ Rails.application.routes.draw do
             resources :reply do
                 collection do
                     post :new_reply
-                    post :auto_reply_referral
-                    post :auto_reply
-                    post :referral
-                    post :interested
-                    post :not_interested
-                    post :do_not_contact
                 end
             end
 

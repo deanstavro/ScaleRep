@@ -1,4 +1,4 @@
-class Api::V1::AccountsController < Api::V1::BaseController
+class Api::V1::AccountController < Api::V1::BaseController
 
     def upload
         
@@ -154,7 +154,7 @@ class Api::V1::AccountsController < Api::V1::BaseController
                     return
                 rescue
                     puts "Duplicate"
-                    render json: {error: "Account exists - account not uploaded", :status => 400}, status: 400
+                    render json: {error: "Duplicate, or required fields (website, name, status) is missing", :status => 400}, status: 400
                     return
 
                 end
