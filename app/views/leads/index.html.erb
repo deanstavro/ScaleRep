@@ -7,7 +7,15 @@
 
 <div class = 'thin_margins'>
   <div id="accordion">
+    
+
+
+
+
+
+
     <div class="card">
+      
       <div class="card-header" id="meetingsSetHeader">
         <h5 class="mb-0">
           <button class="btn btn-link" data-toggle="collapse" data-target="#meetingsSet" aria-expanded="true" aria-controls="meetingsSet">
@@ -22,48 +30,52 @@
       <% else %>
         <div id="meetingsSet" class="collapse" aria-labelledby="meetingsSetHeader">
       <% end %>
-        <div class="card-body">
-          <% if @meeting_set.count == 0 %>
-            <p> No Meetings Set </p>
-          <% else %>
-            <div style="overflow: auto;">
-              <table class = " airtable_data table table-striped">
-                <thead class = "thead-dark">
-                  <tr>
-
-                        <th scope = 'col'>date sourced</th>
-                        <th scope = 'col'>first_name</th>
-                        <th scope = 'col'>last_name</th>
-                        <th scope = 'col'>email</th>
-                        <th scope = 'col'>handed off to:</th>
-                        <th scope = 'col'>email used</th>
-                        <th scope = 'col'>meeting date</th>
-
-
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <% @meeting_set.each do |lead| %>
+          <div class="card-body">
+            <% if @meetings_set.count == 0 %>
+              <p> No Meetings Set </p>
+            <% else %>
+              <div style="overflow: auto;">
+                <table class = " airtable_data table table-striped">
+                  <thead class = "thead-dark">
                     <tr>
 
-                          <td> <%= lead.date_sourced %></td>
-                          <td> <%= lead.first_name %></td>
-                          <td> <%= lead.last_name %></td>
-                          <td> <%= lead.email %></td>
-                          <td> <%= lead.email_handed_off_too %></td>
-                          <td> <%= lead.email_in_contact_with %></td>
-                          <td> <%= lead.meeting_time %></td>
-
+                          <th scope = 'col'>date sourced</th>
+                          <th scope = 'col'>first_name</th>
+                          <th scope = 'col'>last_name</th>
+                          <th scope = 'col'>email</th>
+                          <th scope = 'col'>handed off to:</th>
+                          <th scope = 'col'>email used</th>
+                          <th scope = 'col'>meeting date</th>
 
 
                     </tr>
-                  <% end %>
-                </tbody>
-              </table>
-              <%= will_paginate @meeting_set, :params => { :table_id => :meetingsSet }%>
-            </div>
-          <% end %>
+                  </thead>
+
+                  <tbody>
+                    <% @meetings_set.each do |lead| %>
+                      <tr>
+
+                            <td> <%= lead.date_sourced %> </td>
+                            <td> <%= lead.first_name %> </td>
+                            <td> <%= lead.last_name %> </td>
+                            <td> <%= lead.email %> </td>
+                            <td> <%= lead.email_handed_off_too %></td>
+                            <td> <%= lead.email_in_contact_with %></td>
+                            <td> <%= lead.meeting_time %></td>
+
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+                <div class="digg_pagination">
+                    <div class="page_info">
+                      <%= page_entries_info @meetings_set %>
+                    </div>
+                    <%= will_paginate @meetings_set, :params => { :table_id => :blacklist }, :container => false %>
+                </div>
+                
+              </div>
+            <% end %>
         </div>
       </div>
     </div>
@@ -84,51 +96,62 @@
       <% else %>
         <div id="interestedLeads" class="collapse" aria-labelledby="interestedLeadsHeader">
       <% end %>
-        <div class="card-body">
-          <% if @interested_leads.count == 0 %>
-            <p> No Interested Leads </p>
-          <% else %>
-            <div style="overflow: auto;">
-              <table class = " airtable_data table table-striped">
-                <thead class = "thead-dark">
-                  <tr>
-                        <th scope = 'col'>date sourced</th>
-                        <th scope = 'col'>first_name</th>
-                        <th scope = 'col'>last_name</th>
-                        <th scope = 'col'>email</th>
-                        <th scope = 'col'>handed off to:</th>
-                        <th scope = 'col'>email used</th>
-                        <th scope = 'col'>meeting date</th>
-
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <% @interested_leads.each do |lead| %>
+          <div class="card-body">
+            <% if @interested_leads.count == 0 %>
+              <p> No Interested Leads </p>
+            <% else %>
+              <div style="overflow: auto;">
+                <table class = " airtable_data table table-striped">
+                  <thead class = "thead-dark">
                     <tr>
-
-                          <td> <%= lead.date_sourced %></td>
-                          <td> <%= lead.first_name %></td>
-                          <td> <%= lead.last_name %></td>
-                          <td> <%= lead.email %></td>
-                          <td> <%= lead.email_handed_off_too %></td>
-                          <td> <%= lead.email_in_contact_with %></td>
-                          <td> <%= lead.meeting_time %></td>
-
-
+                          <th scope = 'col'>date sourced</th>
+                          <th scope = 'col'>first_name</th>
+                          <th scope = 'col'>last_name</th>
+                          <th scope = 'col'>email</th>
+                          <th scope = 'col'>handed off to:</th>
+                          <th scope = 'col'>email used</th>
+                          <th scope = 'col'>meeting date</th>
 
                     </tr>
-                  <% end %>
-                </tbody>
-              </table>
-              <%= will_paginate @interested_leads, :params => { :table_id => :interestedLeads }%>
-            </div>
+                  </thead>
+
+                  <tbody>
+                    <% @interested_leads.each do |lead| %>
+                      <tr>
+
+                            <td> <%= lead.date_sourced %></td>
+                            <td> <%= lead.first_name %></td>
+                            <td> <%= lead.last_name %></td>
+                            <td> <%= lead.email %></td>
+                            <td> <%= lead.email_handed_off_too %></td>
+                            <td> <%= lead.email_in_contact_with %></td>
+                            <td> <%= lead.meeting_time %></td>
+
+
+
+                      </tr>
+                    <% end %>
+                  </tbody>
+                </table>
+                <div class="digg_pagination">
+                    <div class="page_info">
+                      <%= page_entries_info @interested_leads %>
+                    </div>
+                    <%= will_paginate @interested_leads, :params => { :table_id => :blacklist }, :container => false %>
+                </div>
+              </div>
           <% end %>
+          </div>
         </div>
-      </div>
     </div>
 
+    
+
+
     <div class="card">
+      
+
+
       <div class="card-header" id="blacklistHeader">
         <h3 class="mb-0">
           <button class="btn btn-link" data-toggle="collapse" data-target="#blacklist" aria-expanded="true" aria-controls="blacklist">
@@ -180,17 +203,26 @@
                   <% end %>
                 </tbody>
               </table>
-              <%= will_paginate @blacklist, :params => { :table_id => :blacklist }%>
+
+              <div class="digg_pagination">
+                  <div class="page_info">
+                    <%= page_entries_info @blacklist %>
+                  </div>
+                  <%= will_paginate @blacklist, :params => { :table_id => :blacklist }, :container => false %>
+              </div>
+
             </div>
           <% end %>
+          </div>
         </div>
-
       </div>
 
 
 
 
       <div class="card">
+        
+
         <div class="card-header" id="qualifiedLeadsHeader">
           <h5 class="mb-0">
             <button class= "btn btn-link" data-toggle="collapse" data-target="#customer_accounts" aria-expanded="true" aria-controls="qualifiedLeads">
@@ -223,6 +255,7 @@
 
                   <tbody>
                     <% @accounts.each do |account| %>
+
                       <tr>
 
                             <td> <%= account.name %></td>
@@ -235,19 +268,21 @@
 
                 </table>
 
-                <%= will_paginate @accounts, :params => { :table_id => :customer_accounts }%>
-
-              </div>
+                <div class="digg_pagination">
+                  <div class="page_info">
+                    <%= page_entries_info @accounts %>
+                  </div>
+                  <%= will_paginate @accounts, :params => { :table_id => :customer_accounts }, :container => false %>
+                </div>
 
             <% end %>
 
           </div>
       </div>
+      </div>
 
 
 
 
-
-    </div>
   </div>
 </div>
