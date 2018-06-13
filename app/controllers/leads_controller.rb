@@ -4,7 +4,7 @@ class LeadsController < ApplicationController
   def index
     @user = User.find(current_user.id)
   	@company = ClientCompany.find_by(id: @user.client_company_id)
-    @accounts = Account.where(client_company_id: @company.id).paginate(:page => params[:page], :per_page => 30)
+    @accounts = Account.where(client_company_id: @company.id).paginate(:page => params[:page], :per_page => 25)
 
     # grab reports and grab leads for every week for a report
     @interested_leads = Lead.where(client_company_id: @company.id, status: "interested").order('updated_at DESC').paginate(:page => params[:page], :per_page => 25)
