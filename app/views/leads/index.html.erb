@@ -3,226 +3,37 @@
   <h1><%= @user.client_company.name if @user.client_company %> Lead List</h1>
 </div>
 
-
-
 <div class = 'thin_margins'>
   <div id="accordion">
-    
 
+    <!-- tab view -->
+    <ul class="nav nav-tabs" id="leadsTab" role = "tablist" >
+      <li class="nav-item">
+        <a class="nav-link active" id="meetings-set" data-toggle="tab" href="#meeting" role="tab" aria-controls="home" aria-selected="true">Meetings Set</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="interesed-leads" data-toggle="tab" href="#interested" role="tab" aria-controls="profile" aria-selected="false">Interested Leads</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="blacklisted-lead" data-toggle="tab" href="#blacklisted" role="tab" aria-controls="contact" aria-selected="false">Blacklisted Leads</a>
+      </li>
+    </ul>
 
-
-
-
-
-    <div class="card">
-      
-      <div class="card-header" id="meetingsSetHeader">
-        <h5 class="mb-0">
-          <button class="btn btn-link" data-toggle="collapse" data-target="#meetingsSet" aria-expanded="true" aria-controls="meetingsSet">
-            Meetings Set
-          </button>
-        </h5>
+    <div class="tab-content", id="leadsTabContent">
+      <div class="tab-pane fade show active" id="meeting" role="tabpanel" aria-labelledby="home-tab">
+        <%= render 'leads/meetings_set_leads' %>
       </div>
 
+      <div class="tab-pane fade" id="interested" role="tabpanel" aria-labelledby="profile-tab">
+        <%= render 'leads/interested_leads' %>
+      </div>
 
-      <% if @current_table == "meetings_set" %>
-        <div id="meetingsSet" class="show" aria-labelledby="meetingsSetHeader">
-      <% else %>
-        <div id="meetingsSet" class="collapse" aria-labelledby="meetingsSetHeader">
-      <% end %>
-          <div class="card-body">
-            <% if @meetings_set.count == 0 %>
-              <p> No Meetings Set </p>
-            <% else %>
-              <div style="overflow: auto;">
-                <table class = " airtable_data table table-striped">
-                  <thead class = "thead-dark">
-                    <tr>
-
-                          <th scope = 'col'>date sourced</th>
-                          <th scope = 'col'>first_name</th>
-                          <th scope = 'col'>last_name</th>
-                          <th scope = 'col'>email</th>
-                          <th scope = 'col'>handed off to:</th>
-                          <th scope = 'col'>email used</th>
-                          <th scope = 'col'>meeting date</th>
-
-
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    <% @meetings_set.each do |lead| %>
-                      <tr>
-
-                            <td> <%= lead.date_sourced %> </td>
-                            <td> <%= lead.first_name %> </td>
-                            <td> <%= lead.last_name %> </td>
-                            <td> <%= lead.email %> </td>
-                            <td> <%= lead.email_handed_off_too %></td>
-                            <td> <%= lead.email_in_contact_with %></td>
-                            <td> <%= lead.meeting_time %></td>
-
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-                <div class="digg_pagination">
-                    <div class="page_info">
-                      <%= page_entries_info @meetings_set %>
-                    </div>
-                    <%= will_paginate @meetings_set, :params => { :table_id => :meetings_set }, :container => false %>
-                </div>
-                
-              </div>
-            <% end %>
-        </div>
+      <div class="tab-pane fade" id="blacklisted" role="tabpanel" aria-labelledby="contact-tab">
+        <%= render 'leads/blacklisted_leads' %>
       </div>
     </div>
 
-
-    <div class="card">
-      
-      <div class="card-header" id="interestedLeadsHeader">
-        <h5 class="mb-0">
-          <button class= "btn btn-link" data-toggle="collapse" data-target="#interestedLeads" aria-expanded="true" aria-controls="interestedLeads">
-            Interested Leads
-          </button>
-        </h5>
-      </div>
-
-      <% if @current_table == "interested_leads" %>
-        <div id="interestedLeads" class="show" aria-labelledby="interestedLeadsHeader">
-      <% else %>
-        <div id="interestedLeads" class="collapse" aria-labelledby="interestedLeadsHeader">
-      <% end %>
-          <div class="card-body">
-            <% if @interested_leads.count == 0 %>
-              <p> No Interested Leads </p>
-            <% else %>
-              <div style="overflow: auto;">
-                <table class = " airtable_data table table-striped">
-                  <thead class = "thead-dark">
-                    <tr>
-                          <th scope = 'col'>date sourced</th>
-                          <th scope = 'col'>first_name</th>
-                          <th scope = 'col'>last_name</th>
-                          <th scope = 'col'>email</th>
-                          <th scope = 'col'>handed off to:</th>
-                          <th scope = 'col'>email used</th>
-                          <th scope = 'col'>meeting date</th>
-
-                    </tr>
-                  </thead>
-
-                  <tbody>
-                    <% @interested_leads.each do |lead| %>
-                      <tr>
-
-                            <td> <%= lead.date_sourced %></td>
-                            <td> <%= lead.first_name %></td>
-                            <td> <%= lead.last_name %></td>
-                            <td> <%= lead.email %></td>
-                            <td> <%= lead.email_handed_off_too %></td>
-                            <td> <%= lead.email_in_contact_with %></td>
-                            <td> <%= lead.meeting_time %></td>
-
-
-
-                      </tr>
-                    <% end %>
-                  </tbody>
-                </table>
-                <div class="digg_pagination">
-                    <div class="page_info">
-                      <%= page_entries_info @interested_leads %>
-                    </div>
-                    <%= will_paginate @interested_leads, :params => { :table_id => :interested_leads }, :container => false %>
-                </div>
-              </div>
-          <% end %>
-          </div>
-        </div>
-    </div>
-
-    
-
-
-    <div class="card">
-      
-
-
-      <div class="card-header" id="blacklistHeader">
-        <h3 class="mb-0">
-          <button class="btn btn-link" data-toggle="collapse" data-target="#blacklist" aria-expanded="true" aria-controls="blacklist">
-            Blacklisted Lead
-          </button>
-        </h5>
-      </div>
-
-      <% if @current_table == "blacklist" %>
-        <div id="blacklist" class="show" aria-labelledby="blacklistHeader">
-      <% else %>
-        <div id="blacklist" class="collapse" aria-labelledby="blacklistHeader">
-      <% end %>
-        <div class="card-body">
-          <% if @blacklist.count == 0 %>
-            <p> No Blacklisted Leads </p>
-
-          <% else %>
-            <div style="overflow: auto;">
-              <table class = " airtable_data table table-striped">
-                <thead class = "thead-dark">
-                  <tr>
-                        <th scope = 'col'>date sourced</th>
-                        <th scope = 'col'>first_name</th>
-                        <th scope = 'col'>last_name</th>
-                        <th scope = 'col'>email</th>
-                        <th scope = 'col'>handed off to:</th>
-                        <th scope = 'col'>email used</th>
-                        <th scope = 'col'>meeting date</th>
-
-                  </tr>
-                </thead>
-
-                <tbody>
-                  <% @blacklist.each do |lead| %>
-                    <tr>
-
-                          <td> <%= lead.date_sourced %></td>
-                          <td> <%= lead.first_name %></td>
-                          <td> <%= lead.last_name %></td>
-                          <td> <%= lead.email %></td>
-                          <td> <%= lead.email_handed_off_too %></td>
-                          <td> <%= lead.email_in_contact_with %></td>
-                          <td> <%= lead.meeting_time %></td>
-
-
-
-                    </tr>
-                  <% end %>
-                </tbody>
-              </table>
-
-              <div class="digg_pagination">
-                  <div class="page_info">
-                    <%= page_entries_info @blacklist %>
-                  </div>
-                  <%= will_paginate @blacklist, :params => { :table_id => :blacklist }, :container => false %>
-              </div>
-
-            </div>
-          <% end %>
-          </div>
-        </div>
-      </div>
-
-
-
-
-      <div class="card">
-        
-
+      <div class="card" style="margin-top:150px;">
         <div class="card-header" id="qualifiedLeadsHeader">
           <h5 class="mb-0">
             <button class= "btn btn-link" data-toggle="collapse" data-target="#customer_accounts" aria-expanded="true" aria-controls="qualifiedLeads">
@@ -241,7 +52,7 @@
               <p> No Customer Accounts </p>
             <% else %>
               <div style="overflow: auto;">
-                
+
 
                 <table class = " airtable_data table table-striped">
                   <thead class = "thead-dark">
@@ -280,9 +91,35 @@
           </div>
       </div>
       </div>
-
-
-
-
   </div>
 </div>
+
+
+
+<script>
+  $(document).ready(function() {
+
+    if(GetURLParameter('tab_id') != undefined) {
+      goToHash(GetURLParameter('tab_id'))
+    }
+  });
+
+
+  function GetURLParameter(sParam)
+  {
+      var sPageURL = window.location.search.substring(1);
+      var sURLVariables = sPageURL.split('&');
+      for (var i = 0; i < sURLVariables.length; i++)
+      {
+          var sParameterName = sURLVariables[i].split('=');
+          if (sParameterName[0] == sParam)
+          {
+              return sParameterName[1];
+          }
+      }
+  }
+
+  function goToHash(type) {
+    $('.nav-tabs a[href="#' + type + '"]').tab('show');
+  }
+</script>

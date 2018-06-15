@@ -1,0 +1,44 @@
+  <div class="card-body">
+    <% if @blacklist.count == 0 %>
+      <p> No Blacklisted Leads </p>
+
+    <% else %>
+      <div style="overflow: auto;">
+        <table class = " airtable_data table table-striped">
+          <thead class = "thead-dark">
+            <tr>
+              <th scope = 'col'>date sourced</th>
+              <th scope = 'col'>first_name</th>
+              <th scope = 'col'>last_name</th>
+              <th scope = 'col'>email</th>
+              <th scope = 'col'>handed off to:</th>
+              <th scope = 'col'>email used</th>
+              <th scope = 'col'>meeting date</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @blacklist.each do |lead| %>
+              <tr>
+                <td> <%= lead.date_sourced %></td>
+                <td> <%= lead.first_name %></td>
+                <td> <%= lead.last_name %></td>
+                <td> <%= lead.email %></td>
+                <td> <%= lead.email_handed_off_too %></td>
+                <td> <%= lead.email_in_contact_with %></td>
+                <td> <%= lead.meeting_time %></td>
+              </tr>
+            <% end %>
+          </tbody>
+        </table>
+
+        <div class="digg_pagination">
+            <div class="page_info">
+              <%= page_entries_info @blacklist %>
+            </div>
+            <%= will_paginate @blacklist, :params => { :tab_id => :blacklist }, :container => false %>
+        </div>
+
+      </div>
+    <% end %>
+  </div>
