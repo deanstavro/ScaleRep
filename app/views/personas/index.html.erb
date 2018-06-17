@@ -1,3 +1,8 @@
+<center>
+  <p class="container text-danger"><%= flash[:error] %></p>
+  <p class="container text-success"><%= flash[:notice] %></p>
+</center>
+
 <div id="title" class="jumbotron">
 
   <br/>
@@ -14,10 +19,7 @@
   <%= link_to '+ Add Persona', new_client_companies_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
 </div>
 
-<center>
-  <p id="error" class="container text-danger"><%= flash[:error] %></p>
-  <p id="notice" class="container text-warning"><%= flash[:notice] %></p>
-</center>
+
 
 <div class="table-display clickable-row">
 

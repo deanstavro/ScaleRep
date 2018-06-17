@@ -122,7 +122,7 @@ class PersonasController < ApplicationController
 
         persona.destroy
         respond_to do |format|
-          format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully destroyed.' }
+          format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully deleted' }
           format.json { head :no_content }
         end
 

@@ -1,3 +1,9 @@
+
+<center>
+  <p class="container text-danger"><%= flash[:error] %></p>
+  <p class="container text-success"><%= flash[:notice] %></p>
+</center>
+
 <div id="title" class="jumbotron">
   <br/>
   <h1>Campaigns</h1>
@@ -13,10 +19,6 @@
   <%= link_to '+ Add Campaign', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
 </div>
 
-<center>
-  <p id="error" class="container text-danger"><%= flash[:error] %></p>
-  <p id="notice" class="container text-warning"><%= flash[:notice] %></p>
-</center>
 
 <div class="table-display">
 
