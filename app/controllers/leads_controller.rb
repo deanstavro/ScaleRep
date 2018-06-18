@@ -13,24 +13,8 @@ class LeadsController < ApplicationController
 
     @current_table = params[:table_id]
 
-    puts @current_table
-
-
-    #airrecord work
-    #authenticate
-    #airtable = @company.airtable_keys
-
-    #airtable_dic = eval(airtable)
-    #puts airtable_dic["AIRTABLE"]
-
-    #table = Airrecord.table(airtable_dic["AIRTABLE"],airtable_dic["MOFU"],"MOFU")
-    
-    #grab view
-    #@pending_opps = table.all(filter: '{lead_status} = "discover_needs"', sort: {follow_up_date: "desc"})
-    #@qualified_opps = table.all(filter: '{lead_status} = "qualified"', sort: {follow_up_date: "desc"})
-    #@warm_opps = table.all(filter: '{lead_status} = "warm_lead"', sort: {follow_up_date: "desc"})
-
   end
+
 
 
   def import_to_campaign
@@ -42,6 +26,15 @@ class LeadsController < ApplicationController
     persona = params[:persona]
 
     col =  Lead.column_names
+    # Column Names
+    # id, decision_maker, internal_notes, email_in_contact_with, date_sourced
+    # created_at, updated_at, client_company_id, campaign_id, contract_sent,
+    # contract_amount, timeline, project_scope, email_handed_off_too, meeting_time,
+    # email, first_name, last_name, hunter_score, hunter_date, title, phone_type,
+    # phone_number, city, state, country, linkedin, timezone, address, meeting_taken,
+    # full_name, status, company_name, company_website, account_id
+    puts "THIS IS COL"
+    puts col
 
 
     begin

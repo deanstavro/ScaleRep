@@ -22,7 +22,7 @@ class Lead < ApplicationRecord
 		
 		puts "Starting importing to campaign"
 		not_imported = 0
-		duplicates = 0
+		duplicates = []
 		imported = 0
 		rows_email_not_present = 0
 		
@@ -64,7 +64,7 @@ class Lead < ApplicationRecord
 							imported = imported + 1
 						else
 
-							duplicates = duplicates + 1
+							duplicates << $.
 						end
 					rescue Exception => e
 						not_imported = not_imported + 1
@@ -77,15 +77,21 @@ class Lead < ApplicationRecord
 		end
 		AddContactsToReplyJob.perform_later(all_hash,campaign_id)
 
-		return imported.to_s + " imported successfully, "+ duplicates.to_s + " duplicates, " + not_imported.to_s + " contacts not imported, " + rows_email_not_present.to_s + " rows with email not present"
+		return imported.to_s + " leads imported successfully, duplicate lead rows not uploaded: "+ duplicates.to_s + ", " + rows_email_not_present.to_s + " rows without email field"
 	end
 
 	private
 
 
 	def one_hash
-		one_hash.require(:lead).permit(:company, :industry, :email, :company_domain, :first_name, :last_name, :hunter_score, :hunter_date, :title, :phone_type, :phone_number, :city, :state, :country, :linkedin, :client_company, :campaign_id, :timezone, :address, :company_description, :number_of_employees, :last_funding_type, :last_funding_date, :last_funding_amount, :email_snippet)
-
+		one_hash.require(:lead).permit(:decision_maker, :internal_notes, :email_in_contact_with, :date_sourced, :client_company, :campaign_id, :contract_sent, :contract_amount, :timeline, :project_scope, :email_handed_off_too, :meeting_time, :email, :first_name, :last_name, :hunter_score, :hunter_date, :title, :phone_type, :phone_number, :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :full_name, :status, :company_name, :company_website, :account_id)
+		# 
+		#id, decision_maker, internal_notes, email_in_contact_with, date_sourced
+    	# created_at, updated_at, client_company_id, campaign_id, contract_sent,
+    	# contract_amount, timeline, project_scope, email_handed_off_too, meeting_time,
+    	# email, first_name, last_name, hunter_score, hunter_date, title, phone_type,
+    	# phone_number, city, state, country, linkedin, timezone, address, meeting_taken,
+    	# full_name, status, company_name, company_website, account_id
 	end
 
 

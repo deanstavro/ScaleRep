@@ -33,10 +33,7 @@ class AddContactsToReplyJob < ApplicationJob
     				  puts response
 
     			rescue
-
-
     				  puts "did not input into reply"
-
     			end
 
   		end
