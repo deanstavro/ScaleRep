@@ -12,10 +12,11 @@ Rails.application.routes.draw do
                 end
             end
 
-            resources :leads do
+            resources :lead do
                 collection { post :import}
                 collection do
-                    post :new_lead
+                    post :new
+                    put :edit
                 end
             end
 
