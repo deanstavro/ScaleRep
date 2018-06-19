@@ -121,7 +121,7 @@ ActiveRecord::Schema.define(version: 20180619194910) do
     t.integer  "minimum_email_score"
     t.boolean  "has_minimum_email_score"
     t.integer  "campaign_type"
-    t.boolean  "archive",                 default: true
+    t.boolean  "archive",                 default: false
     t.index ["client_company_id"], name: "index_campaigns_on_client_company_id", using: :btree
     t.index ["persona_id"], name: "index_campaigns_on_persona_id", using: :btree
   end
@@ -208,12 +208,12 @@ ActiveRecord::Schema.define(version: 20180619194910) do
 
   create_table "personas", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",                          null: false
-    t.datetime "updated_at",                          null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.integer  "client_company_id"
     t.string   "description"
     t.string   "special_instructions"
-    t.boolean  "archive",              default: true
+    t.boolean  "archive",              default: false
     t.index ["client_company_id"], name: "index_personas_on_client_company_id", using: :btree
   end
 
