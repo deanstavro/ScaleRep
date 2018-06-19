@@ -10,6 +10,12 @@ class PersonasController < ApplicationController
       @user = User.find(current_user.id)
       @company = ClientCompany.find_by(id: @user.client_company_id)
       @personas = Persona.where("client_company_id =?", @company).order('created_at DESC')
+      @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
+      @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
+
+      puts "HII"
+      puts params
+
 
       @metrics_hash = Hash.new
 
