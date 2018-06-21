@@ -30,6 +30,11 @@
           <%= f.text_area :description, :rows => 5, :col => 5, class: "form-control" %>
       </div>
 
+      <div class="form-group">
+          <%= f.label :archive, "Archive?", class: "control-label" %>
+          <%= f.check_box :archive, class: "form-control" %>
+      </div>
+
       <% if false %>
           <div class="form-group">
               <%= f.label :special_instructions, class: "control-label" %>
@@ -41,7 +46,7 @@
   <div class="actions">
     <%= f.submit "Submit", class: "btn btn-default btn-primary" %>
   </div>
-  
+
     </div>
 <% end %>
 

@@ -20,7 +20,7 @@ class PersonasController < ApplicationController
       @metrics_hash = Hash.new
 
       @personas.each do |persona|
-          
+
           @campaigns = persona.campaigns
           count = 0
           @campaigns.each do |campaign|
@@ -56,7 +56,7 @@ class PersonasController < ApplicationController
 
       end
 
-      
+
 
         # loop through campaigns
           # add metrics and store in array
@@ -67,13 +67,15 @@ class PersonasController < ApplicationController
 
   # GET /personas/1
   # GET /personas/1.json
-  #def show   
+  #def show
   #end
 
   # GET /personas/new
   def new
     @user = User.find(current_user.id)
     @persona = Persona.new
+
+    puts "hi can you see this?"
   end
 
   # GET /personas/1/edit
@@ -81,6 +83,20 @@ class PersonasController < ApplicationController
     @user = User.find(current_user.id)
     @client_company = ClientCompany.find_by(id: @user.client_company_id)
     @persona = Persona.find_by(id: params[:id])
+  end
+
+  def archive
+    @persona = Persona.find_by(id: params[:id])
+    puts "hi can you see this?"
+    puts "hi can you see this?"
+    puts "hi can you see this?"
+    puts "hi can you see this?"
+    puts "hi can you see this?"
+
+    # update archive setting
+    update @persona.toggle(:archive).save
+    redirect_to client_companies_personas_path
+
   end
 
   # POST /personas
@@ -106,6 +122,7 @@ class PersonasController < ApplicationController
   # PATCH/PUT /personas/1
   # PATCH/PUT /personas/1.json
   def update
+    puts persona_params
     @user = User.find(current_user.id)
     @persona = Persona.find_by(id: params[:id])
     respond_to do |format|
@@ -140,7 +157,7 @@ class PersonasController < ApplicationController
         end
     end
 
-    
+
 
     end
 
@@ -154,6 +171,6 @@ class PersonasController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def persona_params
-      params.require(:persona).permit(:name, :description, :special_instructions)
+      params.require(:persona).permit(:name, :description, :special_instructions, :archive)
     end
 end

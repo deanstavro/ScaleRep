@@ -32,7 +32,7 @@ Rails.application.routes.draw do
     # Set Root Url
     authenticated :user do
         root 'users#home'
-    end 
+    end
     root to: 'homepage#index'
 
 
@@ -48,12 +48,14 @@ Rails.application.routes.draw do
     #ALL ROUTES FOR USERS SIGNED IN
     get 'client_reports/index'
     get 'metrics/index'
-    
+
     resources :users
 
     # Nested In Client Companies
-    resource :client_companies, path: '', only: [:edit, :update, :delete] do  
-        resources :personas
+    resource :client_companies, path: '', only: [:edit, :update, :delete] do
+        resources :personas do
+          collection { put :archive }
+        end
         resources :campaigns
     end
 

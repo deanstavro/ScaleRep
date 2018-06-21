@@ -1,10 +1,10 @@
-<center>
-  <p class="container text-danger"><%= flash[:error] %></p>
-  <p class="container text-success"><%= flash[:notice] %></p>
-</center>
-
 <div id="title" class="jumbotron">
 
+  <center>
+    <p class="container text-danger"><%= flash[:error] %></p>
+    <p class="container text-success"><%= flash[:notice] %></p>
+  </center>
+  
   <br/>
   <h1><%= @user.client_company.name if @user.client_company %> Personas </h1>
   <br>

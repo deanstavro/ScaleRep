@@ -15,6 +15,7 @@
             <th scope="col"># campaigns</th>
             <th scope="col">edit </th>
             <th scope="col">delete</th>
+            <th scope="col">archive</th>
           </tr>
         </thead>
 
@@ -69,24 +70,11 @@
 
               <td><%= link_to '+', edit_client_companies_persona_path(persona) %></td>
               <td><%= link_to '--',  client_companies_persona_path(persona),  method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              <td><%= link_to 'Yes',  archive_client_companies_personas_path(persona) %></td>
             </tr>
-
-
-           
-
-
-
-          
+          <% end %>
         </tbody>
       </table>
-       <div class="digg_pagination">
-              <div class="page_info">
-                <%= page_entries_info @current %>
-              </div>
-              <%= will_paginate @current, :params => { :tab_id => :current }, :container => false %>
-          </div>
-          <% end %>
-
     </div>
   <% end %>
 </div>
