@@ -3,63 +3,48 @@ class PersonasController < ApplicationController
   before_action :authenticate_user!
 
 
-  # GET /personas
-  # GET /personas.json
-  def index
+# GET /personas
+# GET /personas.json
+def index
 
-      @user = User.find(current_user.id)
-      @company = ClientCompany.find_by(id: @user.client_company_id)
-      @personas = Persona.where("client_company_id =?", @company).order('created_at DESC')
-      @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
-      @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
-
-      puts "HII"
-      puts params
+    @user = User.find(current_user.id)
+    @company = ClientCompany.find_by(id: @user.client_company_id)
+    @personas = Persona.where("client_company_id =?", @company).order('created_at DESC')
+    @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
+    @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
 
 
-      @metrics_hash = Hash.new
+    @metrics_hash = Hash.new
+    @personas.each do |persona|
 
-      @personas.each do |persona|
+        @campaigns = persona.campaigns
+        count = 0
+        @campaigns.each do |campaign|
+            array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount]
+            count = count + 1
+            if @metrics_hash[persona]
+              @metrics_hash[persona][0] = @metrics_hash[persona][0].to_i + array[0].to_i
+              @metrics_hash[persona][1] = @metrics_hash[persona][1].to_i + array[1].to_i
+              @metrics_hash[persona][2] = @metrics_hash[persona][2].to_i + array[2].to_i
+              @metrics_hash[persona][3] = @metrics_hash[persona][3].to_i + array[3].to_i
+              @metrics_hash[persona][4] = @metrics_hash[persona][4].to_i + array[4].to_i
 
-          @campaigns = persona.campaigns
-          count = 0
-          @campaigns.each do |campaign|
-              array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount]
-              count = count + 1
-              if @metrics_hash[persona]
+              # add
+            else
+              @metrics_hash[persona] = array
+            end
 
-                @metrics_hash[persona][0] = @metrics_hash[persona][0].to_i + array[0].to_i
-                @metrics_hash[persona][1] = @metrics_hash[persona][1].to_i + array[1].to_i
-                @metrics_hash[persona][2] = @metrics_hash[persona][2].to_i + array[2].to_i
-                @metrics_hash[persona][3] = @metrics_hash[persona][3].to_i + array[3].to_i
-                @metrics_hash[persona][4] = @metrics_hash[persona][4].to_i + array[4].to_i
-
-
-                # add
-              else
-                @metrics_hash[persona] = array
-              end
-
-              @metrics_hash[persona][5] = count
+            @metrics_hash[persona][5] = count
 
           end
 
-          # Aggregate the metrics here
-
-          for metrics in @metrics_hash
-            for fields in metrics
-          puts fields
+        # Aggregate the metrics here
+        for metrics in @metrics_hash
+          for fields in metrics
+            puts fields
+          end
         end
-
       end
-
-
-      end
-
-
-
-        # loop through campaigns
-          # add metrics and store in array
   end
 
 
@@ -86,6 +71,8 @@ class PersonasController < ApplicationController
   end
 
   def archive
+    @user = User.find(current_user.id)
+    @company = ClientCompany.find_by(id: @user.client_company_id)
     @persona = Persona.find_by(id: params[:id])
     puts "hi can you see this?"
     puts "hi can you see this?"

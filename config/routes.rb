@@ -53,15 +53,15 @@ Rails.application.routes.draw do
 
     # Nested In Client Companies
     resource :client_companies, path: '', only: [:edit, :update, :delete] do
-        resources :personas do
-          collection { put :archive }
-        end
-        resources :campaigns
+      resources :personas do
+        collection { put :archive}
+      end
+      resources :campaigns
     end
 
     resources :leads do
-        collection { post :import_to_campaign}
-        collection { get :fields}
+      collection { post :import_to_campaign}
+      collection { get :fields}
     end
     resources :contacts
     resources :accounts
