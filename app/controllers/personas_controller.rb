@@ -73,15 +73,14 @@ def index
   def archive
     @user = User.find(current_user.id)
     @company = ClientCompany.find_by(id: @user.client_company_id)
-    @persona = Persona.find_by(id: params[:id])
-    puts "hi can you see this?"
+    @persona = Persona.find_by(id: params[:format])
     puts "hi can you see this?"
     puts "hi can you see this?"
     puts "hi can you see this?"
     puts "hi can you see this?"
 
     # update archive setting
-    update @persona.toggle(:archive).save
+    @persona.update_attribute(:archive, !@persona.archive)
     redirect_to client_companies_personas_path
 
   end
@@ -109,9 +108,13 @@ def index
   # PATCH/PUT /personas/1
   # PATCH/PUT /personas/1.json
   def update
-    puts persona_params
+    puts "PERSONA PARAMS"
+
     @user = User.find(current_user.id)
     @persona = Persona.find_by(id: params[:id])
+
+    puts persona_params
+
     respond_to do |format|
       if @persona.update(persona_params)
         format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully updated.' }

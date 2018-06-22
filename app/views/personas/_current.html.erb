@@ -69,8 +69,8 @@
               <% end %>
 
               <td><%= link_to '+', edit_client_companies_persona_path(persona) %></td>
-              <td><%= link_to '--',  client_companies_persona_path(persona),  method: :delete, data: { confirm: 'Are you sure?' } %></td>
-              <td><%= link_to 'Yes',  archive_client_companies_personas_path(persona) %></td>
+              <td><%= link_to '--', client_companies_persona_path(persona), method: :delete, data: { confirm: 'Are you sure?' } %></td>
+              <td><%= link_to 'Yes', archive_client_companies_personas_path(persona), method: :put %></td>
             </tr>
           <% end %>
         </tbody>
