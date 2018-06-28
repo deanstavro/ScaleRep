@@ -3,57 +3,48 @@ class PersonasController < ApplicationController
   before_action :authenticate_user!
 
 
-  # GET /personas
-  # GET /personas.json
-  def index
+# GET /personas
+# GET /personas.json
+def index
 
-      @user = User.find(current_user.id)
-      @company = ClientCompany.find_by(id: @user.client_company_id)
-      @personas = Persona.where("client_company_id =?", @company).order('created_at DESC')
-
-      @metrics_hash = Hash.new
-
-      @personas.each do |persona|
-          
-          @campaigns = persona.campaigns
-          count = 0
-          @campaigns.each do |campaign|
-              array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount]
-              count = count + 1
-              if @metrics_hash[persona]
-
-                @metrics_hash[persona][0] = @metrics_hash[persona][0].to_i + array[0].to_i
-                @metrics_hash[persona][1] = @metrics_hash[persona][1].to_i + array[1].to_i
-                @metrics_hash[persona][2] = @metrics_hash[persona][2].to_i + array[2].to_i
-                @metrics_hash[persona][3] = @metrics_hash[persona][3].to_i + array[3].to_i
-                @metrics_hash[persona][4] = @metrics_hash[persona][4].to_i + array[4].to_i
+    @user = User.find(current_user.id)
+    @company = ClientCompany.find_by(id: @user.client_company_id)
+    @personas = Persona.where("client_company_id =?", @company).order('created_at DESC')
+    @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
+    @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
 
 
-                # add
-              else
-                @metrics_hash[persona] = array
-              end
+    @metrics_hash = Hash.new
+    @personas.each do |persona|
 
-              @metrics_hash[persona][5] = count
+        @campaigns = persona.campaigns
+        count = 0
+        @campaigns.each do |campaign|
+            array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount]
+            count = count + 1
+            if @metrics_hash[persona]
+              @metrics_hash[persona][0] = @metrics_hash[persona][0].to_i + array[0].to_i
+              @metrics_hash[persona][1] = @metrics_hash[persona][1].to_i + array[1].to_i
+              @metrics_hash[persona][2] = @metrics_hash[persona][2].to_i + array[2].to_i
+              @metrics_hash[persona][3] = @metrics_hash[persona][3].to_i + array[3].to_i
+              @metrics_hash[persona][4] = @metrics_hash[persona][4].to_i + array[4].to_i
+
+              # add
+            else
+              @metrics_hash[persona] = array
+            end
+
+            @metrics_hash[persona][5] = count
 
           end
 
-          # Aggregate the metrics here
-
-          for metrics in @metrics_hash
-            for fields in metrics
-          puts fields
+        # Aggregate the metrics here
+        for metrics in @metrics_hash
+          for fields in metrics
+            puts fields
+          end
         end
-
       end
-
-
-      end
-
-      
-
-        # loop through campaigns
-          # add metrics and store in array
   end
 
 
@@ -61,13 +52,15 @@ class PersonasController < ApplicationController
 
   # GET /personas/1
   # GET /personas/1.json
-  #def show   
+  #def show
   #end
 
   # GET /personas/new
   def new
     @user = User.find(current_user.id)
     @persona = Persona.new
+
+    puts "hi can you see this?"
   end
 
   # GET /personas/1/edit
@@ -75,6 +68,21 @@ class PersonasController < ApplicationController
     @user = User.find(current_user.id)
     @client_company = ClientCompany.find_by(id: @user.client_company_id)
     @persona = Persona.find_by(id: params[:id])
+  end
+
+  def archive
+    @user = User.find(current_user.id)
+    @company = ClientCompany.find_by(id: @user.client_company_id)
+    @persona = Persona.find_by(id: params[:format])
+    puts "hi can you see this?"
+    puts "hi can you see this?"
+    puts "hi can you see this?"
+    puts "hi can you see this?"
+
+    # update archive setting
+    @persona.update_attribute(:archive, !@persona.archive)
+    redirect_to client_companies_personas_path
+
   end
 
   # POST /personas
@@ -100,8 +108,13 @@ class PersonasController < ApplicationController
   # PATCH/PUT /personas/1
   # PATCH/PUT /personas/1.json
   def update
+    puts "PERSONA PARAMS"
+
     @user = User.find(current_user.id)
     @persona = Persona.find_by(id: params[:id])
+
+    puts persona_params
+
     respond_to do |format|
       if @persona.update(persona_params)
         format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully updated.' }
@@ -134,7 +147,7 @@ class PersonasController < ApplicationController
         end
     end
 
-    
+
 
     end
 
@@ -148,6 +161,6 @@ class PersonasController < ApplicationController
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def persona_params
-      params.require(:persona).permit(:name, :description, :special_instructions)
+      params.require(:persona).permit(:name, :description, :special_instructions, :archive)
     end
 end

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180613003200) do
+ActiveRecord::Schema.define(version: 20180619194910) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -121,6 +121,7 @@ ActiveRecord::Schema.define(version: 20180613003200) do
     t.integer  "minimum_email_score"
     t.boolean  "has_minimum_email_score"
     t.integer  "campaign_type"
+    t.boolean  "archive",                 default: false
     t.index ["client_company_id"], name: "index_campaigns_on_client_company_id", using: :btree
     t.index ["persona_id"], name: "index_campaigns_on_persona_id", using: :btree
   end
@@ -130,8 +131,8 @@ ActiveRecord::Schema.define(version: 20180613003200) do
     t.text     "description"
     t.text     "company_notes"
     t.string   "company_domain"
-    t.datetime "created_at",                      null: false
-    t.datetime "updated_at",                      null: false
+    t.datetime "created_at",                              null: false
+    t.datetime "updated_at",                              null: false
     t.text     "airtable_keys"
     t.text     "replyio_keys"
     t.string   "api_key"
@@ -139,9 +140,11 @@ ActiveRecord::Schema.define(version: 20180613003200) do
     t.text     "emails_to_use"
     t.text     "products"
     t.text     "notable_clients"
-    t.boolean  "profile_setup",   default: false
-    t.boolean  "account_live",    default: false
+    t.boolean  "profile_setup",           default: false
+    t.boolean  "account_live",            default: false
     t.string   "account_manager"
+    t.string   "auto_reply_campaign_id"
+    t.string   "auto_reply_campaign_key"
   end
 
   create_table "client_reports", force: :cascade do |t|
@@ -205,11 +208,12 @@ ActiveRecord::Schema.define(version: 20180613003200) do
 
   create_table "personas", force: :cascade do |t|
     t.string   "name"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
+    t.datetime "created_at",                           null: false
+    t.datetime "updated_at",                           null: false
     t.integer  "client_company_id"
     t.string   "description"
     t.string   "special_instructions"
+    t.boolean  "archive",              default: false
     t.index ["client_company_id"], name: "index_personas_on_client_company_id", using: :btree
   end
 

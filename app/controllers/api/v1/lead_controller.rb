@@ -9,8 +9,8 @@ class Api::V1::LeadController < Api::V1::BaseController
     	@client_company = ClientCompany.find_by(api_key: params[:api_key])
 
     	puts @client_company.name
-    	puts "METHOD TO BE COMPLETED"
-
+    	puts params["first_name"]
+    	puts params["api_key"]
     	
 
   	end

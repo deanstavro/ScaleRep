@@ -1,10 +1,10 @@
-<center>
-  <p class="container text-danger"><%= flash[:error] %></p>
-  <p class="container text-success"><%= flash[:notice] %></p>
-</center>
-
 <div id="title" class="jumbotron">
 
+  <center>
+    <p class="container text-danger"><%= flash[:error] %></p>
+    <p class="container text-success"><%= flash[:notice] %></p>
+  </center>
+  
   <br/>
   <h1><%= @user.client_company.name if @user.client_company %> Personas </h1>
   <br>
@@ -19,83 +19,61 @@
   <%= link_to '+ Add Persona', new_client_companies_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
 </div>
 
+<div class = 'thin_margins'>
+  <div id="accordion">
+
+    <!-- tab view -->
+    <ul class="nav nav-tabs" id="personasTab" role = "tablist" >
+      <li class="nav-item">
+        <a class="nav-link active" id="current-tab" data-toggle="tab" href="#current" role="tab" aria-controls="home" aria-selected="true">Current</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="archive-tab" data-toggle="tab" href="#archive" role="tab" aria-controls="second" aria-selected="false">Archive</a>
+      </li>
+
+    </ul>
+
+    <div class="tab-content", id="personasTabContent">
+      <div class="tab-pane fade show active" id="current" role="tabpanel" aria-labelledby="home-tab">
+        <%= render 'personas/current' %>
+      </div>
+
+      <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="second-tab">
+        <%= render 'personas/archive' %>
+      </div>
+
+    </div>
 
 
-<div class="table-display clickable-row">
-
-  <table class="table table-hover">
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">persona</th>
-        <th scope="col">people</th>
-        <th scope="col">delivered</th>
-        <th scope="col">bounces</th>
-        <th scope="col">replies</th>
-        <th scope="col">opens</th>
-        <th scope="col"># campaigns</th>
-        <th scope="col">edit </th>
-        <th scope="col">delete</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @personas.each do |persona| %>
-        <tr >
-          <td><%= link_to persona.name, client_companies_campaigns_path(persona) %></td>
-
-          <%  if @metrics_hash[persona] && @metrics_hash[persona][0] %>
-             <td><%= @metrics_hash[persona][0] %></td>
-          <% else %>
-              <td>N/A</td>
-          <% end %>
-
-          <%  if @metrics_hash[persona] && @metrics_hash[persona][1] %>
-             <td><%= @metrics_hash[persona][1] %></td>
-          <% else %>
-              <td>N/A</td>
-          <% end %>
-
-          <%  if @metrics_hash[persona] && @metrics_hash[persona][2] %>
-             <td><%= @metrics_hash[persona][2] %></td>
-          <% else %>
-              <td>N/A</td>
-          <% end %>
-
-          <%  if @metrics_hash[persona] && @metrics_hash[persona][3] %>
-
-                <%  if @metrics_hash[persona][0].to_i > @metrics_hash[persona][1].to_i  %>
-                  <td><%= @metrics_hash[persona][3] %></td>
-
-                <% else %>
-
-                  <td><%= @metrics_hash[persona][3] %></td>
-
-                <% end %>
-          <% else %>
-              <td>N/A</td>
-          <% end %>
-
-          <%  if @metrics_hash[persona] && @metrics_hash[persona][4] %>
-             <td><%= @metrics_hash[persona][4] %></td>
-          <% else %>
-              <td>N/A</td>
-          <% end %>
-
-          <%  if @metrics_hash[persona] && @metrics_hash[persona][5] %>
-             <td><%= @metrics_hash[persona][5] %></td>
-          <% else %>
-              <td>0</td>
-          <% end %>
-
-          <td><%= link_to '+', edit_client_companies_persona_path(persona) %></td>
-          <td><%= link_to '--',  client_companies_persona_path(persona),  method: :delete, data: { confirm: 'Are you sure?' } %></td>
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+  </div>
 </div>
 
+
+
 <script>
-$("tr[data-link]").click(function() {
-  window.location = $(this).data("link")
-})
+  $(document).ready(function() {
+
+    if(GetURLParameter('tab_id') != undefined) {
+      goToHash(GetURLParameter('tab_id'))
+    }
+  });
+
+
+  function GetURLParameter(sParam)
+  {
+      var sPageURL = window.location.search.substring(1);
+      var sURLVariables = sPageURL.split('&');
+      for (var i = 0; i < sURLVariables.length; i++)
+      {
+          var sParameterName = sURLVariables[i].split('=');
+          if (sParameterName[0] == sParam)
+          {
+              return sParameterName[1];
+          }
+      }
+  }
+
+  function goToHash(type) {
+    $('.nav-tabs a[href="#' + type + '"]').tab('show');
+  }
 </script>
