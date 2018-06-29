@@ -1,17 +1,28 @@
 class Api::V1::ReplyController < Api::V1::BaseController
-  
-    
+
+
 
     def new_reply
-        
+
         unless params[controller_name.to_s].empty?
 
             # grab reply params, with the json content
             @params_content = params[controller_name.to_s]
-            
+
             begin
                 # Create new lead with secured params
                 @campaign_reply = CampaignReply.new(auto_reply_params)
+
+                #if first_name and last_name are empty --> assign
+                if !@campaign_reply[:first_name] and !@campaign_reply[:last_name]
+                  if @campaign_reply[:full_name].split.length < 2
+                    update_reply(:first_name, @campaign_reply[:full_name])
+                  else
+                    update_reply(:last_name, @campaign_reply[:full_name].split[-1])
+                    update_reply(:first_name, @campaign_reply[:full_name].split[0...-1].join(" "))
+                  end
+                end
+
             rescue
                 puts "wrong status"
                 render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400
@@ -43,7 +54,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
                     end
                     puts status[0]+ " not found"
 
-                        
+
                 end
 
             else
@@ -54,7 +65,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
 
             #begin
-                
+
 
 
                 if @params_content[:status].to_s == "opt_out" or @params_content[:status].to_s == "do_not_contact"
@@ -69,11 +80,11 @@ class Api::V1::ReplyController < Api::V1::BaseController
                     update_lead(@params_content, @client_company, @campaign_reply, "in_campaign")
                     render json: {response: "Reply uploaded", :status => 200}, status: 200
                     return
-                    
+
                 end
 
 
-                
+
 
             #rescue
                 puts "did not save"
@@ -101,7 +112,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
     def auto_reply_params
         @params_content.permit(:first_name, :last_name, :full_name, :last_conversation_subject, :last_conversation_summary, :email, :date_sourced, :status)
     end
-    
+
     def get_reply_statuses
         return CampaignReply.statuses
     end
