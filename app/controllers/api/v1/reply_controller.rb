@@ -1,9 +1,6 @@
 class Api::V1::ReplyController < Api::V1::BaseController
 
-
-
     def new_reply
-
         unless params[controller_name.to_s].empty?
 
             # grab reply params, with the json content

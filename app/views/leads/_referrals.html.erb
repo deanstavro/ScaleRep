@@ -8,9 +8,10 @@
           <tr>
                 <th scope = 'col'>date sourced</th>
                 <th scope = 'col'>follow_up_date</th>
+                <th scope = 'col'>email</th>
                 <th scope = 'col'>first_name</th>
                 <th scope = 'col'>last_name</th>
-                <th scope = 'col'>email</th>
+                <th scope = 'col'>client_company</th>
           </tr>
         </thead>
 
@@ -25,9 +26,10 @@
                 <td> nil </td>
               <% end %>
 
+              <td> <%= lead.email %></td>
               <td> <%= lead.first_name %></td>
               <td> <%= lead.last_name %></td>
-              <td> <%= lead.email %></td>
+              <td> <%= lead.client_company.name %></td>
             </tr>
           <% end %>
         </tbody>
