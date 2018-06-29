@@ -1,0 +1,43 @@
+<div class="card-body">
+  <% if @referrals.count == 0 %>
+    <p> No Referrals To Follow-Up With</p>
+  <% else %>
+    <div style="overflow: auto;">
+      <table class = " airtable_data table table-striped">
+        <thead class = "thead-dark">
+          <tr>
+                <th scope = 'col'>date sourced</th>
+                <th scope = 'col'>follow_up_date</th>
+                <th scope = 'col'>first_name</th>
+                <th scope = 'col'>last_name</th>
+                <th scope = 'col'>email</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @referrals.each do |lead| %>
+            <tr>
+              <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
+
+              <% if lead.follow_up_date? %>
+                <td> <%= lead.follow_up_date.strftime("%b %d, %Y") %></td>
+              <% else %>
+                <td> nil </td>
+              <% end %>
+
+              <td> <%= lead.first_name %></td>
+              <td> <%= lead.last_name %></td>
+              <td> <%= lead.email %></td>
+            </tr>
+          <% end %>
+        </tbody>
+      </table>
+      <div class="digg_pagination">
+          <div class="page_info">
+            <%= page_entries_info @referrals %>
+          </div>
+          <%= will_paginate @referrals, :params => { :tab_id => "pending-referrals" }, :container => false %>
+      </div>
+    </div>
+  <% end %>
+</div>

@@ -33,9 +33,6 @@ class Api::V1::ReplyController < Api::V1::BaseController
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
             update_reply(:client_company, @client_company)
 
-
-
-
             if @params_content.key?(:status)
 
                 #get all lead status enums
@@ -65,32 +62,25 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
 
             #begin
+            if @params_content[:status].to_s == "opt_out" or @params_content[:status].to_s == "do_not_contact"
+                update_lead(@params_content, @client_company, @campaign_reply, "blacklist")
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
+                return
+            elsif @params_content[:status].to_s == "interested" or @params_content[:status].to_s == "not_interested"
+                update_lead(@params_content, @client_company, @campaign_reply, @params_content[:status].to_s)
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
+                return
+            else
+                update_lead(@params_content, @client_company, @campaign_reply, "in_campaign")
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
+                return
 
-
-
-                if @params_content[:status].to_s == "opt_out" or @params_content[:status].to_s == "do_not_contact"
-                    update_lead(@params_content, @client_company, @campaign_reply, "blacklist")
-                    render json: {response: "Reply uploaded", :status => 200}, status: 200
-                    return
-                elsif @params_content[:status].to_s == "interested" or @params_content[:status].to_s == "not_interested"
-                    update_lead(@params_content, @client_company, @campaign_reply, @params_content[:status].to_s)
-                    render json: {response: "Reply uploaded", :status => 200}, status: 200
-                    return
-                else
-                    update_lead(@params_content, @client_company, @campaign_reply, "in_campaign")
-                    render json: {response: "Reply uploaded", :status => 200}, status: 200
-                    return
-
-                end
-
-
-
+            end
 
             #rescue
-                puts "did not save"
-                render json: {error: "Reply was not uploaded. E-mail required fields missing (email)", :status => 400}, status: 400
-                return
-            #end
+            puts "did not save"
+            render json: {error: "Reply was not uploaded. E-mail required fields missing (email)", :status => 400}, status: 400
+            return
 
         else
             puts "params empty"
@@ -122,26 +112,33 @@ class Api::V1::ReplyController < Api::V1::BaseController
     end
 
     def update_lead(params_content, client_company, campaign_reply, status)
+      @lead = Lead.where(:client_company => client_company, :email => campaign_reply.email)
 
-                    @lead = Lead.where(:client_company => client_company, :email => campaign_reply.email)
+      if @lead.empty?
+          @new_lead = @lead.create!(:email => campaign_reply.email, :status => status, :full_name => params_content[:full_name])
+          campaign_reply.update_attribute(:lead, @new_lead)
+          campaign_reply.save!
 
-
-                    if @lead.empty?
-                        @new_lead = @lead.create!(:email => campaign_reply.email, :status => status)
-                        campaign_reply.update_attribute(:lead, @new_lead)
-                        campaign_reply.save!
-                    else
-                        for lead in @lead
-                            lead.update(status: status)
-                            campaign_reply.update_attribute(:lead, lead)
-                            campaign_reply.save!
-                        end
-
-                        #####################
-                        #Here, update the lead with the reply task
-                    end
+          #check for first and last name
+          if params_content[:full_name].split.length < 2
+            @new_lead.update_attribute(:first_name, params_content[:full_name])
+          else
+            @new_lead.update_attribute(:last_name, params_content[:full_name].split[-1])
+            @new_lead.update_attribute(:first_name, params_content[:full_name].split[0...-1].join(" "))
+          end
 
 
+
+      else
+          for lead in @lead
+              lead.update(status: status)
+              campaign_reply.update_attribute(:lead, lead)
+              campaign_reply.save!
+          end
+
+          #####################
+          #Here, update the lead with the reply task
+      end
     end
 
 

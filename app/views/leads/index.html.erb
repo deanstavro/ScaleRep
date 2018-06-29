@@ -2,97 +2,88 @@
   <br/>
   <h1><%= @user.client_company.name if @user.client_company %> Lead List</h1>
 </div>
-
 <div class = 'thin_margins'>
   <div id="accordion">
 
-    <!-- tab view -->
-    <ul class="nav nav-tabs" id="leadsTab" role = "tablist" >
-      <li class="nav-item">
-        <a class="nav-link active" id="meetings-set" data-toggle="tab" href="#meeting" role="tab" aria-controls="home" aria-selected="true">Handed-Off Leads</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="interesed-leads" data-toggle="tab" href="#interested" role="tab" aria-controls="profile" aria-selected="false">Interested Leads</a>
-      </li>
-      <li class="nav-item">
-        <a class="nav-link" id="blacklisted-lead" data-toggle="tab" href="#blacklisted" role="tab" aria-controls="contact" aria-selected="false">Blacklisted Leads</a>
-      </li>
-    </ul>
+    <% if @user.role == "scalerep" %>
+      <%= render 'leads/scalerep_admin_portal' %>
+    <% else %>
+      <!-- tab view -->
+      <ul class="nav nav-tabs" id="leadsTab" role = "tablist" >
+        <li class="nav-item">
+          <a class="nav-link active" id="meetings-set" data-toggle="tab" href="#meeting" role="tab" aria-controls="home" aria-selected="true">Handed-Off Leads</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="interesed-leads" data-toggle="tab" href="#interested" role="tab" aria-controls="profile" aria-selected="false">Interested Leads</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" id="blacklisted-lead" data-toggle="tab" href="#blacklisted" role="tab" aria-controls="contact" aria-selected="false">Blacklisted Leads</a>
+        </li>
+      </ul>
 
-    <div class="tab-content", id="leadsTabContent">
-      <div class="tab-pane fade show active" id="meeting" role="tabpanel" aria-labelledby="home-tab">
-        <%= render 'leads/meetings_set_leads' %>
-      </div>
-
-      <div class="tab-pane fade" id="interested" role="tabpanel" aria-labelledby="profile-tab">
-        <%= render 'leads/interested_leads' %>
-      </div>
-
-      <div class="tab-pane fade" id="blacklisted" role="tabpanel" aria-labelledby="contact-tab">
-        <%= render 'leads/blacklisted_leads' %>
-      </div>
-    </div>
-
-      <div class="card" style="margin-top:150px;">
-        <div class="card-header" id="qualifiedLeadsHeader">
-          <h5 class="mb-0">
-            <button class= "btn btn-link" data-toggle="collapse" data-target="#customer_accounts" aria-expanded="true" aria-controls="qualifiedLeads">
-              Current Customers
-            </button>
-          </h5>
+      <div class="tab-content", id="leadsTabContent">
+        <div class="tab-pane fade show active" id="meeting" role="tabpanel" aria-labelledby="home-tab">
+          <%= render 'leads/meetings_set_leads' %>
         </div>
 
-        <% if @current_table == "accounts" %>
-          <div id="customer_accounts" class="show" aria-labelledby="qualifiedLeadsHeader">
-        <% else %>
-          <div id="customer_accounts" class="collapse" aria-labelledby="qualifiedLeadsHeader">
-        <% end %>
+        <div class="tab-pane fade" id="interested" role="tabpanel" aria-labelledby="profile-tab">
+          <%= render 'leads/interested_leads' %>
+        </div>
+
+        <div class="tab-pane fade" id="blacklisted" role="tabpanel" aria-labelledby="contact-tab">
+          <%= render 'leads/blacklisted_leads' %>
+        </div>
+      </div>
+
+      <div class="card" style="margin-top:150px;">
+          <div class="card-header" id="qualifiedLeadsHeader">
+            <h5 class="mb-0">
+              <button class= "btn btn-link" data-toggle="collapse" data-target="#customer_accounts" aria-expanded="true" aria-controls="qualifiedLeads">
+                Current Customers
+              </button>
+            </h5>
+          </div>
+          <% if @current_table == "accounts" %>
+            <div id="customer_accounts" class="show" aria-labelledby="qualifiedLeadsHeader">
+          <% else %>
+            <div id="customer_accounts" class="collapse" aria-labelledby="qualifiedLeadsHeader">
+          <% end %>
           <div class="card-body">
             <% if @accounts.count == 0 %>
               <p> No Customer Accounts </p>
             <% else %>
               <div style="overflow: auto;">
-
-
                 <table class = " airtable_data table table-striped">
                   <thead class = "thead-dark">
                     <tr>
-                          <th scope = 'col'>name</th>
-                          <th scope = 'col'>website</th>
-                          <th scope = 'col'>do not contact?</th>
-
+                      <th scope = 'col'>name</th>
+                      <th scope = 'col'>website</th>
+                      <th scope = 'col'>do not contact?</th>
                     </tr>
                   </thead>
-
                   <tbody>
                     <% @accounts.each do |account| %>
-
                       <tr>
-
-                            <td> <%= account.name %></td>
-                            <td> <%= account.website %></td>
-                            <td> <%= account.do_not_contact.to_s %></td>
-
+                        <td> <%= account.name %></td>
+                        <td> <%= account.website %></td>
+                        <td> <%= account.do_not_contact.to_s %></td>
                       </tr>
                     <% end %>
                   </tbody>
-
                 </table>
-
                 <div class="digg_pagination">
                   <div class="page_info">
                     <%= page_entries_info @accounts %>
                   </div>
                   <%= will_paginate @accounts, :params => { :table_id => :accounts }, :container => false %>
                 </div>
-
+              </div>
             <% end %>
-
           </div>
+        </div>
       </div>
-      </div>
-  </div>
-</div>
+    </div>
+  <% end %>
 
 
 

@@ -1,0 +1,37 @@
+<ul class="nav nav-tabs" id="leadsTab" role = "tablist" >
+
+  <li class="nav-item">
+    <a class="nav-link active" id="follow-up" data-toggle="tab" href="#followUp" role="tab" aria-controls="followup" aria-selected="true">Follow-Up</a>
+  </li>
+  <li class="nav-item">
+    <a class="nav-link" id="auto-replies" data-toggle="tab" href="#autoReplies" role="tab" aria-controls="autoreplies" aria-selected="false">Auto Replies</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link" id="pending-referrals" data-toggle="tab" href="#referrals" role="tab" aria-controls="referral" aria-selected="false">Referrals</a>
+  </li>
+
+  <li class="nav-item">
+    <a class="nav-link" id="meetings-set" data-toggle="tab" href="#meetings" role="tab" aria-controls="meetings" aria-selected="false">Handed-Off Leads</a>
+  </li>
+</ul>
+
+
+
+<div class="tab-content", id="leadsTabContent">
+  <div class="tab-pane fade show active" id="followUp" role="tabpanel" aria-labelledby="followup-tab">
+    <%= render 'leads/follow_up_leads' %>
+  </div>
+
+  <div class="tab-pane fade" id="autoReplies" role="tabpanel" aria-labelledby="autoreplies-tab">
+    <%= render 'leads/auto_replies' %>
+  </div>
+
+  <div class="tab-pane fade" id="referrals" role="tabpanel" aria-labelledby="referral-tab">
+    <%= render 'leads/referrals' %>
+  </div>
+
+  <div class="tab-pane fade" id="meetings" role="tabpanel" aria-labelledby="meetings-tab">
+    <%= render 'leads/meetings_set_leads' %>
+  </div>
+</div>
