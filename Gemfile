@@ -26,6 +26,7 @@ gem 'rest-client'
 gem 'sidekiq'
 gem 'rails_12factor'
 gem 'will_paginate', '~> 3.1.0'
+gem 'google-analytics-rails', '1.1.1'
 
 group :test do
   gem 'sqlite3'

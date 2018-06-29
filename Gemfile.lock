@@ -138,6 +138,7 @@ GEM
       turf (= 0.0.5)
     globalid (0.4.1)
       activesupport (>= 4.2.0)
+    google-analytics-rails (1.1.1)
     groupdate (4.0.0)
       activesupport (>= 4.2)
     has_scope (0.7.2)
@@ -367,6 +368,7 @@ DEPENDENCIES
   factory_girl_rails
   faker
   frontend-generators
+  google-analytics-rails (= 1.1.1)
   groupdate
   high_voltage
   jbuilder (~> 2.5)
