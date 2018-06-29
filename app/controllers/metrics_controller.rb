@@ -10,9 +10,7 @@ class MetricsController < ApplicationController
 		""" leads as if theya re pulled from our database
 				right now, they are pulled from airtabler
 		"""
-    #@leads = Lead.where(:client_company_id => @company, :meeting_set => true)
-    #@ordered_leads = @leads.sort_by &:date_sourced
-
+    
 		# airtable work
 		airtable = @company.airtable_keys
     airtable_dic = eval(airtable)

@@ -8,9 +8,9 @@ class Lead < ApplicationRecord
 	#validates :client_company, presence: true
 
 	belongs_to :campaign, optional: true
-	enum status: [:cold, :in_campaign, :not_interested, :blacklist, :interested, :meeting_set]
+	enum status: [:cold, :in_campaign, :not_interested, :blacklist, :interested, :handed_off]
 	#validates :email, presence: true
-	
+
 	validates_uniqueness_of :email, scope: :client_company
 	validates :email, presence: true
 	#validates :first_name, presence: true
@@ -19,13 +19,13 @@ class Lead < ApplicationRecord
 
 
 	def self.import_to_campaign(file, company, leads, campaign_id, column_names)
-		
+
 		puts "Starting importing to campaign"
 		not_imported = 0
 		duplicates = []
 		imported = 0
 		rows_email_not_present = 0
-		
+
 		#Hash of all rows that will be inputted to reply
 		all_hash = []
 
@@ -45,7 +45,7 @@ class Lead < ApplicationRecord
 			if one_hash["email"].present?
 
 					puts one_hash
-					
+
 
 					email = one_hash["email"]
 
@@ -85,7 +85,7 @@ class Lead < ApplicationRecord
 
 	def one_hash
 		one_hash.require(:lead).permit(:decision_maker, :internal_notes, :email_in_contact_with, :date_sourced, :client_company, :campaign_id, :contract_sent, :contract_amount, :timeline, :project_scope, :email_handed_off_too, :meeting_time, :email, :first_name, :last_name, :hunter_score, :hunter_date, :title, :phone_type, :phone_number, :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :full_name, :status, :company_name, :company_website, :account_id)
-		# 
+		#
 		#id, decision_maker, internal_notes, email_in_contact_with, date_sourced
     	# created_at, updated_at, client_company_id, campaign_id, contract_sent,
     	# contract_amount, timeline, project_scope, email_handed_off_too, meeting_time,

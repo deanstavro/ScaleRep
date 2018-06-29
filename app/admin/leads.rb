@@ -12,7 +12,7 @@ ActiveAdmin.register Lead do
 #   permitted
 # end
 
-permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :meeting_set, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :company_description, :full_name, :status, :account_id, :company_name, :company_website
+permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :handed_off, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :company_description, :full_name, :status, :account_id, :company_name, :company_website
 
 index do
     selectable_column
@@ -76,14 +76,14 @@ form do |f|
     f.input :last_name
     f.input :full_name
     f.input :status
-    f.input :client_company 
+    f.input :client_company
     f.input :email
     f.input :title
     f.input :linkedin
     f.input :account
     f.input :company_name
     f.input :company_website
-    
+
     f.input :campaign
     f.input :hunter_date
     f.input :hunter_score
@@ -93,7 +93,7 @@ form do |f|
     f.input :address
     f.input :city
     f.input :state
-    f.inputs do 
+    f.inputs do
         f.input :country, as: :select, collection: country_dropdown
     end
     f.input :internal_notes
@@ -113,9 +113,9 @@ form do |f|
   f.actions
 end
 
-def country_dropdown 
+def country_dropdown
     ActionView::Helpers::FormOptionsHelper::COUNTRIES
-  end 
+  end
 
 
 end
