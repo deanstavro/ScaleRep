@@ -6,32 +6,25 @@
       <table class = " airtable_data table table-striped">
         <thead class = "thead-dark">
           <tr>
-
                 <th scope = 'col'>date sourced</th>
                 <th scope = 'col'>email</th>
-                <th scope = 'col'>first_name</th>
-                <th scope = 'col'>last_name</th>
+                <th scope = 'col'>Name</th>
 
                 <% if @user.role == "scalerep" %>
                   <th scope = 'col'>client_company</th>
                 <% end %>
-
-
           </tr>
         </thead>
 
         <tbody>
           <% @meetings_set.each do |lead| %>
             <tr>
-                  <td> <%= lead.updated_at.strftime("%b %d, %Y") %> </td>
-                  <td> <%= lead.email %> </td>
-                  <td> <%= lead.first_name %> </td>
-                  <td> <%= lead.last_name %> </td>
-
-                  <% if @user.role == "scalerep" %>
-                    <td> <%= lead.client_company.name %> </td>
-                  <% end %>
-                  
+              <td> <%= lead.updated_at.strftime("%b %d, %Y") %> </td>
+              <td> <%= lead.email %> </td>
+              <td> <%= lead.full_name %> </td>
+              <% if @user.role == "scalerep" %>
+                <td> <%= lead.client_company.name %> </td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>

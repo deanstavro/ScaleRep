@@ -2,9 +2,8 @@ ActiveAdmin.register CampaignReply do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :lead, :lead_id, :client_company_id, :first_name, :last_name, :full_name, :email, :status, :last_conversation_summary, :last_conversation_subject, :follow_up_date, :company, :notes, :reply_io_key
+permit_params :lead, :lead_id, :client_company_id, :first_name, :last_name, :full_name, :email, :status, :last_conversation_summary, :last_conversation_subject, :follow_up_date, :company, :notes, :reply_io_key, :referral_email, :referral_name
 
-#
 # or
 #
 # permit_params do
@@ -30,6 +29,8 @@ index do
   	column :company
   	column :notes
   	column :reply_io_key
+    column :referral_name
+    column :referral_email
 
   	 actions
 end
@@ -51,6 +52,8 @@ form do |f|
   	f.input :company
   	f.input :notes
   	f.input :reply_io_key
+    f.input :referral_name
+    f.input :referral_email
 
 end
   f.actions

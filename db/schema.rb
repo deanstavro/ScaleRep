@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180629215338) do
+ActiveRecord::Schema.define(version: 20180630181556) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -90,6 +90,8 @@ ActiveRecord::Schema.define(version: 20180629215338) do
     t.integer  "client_company_id"
     t.integer  "lead_id"
     t.string   "note"
+    t.string   "referral_name"
+    t.string   "referral_email"
     t.index ["client_company_id"], name: "index_campaign_replies_on_client_company_id", using: :btree
     t.index ["lead_id"], name: "index_campaign_replies_on_lead_id", using: :btree
   end

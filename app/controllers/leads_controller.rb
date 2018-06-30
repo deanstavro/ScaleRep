@@ -82,12 +82,23 @@ class LeadsController < ApplicationController
     @reply = CampaignReply.where(:email => params[:email]).where(:client_company => @company).first
 
     #update attributes
-    @reply.update_attribute(:follow_up_date, Date.strptime(params[:followUpDate], "%m/%d/%Y"))
+    if params[:followUpDate] != ""
+      @reply.update_attribute(:follow_up_date, Date.strptime(params[:followUpDate], "%m/%d/%Y"))
+    end
+
     @reply.update_attribute(:notes, params[:notes])
     @reply.update_attribute(:status, params[:status])
 
-    redirect_to leads_path
+    #update params if they exist and added for referrals
+    if params.has_key?(:referralName)
+      @reply.update_attribute(:referral_name, params[:referralName])
+    end
+    if params.has_key?(:referralEmail)
+      @reply.update_attribute(:referral_email, params[:referralEmail])
+    end
 
+    #redirect
+    redirect_to leads_path
 
   end
 

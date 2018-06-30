@@ -6,12 +6,15 @@
       <table class = " airtable_data table table-striped">
         <thead class = "thead-dark">
           <tr>
-                <th scope = 'col'>date sourced</th>
-                <th scope = 'col'>follow_up_date</th>
-                <th scope = 'col'>email</th>
-                <th scope = 'col'>first_name</th>
-                <th scope = 'col'>last_name</th>
-                <th scope = 'col'>client_company</th>
+                <th scope = 'col'>Date Sourced</th>
+                <th scope = 'col'>Follow-upp Date</th>
+                <th scope = 'col'>Referree Name</th>
+                <th scope = 'col'>Referral Name</th>
+                <th scope = 'col'>Referral Email</th>
+                <th scope = 'col'>Company</th>
+                <th scope = 'col'>Notes</th>
+                <th scope = 'col'>Status</th>
+                <th scope = 'col'>Update</th>
           </tr>
         </thead>
 
@@ -20,16 +23,36 @@
             <tr>
               <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
 
-              <% if lead.follow_up_date? %>
-                <td> <%= lead.follow_up_date.strftime("%b %d, %Y") %></td>
-              <% else %>
-                <td> nil </td>
+              <%= form_tag update_reply_from_portal_leads_path(:email => lead.email, :company_id => lead.client_company.id) do %>
+                <% if lead.follow_up_date? %>
+                  <td><input type="text" data-provide='datepicker' name="followUpDate" value="<%= lead.follow_up_date.strftime('%m/%d/%Y')%>"></td>
+                <% else %>
+                  <td><input type="text" data-provide='datepicker' name="followUpDate"></td>
+                <% end %>
+
+                <td> <%= lead.full_name %></td>
+
+                <% if lead.referral_name? %>
+                  <td><input type="text" name="referralName" value="<%= lead.referral_name %>"></td>
+                <% else %>
+                  <td><input type="text" name="referralName"></td>
+                <% end %>
+
+                <% if lead.referral_email? %>
+                  <td><input type="text" name="referralEmail" value="<%= lead.referral_email %>"></td>
+                <% else %>
+                  <td><input type="text" name="referralEmail"></td>
+                <% end %>
+
+                <td> <%= lead.client_company.name %></td>
+                <td> <input type="text" name="notes" value="<%= lead.notes %>"></td>
+
+                <td>
+                  <%= select_tag :status, options_for_select(CampaignReply.statuses.keys.to_a, lead.status) %>
+                </td>
+                <td><%= submit_tag "OK" %></td>
               <% end %>
 
-              <td> <%= lead.email %></td>
-              <td> <%= lead.first_name %></td>
-              <td> <%= lead.last_name %></td>
-              <td> <%= lead.client_company.name %></td>
             </tr>
           <% end %>
         </tbody>
