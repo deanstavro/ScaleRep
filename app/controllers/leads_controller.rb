@@ -75,6 +75,23 @@ class LeadsController < ApplicationController
 
 
 
+  def update_reply_from_portal
+    # used to update follow_up_date and notes
+    # find the reply and update the lead
+    @company = ClientCompany.find_by(id: params[:company_id])
+    @reply = CampaignReply.where(:email => params[:email]).where(:client_company => @company).first
+
+    puts @company
+    puts @reply
+
+    #update attributes
+    @reply.update_attribute(:follow_up_date, params[:followUpDate])
+    @reply.update_attribute(:notes, params[:notes])
+
+    redirect_to leads_path
+
+
+  end
 
 
 

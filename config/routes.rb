@@ -61,6 +61,7 @@ Rails.application.routes.draw do
 
     resources :leads do
       collection { post :import_to_campaign}
+      collection { post :update_reply_from_portal}
       collection { get :fields}
     end
     resources :contacts

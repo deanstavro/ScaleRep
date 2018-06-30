@@ -9,9 +9,10 @@
                 <th scope = 'col'>date sourced</th>
                 <th scope = 'col'>follow_up_date</th>
                 <th scope = 'col'>email</th>
-                <th scope = 'col'>first_name</th>
-                <th scope = 'col'>last_name</th>
+                <th scope = 'col'>full_name</th>
                 <th scope = 'col'>client_company</th>
+                <th scope = 'col'>note</th>
+                <th scope = 'col'>update</th>
 
           </tr>
         </thead>
@@ -21,16 +22,19 @@
             <tr>
               <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
 
-              <% if lead.follow_up_date? %>
-                <td> <%= lead.follow_up_date.strftime("%b %d, %Y") %></td>
-              <% else %>
-                <td> nil </td>
-              <% end %>
-              <td> <%= lead.email %></td>
-              <td> <%= lead.first_name %></td>
-              <td> <%= lead.last_name %></td>
-              <td> <%= lead.client_company.name %></td>
+              <%= form_tag update_reply_from_portal_leads_path(:email => lead.email, :company_id => lead.client_company.id) do %>
+                <% if lead.follow_up_date? %>
+                  <td><input type="text" data-provide='datepicker' name="followUpDate" value="<%= lead.follow_up_date.strftime('%m/%d/%Y')%>"></td>
+                <% else %>
+                  <td><input type="text" data-provide='datepicker' name="followUpDate"></td>
+                <% end %>
 
+                <td> <%= lead.email %></td>
+                <td> <%= lead.full_name %></td>
+                <td> <%= lead.client_company.name %></td>
+                <td> <input type="text" name="notes" value="<%= lead.notes %>"></td>
+                <td><%= submit_tag "OK" %></td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>
