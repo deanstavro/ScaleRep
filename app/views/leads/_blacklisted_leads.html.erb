@@ -7,10 +7,11 @@
         <table class = " airtable_data table table-striped">
           <thead class = "thead-dark">
             <tr>
-              <th scope = 'col'>date added</th>
-              <th scope = 'col'>first_name</th>
-              <th scope = 'col'>last_name</th>
-              <th scope = 'col'>email</th>
+              <th scope = 'col'>Date Added</th>
+              <th scope = 'col'>Name</th>
+              <th scope = 'col'>Email</th>
+              <th scope = 'col'>Status</th>
+
             </tr>
           </thead>
 
@@ -18,9 +19,9 @@
             <% @blacklist.each do |lead| %>
               <tr>
                 <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
-                <td> <%= lead.first_name %></td>
-                <td> <%= lead.last_name %></td>
+                <td> <%= lead.full_name %></td>
                 <td> <%= lead.email %></td>
+                <td> <%= lead.status %></td>
               </tr>
             <% end %>
           </tbody>

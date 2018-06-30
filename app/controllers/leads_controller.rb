@@ -9,6 +9,7 @@ class LeadsController < ApplicationController
       @follow_ups   = CampaignReply.where(status: "interested").order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
       @auto_replies = CampaignReply.where(status: "auto_reply").order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
       @referrals    = CampaignReply.where(:status => ["referral", "auto_reply_referral"]).order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
+      @blacklist    = Lead.where(:status => ["not_interested", "blacklist"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
     else
       @company = ClientCompany.find_by(id: @user.client_company_id)
       @accounts = Account.where(client_company_id: @company.id).paginate(:page => params[:page], :per_page => 20)
@@ -96,6 +97,21 @@ class LeadsController < ApplicationController
     if params.has_key?(:referralEmail)
       @reply.update_attribute(:referral_email, params[:referralEmail])
     end
+
+    # if we move a reply to handed-off/opt-out/not-interested, update lead
+    if ["do_not_contact", "opt_out"].include?(params[:status])
+      @reply.lead.update_attribute(:status, "blacklist")
+    elsif ["handed_off"].include?(params[:status])
+      @reply.lead.update_attribute(:status, "handed_off")
+    elsif ["interested"].include?(params[:status])
+      @reply.lead.update_attribute(:status, "interested")
+    elsif ['not_interested'].include?(params[:status])
+      @reply.lead.update_attribute(:status, "not_interested")
+    else # auto_reply, auto_reply_referral, etc
+      @reply.lead.update_attribute(:status, "in_campaign")
+    end
+
+
 
     #redirect
     redirect_to leads_path
