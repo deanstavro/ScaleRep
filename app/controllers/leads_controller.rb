@@ -81,12 +81,10 @@ class LeadsController < ApplicationController
     @company = ClientCompany.find_by(id: params[:company_id])
     @reply = CampaignReply.where(:email => params[:email]).where(:client_company => @company).first
 
-    puts @company
-    puts @reply
-
     #update attributes
     @reply.update_attribute(:follow_up_date, Date.strptime(params[:followUpDate], "%m/%d/%Y"))
     @reply.update_attribute(:notes, params[:notes])
+    @reply.update_attribute(:status, params[:status])
 
     redirect_to leads_path
 

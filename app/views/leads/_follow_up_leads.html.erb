@@ -12,6 +12,7 @@
                 <th scope = 'col'>full_name</th>
                 <th scope = 'col'>client_company</th>
                 <th scope = 'col'>note</th>
+                <th scope = 'col'>status</th>
                 <th scope = 'col'>update</th>
 
           </tr>
@@ -33,6 +34,10 @@
                 <td> <%= lead.full_name %></td>
                 <td> <%= lead.client_company.name %></td>
                 <td> <input type="text" name="notes" value="<%= lead.notes %>"></td>
+
+                <td>
+                  <%= select_tag :status, options_for_select(CampaignReply.statuses.keys.to_a, 'interested') %>
+                </td>
                 <td><%= submit_tag "OK" %></td>
               <% end %>
             </tr>
