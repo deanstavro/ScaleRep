@@ -85,7 +85,7 @@ class LeadsController < ApplicationController
     puts @reply
 
     #update attributes
-    @reply.update_attribute(:follow_up_date, params[:followUpDate])
+    @reply.update_attribute(:follow_up_date, Date.strptime(params[:followUpDate], "%m/%d/%Y"))
     @reply.update_attribute(:notes, params[:notes])
 
     redirect_to leads_path
