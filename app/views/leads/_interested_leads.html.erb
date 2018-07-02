@@ -3,13 +3,13 @@
     <p> No Interested Leads </p>
   <% else %>
     <div style="overflow: auto;">
+      <p style="margin-bottom: 30px;"><i>Interested leads are those ScaleRep is tracking and following-up with on your behalf</i></p>
       <table class = " airtable_data table table-striped">
         <thead class = "thead-dark">
           <tr>
                 <th scope = 'col'>date sourced</th>
-                <th scope = 'col'>first_name</th>
-                <th scope = 'col'>last_name</th>
                 <th scope = 'col'>email</th>
+                <th scope = 'col'>Name</th>
           </tr>
         </thead>
 
@@ -17,9 +17,13 @@
           <% @interested_leads.each do |lead| %>
             <tr>
               <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
-              <td> <%= lead.first_name %></td>
-              <td> <%= lead.last_name %></td>
               <td> <%= lead.email %></td>
+
+              <% if lead.full_name != "" %>
+                <td> <%= lead.full_name %></td>
+              <% else %>
+                <td> <%= lead.first_name + " " + lead.last_name %></td>
+              <% end %>
             </tr>
           <% end %>
         </tbody>

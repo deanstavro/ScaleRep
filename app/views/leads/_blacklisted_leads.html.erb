@@ -4,13 +4,17 @@
 
     <% else %>
       <div style="overflow: auto;">
+        <p style="margin-bottom: 30px;"><i>Blacklisted leads have opted out of receiving future messaging or have asked to be taken off any list</i></p>
         <table class = " airtable_data table table-striped">
           <thead class = "thead-dark">
             <tr>
               <th scope = 'col'>Date Added</th>
-              <th scope = 'col'>Name</th>
               <th scope = 'col'>Email</th>
-              <th scope = 'col'>Status</th>
+              <th scope = 'col'>Name</th>
+
+              <% if @user.role == "scalerep" %>
+                <th scope = 'col'>Status</th>
+              <% end %>
 
             </tr>
           </thead>
@@ -19,9 +23,18 @@
             <% @blacklist.each do |lead| %>
               <tr>
                 <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
-                <td> <%= lead.full_name %></td>
                 <td> <%= lead.email %></td>
-                <td> <%= lead.status %></td>
+
+                <% if lead.full_name != "" %>
+                  <td> <%= lead.full_name %></td>
+                <% else %>
+                  <td> <%= lead.first_name + " " + lead.last_name %></td>
+                <% end %>
+
+                <% if @user.role == "scalerep" %>
+                  <td> <%= lead.status %></td>
+                <% end %>
+                
               </tr>
             <% end %>
           </tbody>
