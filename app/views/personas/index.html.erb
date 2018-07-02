@@ -4,9 +4,15 @@
     <p class="container text-danger"><%= flash[:error] %></p>
     <p class="container text-success"><%= flash[:notice] %></p>
   </center>
-  
+
   <br/>
-  <h1><%= @user.client_company.name if @user.client_company %> Personas </h1>
+    <h1>
+      <% if  @user.email == "demo@scalerep.com" %>
+        Demo_Company Personas
+      <% else %>
+        <%= @user.client_company.name if @user.client_company %> Personas
+      <% end %>
+    </h1>
   <br>
   <p> Personas group outreach campaigns into customer types.</p>
   <p> ex. <br>
