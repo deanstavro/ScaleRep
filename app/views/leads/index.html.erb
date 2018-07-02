@@ -1,6 +1,12 @@
 <div id="title" class="jumbotron">
   <br/>
-  <h1><%= @user.client_company.name if @user.client_company %> Lead List</h1>
+
+  <% if  @user.email == "demo@scalerep.com" %>
+    <h1>Demo_Company Lead List </h1>
+  <% else %>
+    <h1><%= @user.client_company.name if @user.client_company %> Lead List</h1>
+  <% end %>
+  
 </div>
 <div class = 'thin_margins'>
   <div id="accordion">
