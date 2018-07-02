@@ -7,8 +7,14 @@ class Api::V1::ReplyController < Api::V1::BaseController
             @params_content = params[controller_name.to_s]
 
             begin
-                # Create new lead with secured params
-                @campaign_reply = CampaignReply.new(auto_reply_params)
+                # first check to see if this exists
+                @campaign_reply = nil
+                if CampaignReply.exists?(email: params["email"])
+                  @campaign_reply = CampaignReply.find_by(email: params["email"])
+                else
+                  # Create new lead with secured params
+                  @campaign_reply = CampaignReply.new(auto_reply_params)
+                end
 
                 #if first_name and last_name are empty --> assign
                 if !@campaign_reply[:first_name] and !@campaign_reply[:last_name]
