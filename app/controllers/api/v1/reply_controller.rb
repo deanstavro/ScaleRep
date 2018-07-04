@@ -69,7 +69,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
                 update_lead(@params_content, @client_company, @campaign_reply, "blacklist")
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
                 return
-            elsif @params_content[:status].to_s == "interested" or @params_content[:status].to_s == "not_interested"
+            elsif @params_content[:status].to_s == "interested" or @params_content[:status].to_s == "not_interested" or @params_content[:status].to_s == "handed_off"
                 update_lead(@params_content, @client_company, @campaign_reply, @params_content[:status].to_s)
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
                 return
