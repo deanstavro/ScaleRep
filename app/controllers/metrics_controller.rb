@@ -11,17 +11,6 @@ class MetricsController < ApplicationController
 				right now, they are pulled from airtabler
 		"""
     
-		# airtable work
-		airtable = @company.airtable_keys
-    airtable_dic = eval(airtable)
-    puts airtable_dic["AIRTABLE"]
-
-		table = Airrecord.table(airtable_dic["AIRTABLE"],airtable_dic["MOFU"],"MOFU")
-
-		warm_leads = table.all(filter: '{lead_status} = "warm_lead"', sort: {qualified_date: "desc"})
-		qualified_leads = table.all(filter: '{lead_status} = "qualified"', sort: {qualified_date: "desc"})
-
-		@warm_qualified_leads = warm_leads + qualified_leads
 
     #@leads_count = @leads.count
     #@contracts = @leads.where(contract_amount: 1..Float::INFINITY).sort_by &:date_sourced

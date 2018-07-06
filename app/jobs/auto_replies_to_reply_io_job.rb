@@ -8,20 +8,18 @@ class AutoRepliesToReplyIoJob < ApplicationJob
     # grab all replies marked as today
 
     begin
-        @campaign_replies = CampaignReply.where(:follow_up_date => Date.today)
+        @campaign_replies = CampaignReply.where(follow_up_date: Date.today, :status => ["auto_reply", "auto_reply_referral"])
 
+        puts "we got campaign replies: "
 
         begin
 
-
             @campaign_replies.each do |auto_reply|
-
                 @client_company = auto_reply.client_company
-                puts @client_company.auto_reply_campaign_key
-                puts @client_company.auto_reply_campaign_id
+                puts "about to execute remove_contact"
                 response = remove_contact(@client_company.auto_reply_campaign_key, auto_reply["email"])
+                puts "about to execute add_contact"
                 response = add_contact(@client_company.auto_reply_campaign_key,@client_company.auto_reply_campaign_id, auto_reply)
-                sleep 10
             end
 
         rescue

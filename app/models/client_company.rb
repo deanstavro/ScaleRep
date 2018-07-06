@@ -12,7 +12,6 @@ class ClientCompany < ApplicationRecord
 	validates :company_domain, presence: true
 	validates :account_manager, presence: true
 
-	serialize :airtable_keys
 	serialize :replyio_keys
 
 	after_create :generate_key

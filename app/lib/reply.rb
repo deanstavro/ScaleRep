@@ -67,8 +67,6 @@ module Reply
 
   def remove_contact(reply_key, contact_email)
     begin
-        puts reply_key
-        puts reply_id
         puts contact_email
         payload = {"email": contact_email}
 
@@ -78,36 +76,53 @@ module Reply
            :payload => payload
         )
 
-        sleep(10)
+        sleep(5)
         puts response
         return response
 
     rescue
-        puts "did not input into reply"
+        puts "did not remove from reply"
         return "did not input into reply"
     end
   end
 
   def add_contact(reply_key, reply_id, contact)
     begin
+        puts contact["email"]
 
-        puts reply_key
-        puts reply_id
-        puts contact["lead_email"]
-        puts contact["first_name"]
-        puts contact ["last_name"]
+        #check if contact exists. If so, pushtocampaign. If not, addandpushtocampaign
+        # do this through nested begin/rescue
+        response = nil
+        begin
 
-        payload = { "campaignId": reply_id, "email": contact["lead_email"], "firstName": contact["first_name"], "lastName": contact["last_name"]}
+          contact_exists_response = RestClient::Request.execute(
+             :method => :get,
+             :url => 'https://api.reply.io/v1/people?email='+ contact["email"]+ "&apiKey=" + reply_key
+          )
 
-        response = RestClient::Request.execute(
-           :method => :post,
-           :url => 'https://api.reply.io/v1/actions/addandpushtocampaign?apiKey='+ reply_key,
-           :payload => payload
-        )
+          puts "contact exists -- adding to reply campaign"
 
-        sleep(10)
+          payload = { "campaignId": reply_id, "email": contact["email"]}
 
-        puts response
+          response = RestClient::Request.execute(
+             :method => :post,
+             :url => 'https://api.reply.io/v1/actions/pushtocampaign?apiKey='+ reply_key,
+             :payload => payload
+          )
+        rescue
+          puts "contact does not exist, so creating new one"
+
+          payload = { "campaignId": reply_id, "email": contact["email"], "firstName": contact["first_name"], "lastName": contact["last_name"]}
+
+          response = RestClient::Request.execute(
+             :method => :post,
+             :url => 'https://api.reply.io/v1/actions/addandpushtocampaign?apiKey='+ reply_key,
+             :payload => payload
+          )
+        end
+
+        sleep(5)
+
         return response
     rescue
 
