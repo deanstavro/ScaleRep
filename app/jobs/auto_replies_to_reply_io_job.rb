@@ -19,6 +19,7 @@ class AutoRepliesToReplyIoJob < ApplicationJob
                 @client_company = auto_reply.client_company
                 puts @client_company.auto_reply_campaign_key
                 puts @client_company.auto_reply_campaign_id
+                response = remove_contact(@client_company.auto_reply_campaign_key, auto_reply["email"])
                 response = add_contact(@client_company.auto_reply_campaign_key,@client_company.auto_reply_campaign_id, auto_reply)
                 sleep 10
             end
@@ -33,7 +34,7 @@ class AutoRepliesToReplyIoJob < ApplicationJob
         puts "No auto replies exist!"
 
     end
-        
-    
+
+
   end
 end

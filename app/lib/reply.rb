@@ -1,5 +1,4 @@
 # frozen_string_literal: true
-
 require 'rest-client'
 require 'json'
 
@@ -20,8 +19,6 @@ module Reply
     unparsed_campaigns
   end
 
-  
-
   def v1_get_campaign(id, key)
 
     response = RestClient::Request.execute(
@@ -30,7 +27,6 @@ module Reply
     JSON.parse(response, symbolize_names: true)
   end
 
-  
 
   def get_campaigns(company_key)
     keys = JSON.parse(company_key, symbolize_names: true)
@@ -69,12 +65,30 @@ module Reply
     campaign_arr
   end
 
+  def remove_contact(reply_key, contact_email)
+    begin
+        puts reply_key
+        puts reply_id
+        puts contact_email
+        payload = {"email": contact_email}
 
+        response = RestClient::Request.execute(
+           :method => :post,
+           :url => 'https://api.reply.io/v1/actions/removepersonfromallcampaigns?apiKey='+ reply_key,
+           :payload => payload
+        )
 
+        sleep(10)
+        puts response
+        return response
 
+    rescue
+        puts "did not input into reply"
+        return "did not input into reply"
+    end
+  end
 
   def add_contact(reply_key, reply_id, contact)
-
     begin
 
         puts reply_key
@@ -82,24 +96,20 @@ module Reply
         puts contact["lead_email"]
         puts contact["first_name"]
         puts contact ["last_name"]
-        
-        payload = { "campaignId": reply_id, "email": contact["lead_email"], "firstName": contact["first_name"], "lastName": contact["last_name"]}
 
+        payload = { "campaignId": reply_id, "email": contact["lead_email"], "firstName": contact["first_name"], "lastName": contact["last_name"]}
 
         response = RestClient::Request.execute(
            :method => :post,
            :url => 'https://api.reply.io/v1/actions/addandpushtocampaign?apiKey='+ reply_key,
            :payload => payload
-
         )
 
-        sleep(15)
+        sleep(10)
 
         puts response
         return response
-
     rescue
-
 
         puts "did not input into reply"
         return "did not input into reply"
@@ -107,10 +117,6 @@ module Reply
     end
 
   end
-
-
-
-
 
 
   def get_email_accounts(company_key)

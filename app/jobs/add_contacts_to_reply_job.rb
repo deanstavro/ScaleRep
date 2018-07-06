@@ -25,7 +25,6 @@ class AddContactsToReplyJob < ApplicationJob
   							 :method => :post,
   							 :url => 'https://api.reply.io/v1/actions/addandpushtocampaign?apiKey='+ @campaign.reply_key,
   							 :payload => payload
-
   						)
 
               sleep(10)
