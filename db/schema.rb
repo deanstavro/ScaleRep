@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180706164829) do
+ActiveRecord::Schema.define(version: 20180706204309) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -147,6 +147,8 @@ ActiveRecord::Schema.define(version: 20180706164829) do
     t.string   "account_manager"
     t.string   "auto_reply_campaign_id"
     t.string   "auto_reply_campaign_key"
+    t.string   "referral_campaign_key"
+    t.string   "referral_campaign_id"
   end
 
   create_table "client_reports", force: :cascade do |t|

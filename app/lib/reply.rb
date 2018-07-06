@@ -133,6 +133,64 @@ module Reply
 
   end
 
+  def add_referral_contact(reply_key, reply_id, contact)
+    begin
+        puts contact["email"]
+
+        #check if contact exists. If so, pushtocampaign. If not, addandpushtocampaign
+        # do this through nested begin/rescue
+        response = nil
+        begin
+
+          contact_exists_response = RestClient::Request.execute(
+             :method => :get,
+             :url => 'https://api.reply.io/v1/people?email='+ contact["referral_email"]+ "&apiKey=" + reply_key
+          )
+
+          puts "contact exists -- do nothing because we will already be emailng them"
+
+        rescue
+          puts "contact does not exist, so creating new one to put into referral campaign"
+
+
+          payload = { "campaignId": reply_id, "email": contact["referral_email"], "firstName": contact["referral_name"].split[0...-1].join(" "), "lastName": contact["referral_name"].split[-1]}
+
+          response = RestClient::Request.execute(
+             :method => :post,
+             :url => 'https://api.reply.io/v1/actions/addandpushtocampaign?apiKey='+ reply_key,
+             :payload => payload
+          )
+
+          sleep(5)
+
+          #update with custom fields
+          payload_for_custom_fields = {"email": contact["referral_email"], "customFields": [{"key": "referree_name", "value": contact["full_name"]}]}
+
+          custom_field_response = RestClient::Request.execute(
+             :method => :post,
+             :url => 'https://api.reply.io/v1/people?apiKey='+ reply_key,
+             :payload => payload_for_custom_fields
+          )
+
+        end
+
+        sleep(5)
+
+        return response
+    rescue
+
+        puts "did not input into reply"
+        return "did not input into reply"
+
+    end
+
+  end
+
+
+
+
+
+
 
   def get_email_accounts(company_key)
 
