@@ -15,9 +15,11 @@ class ReferralsToReplyJob < ApplicationJob
         begin
 
             @campaign_replies.each do |referral|
+              unless (referral.referral_email.nil? || referral.referral_email=="") and (referral.referral_name.nil? || referral.referral_name == "") and referral.full_name.nil?
                 @client_company = referral.client_company
                 puts "about to execute add_contact for referral"
                 response = add_referral_contact(@client_company.referral_campaign_key,@client_company.referral_campaign_id, referral)
+              end
             end
 
         rescue

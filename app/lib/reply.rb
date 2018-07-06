@@ -163,7 +163,7 @@ module Reply
 
           sleep(5)
 
-          #update with custom fields
+          #update with custom fields --> this is the only endpoint where you can add custom fields
           payload_for_custom_fields = {"email": contact["referral_email"], "customFields": [{"key": "referree_name", "value": contact["full_name"]}]}
 
           custom_field_response = RestClient::Request.execute(
