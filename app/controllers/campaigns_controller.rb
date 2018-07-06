@@ -7,6 +7,11 @@ class CampaignsController < ApplicationController
 	def index
 			@user = get_user
 			@client_company = get_company(@user)
+
+			puts 'printing params'
+			puts params
+
+
 			@persona = get_persona(params)
 
 			if @user.role != 'scalerep' and wrong_campaign(@persona, @client_company)
@@ -16,6 +21,8 @@ class CampaignsController < ApplicationController
 			end
 
       @campaigns = get_campaign(@persona, @client_company)
+			@current = @campaigns.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
+	    @archive = @campaigns.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
 
   end
 
@@ -80,10 +87,21 @@ class CampaignsController < ApplicationController
 				redirect_to client_companies_campaigns_path(persona), :notice => "Campaign created"
 			else
 				redirect_to client_companies_campaigns_path(persona), :notice => @campaign.errors.full_messages
-
 			end
+  end
+
+	def archive
 
 
+		puts 'got into archive'
+		puts 'print params'
+		puts params[:format]
+
+    @campaign = Campaign.find_by(id: params[:format])
+
+    # update archive setting
+    @campaign.update_attribute(:archive, !@campaign.archive)
+    redirect_to client_companies_campaigns_path(:format => @campaign.persona.id)
   end
 
 
@@ -104,7 +122,11 @@ class CampaignsController < ApplicationController
     end
 
     def get_campaign(persona, client_company)
-      return persona.campaigns.where("client_company_id =?", client_company).order('created_at DESC')
+			if @user.role != 'scalerep'
+	      return persona.campaigns.where("client_company_id =?", client_company).order('created_at DESC')
+			else
+				return persona.campaigns.all
+			end
     end
 
     def wrong_campaign(persona, company)

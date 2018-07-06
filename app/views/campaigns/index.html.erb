@@ -19,64 +19,28 @@
   <%= link_to '+ Add Campaign', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
 </div>
 
+<div class = 'thin_margins'>
+  <div id="accordion">
 
-<div class="table-display">
+    <!-- tab view -->
+    <ul class="nav nav-tabs" id="personasTab" role = "tablist" >
+      <li class="nav-item">
+        <a class="nav-link active" id="current-tab" data-toggle="tab" href="#current" role="tab" aria-controls="home" aria-selected="true">Current</a>
+      </li>
+      <li class="nav-item">
+        <a class="nav-link" id="archive-tab" data-toggle="tab" href="#archive" role="tab" aria-controls="second" aria-selected="false">Archive</a>
+      </li>
 
-  <table class="table table-hover"> 
-    <thead class="thead-dark">
-      <tr>
-        <th scope="col">Campaign</th>
+    </ul>
 
-        <th scope="col">Add Leads <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="a"></i></th>
-        <th scope="col">email Account</th>
-        <th scope="col">People</th>
-        <th scope="col">Delivered</th>
-        <th scope="col">Bounces</th>
-        <th scope="col">Replies</th>
-        <th scope="col">Opens</th>
-        <th scope="col">Start Date</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% @campaigns.each do |campaign| %>
-        <tr>
-          <td><%= campaign.campaign_name %></td>
+    <div class="tab-content", id="personasTabContent">
+      <div class="tab-pane fade show active" id="current" role="tabpanel" aria-labelledby="home-tab">
+        <%= render 'campaigns/current' %>
+      </div>
 
-          <td>
-            <%= form_tag import_to_campaign_leads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true do %>
-              <%= file_field_tag :file %>
-              <%= submit_tag "Import CSV" %>
-            <% end %>
-          </td>
-
-          <td><%= campaign.emailAccount %></td>
-
-          <td><%= campaign.peopleCount %></td>
-
-          <td><%= campaign.deliveriesCount %></td>
-
-          <td><%= campaign.bouncesCount %></td>
-
-          <% if (campaign.repliesCount).to_i > 0 %>
-            <% if (campaign.deliveriesCount).to_i > (campaign.peopleCount).to_i %>
-                <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount) %>%</td>
-            <% else %>
-                <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount) %>%</td>
-            <% end %>
-          <% else %>
-            <td>0</td>
-          <% end %>
-
-          <% if (campaign.opensCount).to_i > 0 %>
-            <td><%= campaign.opensCount %><br><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %>%</td>
-          <% else %>
-            <td>0</td>
-          <% end %>
-
-          <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
-
-        </tr>
-      <% end %>
-    </tbody>
-  </table>
+      <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="second-tab">
+        <%= render 'campaigns/archive' %>
+      </div>
+    </div>
+  </div>
 </div>

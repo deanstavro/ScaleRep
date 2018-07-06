@@ -56,7 +56,9 @@ Rails.application.routes.draw do
       resources :personas do
         collection { put :archive}
       end
-      resources :campaigns
+      resources :campaigns do
+        collection {put :archive}
+      end
     end
 
     resources :leads do

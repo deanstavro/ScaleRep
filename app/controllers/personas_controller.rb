@@ -76,14 +76,11 @@ def index
   end
 
   def archive
-    @user = User.find(current_user.id)
-    @company = ClientCompany.find_by(id: @user.client_company_id)
     @persona = Persona.find_by(id: params[:format])
 
     # update archive setting
     @persona.update_attribute(:archive, !@persona.archive)
     redirect_to client_companies_personas_path
-
   end
 
   # POST /personas
