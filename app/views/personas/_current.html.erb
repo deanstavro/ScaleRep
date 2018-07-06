@@ -22,7 +22,11 @@
         <tbody>
           <% @current.each do |persona| %>
             <tr >
-              <td><%= link_to persona.name, client_companies_campaigns_path(persona) %></td>
+              <% if @user.role == "scalerep" %>
+                <td><%= link_to "#{persona.client_company.name} -- #{persona.name}", client_companies_campaigns_path(persona) %></td>
+              <% else %>
+                <td><%= link_to persona.name, client_companies_campaigns_path(persona) %></td>
+              <% end %>
 
               <%  if @metrics_hash[persona] && @metrics_hash[persona][0] %>
                  <td><%= @metrics_hash[persona][0] %></td>

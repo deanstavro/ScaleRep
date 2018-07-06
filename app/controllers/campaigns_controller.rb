@@ -5,18 +5,18 @@ class CampaignsController < ApplicationController
 	include Reply
 
 	def index
-    	@user = get_user
-      @client_company = get_company(@user)
-      @persona = get_persona(params)
+			@user = get_user
+			@client_company = get_company(@user)
+			@persona = get_persona(params)
 
-      if wrong_campaign(@persona, @client_company)
-          flash[:notice] = "Campaign does not exist"
-          redirect_to client_companies_personas_path
+			if @user.role != 'scalerep' and wrong_campaign(@persona, @client_company)
+        flash[:notice] = "Campaign does not exist"
+        redirect_to client_companies_personas_path
         return
-      end
+			end
 
       @campaigns = get_campaign(@persona, @client_company)
-     
+
   end
 
 
@@ -56,7 +56,7 @@ class CampaignsController < ApplicationController
 
     	puts "email to use: "
     	puts email_to_use
-  		
+
       # Find the correct keys for that email to upload the campaign to that email
       for email in email_array
   			if email_to_use == email["emailAddress"]

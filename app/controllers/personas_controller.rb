@@ -6,13 +6,18 @@ class PersonasController < ApplicationController
 # GET /personas
 # GET /personas.json
 def index
+  @user = User.find(current_user.id)
+  if @user.role == "scalerep"
+    @personas = Persona.order('created_at DESC')
+    @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
+    @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
 
-    @user = User.find(current_user.id)
+  else
     @company = ClientCompany.find_by(id: @user.client_company_id)
     @personas = Persona.where("client_company_id =?", @company).order('created_at DESC')
     @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
     @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
-
+  end
 
     @metrics_hash = Hash.new
     @personas.each do |persona|
@@ -74,10 +79,6 @@ def index
     @user = User.find(current_user.id)
     @company = ClientCompany.find_by(id: @user.client_company_id)
     @persona = Persona.find_by(id: params[:format])
-    puts "hi can you see this?"
-    puts "hi can you see this?"
-    puts "hi can you see this?"
-    puts "hi can you see this?"
 
     # update archive setting
     @persona.update_attribute(:archive, !@persona.archive)
