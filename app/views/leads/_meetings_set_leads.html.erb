@@ -28,7 +28,7 @@
               <% else %>
                 <td> <%= lead.first_name + " " + lead.last_name %></td>
               <% end %>
-              
+
               <% if @user.role == "scalerep" %>
                 <td> <%= lead.client_company.name %> </td>
               <% end %>
@@ -40,7 +40,7 @@
           <div class="page_info">
             <%= page_entries_info @meetings_set %>
           </div>
-          <%= will_paginate @meetings_set, :params => { :tab_id => :meetings }, :container => false %>
+          <%= will_paginate @meetings_set, :params => { :tab_id => "meetings" }, :container => false %>
       </div>
 
     </div>

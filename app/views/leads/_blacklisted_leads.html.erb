@@ -34,7 +34,7 @@
                 <% if @user.role == "scalerep" %>
                   <td> <%= lead.status %></td>
                 <% end %>
-                
+
               </tr>
             <% end %>
           </tbody>
@@ -44,7 +44,7 @@
             <div class="page_info">
               <%= page_entries_info @blacklist %>
             </div>
-            <%= will_paginate @blacklist, :params => { :tab_id => :blacklist }, :container => false %>
+            <%= will_paginate @blacklist, :params => { :tab_id => "blacklist" }, :container => false %>
         </div>
 
       </div>
