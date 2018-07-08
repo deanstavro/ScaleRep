@@ -6,9 +6,9 @@
   <% else %>
     <h1><%= @user.client_company.name if @user.client_company %> Lead List</h1>
   <% end %>
-  
+
 </div>
-<div class = 'thin_margins'>
+<div class = 'thin_margins' data-no-turbolink="true">
   <div id="accordion">
 
     <% if @user.role == "scalerep" %>
