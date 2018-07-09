@@ -20,6 +20,11 @@ class AutoRepliesToReplyIoJob < ApplicationJob
                 response = remove_contact(@client_company.auto_reply_campaign_key, auto_reply["email"])
                 puts "about to execute add_contact"
                 response = add_contact(@client_company.auto_reply_campaign_key,@client_company.auto_reply_campaign_id, auto_reply)
+
+                # to-do: update lead status in our system as auto-reply
+
+                #to-do: update attribute
+                auto_reply.update_attribute(:pushed_to_reply_campaign, !auto_reply.pushed_to_reply_campaign)
             end
 
         rescue

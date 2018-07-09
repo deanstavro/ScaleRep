@@ -19,6 +19,9 @@ class ReferralsToReplyJob < ApplicationJob
                 @client_company = referral.client_company
                 puts "about to execute add_contact for referral"
                 response = add_referral_contact(@client_company.referral_campaign_key,@client_company.referral_campaign_id, referral)
+
+                #update referral so that we don't display
+                referral.update_attribute(:pushed_to_reply_campaign, !referral.pushed_to_reply_campaign)
               end
             end
 

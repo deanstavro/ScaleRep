@@ -7,9 +7,10 @@ class LeadsController < ApplicationController
     if @user.role == "scalerep"
       @meetings_set = Lead.where(status: "handed_off").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
       @follow_ups   = CampaignReply.where(status: "interested").order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
-      @auto_replies = CampaignReply.where(status: "auto_reply").order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
-      @referrals    = CampaignReply.where(:status => ["referral", "auto_reply_referral"]).order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
+      @auto_replies = CampaignReply.where(status: "auto_reply", pushed_to_reply_campaign: false).order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
+      @referrals    = CampaignReply.where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false).order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
       @blacklist    = Lead.where(:status => ["not_interested", "blacklist"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
+
     else
       @company = ClientCompany.find_by(id: @user.client_company_id)
       @accounts = Account.where(client_company_id: @company.id).paginate(:page => params[:page], :per_page => 20)
