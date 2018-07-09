@@ -123,6 +123,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
           campaign_reply.save!
 
           #check for first and last name
+          @new_lead.update_attribute(:full_name, params_content[:full_name])
           if params_content[:full_name].split.length < 2
             @new_lead.update_attribute(:first_name, params_content[:full_name])
           else
