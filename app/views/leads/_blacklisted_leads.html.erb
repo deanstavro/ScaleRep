@@ -25,7 +25,7 @@
                 <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
                 <td> <%= lead.email %></td>
 
-                <% if !lead.full_name.nil? or lead.full_name != ""  %>
+                <% if lead.full_name != ""  %>
                   <td> <%= lead.full_name %></td>
                 <% else %>
                   <td> <%= lead.first_name + " " + lead.last_name %></td>
