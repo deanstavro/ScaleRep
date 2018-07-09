@@ -26,6 +26,9 @@ class Api::V1::ReplyController < Api::V1::BaseController
                   end
                 end
 
+                #set pushed_to_reply_campaign false
+                update_reply(:pushed_to_reply_campaign, false)
+
             rescue
                 puts "wrong status"
                 render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400

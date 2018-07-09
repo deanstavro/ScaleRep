@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180709165350) do
+ActiveRecord::Schema.define(version: 20180709192400) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -85,14 +85,14 @@ ActiveRecord::Schema.define(version: 20180709165350) do
     t.string   "reply_io_id"
     t.string   "reply_io_key"
     t.date     "follow_up_date"
-    t.datetime "created_at",                null: false
-    t.datetime "updated_at",                null: false
+    t.datetime "created_at",                                null: false
+    t.datetime "updated_at",                                null: false
     t.integer  "client_company_id"
     t.integer  "lead_id"
     t.string   "note"
     t.string   "referral_name"
     t.string   "referral_email"
-    t.boolean  "pushed_to_reply_campaign"
+    t.boolean  "pushed_to_reply_campaign",  default: false, null: false
     t.index ["client_company_id"], name: "index_campaign_replies_on_client_company_id", using: :btree
     t.index ["lead_id"], name: "index_campaign_replies_on_lead_id", using: :btree
   end
