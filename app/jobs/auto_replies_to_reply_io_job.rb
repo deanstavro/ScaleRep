@@ -8,7 +8,7 @@ class AutoRepliesToReplyIoJob < ApplicationJob
     # grab all replies marked as today
 
     begin
-        @campaign_replies = CampaignReply.where(follow_up_date: Date.today, :status => ["auto_reply", "auto_reply_referral"])
+        @campaign_replies = CampaignReply.where(follow_up_date: Date.today, :status => ["auto_reply", "auto_reply_referral"], pushed_to_reply_campaign: false)
 
         puts "we got campaign replies: "
 

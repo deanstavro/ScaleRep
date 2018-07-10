@@ -84,7 +84,7 @@ class LeadsController < ApplicationController
     @reply = CampaignReply.where(:email => params[:email]).where(:client_company => @company).first
 
     #update attributes
-    if params[:followUpDate] != ""
+    if params.has_key?(:followUpDate) and params[:followUpDate] != ""
       @reply.update_attribute(:follow_up_date, Date.strptime(params[:followUpDate], "%m/%d/%Y"))
     end
 
