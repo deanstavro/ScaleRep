@@ -8,7 +8,7 @@ class ReferralsToReplyJob < ApplicationJob
     # grab all replies marked as today
 
     begin
-        @campaign_replies = CampaignReply.where(follow_up_date: Date.today, :status => ["referral", "auto_reply_referral"])
+        @campaign_replies = CampaignReply.where(:status => ["referral", "auto_reply_referral"]).where.not(referral_name: [nil, ''], referral_email: [nil,''])
 
         puts "we got campaign replies"
 

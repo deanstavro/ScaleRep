@@ -7,7 +7,6 @@
         <thead class = "thead-dark">
           <tr>
                 <th scope = 'col'>Date Sourced</th>
-                <th scope = 'col'>Follow-upp Date</th>
                 <th scope = 'col'>Referree Name</th>
                 <th scope = 'col'>Referral Name</th>
                 <th scope = 'col'>Referral Email</th>
@@ -24,12 +23,6 @@
               <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
 
               <%= form_tag update_reply_from_portal_leads_path(:email => lead.email, :company_id => lead.client_company.id) do %>
-                <% if lead.follow_up_date? %>
-                  <td><input type="text" data-provide='datepicker' name="followUpDate" value="<%= lead.follow_up_date.strftime('%m/%d/%Y')%>"></td>
-                <% else %>
-                  <td><input type="text" data-provide='datepicker' name="followUpDate"></td>
-                <% end %>
-
                 <td> <%= lead.full_name %></td>
 
                 <% if lead.referral_name? %>
