@@ -4,12 +4,6 @@
   <% else %>
     <div style="overflow: auto;">
       <p style="margin-bottom: 30px;"><i>Interested leads are those ScaleRep is tracking and following-up with on your behalf</i></p>
-      <div class="digg_pagination">
-          <div class="page_info">
-            <%= page_entries_info @interested_leads %>
-          </div>
-          <%= will_paginate @interested_leads, :params => { :tab_id => :interested }, :container => false %>
-      </div>
       <table class = " airtable_data table table-striped">
         <thead class = "thead-dark">
           <tr>

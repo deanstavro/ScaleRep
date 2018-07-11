@@ -3,13 +3,6 @@
     <p> No Pending Auto-Replies</p>
   <% else %>
     <div style="overflow: auto;">
-      <div class="digg_pagination">
-          <div class="page_info">
-            <%= page_entries_info @auto_replies %>
-          </div>
-          <%= will_paginate @auto_replies, :params => { :tab_id => "autoReplies" }, :container => false %>
-      </div>
-    </div>
       <table class = " airtable_data table table-striped">
         <thead class = "thead-dark">
           <tr>

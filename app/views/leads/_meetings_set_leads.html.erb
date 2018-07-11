@@ -4,12 +4,6 @@
   <% else %>
     <div style="overflow: auto;">
       <p style="margin-bottom: 30px;"><i>Handed-off leads have a meeting set with your team or were sent to you for a follow-up conversation</i></p>
-      <div class="digg_pagination">
-          <div class="page_info">
-            <%= page_entries_info @meetings_set %>
-          </div>
-          <%= will_paginate @meetings_set, :params => { :tab_id => "meetings" }, :container => false %>
-      </div>
       <table class = " airtable_data table table-striped">
         <thead class = "thead-dark">
           <tr>

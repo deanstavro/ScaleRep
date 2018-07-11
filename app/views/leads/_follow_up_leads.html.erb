@@ -3,12 +3,6 @@
     <p> No Leads To Follow-Up With</p>
   <% else %>
     <div style="overflow: auto;">
-      <div class="digg_pagination">
-          <div class="page_info">
-            <%= page_entries_info @follow_ups %>
-          </div>
-          <%= will_paginate @follow_ups, :params => { :tab_id => "followUp" }, :container => false %>
-      </div>
       <table class = " airtable_data table table-striped">
         <thead class = "thead-dark">
           <tr>

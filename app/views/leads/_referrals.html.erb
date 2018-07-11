@@ -3,16 +3,6 @@
     <p> No Referrals To Follow-Up With</p>
   <% else %>
     <div style="overflow: auto;">
-      
-
-      <div class="digg_pagination">
-          <div class="page_info">
-            <%= page_entries_info @referrals %>
-          </div>
-          <%= will_paginate @referrals, :params => { :tab_id => "referrals" }, :container => false %>
-      </div>
-
-
       <table class = " airtable_data table table-striped">
         <thead class = "thead-dark">
           <tr>
