@@ -137,7 +137,7 @@ module Reply
 
 
   def add_referral_contact(reply_key, reply_id, contact)
-    #begin
+    begin
         #puts "REPLY_KEY: " + reply_key
         #puts "REPLY_ID: " + reply_id
         #puts contact.email
@@ -173,7 +173,7 @@ module Reply
              :payload => payload
           )
           puts "HERRRRRRRRO"
-          sleep(5)
+          #sleep(5)
 
           #update with custom fields --> this is the only endpoint where you can add custom fields
           #payload_for_custom_fields = { "email": contact.referral_email, "firstName": contact.referral_name.split[0...-1].join(" "), "customFields": [{"key": "custom-variable-18927", "value": contact.full_name}]}
@@ -189,15 +189,15 @@ module Reply
 
         end
 
-        sleep(5)
+        #sleep(5)
 
         return response
-    #rescue
+    rescue
 
-    #    puts "did not input into reply"
-    #    return "did not input into reply"
+        puts "did not input into reply"
+        return "did not input into reply"
 
-    #end
+    end
 
   end
 
