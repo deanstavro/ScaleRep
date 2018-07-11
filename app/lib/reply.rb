@@ -164,7 +164,7 @@ module Reply
           puts "contact does not exist, so creating new one to put into referral campaign"
 
 
-          payload = { "campaignId": reply_id, "email": contact.referral_email, "firstName": contact.referral_name.split[0...-1].join(" "), "lastName": contact.referral_name.split[-1] }
+          payload = { "campaignId": reply_id, "email": contact.referral_email, "firstName": contact.referral_name.split[0...-1].join(" "), "lastName": contact.referral_name.split[-1], "title": contact.full_name, "customFields": [{"key": "referree_name", "value": contact.full_name}] }
 
           puts "WE HERE"
           response = RestClient::Request.execute(
@@ -176,13 +176,16 @@ module Reply
           sleep(5)
 
           #update with custom fields --> this is the only endpoint where you can add custom fields
-          payload_for_custom_fields = {"email": contact.referral_email, "customFields": [{"key": "referree_name", "value": contact.full_name}]}
+          #payload_for_custom_fields = { "email": contact.referral_email, "firstName": contact.referral_name.split[0...-1].join(" "), "customFields": [{"key": "custom-variable-18927", "value": contact.full_name}]}
 
-          custom_field_response = RestClient::Request.execute(
-             :method => :post,
-             :url => 'https://api.reply.io/v1/people?apiKey='+ reply_key,
-             :payload => payload_for_custom_fields
-          )
+          #custom_field_response = RestClient::Request.execute(
+          #   :method => :post,
+          #   :url => 'https://api.reply.io/v1/people?apiKey='+ reply_key,
+          #   :payload => payload_for_custom_fields
+          #)
+
+          #puts custom_field_response.to_s
+          #puts custom_field_response.code
 
         end
 
