@@ -1,5 +1,6 @@
 class LeadsController < ApplicationController
   before_action :authenticate_user!
+  include Reply
 
   def index
     @user = User.find(current_user.id)
@@ -111,6 +112,22 @@ class LeadsController < ApplicationController
     else # auto_reply, auto_reply_referral, etc
       @reply.lead.update_attribute(:status, "in_campaign")
     end
+
+
+    if @reply.status == "referral" or @reply.status == "auto_reply_referral"
+
+      #update reply
+      unless (@reply.referral_email.nil? || @reply.referral_email=="") and (@reply.referral_name.nil? || @reply.referral_name == "") and @reply.full_name.nil?
+                response = add_referral_contact(@company.referral_campaign_key,@company.referral_campaign_id, @reply)
+
+                #update referral so that we don't display
+                @reply.update_attribute(:pushed_to_reply_campaign, !@reply.pushed_to_reply_campaign)
+              end
+
+
+    end
+
+
 
 
 

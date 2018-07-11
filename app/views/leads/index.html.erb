@@ -50,6 +50,8 @@
             </h5>
           </div>
           <% if @current_table == "accounts" %>
+            <div class="page_info">
+                  
             <div id="customer_accounts" class="show" aria-labelledby="qualifiedLeadsHeader">
           <% else %>
             <div id="customer_accounts" class="collapse" aria-labelledby="qualifiedLeadsHeader">
@@ -58,8 +60,10 @@
             <% if @accounts.count == 0 %>
               <p> No Customer Accounts </p>
             <% else %>
+
               <div style="overflow: auto;">
                 <table class = " airtable_data table table-striped">
+                  
                   <thead class = "thead-dark">
                     <tr>
                       <th scope = 'col'>name</th>
