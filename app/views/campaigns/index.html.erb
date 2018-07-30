@@ -1,21 +1,23 @@
-
-<center>
-  <p class="container text-danger"><%= flash[:error] %></p>
-  <p class="container text-success"><%= flash[:notice] %></p>
-</center>
-
 <div id="title" class="jumbotron">
+  <center>
+    <p class="container text-danger"><%= flash[:error] %></p>
+    <p class="container text-success"><%= flash[:notice] %></p>
+  </center>
+
   <br/>
   <h1>Campaigns</h1>
   <h3>for <%= @persona.name if @persona.name %></h3>
-
   <br>
+
+  <!--
   <p> Campaigns track messaging and e-mail order to improve overall persona metrics.</p>
   <p> ex. <br>
     <i>Baseline campaign</i><br>
     <i>Shorter outbound campaign, using website messaging as reference</i><br>
     <i>General Facebook inbound lead campaign</i><br>
   </p>
+  -->
+
   <%= link_to '+ Add Campaign', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
 </div>
 
@@ -35,7 +37,9 @@
 
     <div class="tab-content", id="personasTabContent">
       <div class="tab-pane fade show active" id="current" role="tabpanel" aria-labelledby="home-tab">
-        <%= render 'campaigns/current' %>
+        <div class="card-body">
+          <%= render 'campaigns/current' %>
+        </div>
       </div>
 
       <div class="tab-pane fade" id="archive" role="tabpanel" aria-labelledby="second-tab">
