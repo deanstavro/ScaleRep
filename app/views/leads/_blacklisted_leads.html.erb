@@ -5,6 +5,12 @@
     <% else %>
       <div style="overflow: auto;">
         <p style="margin-bottom: 30px;"><i>Blacklisted leads have opted out of receiving future messaging or have asked to be taken off any list</i></p>
+        <div class="digg_pagination">
+            <div class="page_info">
+              <%= page_entries_info @blacklist %>
+            </div>
+            <%= will_paginate @blacklist, :params => { :tab_id => "blacklist" }, :container => false %>
+        </div>
         <table class = " airtable_data table table-striped">
           <thead class = "thead-dark">
             <tr>
