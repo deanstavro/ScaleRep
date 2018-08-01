@@ -28,6 +28,7 @@ gem 'rails_12factor'
 gem 'will_paginate', '~> 3.1.0'
 gem 'google-analytics-rails', '1.1.1'
 gem 'bootstrap-datepicker-rails'
+gem 'octicons_helper'
 
 
 group :test do

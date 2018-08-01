@@ -14,7 +14,6 @@
         <th scope="col">Opens</th>
         <th scope="col">Start Date</th>
         <th scope="col">Archive</th>
-
       </tr>
     </thead>
     <tbody>
@@ -24,7 +23,7 @@
 
           <td>
             <%= form_tag import_to_campaign_leads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true do %>
-              <%= file_field_tag :file %>
+              <%= file_field_tag :file %><br/>
               <%= submit_tag "Import CSV" %>
             <% end %>
           </td>
