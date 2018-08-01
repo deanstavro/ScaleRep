@@ -5,7 +5,6 @@
 
 .table-display {
   margin: 0 auto;
-  font-size: 14px;
 }
 
 .clickable-row {
@@ -14,4 +13,31 @@
 
 .add_campaign {
   margin-top:20px;
+}
+
+.pct {
+  font-size: 12px;
+  color: gray;
+}
+
+.fileUpload {
+  position: relative;
+  overflow: hidden;
+  margin-bottom: 4px;
+}
+.fileUpload input.upload {
+  position: absolute;
+  top: 0;
+  right: 0;
+  margin: 0;
+  padding: 0;
+  font-size: 20px;
+  cursor: pointer;
+  opacity: 0;
+  filter: alpha(opacity=0);
+}
+
+
+.shorter-column {
+  width: 150px;
 }

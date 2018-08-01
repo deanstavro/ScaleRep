@@ -1,7 +1,7 @@
 <div class="table-display">
 
   <table class="table table-hover">
-    <thead class="thead-dark">
+    <thead class="thead">
       <tr>
         <th scope="col">Campaign</th>
         <th scope="col">email Account</th>
@@ -19,34 +19,63 @@
         <tr>
           <td><%= campaign.campaign_name %></td>
 
-
           <td><%= campaign.emailAccount %></td>
 
           <td><%= campaign.peopleCount %></td>
 
           <td><%= campaign.deliveriesCount %></td>
 
-          <td><%= campaign.bouncesCount %></td>
+          <td>
+            <%= campaign.bouncesCount %>
+            <span class="pct">
+              <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
+               (<%= number_to_percentage(campaign.bouncesCount / campaign.deliveriesCount.to_f * 100, precision:0) %>)
+             <% end %>
+            </span>
+          </td>
 
           <% if (campaign.repliesCount).to_i > 0 %>
-            <% if (campaign.deliveriesCount).to_i > (campaign.peopleCount).to_i %>
-                <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount) %>%</td>
-            <% else %>
-                <td><%= campaign.repliesCount %><br><%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount) %>%</td>
-            <% end %>
+            <td>
+              <% if (campaign.deliveriesCount).to_i > (campaign.peopleCount).to_i %>
+                <%= campaign.repliesCount %>
+                <span class="pct">
+                  <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
+                   (<%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount) %>%)
+                 <% end %>
+                </span>
+              <% else %>
+                <%= campaign.repliesCount %>
+                <span class="pct">
+                  <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
+                   (<%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount) %>%)
+                 <% end %>
+                </span>
+              <% end %>
+              </td>
           <% else %>
             <td>0</td>
           <% end %>
 
           <% if (campaign.opensCount).to_i > 0 %>
-            <td><%= campaign.opensCount %><br><%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %>%</td>
+            <td>
+              <%= campaign.opensCount %>
+              <span class="pct">
+                <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
+                 (<%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %>%)
+               <% end %>
+              </span>
+            </td>
           <% else %>
             <td>0</td>
           <% end %>
 
           <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
 
-          <td><%= link_to 'Yes', archive_client_companies_campaigns_path(campaign), method: :put %></td>
+          <td>
+            <%= link_to archive_client_companies_campaigns_path(campaign), method: :put do %>
+              <%= octicon "issue-opened", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+            <% end %>
+          </td>
 
         </tr>
       <% end %>
