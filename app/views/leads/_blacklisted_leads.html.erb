@@ -11,8 +11,8 @@
             </div>
             <%= will_paginate @blacklist, :params => { :tab_id => "blacklist" }, :container => false %>
         </div>
-        <table class = " airtable_data table table-striped">
-          <thead class = "thead-dark">
+        <table class = " airtable_data table table-hover">
+          <thead class = "thead">
             <tr>
               <th scope = 'col'>Date Added</th>
               <th scope = 'col'>Email</th>
@@ -31,10 +31,10 @@
                 <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
                 <td> <%= lead.email %></td>
 
-                <% if lead.full_name != ""  %>
-                  <td> <%= lead.full_name %></td>
-                <% else %>
+                <% if lead.first_name != "" && lead.last_name != "" %>
                   <td> <%= lead.first_name + " " + lead.last_name %></td>
+                <% else %>
+                  <td> <%= lead.full_name %></td>
                 <% end %>
 
                 <% if @user.role == "scalerep" %>

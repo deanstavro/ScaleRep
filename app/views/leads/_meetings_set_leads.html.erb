@@ -4,8 +4,8 @@
   <% else %>
     <div style="overflow: auto;">
       <p style="margin-bottom: 30px;"><i>Handed-off leads have a meeting set with your team or were sent to you for a follow-up conversation</i></p>
-      <table class = " airtable_data table table-striped">
-        <thead class = "thead-dark">
+      <table class = " airtable_data table table-hover">
+        <thead class = "thead">
           <tr>
                 <th scope = 'col'>date sourced</th>
                 <th scope = 'col'>email</th>
@@ -23,10 +23,10 @@
               <td> <%= lead.updated_at.strftime("%b %d, %Y") %> </td>
               <td> <%= lead.email %> </td>
 
-              <% if lead.full_name != "" %>
-                <td> <%= lead.full_name %></td>
-              <% else %>
+              <% if lead.first_name != "" && lead.last_name != "" %>
                 <td> <%= lead.first_name + " " + lead.last_name %></td>
+              <% else %>
+                <td> <%= lead.full_name %></td>
               <% end %>
 
               <% if @user.role == "scalerep" %>
