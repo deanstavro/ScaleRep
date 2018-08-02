@@ -17,7 +17,9 @@
     <tbody>
       <% @current.each do |campaign| %>
         <tr>
-          <td><%= campaign.campaign_name %></td>
+          <td>
+            <%= link_to "#{campaign.campaign_name}", campaign_path(campaign.id) %></td>
+          </td>
 
           <td>
             <%= form_tag import_to_campaign_leads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true, class:"shorter-column" do %>
