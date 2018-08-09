@@ -1,14 +1,23 @@
 class LeadsController < ApplicationController
   before_action :authenticate_user!
   include Reply
+  require 'will_paginate/array'
 
   def index
     @user = User.find(current_user.id)
 
     if @user.role == "scalerep"
       @meetings_set = Lead.where(status: "handed_off").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
-      @follow_ups   = CampaignReply.where(status: "interested").order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
-      @auto_replies = CampaignReply.where(status: "auto_reply", pushed_to_reply_campaign: false).order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
+
+      @follow_up   = CampaignReply.where("follow_up_date is not null").where(status: "interested").order(:follow_up_date)
+      @no_follow_ups = CampaignReply.where("follow_up_date is null").where(status: "interested")
+      @follow_ups = (@no_follow_ups + @follow_up).paginate(:page => params[:page], :per_page => 20)
+
+
+      @auto_reply = CampaignReply.where("follow_up_date is not null").where(status: "auto_reply", pushed_to_reply_campaign: false).order(:follow_up_date)
+      @no_auto_reply = CampaignReply.where("follow_up_date is null").where(status: "auto_reply", pushed_to_reply_campaign: false)
+      @auto_replies = (@no_auto_reply + @auto_reply).paginate(:page => params[:page], :per_page => 20)
+
       @referrals    = CampaignReply.where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false).order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
       @blacklist    = Lead.where(:status => ["not_interested", "blacklist"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
 
