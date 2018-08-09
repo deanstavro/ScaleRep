@@ -18,7 +18,10 @@ class LeadsController < ApplicationController
       @no_auto_reply = CampaignReply.where("follow_up_date is null").where(status: "auto_reply", pushed_to_reply_campaign: false)
       @auto_replies = (@no_auto_reply + @auto_reply).paginate(:page => params[:page], :per_page => 20)
 
-      @referrals    = CampaignReply.where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false).order(:follow_up_date).paginate(:page => params[:page], :per_page => 20)
+      @referral    = CampaignReply.where.not(referral_email: [nil, ""]).where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false).order(:follow_up_date)
+      @no_referral    = CampaignReply.where(referral_email: [nil, ""]).where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false)
+      @referrals    = (@no_referral + @referral).paginate(:page => params[:page], :per_page => 20)
+
       @blacklist    = Lead.where(:status => ["not_interested", "blacklist"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
 
     else
