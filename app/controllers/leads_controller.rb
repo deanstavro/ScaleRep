@@ -9,13 +9,13 @@ class LeadsController < ApplicationController
     if @user.role == "scalerep"
       @meetings_set = Lead.where(status: "handed_off").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
 
-      @follow_up   = CampaignReply.where("follow_up_date is not null").where(status: "interested").order(:follow_up_date)
-      @no_follow_ups = CampaignReply.where("follow_up_date is null").where(status: "interested")
+      @follow_up   = CampaignReply.where.not(follow_up_date: [nil, ""]).where(status: "interested").order(:follow_up_date)
+      @no_follow_ups = CampaignReply.where(follow_up_date: [nil, ""]).where(status: "interested")
       @follow_ups = (@no_follow_ups + @follow_up).paginate(:page => params[:page], :per_page => 20)
 
 
-      @auto_reply = CampaignReply.where("follow_up_date is not null").where(status: "auto_reply", pushed_to_reply_campaign: false).order(:follow_up_date)
-      @no_auto_reply = CampaignReply.where("follow_up_date is null").where(status: "auto_reply", pushed_to_reply_campaign: false)
+      @auto_reply = CampaignReply.where.not(follow_up_date: [nil, ""]).where(status: "auto_reply", pushed_to_reply_campaign: false).order(:follow_up_date)
+      @no_auto_reply = CampaignReply.where(follow_up_date: [nil, ""]).where(status: "auto_reply", pushed_to_reply_campaign: false)
       @auto_replies = (@no_auto_reply + @auto_reply).paginate(:page => params[:page], :per_page => 20)
 
       @referral    = CampaignReply.where.not(referral_email: [nil, ""]).where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false).order(:follow_up_date)
