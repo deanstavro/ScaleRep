@@ -7,7 +7,7 @@
 
   <br/>
     <% if @user.role == 'scalerep' %>
-      <h1>All Active Company Personas</h1>
+      <h1>All Company Personas</h1>
     <% else %>
       <h1>Personas</h1>
       <h3>for <%= @user.client_company.name if @user.client_company %></h3>
