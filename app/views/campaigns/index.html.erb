@@ -17,8 +17,9 @@
     <i>General Facebook inbound lead campaign</i><br>
   </p>
   -->
-
-  <%= link_to '+ Add Campaign', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+  <% if @user.role == 'scalerep' %>
+      <%= link_to '+ Add Campaign', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+  <% end %>
 </div>
 
 <div class = 'thin_margins'>

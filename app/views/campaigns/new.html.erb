@@ -11,6 +11,12 @@
   <%= form_for @campaign, url: client_companies_campaigns_path, :html => {:class => "form-horizontal center"} do |f| %>
 
       <div class="form-group">
+         <%= f.label :client_company, "Company Name*", class: "control-label" %><br>
+          <%= f.select :client_company, @client_companies , required: true, class: "form-control" %>
+      </div>
+      
+
+      <div class="form-group">
           <%= f.label :campaign_name, "Campaign Name*", class: "control-label" %>
 
           <%= f.text_field :campaign_name, required: true, class: "form-control" %>
@@ -20,8 +26,6 @@
       <br>
 
 
-      
-
       <div class="form-group">
           <%= f.label :user_notes, "Extra Notes (Add extra details for ScaleRep reps here)", class: "control-label" %>
 
@@ -30,8 +34,6 @@
       </div>
 
       <br>
-
-
 
       <div class="form-group">
           <p> Requiring a minimum e-mail score helps overall deliverability.</p>
