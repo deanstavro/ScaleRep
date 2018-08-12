@@ -65,7 +65,7 @@ def index
     @user = User.find(current_user.id)
     @persona = Persona.new
 
-    puts "hi can you see this?"
+    @client_companies = ClientCompany.all.pluck(:name)
   end
 
   # GET /personas/1/edit
@@ -87,7 +87,10 @@ def index
   # POST /personas.json
   def create
     @user = User.find(current_user.id)
-    @company = ClientCompany.find_by(id: @user.client_company_id)
+
+    @company = ClientCompany.find_by(name: params[:persona][:client_company])
+    params[:persona].delete :client_company
+
     @persona = Persona.new(persona_params)
     @persona.client_company = @company
 

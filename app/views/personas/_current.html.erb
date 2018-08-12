@@ -14,7 +14,11 @@
             <th scope="col">opens</th>
             <th scope="col"># campaigns</th>
             <th scope="col">edit </th>
-            <th scope="col">delete</th>
+
+            <% if @user.role == 'scalerep' %>
+              <th scope="col">delete</th>
+            <% end %>
+
             <th scope="col">archive</th>
           </tr>
         </thead>
@@ -90,11 +94,15 @@
                   <%= octicon "pencil", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
                 <% end %>
               </td>
-              <td>
-                <%= link_to client_companies_persona_path(persona), method: :delete, data: { confirm: 'Are you sure?' }  do %>
-                  <%= octicon "trashcan", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
-                <% end %>
-              </td>
+
+              <% if @user.role == 'scalerep' %>
+                <td>
+                  <%= link_to client_companies_persona_path(persona), method: :delete, data: { confirm: 'Are you sure?' }  do %>
+                    <%= octicon "trashcan", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+                  <% end %>
+                </td>
+              <% end %>
+
               <td>
                 <%= link_to archive_client_companies_personas_path(persona), method: :put  do %>
                   <%= octicon "issue-closed", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
