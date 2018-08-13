@@ -6,6 +6,7 @@
       <table class = " airtable_data table table-hover">
         <thead class = "thead">
           <tr>
+            <th scope="col">created date</th>
             <th scope="col">persona</th>
             <th scope="col">people</th>
             <th scope="col">delivered</th>
@@ -26,6 +27,14 @@
         <tbody>
           <% @current.each do |persona| %>
             <tr >
+
+              <%  if @metrics_hash[persona] && @metrics_hash[persona][6] %>
+                 <td><%= @metrics_hash[persona][6] %></td>
+              <% else %>
+                  <td>N/A</td>
+              <% end %>
+
+
               <% if @user.role == "scalerep" %>
                 <td><%= link_to "#{persona.client_company.name} -- #{persona.name}", client_companies_campaigns_path(persona) %></td>
               <% else %>

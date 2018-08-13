@@ -48,8 +48,6 @@ class CampaignsController < ApplicationController
   		@company = ClientCompany.find_by(name: params[:campaign][:client_company])
       @campaign = @company.campaigns.build(campaign_params)
       @campaigns = Campaign.where("client_company_id =?", @company).order('created_at DESC')
-
-
       persona = Persona.find_by(id: params[:subaction].to_i)
       @campaign.persona = persona
 

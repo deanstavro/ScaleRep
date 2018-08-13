@@ -25,7 +25,7 @@ def index
         @campaigns = persona.campaigns
         count = 0
         @campaigns.each do |campaign|
-            array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount]
+            array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.created_at]
             count = count + 1
             if @metrics_hash[persona]
               @metrics_hash[persona][0] = @metrics_hash[persona][0].to_i + array[0].to_i
@@ -40,6 +40,7 @@ def index
             end
 
             @metrics_hash[persona][5] = count
+            @metrics_hash[persona][6] = campaign.created_at.strftime("%m-%d-%Y")
 
           end
 
