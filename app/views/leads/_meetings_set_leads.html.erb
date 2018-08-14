@@ -10,7 +10,6 @@
                 <th scope = 'col'>date sourced</th>
                 <th scope = 'col'>email</th>
                 <th scope = 'col'>Name</th>
-                <th scope = 'col'>Status</th>
 
                 <% if @user.role == "scalerep" %>
                   <th scope = 'col'>client_company</th>
@@ -32,10 +31,7 @@
 
               <% if @user.role == "scalerep" %>
                 <td> <%= lead.client_company.name %> </td>
-                <td> <%= lead.status.to_s %></td>
               <% end %>
-
-
             </tr>
           <% end %>
         </tbody>
