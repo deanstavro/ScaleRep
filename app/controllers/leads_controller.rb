@@ -7,7 +7,7 @@ class LeadsController < ApplicationController
     @user = User.find(current_user.id)
 
     if @user.role == "scalerep"
-      @meetings_set = Lead.where(status: "handed_off").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
+      @meetings_set = Lead.where(:status => ["handed_off", "handed_off_with_questions", "sent_meeting_invite"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
 
       @follow_up   = CampaignReply.where("follow_up_date is not null").where(status: "interested").order(:follow_up_date)
       @no_follow_ups = CampaignReply.where(follow_up_date: [nil, ""]).where(status: "interested")
@@ -21,6 +21,8 @@ class LeadsController < ApplicationController
       @referral    = CampaignReply.where.not(referral_email: [nil, ""]).where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false).order(:follow_up_date)
       @no_referral    = CampaignReply.where(referral_email: [nil, ""]).where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false)
       @referrals    = (@no_referral + @referral).paginate(:page => params[:page], :per_page => 20)
+
+
 
       @blacklist    = Lead.where(:status => ["not_interested", "blacklist"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
 
@@ -168,6 +170,10 @@ class LeadsController < ApplicationController
       @reply.lead.update_attribute(:status, "interested")
     elsif ['not_interested'].include?(params[:status])
       @reply.lead.update_attribute(:status, "not_interested")
+    elsif ['handed_off_with_questions'].include?(params[:status])
+      @reply.lead.update_attribute(:status, "handed_off_with_questions")
+    elsif ['sent_meeting_invite'].include?(params[:status])
+      @reply.lead.update_attribute(:status, "sent_meeting_invite")
     else # auto_reply, auto_reply_referral, etc
       @reply.lead.update_attribute(:status, "in_campaign")
     end
