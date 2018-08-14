@@ -5,6 +5,20 @@
     <% else %>
       <div style="overflow: auto;">
         <p style="margin-bottom: 30px;"><i>Blacklisted leads have opted out of receiving future messaging or have asked to be taken off any list</i></p>
+
+
+
+            <%= form_tag import_blacklist_leads_path, multipart: true, class:"shorter-column" do %>
+              <div class= "fileUpload btn btn-sm btn-light">
+                <span id="uploadPath">+ Blacklist CSV</span>
+                <%= file_field_tag :file, class:"upload uploadBtn"%>
+              </div>
+              <br/>
+                <%= submit_tag "Submit", class: "btn btn-sm btn-outline-primary"%>
+            <% end %>
+
+        <br><br>
+
         <div class="digg_pagination">
             <div class="page_info">
               <%= page_entries_info @blacklist %>

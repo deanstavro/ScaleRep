@@ -88,6 +88,53 @@ class LeadsController < ApplicationController
     end
   end
 
+  def import_blacklist
+
+    @user = User.find(current_user.id)
+    @company = ClientCompany.find_by(id: @user.client_company_id)
+    @leads = Lead.where(client_company: @company)
+
+    col =  Lead.column_names
+    # Column Names
+    # id, decision_maker, internal_notes, email_in_contact_with, date_sourced
+    # created_at, updated_at, client_company_id, campaign_id, contract_sent,
+    # contract_amount, timeline, project_scope, email_handed_off_too, meeting_time,
+    # email, first_name, last_name, hunter_score, hunter_date, title, phone_type,
+    # phone_number, city, state, country, linkedin, timezone, address, meeting_taken,
+    # full_name, status, company_name, company_website, account_id
+    puts "THIS IS COL"
+    puts col
+
+
+    begin
+        if (params[:file].content_type).to_s == 'text/csv'
+          if (params[:file].size).to_i < 1000000
+
+          puts "Starting upload method"
+          upload_message = Lead.import_blacklist(params[:file], @company, @leads, params, col)
+          puts "Finished uploading blacklist. Redirecting!"
+          flash[:notice] = upload_message
+          redirect_to :back
+          else
+
+            redirect_to :back, :flash => { :error => "Blacklist CSV is too large. Please upload a shorter CSV!" }
+            return
+          end
+
+
+        else
+
+          redirect_to :back, :flash => { :error => "Blacklist file was not uploaded. Please Upload a CSV!" }
+          return
+
+        end
+    rescue
+        redirect_to :back, :flash => { :error => "No blacklist file chosen. Please upload a CSV!" }
+        return
+
+    end
+  end
+
 
 
   def update_reply_from_portal

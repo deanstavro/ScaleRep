@@ -1,6 +1,11 @@
 <div id="title" class="jumbotron">
   <br/>
 
+  <center>
+    <p class="container text-danger"><%= flash[:error] %></p>
+    <p class="container text-success"><%= flash[:notice] %></p>
+  </center>
+
   <% if  @user.email == "demo@scalerep.com" %>
     <h1>Demo_Company Lead List </h1>
   <% else %>
