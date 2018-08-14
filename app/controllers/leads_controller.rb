@@ -108,7 +108,7 @@ class LeadsController < ApplicationController
 
     begin
         if (params[:file].content_type).to_s == 'text/csv'
-          if (params[:file].size).to_i < 1000000
+          if (params[:file].size).to_i < 3000000
 
           puts "Starting upload method"
           upload_message = Lead.import_blacklist(params[:file], @company, @leads, params, col)
