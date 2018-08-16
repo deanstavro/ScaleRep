@@ -1,5 +1,11 @@
 class Api::V1::ReplyController < Api::V1::BaseController
 
+    def email_open
+      puts "EMAIL OPEN METHOD"
+      
+    end
+
+
     def new_reply
         unless params[controller_name.to_s].empty?
 
