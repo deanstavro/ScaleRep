@@ -23,6 +23,7 @@ Rails.application.routes.draw do
             resources :reply do
                 collection do
                     post :new_reply
+                    post :email_open
                 end
             end
 
