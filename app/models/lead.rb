@@ -105,6 +105,7 @@ class Lead < ApplicationRecord
 			if one_hash["email"].present?
 				email = one_hash["email"]
 
+				puts one_hash
 
 				#If e-mail does not exist in database
 				begin
@@ -113,13 +114,19 @@ class Lead < ApplicationRecord
 					if leads.where(:email => email).count == 0
 						puts "email is not duplicate"
 						lead = Lead.create!(one_hash)
-						lead.update_attribute(:status, "blacklist")
-						lead.update_attribute(:client_company, company)
+						event = CampaignReply.create!(one_hash)
+
+
+						#event.update_attributes(:status => "blacklist", :client_company => company, :lead => lead)
+						lead.update_attributes(:status => "blacklist", :client_company => company)
 
 					else
+						event = CampaignReply.create!(one_hash)
 						lead = leads.find_by(email: email)
-						lead.update_attribute(:client_company, company)
-						lead.update_attribute(:status, "blacklist")
+
+						event.update_attributes(:client_company_id => company.id, :lead_id => lead.id, :status => "blacklist" )
+						#event.update_attributes(:status => "blacklist")
+						lead.update_attributes(:status => "blacklist", :client_company => company)
 						puts "This is a duplicate. Get the lead and change it to blacklist"
 						duplicates = duplicates + 1
 					end
