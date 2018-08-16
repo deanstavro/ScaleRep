@@ -1,8 +1,21 @@
 class Api::V1::ReplyController < Api::V1::BaseController
 
     def email_open
-      puts "EMAIL OPEN METHOD"
-      
+      puts "e-mail has been opened. Webhook for Reply.io"
+
+      unless params[controller_name.to_s].empty?
+
+        puts params.to_s
+
+
+      else
+            puts "params empty"
+            render json: {error: "Empty params received from Reply.io", :status => 400}, status: 400
+            return
+        end
+
+
+
     end
 
 
