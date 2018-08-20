@@ -5,4 +5,5 @@ class Campaign < ApplicationRecord
 
 	# enum
 	enum campaign_type: [ :standard, :auto_reply, :direct_referral, :auto_reply_referrall]
+	validates :campaign_name, uniqueness: { scope: :client_company }
 end

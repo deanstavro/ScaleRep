@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180709192400) do
+ActiveRecord::Schema.define(version: 20180820224322) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -126,6 +126,7 @@ ActiveRecord::Schema.define(version: 20180709192400) do
     t.boolean  "has_minimum_email_score"
     t.integer  "campaign_type"
     t.boolean  "archive",                 default: false
+    t.integer  "uniqueOpens"
     t.index ["client_company_id"], name: "index_campaigns_on_client_company_id", using: :btree
     t.index ["persona_id"], name: "index_campaigns_on_persona_id", using: :btree
   end

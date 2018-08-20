@@ -2,17 +2,68 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
     def email_open
       puts "e-mail has been opened. Webhook for Reply.io"
+      puts params.to_s
 
-      unless params[controller_name.to_s].empty?
+      unless params.empty?
+        #{"opens_count":"4", "campaign_step":"1", "last_name":"Lussier", "first_name":"Samantha", "first_time_open":"False", "campaign_name":"Better | Email Dump | 3110-3410", "email":"samanthalussierpsyd@gmail.com"}
 
-        puts params.to_s
 
+        #"api_key"=>"b4e330f5cda737343261c5c978266211", "controller"=>"api/v1/reply", "action"=>"email_open", 
+        #"reply"=><ActionController::Parameters {"opens_count"=>"4", "campaign_step"=>"1", "last_name"=>"Lussier", "first_name"=>"Samantha",
+        # "first_time_open"=>"False", "campaign_name"=>"Better | Email Dump | 3110-3410", "email"=>"samanthalussierpsyd@gmail.com"} 
+        #permitted: false>}
+        
+
+        begin
+
+            client_company = ClientCompany.find_by(api_key: params["api_key"])
+            puts client_company.to_s
+            puts params["campaign_name"]
+            campaign_to_update = Campaign.find_by client_company: client_company, campaign_name: params["campaign_name"]
+            puts campaign_to_update
+            
+            if params["first_time_open"] != "False"
+              
+              begin
+                old_count = campaign_to_update.uniqueOpens # Create new campaign reply
+                count = old_count + 1
+              rescue
+                puts "count is at 0"
+                count = 1
+              end
+
+              campaign_to_update.update_attribute(:uniqueOpens, count)
+
+            else
+
+              puts "User has already opened"
+
+
+            end
+            # @campaign_reply = CampaignReply.new(auto_reply_params)
+
+            # Check if lead exists
+              # if it does, update
+                # Update the campaign it is in
+              # if not, create a new lead
+                # Find the campaign, update
+
+            render json: {response: "E-mail opened status updated", :status => 200}, status: 200
+            return
+
+        rescue
+
+            puts "could not find company or campaign for company"
+            render json: {error: "could not find company or campaign for company", :status => 400}, status: 400
+            return
+
+        end
 
       else
             puts "params empty"
             render json: {error: "Empty params received from Reply.io", :status => 400}, status: 400
             return
-        end
+      end
 
 
 
