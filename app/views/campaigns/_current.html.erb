@@ -8,10 +8,16 @@
         <th scope="col">email Account</th>
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
-        <th scope="col">Bounces</th>
+
+        <% if @user.role == 'scalerep' %>
+            <th scope="col">Bounces</th>
+        <% end %>
+
         <th scope="col">Replies</th>
         <th scope="col">Opens</th>
+        <th scope="col">Unique Opens</th>
         <th scope="col">Archive</th>
+
       </tr>
     </thead>
     <tbody>
@@ -41,14 +47,16 @@
 
           <td><%= campaign.deliveriesCount %></td>
 
-          <td>
-            <%= campaign.bouncesCount %>
-            <span class="pct">
-              <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
-               (<%= number_to_percentage(campaign.bouncesCount / campaign.deliveriesCount.to_f * 100, precision:0) %>)
-             <% end %>
-            </span>
-          </td>
+          <% if @user.role == 'scalerep' %>          
+              <td>
+                <%= campaign.bouncesCount %>
+                <span class="pct">
+                  <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
+                   (<%= number_to_percentage(campaign.bouncesCount / campaign.deliveriesCount.to_f * 100, precision:0) %>)
+                 <% end %>
+                </span>
+              </td>
+          <% end %>
 
           <% if (campaign.repliesCount).to_i > 0 %>
             <td>
@@ -85,7 +93,17 @@
             <td>0</td>
           <% end %>
 
-          
+          <% if !campaign.uniqueOpens.present? %>
+              <td>N/A</td>
+          <% else %>
+
+              <% if campaign.bouncesCount.present? %>
+                  <td> <%= campaign.uniqueOpens - campaign.bouncesCount %> </td>
+              <% else %>
+                  <td> 0 </td>
+              <% end %>
+          <% end %>
+
 
           <td>
             <%= link_to archive_client_companies_campaigns_path(campaign), method: :put do %>
