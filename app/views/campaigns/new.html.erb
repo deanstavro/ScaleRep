@@ -11,9 +11,10 @@
   <%= form_for @campaign, url: client_companies_campaigns_path, :html => {:class => "form-horizontal center"} do |f| %>
 
       <div class="form-group">
-         <%= f.label :client_company, "Company Name*", class: "control-label" %><br>
-          <%= f.select :client_company, @client_companies , required: true, class: "form-control" %>
+        Client Company: <%= @client_company_for_campaign.name %>
       </div>
+
+      <%= f.hidden_field :client_company, value: @client_company_for_campaign.name %>
       
 
       <div class="form-group">

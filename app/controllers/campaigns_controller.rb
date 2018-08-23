@@ -30,14 +30,18 @@ class CampaignsController < ApplicationController
 
   def new
     	@user = get_user
+      @client_company = get_company(@user)
+
       @persona_name = params[:persona_name]
       @persona_id = params[:persona_id]
+      @persona = Persona.find_by(id: params[:persona_id])
+      @client_company_for_campaign = @persona.client_company
 
-  		@client_company = get_company(@user)
+
       @personas = @client_company.personas.find_by(id: params[:persona_id])
   		@campaign = @client_company.campaigns.build
 
-      @client_companies = ClientCompany.all.pluck(:name) 
+      
   end
 
 
