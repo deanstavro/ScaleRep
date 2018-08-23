@@ -22,7 +22,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             campaign_to_update = Campaign.find_by client_company: client_company, campaign_name: params["campaign_name"]
             puts campaign_to_update
             
-            if campaign_to_update.uniqueOpens != 0
+            if campaign_to_update.uniqueOpens.present?
             
               if params["first_time_open"] != "False"
 
