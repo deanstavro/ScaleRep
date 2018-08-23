@@ -22,24 +22,36 @@ class Api::V1::ReplyController < Api::V1::BaseController
             campaign_to_update = Campaign.find_by client_company: client_company, campaign_name: params["campaign_name"]
             puts campaign_to_update
             
-            if params["first_time_open"] != "False"
+            if campaign_to_update.uniqueOpens != 0
+            
+              if params["first_time_open"] != "False"
+
+
               
-              begin
-                old_count = campaign_to_update.uniqueOpens # Create new campaign reply
-                count = old_count + 1
-              rescue
-                puts "count is at 0"
-                count = 1
+                begin
+                  old_count = campaign_to_update.uniqueOpens # Create new campaign reply
+                  count = old_count + 1
+                rescue
+                  puts "count is at 0"
+                  count = 1
+                end
+
+                campaign_to_update.update_attribute(:uniqueOpens, count)
+
+              else
+
+                puts "User has already opened"
+
+
               end
 
-              campaign_to_update.update_attribute(:uniqueOpens, count)
-
-            else
-
-              puts "User has already opened"
-
+              render json: {response: "E-mail opened status updated", :status => 200}, status: 200
+              return
 
             end
+
+            render json: {response: "Old campaign. not updated", :status => 200}, status: 200
+            return
             # @campaign_reply = CampaignReply.new(auto_reply_params)
 
             # Check if lead exists
@@ -48,8 +60,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
               # if not, create a new lead
                 # Find the campaign, update
 
-            render json: {response: "E-mail opened status updated", :status => 200}, status: 200
-            return
+            
 
         rescue
 
