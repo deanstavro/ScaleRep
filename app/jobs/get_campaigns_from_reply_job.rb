@@ -46,14 +46,14 @@ class GetCampaignsFromReplyJob < ApplicationJob
                                 # Update the campaign in the local database
                                 campaign.update_attributes(response)
 
-                                sleep 7
+                                sleep 20
                             rescue
                                 puts "COULD NOT PULL METRICS FOR CAMPAIGN " + campaign.campaign_name
 
                                 #archive the campaign
-                                #campaign.update_attribute(:archive, true)
+                                campaign.update_attribute(:archive, true)
                                 puts "Could not pull data. Campaign archived"
-                                sleep 7
+                                sleep 20
                             end
                       end
                 end
