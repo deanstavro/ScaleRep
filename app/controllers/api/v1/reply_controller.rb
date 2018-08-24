@@ -48,19 +48,22 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
                 campaign_to_update.update_attribute(:uniqueOpens, count)
 
+                render json: {response: "Campaign total opens updated. E-mail unique opened updated", :status => 200}, status: 200
+                return
+
               else
 
                 puts "User has already opened"
-
+                render json: {response: "Campaign total opens updated. Unique contacts opened not updated", :status => 200}, status: 200
+                return
 
               end
 
-              render json: {response: "E-mail opened status updated", :status => 200}, status: 200
-              return
+              
 
             end
 
-            render json: {response: "Old campaign. not updated", :status => 200}, status: 200
+            render json: {response: "Campaign total opens updated. Unique contacts opened not updated", :status => 200}, status: 200
             return
             # @campaign_reply = CampaignReply.new(auto_reply_params)
 
