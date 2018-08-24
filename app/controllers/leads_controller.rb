@@ -33,7 +33,8 @@ class LeadsController < ApplicationController
       # grab reports and grab leads for every week for a report
       @interested_leads = CampaignReply.where(client_company_id: @company.id, status: "interested").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
       @blacklist = Lead.where(client_company_id: @company.id, status: "blacklist").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
-      @meetings_set = Lead.where(client_company_id: @company.id, status: "handed_off").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
+      #@meetings_set = Lead.where(client_company_id: @company.id, status: "handed_off").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
+      @meetings_set = Lead.where(client_company_id: @company.id).where(:status => ["handed_off", "handed_off_with_questions", "sent_meeting_invite"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
 
       @current_table = params[:table_id]
     end
