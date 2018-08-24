@@ -17,7 +17,10 @@
         <th scope="col">Replies</th>
         <th scope="col">Opens</th>
         <th scope="col">Unique Opens</th>
-        <th scope="col">Archive</th>
+
+        <% if @user.role == 'scalerep' %>
+          <th scope="col">Un-Archive</th>
+        <% end %>
 
       </tr>
     </thead>
@@ -112,12 +115,13 @@
               <% end %>
           <% end %>
 
-
-          <td>
-            <%= link_to archive_client_companies_campaigns_path(campaign), method: :put do %>
-              <%= octicon "issue-closed", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
-            <% end %>
-          </td>
+          <% if @user.role == 'scalerep' %>
+              <td>
+                <%= link_to archive_client_companies_campaigns_path(campaign), method: :put do %>
+                  <%= octicon "issue-closed", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+                <% end %>
+              </td>
+          <% end %>
 
         </tr>
       <% end %>
