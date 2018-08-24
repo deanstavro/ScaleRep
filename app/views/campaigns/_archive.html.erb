@@ -3,21 +3,44 @@
   <table class="table table-hover">
     <thead class="thead">
       <tr>
+        <th scope="col">Start Date</th>
         <th scope="col">Campaign</th>
+        <th scope="col">Add Leads <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="a"></i></th>
         <th scope="col">email Account</th>
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
-        <th scope="col">Bounces</th>
+
+        <% if @user.role == 'scalerep' %>
+            <th scope="col">Bounces</th>
+        <% end %>
+
         <th scope="col">Replies</th>
         <th scope="col">Opens</th>
-        <th scope="col">Start Date</th>
-        <th scope="col">Un-archive</th>
+        <th scope="col">Unique Opens</th>
+        <th scope="col">Archive</th>
+
       </tr>
     </thead>
     <tbody>
       <% @archive.each do |campaign| %>
         <tr>
-          <td><%= campaign.campaign_name %></td>
+
+          <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
+          
+          <td>
+            <%= link_to "#{campaign.campaign_name}", campaign_path(campaign.id) %></td>
+          </td>
+
+          <td>
+            <%= form_tag import_to_campaign_leads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true, class:"shorter-column" do %>
+              <div class= "fileUpload btn btn-sm btn-light">
+                <span id="uploadPath">Upload a file</span>
+                <%= file_field_tag :file, class:"upload uploadBtn"%>
+              </div>
+              <br/>
+                <%= submit_tag "Submit", class: "btn btn-sm btn-outline-primary"%>
+            <% end %>
+          </td>
 
           <td><%= campaign.emailAccount %></td>
 
@@ -25,55 +48,74 @@
 
           <td><%= campaign.deliveriesCount %></td>
 
-          <td>
-            <%= campaign.bouncesCount %>
-            <span class="pct">
-              <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
-               (<%= number_to_percentage(campaign.bouncesCount / campaign.deliveriesCount.to_f * 100, precision:0) %>)
-             <% end %>
-            </span>
-          </td>
+          <% if @user.role == 'scalerep' %>          
+              <td>
+                <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
+                   <%= number_to_percentage(campaign.bouncesCount / campaign.deliveriesCount.to_f * 100, precision:0) %>
+                 <% end %>
+                
+                <span class="pct">
+                  (<%= campaign.bouncesCount %>)
+                </span>
+              </td>
+          <% end %>
 
           <% if (campaign.repliesCount).to_i > 0 %>
             <td>
               <% if (campaign.deliveriesCount).to_i > (campaign.peopleCount).to_i %>
-                <%= campaign.repliesCount %>
-                <span class="pct">
-                  <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
-                   (<%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount) %>%)
+                 <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
+                   
+                   <%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount - campaign.bouncesCount) %>%
                  <% end %>
+                
+                <span class="pct">
+                    (<%= campaign.repliesCount %>)
                 </span>
               <% else %>
-                <%= campaign.repliesCount %>
-                <span class="pct">
                   <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
-                   (<%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount) %>%)
-                 <% end %>
+                    <%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount-campaign.bouncesCount) %>%
+                  <% end %>
+                
+                <span class="pct">
+                    (<%= campaign.repliesCount %>)
                 </span>
               <% end %>
-              </td>
+            </td>
           <% else %>
             <td>0</td>
           <% end %>
 
+
           <% if (campaign.opensCount).to_i > 0 %>
             <td>
-              <%= campaign.opensCount %>
-              <span class="pct">
-                <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
-                 (<%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount) %>%)
+              <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
+                 <%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount-campaign.bouncesCount) %>%
                <% end %>
+              
+              
+              <span class="pct">
+                (<%= campaign.opensCount %>) 
               </span>
             </td>
           <% else %>
             <td>0</td>
           <% end %>
 
-          <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
+          <% if !campaign.uniqueOpens.present? %>
+              <td>N/A</td>
+          <% else %>
+
+              <% if campaign.bouncesCount.present? %>
+                  <td> <%= campaign.uniqueOpens - campaign.bouncesCount %> </td>
+              <% else %>
+                  <td> 0 </td>
+              <% end %>
+          <% end %>
+
 
           <td>
             <%= link_to archive_client_companies_campaigns_path(campaign), method: :put do %>
-              <%= octicon "issue-opened", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+              <%= octicon "issue-closed", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
             <% end %>
           </td>
 
