@@ -17,13 +17,24 @@ class Api::V1::ReplyController < Api::V1::BaseController
         begin
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
-            puts client_company.to_s
-            puts params["campaign_name"]
+
             campaign_to_update = Campaign.find_by client_company: client_company, campaign_name: params["campaign_name"]
-            puts campaign_to_update
             
             if campaign_to_update.uniqueOpens.present?
-            
+
+              # update the total_opens in the campaign
+              total_opens = campaign_to_update.opensCount
+
+              if total_opens.present?
+                count = campaign_to_update.opensCount
+                campaign_to_update.update_attribute(:opensCount, count + 1)
+
+              else
+                campaign_to_update.update_attribute(:opensCount, 1)
+
+              end
+
+              # update the unqiue opens in the campaign
               if params["first_time_open"] != "False"
 
 
@@ -32,7 +43,6 @@ class Api::V1::ReplyController < Api::V1::BaseController
                   old_count = campaign_to_update.uniqueOpens # Create new campaign reply
                   count = old_count + 1
                 rescue
-                  puts "count is at 0"
                   count = 1
                 end
 

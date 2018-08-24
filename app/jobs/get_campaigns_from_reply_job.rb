@@ -22,28 +22,23 @@ class GetCampaignsFromReplyJob < ApplicationJob
                     response[:last_poll_from_reply] = response[:created]
                     response[:campaign_name] = response[:name]
                     response.delete(:name)
+                    response.delete(:opensCount)
                     response.delete(:id)
                     response.delete(:created)
+                    response.delete_if { |k, v| v.nil? }
 
                     puts "RESPONSE BEFORE"
                     puts response
-
-                    response.delete_if { |k, v| v.nil? }
-
-                    puts "RESPONSE"
-                    puts response
-                    puts "EMAIL"
-                    puts response[:emailAccount]
    
                     # Update the campaign in the local database
                     campaign.update_attributes(response)
 
 
 
-                    sleep 10
+                    sleep 7
                 rescue
                     puts "COULD NOT PULL METRICS FOR CAMPAIGN " + campaign.campaign_name
-                    sleep 10
+                    sleep 7
                 end
               end
             end
