@@ -5,27 +5,47 @@
     <div style="overflow: auto;">
       <table class = " airtable_data table table-hover">
         <thead class = "thead">
-          <tr>
+           <tr>
+            <th scope="col">created date</th>
             <th scope="col">persona</th>
             <th scope="col">people</th>
             <th scope="col">delivered</th>
-            <th scope="col">bounces</th>
+            
+            <% if @user.role == 'scalerep' %>
+                <th scope="col">bounces</th>
+            <% end %>
+            
             <th scope="col">replies</th>
-            <th scope="col">opens</th>
+            <th scope="col">total opens</th>
             <th scope="col"># campaigns</th>
-            <th scope="col">edit </th>
+
+
+            
 
             <% if @user.role == 'scalerep' %>
               <th scope="col">delete</th>
             <% end %>
-            
-            <th scope="col">un-archive</th>
+
+            <% if false %>
+                <th scope="col">edit </th>
+            <% end %>
+
+            <th scope="col">archive</th>
+
           </tr>
         </thead>
 
         <tbody>
           <% @archive.each do |persona| %>
             <tr >
+
+              <%  if @metrics_hash[persona] && @metrics_hash[persona][6] %>
+                 <td><%= @metrics_hash[persona][6] %></td>
+              <% else %>
+                  <td>N/A</td>
+              <% end %>
+
+
               <% if @user.role == "scalerep" %>
                 <td><%= link_to "#{persona.client_company.name} -- #{persona.name}", client_companies_campaigns_path(persona) %></td>
               <% else %>
@@ -44,26 +64,31 @@
                   <td>N/A</td>
               <% end %>
 
-              <%  if @metrics_hash[persona] && @metrics_hash[persona][2] %>
-                 <td>
-                   <%= @metrics_hash[persona][2] %>
-                   <span class="pct">
-                     <% if @metrics_hash[persona] && @metrics_hash[persona][1] && @metrics_hash[persona][1] >0 %>
-                      (<%= number_to_percentage(@metrics_hash[persona][2] / @metrics_hash[persona][1].to_f * 100, precision:0) %>)
-                    <% end %>
-                   </span>
-                 </td>
-              <% else %>
-                  <td>N/A</td>
+
+
+              <% if @user.role == "scalerep" %>
+                  <%  if @metrics_hash[persona] && @metrics_hash[persona][2] %>
+                     <td>
+                       <%= @metrics_hash[persona][2] %>
+                       <span class="pct">
+                         <% if @metrics_hash[persona] && @metrics_hash[persona][1] && @metrics_hash[persona][1] >0 %>
+                          (<%= number_to_percentage(@metrics_hash[persona][2] / @metrics_hash[persona][1].to_f * 100, precision:0) %>)
+                        <% end %>
+                       </span>
+                     </td>
+                  <% else %>
+                      <td>N/A</td>
+                  <% end %>
               <% end %>
 
               <%  if @metrics_hash[persona] && @metrics_hash[persona][3] %>
                 <td>
-                  <%= @metrics_hash[persona][3] %>
-                  <span class="pct">
-                    <% if @metrics_hash[persona] && @metrics_hash[persona][1] && @metrics_hash[persona][1] >0 %>
-                     (<%= number_to_percentage(@metrics_hash[persona][3] / @metrics_hash[persona][1].to_f * 100, precision:0) %>)
+                  <% if @metrics_hash[persona] && @metrics_hash[persona][1] && @metrics_hash[persona][1] >0 %>
+                     <%= number_to_percentage(@metrics_hash[persona][3] / (@metrics_hash[persona][1].to_f - @metrics_hash[persona][2]) * 100, precision:1) %>
                    <% end %>
+                  
+                  <span class="pct">
+                    (<%= @metrics_hash[persona][3] %>)
                   </span>
                 </td>
               <% else %>
@@ -72,11 +97,12 @@
 
               <%  if @metrics_hash[persona] && @metrics_hash[persona][4] %>
                  <td>
-                   <%= @metrics_hash[persona][4] %>
-                   <span class="pct">
-                     <% if @metrics_hash[persona] && @metrics_hash[persona][1] && @metrics_hash[persona][1] >0 %>
-                      (<%= number_to_percentage(@metrics_hash[persona][4] / @metrics_hash[persona][1].to_f * 100, precision:0) %>)
+                  <% if @metrics_hash[persona] && @metrics_hash[persona][1] && @metrics_hash[persona][1] >0 %>
+                      <%= number_to_percentage(@metrics_hash[persona][4] / (@metrics_hash[persona][1].to_f - @metrics_hash[persona][2]) * 100, precision:0) %>
                     <% end %>
+                   
+                   <span class="pct">
+                     (<%= @metrics_hash[persona][4] %>)
                    </span>
                  </td>
               <% else %>
@@ -89,11 +115,7 @@
                   <td>0</td>
               <% end %>
 
-              <td>
-                <%= link_to edit_client_companies_persona_path(persona) do %>
-                  <%= octicon "pencil", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
-                <% end %>
-              </td>
+              
 
               <% if @user.role == 'scalerep' %>
                 <td>
@@ -103,10 +125,19 @@
                 </td>
               <% end %>
 
+              <% if false %>
+                  <td>
+                    <%= link_to edit_client_companies_persona_path(persona) do %>
+                      <%= octicon "pencil", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+                    <% end %>
+                  </td>
+
+              <% end %>
+
               <td>
-                <%= link_to archive_client_companies_personas_path(persona), method: :put  do %>
-                  <%= octicon "issue-opened", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
-                <% end %>
+                    <%= link_to archive_client_companies_personas_path(persona), method: :put  do %>
+                      <%= octicon "issue-closed", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+                    <% end %>
               </td>
             </tr>
           <% end %>
