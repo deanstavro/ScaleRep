@@ -51,7 +51,7 @@ class GetCampaignsFromReplyJob < ApplicationJob
                                 puts "COULD NOT PULL METRICS FOR CAMPAIGN " + campaign.campaign_name
 
                                 #archive the campaign
-                                campaign.update_attribute(:archive, true)
+                                #campaign.update_attribute(:archive, true)
                                 puts "Could not pull data. Campaign archived"
                                 sleep 7
                             end
