@@ -90,7 +90,7 @@
           <% if (campaign.opensCount).to_i > 0 %>
             <td>
               <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
-                 <%= reply_rate_calculator(campaign.opensCount, campaign.deliveriesCount-campaign.bouncesCount) %>%
+                 <%= reply_rate_calculator(campaign.opensCount-campaign.bouncesCount, campaign.deliveriesCount-campaign.bouncesCount) %>%
                <% end %>
               
               
