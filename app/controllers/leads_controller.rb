@@ -45,10 +45,15 @@ class LeadsController < ApplicationController
   def import_to_campaign
 
     @user = User.find(current_user.id)
-    @company = ClientCompany.find_by(id: @user.client_company_id)
+    
     @leads = Lead.where(client_company: @company)
 
-    persona = params[:persona]
+    # persona of the company we are inserting leads into
+    persona_id = params[:persona].to_i
+    persona = Persona.find(persona_id)
+
+    # company we are inserting leads into
+    @company = persona.client_company
 
     col =  Lead.column_names
     # Column Names
