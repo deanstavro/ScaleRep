@@ -86,13 +86,7 @@
 
               <%  if @metrics_hash[persona] && @metrics_hash[persona][4] %>
                  <td>
-                  <% if @metrics_hash[persona] && @metrics_hash[persona][1] && @metrics_hash[persona][1] >0 %>
-                      <%= number_to_percentage(@metrics_hash[persona][4] / (@metrics_hash[persona][1].to_f - @metrics_hash[persona][2]) * 100, precision:1) %>
-                    <% end %>
-                   
-                   <span class="pct">
-                     (<%= @metrics_hash[persona][4] %>)
-                   </span>
+                    <%= @metrics_hash[persona][4] %>
                  </td>
               <% else %>
                   <td>N/A</td>
