@@ -23,7 +23,7 @@
       </tr>
     </thead>
     <tbody>
-      <% @archive.each do |campaign| %>
+      <% @current.each do |campaign| %>>
         <tr>
 
           <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
@@ -111,6 +111,9 @@
           <% else %>
             <td>0</td>
           <% end %>
+
+
+          
 
           <% if !campaign.uniqueOpens.present? %>
               <td>N/A</td>
