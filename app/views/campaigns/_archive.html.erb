@@ -53,13 +53,19 @@
 
           <% if @user.role == 'scalerep' %>          
               <td>
-                <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
+                <% if campaign && campaign.deliveriesCount && campaign.bouncesCount >0 %>
                    <%= number_to_percentage(campaign.bouncesCount / campaign.deliveriesCount.to_f * 100, precision:0) %>
+
+                  <span class="pct">
+                      (<%= campaign.bouncesCount %>)
+                  </span>
+
+
+                <% else %>
+                    0%
                  <% end %>
                 
-                <span class="pct">
-                  (<%= campaign.bouncesCount %>)
-                </span>
+               
               </td>
           <% end %>
 
@@ -85,7 +91,7 @@
               <% end %>
             </td>
           <% else %>
-            <td>0</td>
+            <td>0%</td>
           <% end %>
 
 
@@ -93,12 +99,16 @@
             <td>
               <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
                  <%= reply_rate_calculator(campaign.opensCount-campaign.bouncesCount, campaign.deliveriesCount-campaign.bouncesCount) %>%
-               <% end %>
-              
-              
-              <span class="pct">
+
+                 <span class="pct">
                 (<%= campaign.opensCount-campaign.bouncesCount %>) 
-              </span>
+                </span>
+              <% else %>
+                0%
+              <% end %>
+              
+              
+              
             </td>
           <% else %>
             <td>0</td>
