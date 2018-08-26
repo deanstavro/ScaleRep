@@ -12,6 +12,13 @@ permit_params :name, :description, :company_domain, :company_notes, :replyio_key
 #   permitted
 # end
 
+remove_filter :leads
+remove_filter :campaign_replies
+remove_filter :users
+remove_filter :personas
+remove_filter :accounts
+remove_filter :campaigns
+
 form do |f|
   f.inputs "Client Company Details" do
 

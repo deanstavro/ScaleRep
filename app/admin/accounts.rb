@@ -13,6 +13,9 @@ permit_params :name, :website, :status, :industry, :description, :internal_notes
 #   permitted
 # end
 
+remove_filter :leads
+
+
 form do |f|
   f.inputs "Accounts" do
 

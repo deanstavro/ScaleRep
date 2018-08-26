@@ -14,6 +14,9 @@ permit_params :reply_id, :reply_key, :persona, :user_notes, :industry, :campaign
 #   permitted << :other if params[:action] == 'create' && current_user.admin?
 #   permitted
 # end
+remove_filter :leads
+remove_filter :persona
+
 form do |f|
   f.inputs "Admin Details" do
     f.input :archive

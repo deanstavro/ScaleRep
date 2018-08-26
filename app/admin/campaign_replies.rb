@@ -12,6 +12,8 @@ permit_params :lead, :lead_id, :client_company_id, :first_name, :last_name, :ful
 #   permitted
 # end
 
+remove_filter :lead
+
 index do
     selectable_column
     id_column

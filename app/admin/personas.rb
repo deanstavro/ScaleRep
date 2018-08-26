@@ -4,6 +4,8 @@ ActiveAdmin.register Persona do
 #
 
 permit_params :name, :client_company, :special_instructions, :description, :client_company_id, :archive
+
+remove_filter :campaigns
 #
 # or
 #
