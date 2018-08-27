@@ -228,18 +228,12 @@ class Api::V1::ReplyController < Api::V1::BaseController
               @new_lead.update_attributes(:first_name => first_name, :last_name => @new_lead[:full_name].split[-1])
               puts "Full name: " + first_name + " " + @new_lead[:full_name].split[-1]
           end
-
-
-
       else
           for lead in @lead
               lead.update(status: status)
               campaign_reply.update_attribute(:lead, lead)
               campaign_reply.save!
           end
-
-          #####################
-          #Here, update the lead with the reply task
       end
     end
 

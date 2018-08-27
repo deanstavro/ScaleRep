@@ -7,23 +7,26 @@ class LeadsController < ApplicationController
     @user = User.find(current_user.id)
 
     if @user.role == "scalerep"
+
+      # Take leads who have set meetings to display in Handed-Off
       @meetings_set = Lead.where(:status => ["handed_off", "handed_off_with_questions", "sent_meeting_invite"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
 
+      # Show interested folks who need follow up
       @follow_up   = CampaignReply.where("follow_up_date is not null").where(status: "interested").order(:follow_up_date)
       @no_follow_ups = CampaignReply.where(follow_up_date: [nil, ""]).where(status: "interested")
       @follow_ups = (@no_follow_ups + @follow_up).paginate(:page => params[:page], :per_page => 20)
 
-
+      # Show auto reply referrals and referrals
       @auto_reply = CampaignReply.where("follow_up_date is not null").where(status: "auto_reply", pushed_to_reply_campaign: false).order(:follow_up_date)
       @no_auto_reply = CampaignReply.where(follow_up_date: [nil, ""]).where(status: "auto_reply", pushed_to_reply_campaign: false)
       @auto_replies = (@no_auto_reply + @auto_reply).paginate(:page => params[:page], :per_page => 20)
-
+      
+      # Show referrals
       @referral    = CampaignReply.where.not(referral_email: [nil, ""]).where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false).order(:follow_up_date)
       @no_referral    = CampaignReply.where(referral_email: [nil, ""]).where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false)
       @referrals    = (@no_referral + @referral).paginate(:page => params[:page], :per_page => 20)
 
-
-
+      # Take blacklist and display (not_interested, blacklist) leads
       @blacklist    = Lead.where(:status => ["not_interested", "blacklist"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
 
     else
@@ -33,12 +36,12 @@ class LeadsController < ApplicationController
       # grab reports and grab leads for every week for a report
       @interested_leads = CampaignReply.where(client_company_id: @company.id, status: "interested").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
       @blacklist = Lead.where(client_company_id: @company.id, status: "blacklist").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
-      #@meetings_set = Lead.where(client_company_id: @company.id, status: "handed_off").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
       @meetings_set = Lead.where(client_company_id: @company.id).where(:status => ["handed_off", "handed_off_with_questions", "sent_meeting_invite"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
 
       @current_table = params[:table_id]
     end
   end
+
 
 
 
