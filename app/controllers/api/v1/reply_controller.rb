@@ -6,14 +6,10 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
       unless params.empty?
         #{"opens_count":"4", "campaign_step":"1", "last_name":"Lussier", "first_name":"Samantha", "first_time_open":"False", "campaign_name":"Better | Email Dump | 3110-3410", "email":"samanthalussierpsyd@gmail.com"}
-
-
         #"api_key"=>"b4e330f5cda737343261c5c978266211", "controller"=>"api/v1/reply", "action"=>"email_open", 
         #"reply"=><ActionController::Parameters {"opens_count"=>"4", "campaign_step"=>"1", "last_name"=>"Lussier", "first_name"=>"Samantha",
         # "first_time_open"=>"False", "campaign_name"=>"Better | Email Dump | 3110-3410", "email"=>"samanthalussierpsyd@gmail.com"} 
         #permitted: false>}
-        
-
         begin
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
@@ -93,97 +89,100 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
     end
 
+    # API to catch all from front app
+    # This api adds a new campaign_reply object, and then updates the lead's status
 
+    # API example payload
+    # {"status": "auto_reply","last_conversation_subject": "Thank you for your email! Re: insurance question","email": "info@caninetherapycorps.org","last_conversation_summary": " Thank you so much for contacting Canine Therapy Corps! Your inquiry is important to us. We have a small staff, so please be patient. We will get back to you as soon as we can. If you do not receive a","full_name": "Canine Therapy Corps Inc."}
     def new_reply
+        puts "New Tag from FrontApp received. Running new_reply API"
+        puts "DATA IN: " + params.to_s
+        # Check if params are present
         unless params[controller_name.to_s].empty?
 
-            # grab reply params, with the json content
-            @params_content = params[controller_name.to_s]
-
             begin
-                # first check to see if this exists
-                @campaign_reply = nil
-                if CampaignReply.exists?(email: params["email"])
-                  @campaign_reply = CampaignReply.find_by(email: params["email"])
+
+                # Make campaign_reply
+                @params_content = params[controller_name.to_s]
+
+                # Check if matching status exists, or return error
+                if @params_content.key?(:status)
+
+                  #get all lead status enums
+                  statuses = get_reply_statuses
+                  correct_status = false
+                  for status in statuses
+                    if status[0].to_s == @params_content[:status].to_s
+                        puts "Status for reply in  " + __method__.to_s + " api is " + status[0].to_str
+                        correct_status = true
+                        break
+                    end
+                  end
+
+                  # If incorrect status included, return 400
+                  if correct_status == false
+                    render json: {error: "Wrong status included. Please input the correct status name and try again", :status => 400}, status: 400
+                    return
+                  end
+
+                # stauts not included in payload
                 else
-                  # Create new lead with secured params
-                  @campaign_reply = CampaignReply.new(auto_reply_params)
+                    render json: {error: "Reply was not uploaded. Please include status field and value.", :status => 400}, status: 400
+                    return
                 end
 
-                #if first_name and last_name are empty --> assign
-                if !@campaign_reply[:first_name] and !@campaign_reply[:last_name]
+                # Create campaign reply
+                @campaign_reply = CampaignReply.new(auto_reply_params)
+
+                # Try to add campaign_reply first and last name using the full name passed through the API
+                begin
                   if @campaign_reply[:full_name].split.length < 2
-                    update_reply(:first_name, @campaign_reply[:full_name])
+                    @campaign_reply.update_attributes( :first_name => @campaign_reply[:full_name], :last_name => 'N/A')
+                    puts "Full name: " + @campaign_reply[:full_name]
                   else
-                    update_reply(:last_name, @campaign_reply[:full_name].split[-1])
-                    update_reply(:first_name, @campaign_reply[:full_name].split[0...-1].join(" "))
+                    first_name = @campaign_reply[:full_name].split[0...-1].join(" ").tr(",","")
+                    @campaign_reply.update_attributes(:first_name => first_name, :last_name => @campaign_reply[:full_name].split[-1])
+                    puts "Full name: " + first_name + " " + @campaign_reply[:full_name].split[-1]
                   end
+                # could not update name
+                rescue
+                  @campaign_reply.update_attributes(:first_name => 'N/A', :last_name => 'N/A')
                 end
 
                 #set pushed_to_reply_campaign false
-                update_reply(:pushed_to_reply_campaign, false)
+                @campaign_reply.update_attribute(:pushed_to_reply_campaign, false)
 
             rescue
-                puts "wrong status"
-                render json: {error: "Reply was not uploaded. Wrong status input.", :status => 400}, status: 400
+                render json: {error: "Reply was not uploaded. Wrong status input, or bad payload.", :status => 400}, status: 400
                 return
             end
 
+            ##### Campaign Reply object created and updated. Time to associate reply to the correct company, and lead  ##########
             # Update lead to the correct company
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
-            update_reply(:client_company, @client_company)
+            @campaign_reply.update_attribute(:client_company, @client_company)
 
-            if @params_content.key?(:status)
-
-                #get all lead status enums
-                statuses = get_reply_statuses
-
-                for status in statuses
-                    puts "YUP"
-                    puts status
-
-                    if status[0].to_s == @params_content[:status].to_s
-
-                        puts "updating " + __method__.to_s
-                        update_reply(:status, @params_content[:status].to_s)
-                        puts "updated"
-
-                    end
-                    puts status[0]+ " not found"
-
+            begin
+                if @params_content[:status].to_s == "opt_out" or @params_content[:status].to_s == "do_not_contact"
+                    update_lead(@params_content, @client_company, @campaign_reply, "blacklist")
+                    render json: {response: "Reply uploaded", :status => 200}, status: 200
+                    return
+                elsif @params_content[:status].to_s == "interested" or @params_content[:status].to_s == "not_interested" or @params_content[:status].to_s == "handed_off" or @params_content[:status].to_s == "handed_off_with_questions" or @params_content[:status].to_s == "sent_meeting_invite"
+                    update_lead(@params_content, @client_company, @campaign_reply, @params_content[:status].to_s)
+                    render json: {response: "Reply uploaded", :status => 200}, status: 200
+                    return
+                else
+                    update_lead(@params_content, @client_company, @campaign_reply, "in_campaign")
+                    render json: {response: "Reply uploaded", :status => 200}, status: 200
+                    return
 
                 end
-
-            else
-                puts "no status"
-                render json: {error: "Reply was not uploaded. Please include status.", :status => 400}, status: 400
+            rescue
+                render json: {error: "Reply was not uploaded. E-mail required fields missing (email)", :status => 400}, status: 400
                 return
             end
-
-
-            #begin
-            if @params_content[:status].to_s == "opt_out" or @params_content[:status].to_s == "do_not_contact"
-                update_lead(@params_content, @client_company, @campaign_reply, "blacklist")
-                render json: {response: "Reply uploaded", :status => 200}, status: 200
-                return
-            elsif @params_content[:status].to_s == "interested" or @params_content[:status].to_s == "not_interested" or @params_content[:status].to_s == "handed_off" or @params_content[:status].to_s == "handed_off_with_questions" or @params_content[:status].to_s == "sent_meeting_invite"
-                update_lead(@params_content, @client_company, @campaign_reply, @params_content[:status].to_s)
-                render json: {response: "Reply uploaded", :status => 200}, status: 200
-                return
-            else
-                update_lead(@params_content, @client_company, @campaign_reply, "in_campaign")
-                render json: {response: "Reply uploaded", :status => 200}, status: 200
-                return
-
-            end
-
-            #rescue
-            puts "did not save"
-            render json: {error: "Reply was not uploaded. E-mail required fields missing (email)", :status => 400}, status: 400
-            return
 
         else
-            puts "params empty"
             render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
             return
         end
@@ -222,10 +221,12 @@ class Api::V1::ReplyController < Api::V1::BaseController
           #check for first and last name
           @new_lead.update_attribute(:full_name, params_content[:full_name])
           if params_content[:full_name].split.length < 2
-            @new_lead.update_attribute(:first_name, params_content[:full_name])
+              @new_lead.update_attributes( :first_name => @campaign_reply[:full_name], :last_name => 'N/A')
+              puts "Full name: " + @campaign_reply[:full_name] + " N/A" 
           else
-            @new_lead.update_attribute(:last_name, params_content[:full_name].split[-1])
-            @new_lead.update_attribute(:first_name, params_content[:full_name].split[0...-1].join(" "))
+              first_name = @campaign_reply[:full_name].split[0...-1].join(" ").tr(",","")
+              @new_lead.update_attributes(:first_name => first_name, :last_name => @new_lead[:full_name].split[-1])
+              puts "Full name: " + first_name + " " + @new_lead[:full_name].split[-1]
           end
 
 
