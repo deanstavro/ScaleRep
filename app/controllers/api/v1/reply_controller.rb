@@ -74,7 +74,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
         rescue
 
             puts "could not find company or campaign for company"
-            render json: {error: "could not find company or campaign for company", :status => 400}, status: 400
+            render json: {error: "could not find company or campaign for company", :status => 200}, status: 200
             return
 
         end
