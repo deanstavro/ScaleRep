@@ -162,5 +162,15 @@
         </tr>
       <% end %>
     </tbody>
+
   </table>
+
+ <div class="digg_pagination">
+          <div class="page_info">
+            <%= page_entries_info @archive %>
+          </div>
+      <%= will_paginate @archive, :params => { :tab_id => :archive }, :container => false %>
+    </div>
+
+    
 </div>
