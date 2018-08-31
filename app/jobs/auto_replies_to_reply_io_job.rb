@@ -8,9 +8,10 @@ class AutoRepliesToReplyIoJob < ApplicationJob
     # grab all replies marked as today
 
     begin
-        @campaign_replies = CampaignReply.where(follow_up_date: Date.today, :status => ["auto_reply", "auto_reply_referral"], pushed_to_reply_campaign: false)
+        @campaign_replies = CampaignReply.where(follow_up_date: Date.today, status: "auto_reply", pushed_to_reply_campaign: false)
 
         puts "we got campaign replies: "
+        puts "DATE TODAY: " + Date.today.to_s
 
         begin
 
@@ -24,7 +25,11 @@ class AutoRepliesToReplyIoJob < ApplicationJob
                 # to-do: update lead status in our system as auto-reply
 
                 #to-do: update attribute
-                auto_reply.update_attribute(:pushed_to_reply_campaign, !auto_reply.pushed_to_reply_campaign)
+                if response != "did not input into reply"
+                  auto_reply.update_attribute(:pushed_to_reply_campaign, !auto_reply.pushed_to_reply_campaign)
+                else
+                  puts "auto-reply stays. contact not updated into campaign"
+                end
             end
 
         rescue
