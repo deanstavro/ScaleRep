@@ -153,7 +153,7 @@ module Reply
         response = nil
         begin
 
-          contact_exists_response = RestClient::Request.execute(
+          response = RestClient::Request.execute(
              :method => :get,
              :url => 'https://api.reply.io/v1/people?email='+ contact.referral_email+ "&apiKey=" + reply_key
           )
