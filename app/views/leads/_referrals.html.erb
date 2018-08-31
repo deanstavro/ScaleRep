@@ -23,6 +23,9 @@
               <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
 
               <%= form_tag update_reply_from_portal_leads_path(:email => lead.email, :company_id => lead.client_company.id) do %>
+
+                <%= hidden_field_tag 'campaign_reply_id', lead.id %>
+
                 <td> <%= lead.full_name %></td>
 
                 <% if lead.referral_name? %>

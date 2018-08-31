@@ -164,15 +164,13 @@ module Reply
           puts "contact does not exist, so creating new one to put into referral campaign"
 
 
-          payload = { "campaignId": reply_id, "email": contact.referral_email, "firstName": contact.referral_name.split[0...-1].join(" "), "lastName": contact.referral_name.split[-1], "title": contact.full_name, "customFields": [{"key": "referree_name", "value": contact.full_name}] }
+          payload = { "campaignId": reply_id, "email": contact.referral_email, "firstName": contact.first_name, "customFields": [{"key": "referree_name", "value": contact.full_name}] }
 
-          puts "WE HERE"
           response = RestClient::Request.execute(
              :method => :post,
              :url => 'https://api.reply.io/v1/actions/addandpushtocampaign?apiKey='+ reply_key,
              :payload => payload
           )
-          puts "HERRRRRRRRO"
           #sleep(5)
 
           #update with custom fields --> this is the only endpoint where you can add custom fields

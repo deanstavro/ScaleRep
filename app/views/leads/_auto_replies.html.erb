@@ -7,11 +7,13 @@
         <thead class = "thead">
           <tr>
             <th scope = 'col'>Date Sourced</th>
-            <th scope = 'col'>Follow-up Date</th>
+            <th scope = 'col'>Company</th>
             <th scope = 'col'>Email</th>
             <th scope = 'col'>Full Name</th>
-            <th scope = 'col'>Company</th>
-            <th scope = 'col'>Notes</th>
+            
+            <th scope = 'col'>Follow-up Date</th>
+            <th scope = 'col'>First Name</th>
+            <th scope = 'col'>Lead Company Name</th>
             <th scope = 'col'>Status</th>
             <th scope = 'col'>Update</th>
 
@@ -21,23 +23,47 @@
         <tbody>
           <% @auto_replies.each do |lead| %>
             <tr>
-              <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
+              
 
               <%= form_tag update_reply_from_portal_leads_path(:email => lead.email, :company_id => lead.client_company.id) do %>
+
+
+
+                <%= hidden_field_tag :campaign_reply_id , lead.id %>
+
+                <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
+
+                <td> <%= lead.client_company.name %></td>
+                
+
+                <td> <%= lead.email %></td>
+                
+                <td> <%= lead.full_name %></td>
+                
+                
+                
                 <% if lead.follow_up_date? %>
                   <td><input type="text" data-provide='datepicker' name="followUpDate" value="<%= lead.follow_up_date.strftime('%m/%d/%Y')%>"></td>
                 <% else %>
                   <td><input type="text" data-provide='datepicker' name="followUpDate"></td>
                 <% end %>
 
-                <td> <%= lead.email %></td>
-                <td> <%= lead.full_name %></td>
-                <td> <%= lead.client_company.name %></td>
-                <td> <input type="text" name="notes" value="<%= lead.notes %>"></td>
+                <% if lead.first_name? %>
+                  <td><input type="text" name="first_name" value="<%= lead.first_name %>"></td>
+                <% else %>
+                  <td><input type="text" name="first_name"></td>
+                <% end %>
+
+                
+
+                <td> <input type="text" name="company" value="<%= lead.company %>"></td>
+                
+                
 
                 <td>
                   <%= select_tag :status, options_for_select(CampaignReply.statuses.keys.to_a, 'auto_reply') %>
                 </td>
+                
                 <td><%= submit_tag "OK" %></td>
               <% end %>
             </tr>

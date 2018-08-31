@@ -149,59 +149,70 @@ class LeadsController < ApplicationController
 
 
   def update_reply_from_portal
+
     # used to update follow_up_date and notes
     # find the reply and update the lead
     @company = ClientCompany.find_by(id: params[:company_id])
-    @reply = CampaignReply.where(:email => params[:email]).where(:client_company => @company).first
+    @reply = CampaignReply.find_by(id: params[:campaign_reply_id])
 
     #update attributes
-    if params.has_key?(:followUpDate) and params[:followUpDate] != ""
+
+    if params[:status] == "referral" or "auto_reply_referral"
+        #update params if they exist and added for referrals
+        @reply.update_attribute(:referral_name, params[:referralName])
+        @reply.update_attribute(:referral_email, params[:referralEmail])
+        @reply.update_attribute(:notes, params[:notes])
+
+        #update reply
+        unless (@reply.referral_email.nil? or @reply.referral_email=="") or (@reply.referral_name.nil? or @reply.referral_name == "") or @reply.full_name.nil?
+          response = add_referral_contact(@company.referral_campaign_key,@company.referral_campaign_id, @reply)
+
+          #update referral so that we don't display
+          @reply.update_attribute(:pushed_to_reply_campaign, !@reply.pushed_to_reply_campaign)
+        end
+
+    end
+
+    begin
       @reply.update_attribute(:follow_up_date, Date.strptime(params[:followUpDate], "%m/%d/%Y"))
+    rescue
+      @reply.update_attribute(:follow_up_date, "")
     end
 
     @reply.update_attribute(:notes, params[:notes])
+
+
+
+    @reply.update_attribute(:company, params[:company])
+
+
+
+    @reply.update_attribute(:first_name, params[:first_name])
+
+
     @reply.update_attribute(:status, params[:status])
 
-    #update params if they exist and added for referrals
-    if params.has_key?(:referralName)
-      @reply.update_attribute(:referral_name, params[:referralName])
+    
+    begin
+        # if we move a reply to handed-off/opt-out/not-interested, update lead
+        if ["do_not_contact", "opt_out"].include?(params[:status])
+          @reply.lead.update_attribute(:status, "blacklist")
+        elsif ["handed_off"].include?(params[:status])
+          @reply.lead.update_attribute(:status, "handed_off")
+        elsif ["interested"].include?(params[:status])
+          @reply.lead.update_attribute(:status, "interested")
+        elsif ['not_interested'].include?(params[:status])
+          @reply.lead.update_attribute(:status, "not_interested")
+        elsif ['handed_off_with_questions'].include?(params[:status])
+          @reply.lead.update_attribute(:status, "handed_off_with_questions")
+        elsif ['sent_meeting_invite'].include?(params[:status])
+          @reply.lead.update_attribute(:status, "sent_meeting_invite")
+        else # auto_reply, auto_reply_referral, etc
+          @reply.lead.update_attribute(:status, "in_campaign")
+        end
+    rescue
+      puts "no associated lead with reply_campaign"
     end
-    if params.has_key?(:referralEmail)
-      @reply.update_attribute(:referral_email, params[:referralEmail])
-    end
-
-    # if we move a reply to handed-off/opt-out/not-interested, update lead
-    if ["do_not_contact", "opt_out"].include?(params[:status])
-      @reply.lead.update_attribute(:status, "blacklist")
-    elsif ["handed_off"].include?(params[:status])
-      @reply.lead.update_attribute(:status, "handed_off")
-    elsif ["interested"].include?(params[:status])
-      @reply.lead.update_attribute(:status, "interested")
-    elsif ['not_interested'].include?(params[:status])
-      @reply.lead.update_attribute(:status, "not_interested")
-    elsif ['handed_off_with_questions'].include?(params[:status])
-      @reply.lead.update_attribute(:status, "handed_off_with_questions")
-    elsif ['sent_meeting_invite'].include?(params[:status])
-      @reply.lead.update_attribute(:status, "sent_meeting_invite")
-    else # auto_reply, auto_reply_referral, etc
-      @reply.lead.update_attribute(:status, "in_campaign")
-    end
-
-
-    if @reply.status == "referral" or @reply.status == "auto_reply_referral"
-
-      #update reply
-      unless (@reply.referral_email.nil? || @reply.referral_email=="") and (@reply.referral_name.nil? || @reply.referral_name == "") and @reply.full_name.nil?
-                response = add_referral_contact(@company.referral_campaign_key,@company.referral_campaign_id, @reply)
-
-                #update referral so that we don't display
-                @reply.update_attribute(:pushed_to_reply_campaign, !@reply.pushed_to_reply_campaign)
-              end
-
-
-    end
-
-
 
 
 
