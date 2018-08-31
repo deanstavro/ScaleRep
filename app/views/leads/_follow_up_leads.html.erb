@@ -6,14 +6,15 @@
       <table class = " airtable_data table table-hover">
         <thead class = "thead">
           <tr>
-                <th scope = 'col'>Date Sourced</th>
+                
                 <th scope = 'col'>Follow-up Date</th>
+                <th scope = 'col'>Status</th>
                 <th scope = 'col'>Email</th>
                 <th scope = 'col'>Name</th>
                 <th scope = 'col'>Company</th>
-                <th scope = 'col'>Notes</th>
-                <th scope = 'col'>Status</th>
+                <th scope = 'col'>Date Sourced</th>
                 <th scope = 'col'>Update</th>
+
 
           </tr>
         </thead>
@@ -21,7 +22,7 @@
         <tbody>
           <% @follow_ups.each do |lead| %>
             <tr>
-              <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
+              
 
               <%= form_tag update_reply_from_portal_leads_path(:email => lead.email, :company_id => lead.client_company.id) do %>
 
@@ -33,18 +34,17 @@
                   <td><input type="text" data-provide='datepicker' name="followUpDate"></td>
                 <% end %>
 
+                <td>
+                  <%= select_tag :status, options_for_select(CampaignReply.statuses.keys.to_a, 'interested') %>
+                </td>
+
                 <td> <%= lead.email %></td>
                 
                 <td> <%= lead.full_name %></td>
                 
                 <td> <%= lead.client_company.name %></td>
-                
-                <td> <input type="text" name="notes" value="<%= lead.notes %>"></td>
 
-                <td>
-                  <%= select_tag :status, options_for_select(CampaignReply.statuses.keys.to_a, 'interested') %>
-                </td>
-
+                <td> <%= lead.updated_at.strftime("%b %d, %Y") %></td>
 
                 <td><%= submit_tag "OK" %></td>
               <% end %>

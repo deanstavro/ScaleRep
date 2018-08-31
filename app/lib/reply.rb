@@ -164,7 +164,7 @@ module Reply
           puts "contact does not exist, so creating new one to put into referral campaign"
 
 
-          payload = { "campaignId": reply_id, "email": contact.referral_email, "firstName": contact.first_name, "customFields": [{"key": "referree_name", "value": contact.full_name}] }
+          payload = { "campaignId": reply_id, "email": contact.referral_email, "firstName": contact.referral_name, "title": contact.full_name }
 
           response = RestClient::Request.execute(
              :method => :post,

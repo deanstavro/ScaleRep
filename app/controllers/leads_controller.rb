@@ -159,19 +159,22 @@ class LeadsController < ApplicationController
 
     if params[:status] == "referral" or "auto_reply_referral"
         #update params if they exist and added for referrals
-        @reply.update_attribute(:referral_name, params[:referralName])
-        @reply.update_attribute(:referral_email, params[:referralEmail])
-        @reply.update_attribute(:notes, params[:notes])
+        @reply.update_attributes(:referral_name => params[:referralName], :referral_email => params[:referralEmail], :company => params[:company], :status => params[:status], :full_name => params[:full_name] )
 
         #update reply
         unless (@reply.referral_email.nil? or @reply.referral_email=="") or (@reply.referral_name.nil? or @reply.referral_name == "") or @reply.full_name.nil?
           response = add_referral_contact(@company.referral_campaign_key,@company.referral_campaign_id, @reply)
+          puts "push referral reply response: " + response
+          
 
-          #update referral so that we don't display
-          @reply.update_attribute(:pushed_to_reply_campaign, !@reply.pushed_to_reply_campaign)
+          if response != "did not input into reply"
+            @reply.update_attribute(:pushed_to_reply_campaign, !@reply.pushed_to_reply_campaign)
+          end
         end
 
     end
+
+
 
     begin
       @reply.update_attribute(:follow_up_date, Date.strptime(params[:followUpDate], "%m/%d/%Y"))
@@ -182,8 +185,11 @@ class LeadsController < ApplicationController
     @reply.update_attribute(:notes, params[:notes])
 
 
-
-    @reply.update_attribute(:company, params[:company])
+    begin
+      @reply.update_attribute(:company, params[:company])
+    rescue
+      @reply.update_attribute(:company, "")
+    end
 
 
 
