@@ -128,7 +128,6 @@ ActiveRecord::Schema.define(version: 20180903023028) do
     t.boolean  "archive",                 default: false
     t.integer  "uniqueOpens",             default: 0
     t.integer  "contactLimit"
-    t.jsonb    "leadupload",              default: "{}",  null: false
     t.index ["client_company_id"], name: "index_campaigns_on_client_company_id", using: :btree
     t.index ["persona_id"], name: "index_campaigns_on_persona_id", using: :btree
   end
