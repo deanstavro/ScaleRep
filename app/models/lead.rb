@@ -68,7 +68,7 @@ class Lead < ApplicationRecord
 		data_object.save!
 
 		# Perform later the making of the campaigns, then adding the data
-		LeadUploadJob.perform_now(data_object)
+		LeadUploadJob.perform_later(data_object)
 		return "Data has been uploaded. A report will be generated when the upload is complete"
 
 
