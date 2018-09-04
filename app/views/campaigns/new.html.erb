@@ -13,12 +13,12 @@
       <div class="form-group">
         Client Company: <%= @client_company_for_campaign.name %>
       </div>
-
+      <br><br>
       <%= f.hidden_field :client_company, value: @client_company_for_campaign.name %>
       
 
       <div class="form-group">
-          <%= f.label :campaign_name, "Campaign Name*", class: "control-label" %>
+          <%= f.label :campaign_name, "campaign name*", class: "control-label" %>
 
           <%= f.text_field :campaign_name, required: true, class: "form-control" %>
 
@@ -26,9 +26,28 @@
 
       <br>
 
+      <div class="form-group">
+
+          <%= f.label :contactLimit, "campaign contact limit*", class: "control-label" %>
+          <%= f.number_field :contactLimit, required: true, :value => 150, class: "form-control" %>
+
+      </div>
+
+      <br>
+
 
       <div class="form-group">
-          <%= f.label :user_notes, "Extra Notes (Add extra details for ScaleRep reps here)", class: "control-label" %>
+
+          <%= f.label :minimum_email_score, "minimum e-mail score (0-99)", class: "control-label" %>
+          <%= f.number_field :minimum_email_score, required: true, :value => 85, class: "form-control" %>
+
+      </div>
+
+      <br>
+
+
+      <div class="form-group">
+          <%= f.label :user_notes, "extra notes (Add extra details for ScaleRep reps here)", class: "control-label" %>
 
           <%= f.text_area :user_notes, :rows => 5, :col => 5, class: "form-control" %>
 
@@ -36,24 +55,10 @@
 
       <br>
 
-      <div class="form-group">
-          <p> Requiring a minimum e-mail score helps overall deliverability.</p>
-
-          <%= f.label :minimum_email_score, "Minimum E-mail Score (0-99)", class: "control-label" %>
-          <%= f.number_field :minimum_email_score, required: true, :value => 70, class: "form-control" %>
-
-      </div>
-
-      <br>
-
-      
-
-
-
       <% if false %>
 
           <div class="form-group">
-              <%= f.label :personalized, "Check if you'd like every e-mail personalized", class: "control-label" %>
+              <%= f.label :personalized, "check if you'd like every e-mail personalized", class: "control-label" %>
  
               <%= f.check_box :personalized, class: "form-control" %>
 

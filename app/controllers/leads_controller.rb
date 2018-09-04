@@ -47,16 +47,15 @@ class LeadsController < ApplicationController
 
   def import_to_campaign
 
+    # User account we are logged into
     @user = User.find(current_user.id)
-    
-    @leads = Lead.where(client_company: @company)
-
     # persona of the company we are inserting leads into
     persona_id = params[:persona].to_i
     persona = Persona.find(persona_id)
-
     # company we are inserting leads into
     @company = persona.client_company
+    # leads we are checking against
+    @leads = Lead.where(client_company: @company)
 
     col =  Lead.column_names
     # Column Names
@@ -66,15 +65,16 @@ class LeadsController < ApplicationController
     # email, first_name, last_name, hunter_score, hunter_date, title, phone_type,
     # phone_number, city, state, country, linkedin, timezone, address, meeting_taken,
     # full_name, status, company_name, company_website, account_id
-    puts "THIS IS COL"
-    puts col
 
-
-    begin
+    # 1. Check if the file is a csv
+    # 2. Check if file is under a specific size
+    # 3. Upload data
+    #begin
         if (params[:file].content_type).to_s == 'text/csv'
           if (params[:file].size).to_i < 1000000
 
           puts "Starting upload method"
+          
           upload_message = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign], col)
           puts "Finished uploading. Redirecting!"
           flash[:notice] = upload_message
@@ -92,12 +92,15 @@ class LeadsController < ApplicationController
           return
 
         end
-    rescue
-        redirect_to client_companies_campaigns_path(persona), :flash => { :error => "No file chosen. Please upload a CSV!" }
-        return
+    #rescue
+        #redirect_to client_companies_campaigns_path(persona), :flash => { :error => "No file chosen. Please upload a CSV!" }
+        #return
 
-    end
+    #end
   end
+
+
+
 
   def import_blacklist
 

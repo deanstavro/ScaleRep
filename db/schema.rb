@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180823170100) do
+ActiveRecord::Schema.define(version: 20180903023028) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -127,6 +127,8 @@ ActiveRecord::Schema.define(version: 20180823170100) do
     t.integer  "campaign_type"
     t.boolean  "archive",                 default: false
     t.integer  "uniqueOpens",             default: 0
+    t.integer  "contactLimit"
+    t.jsonb    "leadupload",              default: "{}",  null: false
     t.index ["client_company_id"], name: "index_campaigns_on_client_company_id", using: :btree
     t.index ["persona_id"], name: "index_campaigns_on_persona_id", using: :btree
   end
@@ -161,6 +163,17 @@ ActiveRecord::Schema.define(version: 20180823170100) do
     t.datetime "updated_at",           null: false
     t.integer  "client_company_id"
     t.index ["client_company_id"], name: "index_client_reports_on_client_company_id", using: :btree
+  end
+
+  create_table "data_uploads", force: :cascade do |t|
+    t.jsonb    "data"
+    t.integer  "campaign_id"
+    t.integer  "client_company_id"
+    t.integer  "count"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["campaign_id"], name: "index_data_uploads_on_campaign_id", using: :btree
+    t.index ["client_company_id"], name: "index_data_uploads_on_client_company_id", using: :btree
   end
 
   create_table "demos", force: :cascade do |t|
@@ -252,6 +265,7 @@ ActiveRecord::Schema.define(version: 20180823170100) do
   add_foreign_key "campaigns", "client_companies"
   add_foreign_key "campaigns", "personas"
   add_foreign_key "client_reports", "client_companies"
+  add_foreign_key "data_uploads", "client_companies"
   add_foreign_key "leads", "accounts"
   add_foreign_key "leads", "campaigns"
   add_foreign_key "leads", "client_companies"

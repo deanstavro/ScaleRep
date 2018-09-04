@@ -149,7 +149,7 @@ class CampaignsController < ApplicationController
 
 
   	def campaign_params
-      params.require(:campaign).permit(:persona_id, :user_notes, :create_persona, :campaign_name, :minimum_email_score, :has_minimum_email_score)
+      params.require(:campaign).permit(:persona_id, :contactLimit, :user_notes, :create_persona, :campaign_name, :minimum_email_score, :has_minimum_email_score)
   	end
 
 

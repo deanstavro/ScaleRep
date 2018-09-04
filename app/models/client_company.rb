@@ -6,6 +6,7 @@ class ClientCompany < ApplicationRecord
 	has_many :personas
 	has_many :campaign_replies
 	has_many :accounts
+	has_many :data_uploads
 
 
 	validates :name, presence: true, uniqueness: true

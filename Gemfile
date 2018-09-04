@@ -29,6 +29,8 @@ gem 'will_paginate', '~> 3.1.0'
 gem 'google-analytics-rails', '1.1.1'
 gem 'bootstrap-datepicker-rails'
 gem 'octicons_helper'
+gem 'activerecord-import'
+gem 'activeadmin_json_editor', '~> 0.0.7'
 
 
 group :test do
