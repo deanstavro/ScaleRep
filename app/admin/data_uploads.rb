@@ -21,11 +21,6 @@ index do
     column :campaign
     column :client_company
     column :count
-    
-    column :imported_count
-    column :not_imported_count
-    column :duplicates_count
-
     column :created_at
     column :updated_at
 
@@ -41,11 +36,8 @@ form do |f|
       f.input :count
       f.input :data, as: :json
       f.input :imported
-      f.input :imported_count
       f.input :not_imported
-      f.input :not_imported_count
       f.input :duplicates
-      f.input :duplicates_count
 
     end
 
