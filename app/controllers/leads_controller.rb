@@ -57,18 +57,15 @@ class LeadsController < ApplicationController
     # leads we are checking against
     @leads = Lead.where(client_company: @company)
 
-    col =  Lead.column_names
+    col =  Lead.column_names - %w{id client_company_id campaign_id account_id}
     # Column Names
-    # id, decision_maker, internal_notes, email_in_contact_with, date_sourced
-    # created_at, updated_at, client_company_id, campaign_id, contract_sent,
-    # contract_amount, timeline, project_scope, email_handed_off_too, meeting_time,
-    # email, first_name, last_name, hunter_score, hunter_date, title, phone_type,
-    # phone_number, city, state, country, linkedin, timezone, address, meeting_taken,
-    # full_name, status, company_name, company_website, account_id
+    # ["decision_maker", "internal_notes", "email_in_contact_with", "date_sourced", "created_at", "updated_at", "contract_sent", "contract_amount", "timeline", "project_scope", "email_handed_off_too", "meeting_time", "email", "first_name", "last_name", "hunter_score", "hunter_date", "title", "phone_type", "phone_number", "city", "state", "country", "linkedin", "timezone", "address", "meeting_taken", "full_name", "status", "company_name", "company_website"]
 
     # 1. Check if the file is a csv
     # 2. Check if file is under a specific size
     # 3. Upload data
+    
+
     #begin
         if (params[:file].content_type).to_s == 'text/csv'
           if (params[:file].size).to_i < 1000000

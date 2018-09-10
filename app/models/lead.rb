@@ -22,22 +22,33 @@ class Lead < ApplicationRecord
 		
 		lines = CSV.open(file.path).readlines
 		keys = lines.delete lines.first
+		new_keys = Hash.new
+		keys_unused = []
 	
 		email_exists = false
 		first_name_exists = false
-		
-		# Check for required keys
-		for key in keys
-			if key != nil
 
-				email_exists = true if key.downcase == "email"
-				first_name_exists = true if key.downcase == "first_name"
-			else
-				puts "empty header"
+		# Check for required keys
+		keys.each_with_index do |key, index|
+			begin
+				key_to_insert = key.downcase
+				if column_names.include? key_to_insert 
+					new_keys[key_to_insert] = index
+					email_exists = true if key_to_insert == "email"
+					first_name_exists = true if key_to_insert == "first_name"
+				else
+					puts "empty header"
+					keys_unused << index
+				end
+			rescue
+				puts "could not read column name"
+				keys_unused << index
 			end
-			
-			keys.keep_if {|k,_| column_names.include? k}
 		end
+
+		puts new_keys.to_s
+		keys_array = new_keys.keys
+		puts keys_unused.to_s
 
 		# check for required fields in the header
 		if first_name_exists == false
@@ -53,7 +64,10 @@ class Lead < ApplicationRecord
   			data_ob = lines.map do |values|
   				count = count + 1
   				!!(values =~ /^[-+]?[1-9]([0-9]*)?$/) ? values.to_i : values.to_s
-    			Hash[keys.zip(values)]
+  				
+  				new_value = values.reject.with_index {|e, x| keys_unused.include? x}
+  				puts new_value.to_s
+    			Hash[keys_array.zip(new_value)]
   			end
   			puts JSON.pretty_generate(data_ob)
   			data = data_ob
@@ -69,72 +83,8 @@ class Lead < ApplicationRecord
 
 		# Perform later the making of the campaigns, then adding the data
 		LeadUploadJob.perform_later(data_object)
-		return "Data has been uploaded. A report will be generated when the upload is complete"
+		return count.to_s + " records uploaded. Columns " + keys_array.to_s + " included. A report will be generated when upload completes"
 
-
-
-
-		if false
-				not_imported = 0
-				duplicates = []
-				imported = 0
-				rows_email_not_present = 0
-
-				#Hash of all rows that will be inputted to reply
-				all_hash = []
-
-				CSV.foreach(file.path, headers: true) do |row|
-					puts "looping through each row"
-
-					#Take row, convert keys to lowercase, put in key,value hash
-		  			new_hash = {}
-		  			row.to_hash.each_pair do |k,v|
-		 	  			new_hash.merge!({k.downcase => v})
-		 	  			new_hash.keep_if {|k,_| column_names.include? k }
-		  			end
-
-
-					one_hash = new_hash.to_hash
-					# If e-mail field is included
-					if one_hash["email"].present?
-
-							puts one_hash
-
-
-							email = one_hash["email"]
-
-							begin
-								# check for duplicates
-								if leads.where(:email => email).count == 0
-
-									one_hash[:client_company] = company
-									one_hash[:campaign_id] = campaign_id
-
-									#This is where the account will get updated
-
-									#lead = Lead.create!(one_hash)
-									all_hash << Lead.new(one_hash.to_h)
-
-									imported = imported + 1
-								else
-
-									duplicates << $.
-								end
-							rescue Exception => e
-								not_imported = not_imported + 1
-							end
-
-					else
-						rows_email_not_present = rows_email_not_present + 1
-					end
-
-
-				end
-				Lead.import(all_hash)
-				AddContactsToReplyJob.perform_later(all_hash,campaign_id)
-
-				return imported.to_s + " leads imported successfully, duplicate lead rows not uploaded: "+ duplicates.to_s + ", " + rows_email_not_present.to_s + " rows without email field"
-		end
 	end
 
 

@@ -32,7 +32,7 @@ Rails.application.routes.draw do
 
     # Set Root Url
     authenticated :user do
-        root 'users#home'
+        root 'personas#index'
     end
     root to: 'homepage#index'
 

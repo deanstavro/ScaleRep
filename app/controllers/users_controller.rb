@@ -6,30 +6,6 @@ class UsersController < ApplicationController
     @users = User.all
   end
 
-  # Action when user signs in
-  def home   
-
-    if user_signed_in?
-
-      @user = find_user
-      @client_company = find_company
-
-      redirect_to client_companies_personas_path
-
-      # Direct to personas if account is live
-      #if account_live
-        #redirect_to client_companies_personas_path
-      #else
-        # Direct to onboarding if account is not live
-        #render 'home'
-      #end
-    
-    else
-      render 'homepage#index'
-    end
-    
-  end
-
   # Update user action
   def update
     @user = User.find(params[:id])
