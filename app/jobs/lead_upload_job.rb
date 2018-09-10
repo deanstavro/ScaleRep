@@ -28,7 +28,6 @@ class LeadUploadJob < ApplicationJob
 
 			lead_list_copy, imported, duplicated, not_imported = upload_leads(clients_leads, campaign_contact_count, number_leads_in_campaign, data_copy, @base_campaign)
 
-
 			# If more leads don't exist on the lead list, we are done
 			if lead_list_copy.empty?
 				puts "LEAD LIST IS EMPTY"
@@ -40,21 +39,16 @@ class LeadUploadJob < ApplicationJob
 				puts "have more leads"
 				# Create campaigns and upload leads for the remain contacts
 				createCampaignsUploadLeads(lead_list_copy, data_upload_object, campaign_contact_count, client_company, @base_campaign, imported, duplicated, not_imported)
-
 			end	
 		else
 			puts "no more space in current campaign"
 			# The current campaign is full
-			createCampaignsUploadLeads(data_copy, data_upload_object, campaign_contact_count, client_company, @base_campaign, [], [], [])
-			
+			createCampaignsUploadLeads(data_copy, data_upload_object, campaign_contact_count, client_company, @base_campaign, [], [], [])	
 		end
-
-
-
-
 	end
 
 	private
+
 
 	def createCampaignsUploadLeads(remaining_leads_json, data_upload_object, campaign_contact_count, client_company, base_campaign, imported, duplicated, not_imported)
 		puts "private method to create campaigns and upload leads"
@@ -102,8 +96,6 @@ class LeadUploadJob < ApplicationJob
 
 		        # If the campaign saves, post the campaign to reply
 				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, @campaign.campaign_name))
-
-
 				#Add in contact_limit amount of data
 				remaining_leads_json, imports, duplicates, not_imports = upload_leads(clients_leads, campaign_contact_count, 0, remaining_leads_json, @campaign)
 
@@ -116,20 +108,15 @@ class LeadUploadJob < ApplicationJob
 					puts "LEAD LIST IS EMPTY"
 
 					data_upload_object.update_attributes(:imported => imported, :duplicates => duplicated, :not_imported => not_imported)
-				
-
 					puts "Contacts Added to Current Campaign. Job finished"
 					return
 				else
 					puts "more leads"
 				end
-
 			else
 				puts "Campaign Did Not Save"
 			end
 		end
-
-
 	end
 
 
@@ -145,7 +132,6 @@ class LeadUploadJob < ApplicationJob
 		
 		# Fill in the rest of leads in the campaign
 		lead_list = upload_lead_list
-
 		lead_list_copy = []
 		lead_list_copy.replace(lead_list)
 
@@ -166,7 +152,6 @@ class LeadUploadJob < ApplicationJob
 						le[:client_company] = campaign.client_company
 						le[:campaign_id] = campaign.id
 
-
 						all_hash << Lead.new(le.to_h)
 
 						imported << le
@@ -175,31 +160,22 @@ class LeadUploadJob < ApplicationJob
 						puts "NUMBER OF LEADS LEFT THAT WE CAN INPUT TO CAMPAIGN: " + leads_left_to_upload_in_campaign.to_s
 						
 						lead_list_copy.shift
-
-
-
-						
 					else
 
 						duplicates << le
 						puts le["email"] + " is a duplicate"
 						lead_list_copy.shift
-
-
 					end
 				else
 					puts "row does not have email"
 					lead_list_copy.shift
 					not_imported << le
-
 				end
 			rescue Exception => e
 				not_imported << le
 				puts le["email"] + " not imported"
 				lead_list_copy.shift
 			end
-				
-
 		end
 
 		Lead.import(all_hash)

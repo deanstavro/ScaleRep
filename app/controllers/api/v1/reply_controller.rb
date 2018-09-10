@@ -162,7 +162,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
             @campaign_reply.update_attribute(:client_company, @client_company)
 
-            begin
+            #begin
                 if @params_content[:status].to_s == "opt_out" or @params_content[:status].to_s == "do_not_contact"
                     update_lead(@params_content, @client_company, @campaign_reply, "blacklist")
                     render json: {response: "Reply uploaded", :status => 200}, status: 200
@@ -177,10 +177,10 @@ class Api::V1::ReplyController < Api::V1::BaseController
                     return
 
                 end
-            rescue
-                render json: {error: "Reply was not uploaded. E-mail required fields missing (email)", :status => 400}, status: 400
-                return
-            end
+            #rescue
+             #   render json: {error: "Reply was not uploaded. E-mail required fields missing (email)", :status => 400}, status: 400
+              #  return
+            #end
 
         else
             render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
@@ -214,20 +214,21 @@ class Api::V1::ReplyController < Api::V1::BaseController
       @lead = Lead.where(:client_company => client_company, :email => campaign_reply.email)
 
       if @lead.empty?
-          @new_lead = @lead.create!(:email => campaign_reply.email, :status => status, :full_name => params_content[:full_name])
-          campaign_reply.update_attribute(:lead, @new_lead)
+          
+          if params_content[:full_name].split.length < 2
+              f_name = @campaign_reply[:full_name]
+              l_name = 'N/A'
+          else
+              f_name = @campaign_reply[:full_name].split[0...-1].join(" ").tr(",","")
+              l_name = @campaign_reply[:full_name].split[-1]
+          end
+
+          new_lead = @lead.create!(:email => campaign_reply.email, :status => status, :full_name => params_content[:full_name], :first_name => f_name, :last_name => l_name, :client_company => client_company)
+          campaign_reply.update_attribute(:lead, new_lead)
           campaign_reply.save!
 
           #check for first and last name
-          @new_lead.update_attribute(:full_name, params_content[:full_name])
-          if params_content[:full_name].split.length < 2
-              @new_lead.update_attributes( :first_name => @campaign_reply[:full_name], :last_name => 'N/A')
-              puts "Full name: " + @campaign_reply[:full_name] + " N/A" 
-          else
-              first_name = @campaign_reply[:full_name].split[0...-1].join(" ").tr(",","")
-              @new_lead.update_attributes(:first_name => first_name, :last_name => @new_lead[:full_name].split[-1])
-              puts "Full name: " + first_name + " " + @new_lead[:full_name].split[-1]
-          end
+          
       else
           for lead in @lead
               lead.update(status: status)
