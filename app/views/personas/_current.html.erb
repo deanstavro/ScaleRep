@@ -19,15 +19,9 @@
             
             <th scope="col"># campaigns</th>
 
-
-            
-
             <% if @user.role == 'scalerep' %>
+              <th scope="col">edit </th>
               <th scope="col">delete</th>
-            <% end %>
-
-            <% if false %>
-                <th scope="col">edit </th>
             <% end %>
 
             <th scope="col">archive</th>
@@ -39,12 +33,7 @@
           <% @current.each do |persona| %>
             <tr >
 
-              <%  if @metrics_hash[persona] && @metrics_hash[persona][6] %>
-                 <td><%= @metrics_hash[persona][6] %></td>
-              <% else %>
-                  <td>N/A</td>
-              <% end %>
-
+              <td><%= persona.created_at.strftime("%m-%d-%Y") %></td>
 
               <% if @user.role == "scalerep" %>
                 <td><%= link_to "#{persona.client_company.name} -- #{persona.name}", client_companies_campaigns_path(persona) %></td>
@@ -55,13 +44,13 @@
               <%  if @metrics_hash[persona] && @metrics_hash[persona][0] %>
                  <td><%= @metrics_hash[persona][0] %></td>
               <% else %>
-                  <td>N/A</td>
+                  <td>0</td>
               <% end %>
 
               <%  if @metrics_hash[persona] && @metrics_hash[persona][1] %>
                  <td><%= @metrics_hash[persona][1] %></td>
               <% else %>
-                  <td>N/A</td>
+                  <td>0</td>
               <% end %>
 
 
@@ -79,7 +68,7 @@
                        </span>
                      </td>
                   <% else %>
-                      <td>N/A</td>
+                      <td>0%</td>
                   <% end %>
               <% end %>
 
@@ -89,7 +78,7 @@
                     <%= @metrics_hash[persona][4] %>
                  </td>
               <% else %>
-                  <td>N/A</td>
+                  <td>0</td>
               <% end %>
 
 
@@ -105,10 +94,9 @@
                   </span>
                 </td>
               <% else %>
-                  <td>N/A</td>
+                  <td>0%</td>
               <% end %>
 
-              
 
               <%  if @metrics_hash[persona] && @metrics_hash[persona][5] %>
                  <td><%= @metrics_hash[persona][5] %></td>
@@ -119,21 +107,25 @@
               
 
               <% if @user.role == 'scalerep' %>
+
+                <td>
+                    <%= link_to edit_client_companies_persona_path(persona) do %>
+                        <%= octicon "pencil", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+                    <% end %>
+                </td>
+
                 <td>
                   <%= link_to client_companies_persona_path(persona), method: :delete, data: { confirm: 'Are you sure?' }  do %>
                     <%= octicon "trashcan", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
                   <% end %>
                 </td>
-              <% end %>
-
-              <% if false %>
-                  <td>
-                    <%= link_to edit_client_companies_persona_path(persona) do %>
-                      <%= octicon "pencil", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
-                    <% end %>
-                  </td>
 
               <% end %>
+
+
+                  
+
+
 
               <td>
                     <%= link_to archive_client_companies_personas_path(persona), method: :put  do %>

@@ -9,19 +9,20 @@
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
         <th scope="col">Opens</th>
+
         <% if @user.role == 'scalerep' %>
             <th scope="col">Bounces</th>
         <% end %>
+
         <th scope="col">Unique Opens</th>
         <th scope="col">Replies</th>
-        
         
         <% if @user.role == 'scalerep' %>
             <th scope="col">Archive</th>
         <% end %>
-
       </tr>
     </thead>
+
     <tbody>
       <% @current.each do |campaign| %>
         <tr>
@@ -35,36 +36,40 @@
           <td>
             <%= form_tag import_to_campaign_leads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true, class:"shorter-column" do %>
               <div class= "fileUpload btn btn-sm btn-light">
-                <span id="uploadPath">Upload a file</span>
+                <span id="uploadPath">upload csv</span>
                 <%= file_field_tag :file, class:"upload uploadBtn"%>
               </div>
               <br/>
-                <%= submit_tag "Submit", class: "btn btn-sm btn-outline-primary"%>
+              <%= submit_tag "Submit", class: "btn btn-sm btn-outline-primary"%>
             <% end %>
           </td>
 
           <td><%= campaign.emailAccount %></td>
 
-          <td><%= campaign.peopleCount %></td>
+          <% if (campaign.opensCount).to_i > 0 %>
+            <td><%= campaign.peopleCount %></td>
+          <% else %>
+            <td> 0 </td>
+          <% end %>
 
-          <td><%= campaign.deliveriesCount %></td>
+          <% if (campaign.deliveriesCount).to_i > 0 %>
+            <td><%= campaign.deliveriesCount %></td>
+          <% else %>
+            <td> 0 </td>
+          <% end %>
 
-
+          
           <% if (campaign.opensCount).to_i > 0 %>
             <td>
               <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
                 <%= campaign.opensCount-campaign.bouncesCount %>
               <% else %>
                 0
-              <% end %>
-              
-              
-              
+              <% end %> 
             </td>
           <% else %>
             <td>0</td>
           <% end %>
-
 
           <% if @user.role == 'scalerep' %>          
               <td>
@@ -75,19 +80,14 @@
                       (<%= campaign.bouncesCount %>)
                   </span>
 
-
                 <% else %>
                     0%
                  <% end %>
-                
-               
               </td>
           <% end %>
 
-
-
           <% if !campaign.uniqueOpens.present? %>
-              <td>N/A</td>
+              <td>0</td>
           <% else %>
 
               <% if campaign.bouncesCount.present? %>
@@ -145,12 +145,6 @@
             <td>0%</td>
           <% end %>
 
-
-
-
-          
-
-
           <% if @user.role == 'scalerep' %>
               <td>
                 <%= link_to archive_client_companies_campaigns_path(campaign), method: :put do %>
@@ -163,12 +157,14 @@
       <% end %>
     </tbody>
   </table>
+  
   <div class="digg_pagination">
-          <div class="page_info">
-            <%= page_entries_info @current %>
-          </div>
+      <div class="page_info">
+          <%= page_entries_info @current %>
+      </div>
       <%= will_paginate @current, :params => { :tab_id => :current }, :container => false %>
-</div>
+  </div>
+  
 </div>
 
 

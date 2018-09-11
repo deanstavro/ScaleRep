@@ -10,20 +10,20 @@
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
         <th scope="col">Opens</th>
+        
         <% if @user.role == 'scalerep' %>
             <th scope="col">Bounces</th>
         <% end %>
+
         <th scope="col">Unique Opens</th>
         <th scope="col">Replies</th>
         
-        
-
         <% if @user.role == 'scalerep' %>
           <th scope="col">Un-Archive</th>
         <% end %>
-
       </tr>
     </thead>
+
     <tbody>
       <% @archive.each do |campaign| %>
         <tr>
@@ -37,7 +37,7 @@
           <td>
             <%= form_tag import_to_campaign_leads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true, class:"shorter-column" do %>
               <div class= "fileUpload btn btn-sm btn-light">
-                <span id="uploadPath">Upload a file</span>
+                <span id="uploadPath">upload csv</span>
                 <%= file_field_tag :file, class:"upload uploadBtn"%>
               </div>
               <br/>
@@ -47,9 +47,17 @@
 
           <td><%= campaign.emailAccount %></td>
 
-          <td><%= campaign.peopleCount %></td>
+          <% if (campaign.opensCount).to_i > 0 %>
+            <td><%= campaign.peopleCount %></td>
+          <% else %>
+            <td> 0 </td>
+          <% end %>
 
-          <td><%= campaign.deliveriesCount %></td>
+          <% if (campaign.deliveriesCount).to_i > 0 %>
+            <td><%= campaign.deliveriesCount %></td>
+          <% else %>
+            <td> 0 </td>
+          <% end %>
 
           <% if (campaign.opensCount).to_i > 0 %>
             
@@ -84,7 +92,7 @@
 
 
           <% if !campaign.uniqueOpens.present? %>
-              <td>N/A</td>
+              <td>0</td>
           <% else %>
 
               <% if campaign.bouncesCount.present? %>
@@ -108,9 +116,6 @@
                     </td>
 
                 <% end %>
-
-                
-
               <% else %>
                   <td>0%</td>
               <% end %>
@@ -141,16 +146,6 @@
             <td>0%</td>
           <% end %>
 
-
-          
-
-
-
-
-          
-
-
-
           <% if @user.role == 'scalerep' %>
               <td>
                 <%= link_to archive_client_companies_campaigns_path(campaign), method: :put do %>
@@ -162,15 +157,13 @@
         </tr>
       <% end %>
     </tbody>
-
   </table>
 
- <div class="digg_pagination">
-          <div class="page_info">
-            <%= page_entries_info @archive %>
-          </div>
+  <div class="digg_pagination">
+      <div class="page_info">
+        <%= page_entries_info @archive %>
+      </div>
       <%= will_paginate @archive, :params => { :tab_id => :archive }, :container => false %>
-    </div>
-
+  </div>
     
 </div>

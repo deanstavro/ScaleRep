@@ -43,17 +43,8 @@ def index
             @metrics_hash[persona][6] = campaign.created_at.strftime("%m-%d-%Y")
 
           end
-
-        # Aggregate the metrics here
-        for metrics in @metrics_hash
-          for fields in metrics
-            puts fields
-          end
-        end
       end
   end
-
-
 
 
   # GET /personas/1
