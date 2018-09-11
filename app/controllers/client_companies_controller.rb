@@ -7,11 +7,6 @@ class ClientCompaniesController < ApplicationController
     @company = ClientCompany.find(@user.client_company_id)
 
     if @company.update_attributes(model_params)
-        if profile_conditions
-        	 @company.update_attributes(:profile_setup => true)
-        else
-        	@company.update_attributes(:profile_setup => false)
-        end
         redirect_to users_path, :notice => "Account updated."
       else
         redirect_to users_path, :alert => "Unable to update account."

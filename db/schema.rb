@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20180910224038) do
+ActiveRecord::Schema.define(version: 20180911024505) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -145,7 +145,6 @@ ActiveRecord::Schema.define(version: 20180910224038) do
     t.text     "emails_to_use"
     t.text     "products"
     t.text     "notable_clients"
-    t.boolean  "profile_setup",           default: false
     t.boolean  "account_live",            default: false
     t.string   "account_manager"
     t.string   "auto_reply_campaign_id"

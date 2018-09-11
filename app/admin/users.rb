@@ -5,6 +5,27 @@ ActiveAdmin.register User do
 
 permit_params :client_company_id, :email, :encrypted_password, :first_name, :last_name, :role, :password, :password_confirmation, :api_key
 
+index do
+    selectable_column
+    id_column
+
+    column :first_name
+    column :last_name
+    column :email
+    column :client_company
+    column :role
+    column :last_sign_in_at
+    column :last_sign_in_ip
+    column :current_sign_in_at
+    column :current_sign_in_ip
+    column :api_key
+    column :created_at
+    column :updated_at
+
+
+    actions
+
+end
 
 
 
@@ -18,9 +39,6 @@ form do |f|
     f.input :password
     f.input :password_confirmation
     
-    
-
-
   end                               
   f.actions                         
 end

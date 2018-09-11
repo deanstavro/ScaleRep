@@ -8,10 +8,10 @@ class ClientCompany < ApplicationRecord
 	has_many :accounts
 	has_many :data_uploads
 
-
 	validates :name, presence: true, uniqueness: true
 	validates :company_domain, presence: true, uniqueness: true
 	validates :account_manager, presence: true
+	validates :replyio_keys, presence: true
 
 	serialize :replyio_keys
 
