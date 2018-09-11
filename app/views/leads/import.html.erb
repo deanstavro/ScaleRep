@@ -1,0 +1,29 @@
+<div id="title" class="jumbotron">
+  <center>
+    <p class="container text-danger"><%= flash[:error] %></p>
+    <p class="container text-success"><%= flash[:notice] %></p>
+  </center>
+
+  <br/>
+  <h1>Campaign Upload</h1>
+  <h3>for <%= @campaign.campaign_name if @campaign.campaign_name %></h3>
+  <br>
+</div>
+
+
+
+<div class="container">
+	<h2> CSV Information </h2>
+	<p> Headers: 
+	<% @headers.each do |element| %>
+  		<%= element %>, 
+		<% end %>
+
+		Row Count: <%= @data_upload.count.to_s %>
+	</p>
+</div>
+
+<div class="container">
+	<h2> Rules </h2>
+
+</div>

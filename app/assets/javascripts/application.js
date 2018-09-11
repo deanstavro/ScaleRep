@@ -24,7 +24,7 @@
 $( document ).on('turbolinks:load', function() {
   $(function () {
     $('[data-toggle="tooltip"]').tooltip({
-      template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-head"><dl><dt>Upload Requirements:</dt><dd>- Uploaded file must be a csv</dd><dt>CSV fields:</dt><dd>- first_name*</dd><dd>- last_name*</dd><dd>- email*</dd><dd>- company_name*</dd><dd>- phone_type</dd><dd>- phone_number</dd><dd>- title</dd><dd>- linkedin</dd><dd>- timezone</dd><dd>- company_website</dd><dd>- address</dd><dd>- city</dd><dd>- state</dd><dd>- country</dd><dd>- email_snippet</dd></dl></div></div>'
+      template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-head"><dl><dt>Upload Requirements:</dt><dd>- Uploaded file must be a csv</dd><dt>CSV fields:</dt><ddd> first_name*, last_name, email*, company_name*, phone_type, </ddd><ddd>phone_number, title, linkedin, timezone, </ddd><ddd>company_website, address, city, state, </ddd><ddd> country, email_snippet</ddd></dl></div></div>'
     });
   });
 });

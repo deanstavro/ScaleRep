@@ -67,6 +67,7 @@ Rails.application.routes.draw do
       collection { post :import_blacklist}
       collection { post :update_reply_from_portal}
       collection { get :fields}
+      collection { get :import}
     end
     resources :contacts
     resources :accounts

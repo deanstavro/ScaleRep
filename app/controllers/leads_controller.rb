@@ -43,6 +43,27 @@ class LeadsController < ApplicationController
   end
 
 
+  def import
+
+    @user = User.find(current_user.id)
+
+    @campaign = Campaign.find_by(id: params[:campaign])
+    @persona = @campaign.persona
+
+    @data_upload = DataUpload.find_by(id: params[:data])
+
+    @headers = @data_upload.headers.tr('[]"', '').split(',').map(&:to_s)
+    #campaign_contact_limit = @campaign.contactLimit
+    #number_leads_in_campaign = @campaign.leads.count
+
+    #if (campaign_contact_count - number_leads_in_campaign) > 0
+
+    #    #let the user know new campaigns will be made
+
+
+
+
+  end
 
 
   def import_to_campaign
@@ -72,10 +93,10 @@ class LeadsController < ApplicationController
 
           puts "Starting upload method"
           
-          upload_message = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign], col)
+          upload_message, @uploaded_data = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign], col)
           puts "Finished uploading. Redirecting!"
           flash[:notice] = upload_message
-          redirect_to client_companies_campaigns_path(persona)
+          redirect_to import_leads_path(:campaign => params[:campaign], :data => @uploaded_data.id)
           else
 
             redirect_to client_companies_campaigns_path(persona), :flash => { :error => "The CSV is too large. Please upload a shorter CSV!" }
