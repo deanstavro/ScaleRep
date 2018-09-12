@@ -1,0 +1,48 @@
+
+<div id="title" class="jumbotron">
+  <center>
+    <p class="container text-danger"><%= flash[:error] %></p>
+    <p class="container text-success"><%= flash[:notice] %></p>
+  </center>
+
+  <br/>
+  <h1>Cleaned Data</h1>
+  <h3>for <%= @campaign.campaign_name if @campaign.campaign_name %></h3>
+  <h4>of  <%= @campaign.client_company.name if @campaign.client_company.name %></h4>
+  <br>
+
+  <%= link_to '+ export csv', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+
+  <%= form_tag import_to_current_campaign_leads_path(@user.client_company, data_upload: @data_upload) do %>
+  	 <%= submit_tag "+ campaign" %>
+  <% end %>
+</div>
+
+
+<div class="table-display container">
+  <table class="table table-hover">
+    <thead class="thead">
+      <tr>
+      	<% @headers.each do |header| %>
+        	<th scope="col"><%= header %></th>
+        <% end %>
+      </tr>
+
+    </thead>
+
+    <tbody>
+    	
+      <% @values.each do |value| %>
+      <tr>
+      	<% value.each do |column_value| %>
+        
+          <td> <%= column_value %></td>
+        
+      <% end %>
+      </tr>
+      <% end %>
+      
+    </tbody>
+
+  </table>
+</div>

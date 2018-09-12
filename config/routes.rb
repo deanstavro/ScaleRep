@@ -68,6 +68,10 @@ Rails.application.routes.draw do
       collection { post :update_reply_from_portal}
       collection { get :fields}
       collection { get :import}
+      collection { patch :clean_imports}
+      collection { get :cleaned_data}
+      collection { get :export_or_import_campaign}
+      collection { post :import_to_current_campaign}
     end
     resources :contacts
     resources :accounts

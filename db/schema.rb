@@ -177,7 +177,8 @@ ActiveRecord::Schema.define(version: 20180911204521) do
     t.boolean  "ignore_duplicates", default: false
     t.string   "headers"
     t.integer  "actions"
-    t.jsonb    "cleaned_data"
+    t.jsonb    "cleaned_data",      default: "{}"
+    t.jsonb    "rules",             default: "{}"
     t.index ["campaign_id"], name: "index_data_uploads_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_data_uploads_on_client_company_id", using: :btree
   end

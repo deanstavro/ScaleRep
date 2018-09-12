@@ -43,27 +43,51 @@ class LeadsController < ApplicationController
   end
 
 
+  # GET - Shows CSV Info of import, and allows user to add clean options
   def import
 
     @user = User.find(current_user.id)
-
     @campaign = Campaign.find_by(id: params[:campaign])
     @persona = @campaign.persona
 
     @data_upload = DataUpload.find_by(id: params[:data])
 
     @headers = @data_upload.headers.tr('[]"', '').split(',').map(&:to_s)
-    #campaign_contact_limit = @campaign.contactLimit
-    #number_leads_in_campaign = @campaign.leads.count
+  end
 
-    #if (campaign_contact_count - number_leads_in_campaign) > 0
+  # Patch - cleans data, displays data and allows export or upload into campaign
+  def clean_imports
+    @user = User.find(current_user.id)
+    
+    @campaign = Campaign.find_by(id: params[:data_upload][:campaign_id])
+    @client_company = @campaign.client_company
+    @persona = @campaign.persona
+    @data_upload = DataUpload.find_by(id: params[:data_upload][:data_upload_id])
+    @headers = @data_upload.data[0].keys
+    @values = []
 
-    #    #let the user know new campaigns will be made
+    if  @data_upload.update_attributes(secure_params)
+      clean_data(@data_upload, @client_company)
+      @cleaned_data = @data_upload.cleaned_data
+      
+      @cleaned_data.each do |value_hash|
+        @values << value_hash.values
+      end
 
-
-
+      render 'export_or_import_campaign'
+      return
+    end
 
   end
+
+  def import_to_current_campaign
+    puts params
+
+    @data_object = DataUpload.find_by(id: params[:data_upload])
+    LeadUploadJob.perform_later(@data_object)
+
+  end
+
 
 
   def import_to_campaign
@@ -81,12 +105,7 @@ class LeadsController < ApplicationController
     col =  Lead.column_names - %w{id client_company_id campaign_id account_id}
     # Column Names
     # ["decision_maker", "internal_notes", "email_in_contact_with", "date_sourced", "created_at", "updated_at", "contract_sent", "contract_amount", "timeline", "project_scope", "email_handed_off_too", "meeting_time", "email", "first_name", "last_name", "hunter_score", "hunter_date", "title", "phone_type", "phone_number", "city", "state", "country", "linkedin", "timezone", "address", "meeting_taken", "full_name", "status", "company_name", "company_website"]
-
-    # 1. Check if the file is a csv
-    # 2. Check if file is under a specific size
-    # 3. Upload data
     
-
     #begin
         if (params[:file].content_type).to_s == 'text/csv'
           if (params[:file].size).to_i < 1000000
@@ -117,15 +136,11 @@ class LeadsController < ApplicationController
     #end
   end
 
-
-
-
   def import_blacklist
 
     @user = User.find(current_user.id)
-    @company = ClientCompany.find_by(id: @user.client_company_id)
+    #@company = ClientCompany.find_by(id: @user.client_company_id)
     @leads = Lead.where(client_company: @company)
-
     col =  Lead.column_names
     # Column Names
     # id, decision_maker, internal_notes, email_in_contact_with, date_sourced
@@ -136,8 +151,6 @@ class LeadsController < ApplicationController
     # full_name, status, company_name, company_website, account_id
     puts "THIS IS COL"
     puts col
-
-
     begin
         if (params[:file].content_type).to_s == 'text/csv'
           if (params[:file].size).to_i < 1000000
@@ -148,17 +161,13 @@ class LeadsController < ApplicationController
           flash[:notice] = "Uploading..."
           redirect_to :back
           else
-
             redirect_to :back, :flash => { :error => "Blacklist CSV is too large. Please upload a shorter CSV!" }
             return
           end
-
-
         else
 
           redirect_to :back, :flash => { :error => "Blacklist file was not uploaded. Please Upload a CSV!" }
           return
-
         end
     rescue
         redirect_to :back, :flash => { :error => "No blacklist file chosen. Please upload a CSV!" }
@@ -168,16 +177,12 @@ class LeadsController < ApplicationController
   end
 
 
-
   def update_reply_from_portal
-
     # used to update follow_up_date and notes
     # find the reply and update the lead
     @company = ClientCompany.find_by(id: params[:company_id])
     @reply = CampaignReply.find_by(id: params[:campaign_reply_id])
-
     #update attributes
-
     if params[:status] == "referral" or "auto_reply_referral"
         #update params if they exist and added for referrals
         @reply.update_attributes(:referral_name => params[:referralName], :referral_email => params[:referralEmail], :company => params[:company], :status => params[:status], :full_name => params[:full_name] )
@@ -187,36 +192,24 @@ class LeadsController < ApplicationController
           response = add_referral_contact(@company.referral_campaign_key,@company.referral_campaign_id, @reply)
           puts "push referral reply response: " + response
           
-
           if response != "did not input into reply"
             @reply.update_attribute(:pushed_to_reply_campaign, !@reply.pushed_to_reply_campaign)
           end
         end
-
     end
-
-
-
     begin
       @reply.update_attribute(:follow_up_date, Date.strptime(params[:followUpDate], "%m/%d/%Y"))
     rescue
       @reply.update_attribute(:follow_up_date, "")
     end
-
     @reply.update_attribute(:notes, params[:notes])
-
 
     begin
       @reply.update_attribute(:company, params[:company])
     rescue
       @reply.update_attribute(:company, "")
     end
-
-
-
     @reply.update_attribute(:first_name, params[:first_name])
-
-
     @reply.update_attribute(:status, params[:status])
 
     
@@ -241,17 +234,75 @@ class LeadsController < ApplicationController
       puts "no associated lead with reply_campaign"
     end
 
-
-
     #redirect
     redirect_to leads_path
-
   end
 
 
 
   private
 
+
+  def secure_params
+    params.require(:data_upload).permit(:ignore_duplicates, :rules)
+  end
+
+  def clean_data(data_upload, client_company)
+    puts "Starting to clean data"
+    client_leads = client_company.leads
+    data_copy = Marshal.load(Marshal.dump(data_upload.data))
+    data_rules = data_upload.rules.dup
+    all_hash = []
+    duplicates = []
+    not_imported = []
+
+    data_copy.each_with_index do |contact, index|
+
+      if contact["email"].present? and contact["first_name"].present?
+        puts "YOOOOO"
+          # Check duplicates setting
+          if data_upload.ignore_duplicates == false
+              puts "check for dups"
+              # check for duplicates
+              if client_leads.where(:email => contact["email"]).count == 0
+                  default = '"'+ data_upload.rules.to_s + '"'
+                  if default == DataUpload.columns_hash["rules"].default
+                      # Insert the hash into the main hash
+                      all_hash << contact.to_h
+                  else
+
+                    hash_rules = eval(data_rules.to_json)
+
+                    puts hash_rules
+                    puts "WE NEED TO RUN THROUGH RULES"
+                  end
+              else
+                duplicates << contact
+                puts contact["email"] + " exists for client. Checking duplicates. Not included into cleaned data set"
+              end
+          else
+            # We are ignoring dups, we are only checking for rules
+            default = '"'+ data_upload.rules.to_s + '"'
+            if default == DataUpload.columns_hash["rules"].default
+              # Insert the hash into the main hash
+              all_hash << contact.to_h
+            else
+
+
+                puts "WE NEED TO RUN THROUGH RULES"
+            end
+
+          end
+      else
+          puts "row has not e-mail or first name. Not included into cleaned data set"
+          not_imported << contact
+      end
+    end
+
+    data_upload.update_attributes(:cleaned_data => all_hash, :duplicates => duplicates, :not_imported => not_imported)
+    puts "ALL HASH " + all_hash.to_s
+
+  end
 
 
 end

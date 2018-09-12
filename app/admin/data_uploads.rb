@@ -25,6 +25,7 @@ index do
     column :headers
     column :rules
     column :actions
+    column :ignore_duplicates
 
     column :created_at
     column :updated_at
@@ -47,6 +48,7 @@ form do |f|
       f.input :imported
       f.input :not_imported
       f.input :duplicates
+      f.input :ignore_duplicates
 
     end
 
