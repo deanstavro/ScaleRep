@@ -1,6 +1,5 @@
 class DemosController < ApplicationController
 
-
 	def create
  
 		if  Demo.create(demo_params)
@@ -11,13 +10,10 @@ class DemosController < ApplicationController
 
 	end
 
-
 	private
-
 
 	def demo_params
       params.require(:demo).permit(:name, :email, :phone_number, :comments)
 	end
-
 
 end

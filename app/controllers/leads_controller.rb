@@ -259,10 +259,10 @@ class LeadsController < ApplicationController
     data_copy.each_with_index do |contact, index|
 
       if contact["email"].present? and contact["first_name"].present?
-        puts "YOOOOO"
+
           # Check duplicates setting
           if data_upload.ignore_duplicates == false
-              puts "check for dups"
+
               # check for duplicates
               if client_leads.where(:email => contact["email"]).count == 0
                   default = '"'+ data_upload.rules.to_s + '"'

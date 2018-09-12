@@ -6,5 +6,4 @@ class HomepageController < ApplicationController
         puts "User not signed in - direct to home"
   end
 
-  
 end

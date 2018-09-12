@@ -53,3 +53,20 @@
     height: 1%; }
   *:first-child + html .digg_pagination {
     overflow: hidden; }
+
+    
+
+  .import-table-settings {
+    border: 1px solid black;
+    margin:0;
+    padding:0;
+    width:100%;
+
+    }
+
+  .td-import-table-settings {
+    word-wrap:break-word;
+    vertical-align: middle;
+    }
+
+

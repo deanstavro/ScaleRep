@@ -25,18 +25,11 @@
 
       <meta name="viewport" content="width=device-width, initial-scale=1.0">
       <title>ScaleRep</title>
-      <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "Your Automated Lead Conversion Tool" %>">
+
+      <meta name="description" content="<%= content_for?(:description) ? yield(:description) : "B2B Sales Engagement" %>">
       <%= stylesheet_link_tag "application", media: "all", "data-turbolinks-track" => "reload" %>
       <%= javascript_include_tag "application", "data-turbolinks-track" => "reload" %>
       <%= csrf_meta_tags %>
-
-      <link
-      href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/4.3.0/css/font-awesome.css"
-      rel="stylesheet"  type='text/css'>
-
-      <%= analytics_init if GoogleAnalytics.valid_tracker? %>
-
-
   </head>
 
 
