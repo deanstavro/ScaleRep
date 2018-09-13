@@ -9,7 +9,7 @@ class LeadUploadJob < ApplicationJob
 
 		puts "upload lead job has been started"
 
-		data_copy = Marshal.load(Marshal.dump(data_upload_object.data))
+		data_copy = Marshal.load(Marshal.dump(data_upload_object.cleaned_data))
 
 		#From campaign, grab the number of contacts per campaign
 		@base_campaign = Campaign.find_by(id: data_upload_object.campaign_id)

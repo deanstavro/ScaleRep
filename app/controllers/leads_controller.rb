@@ -88,8 +88,9 @@ class LeadsController < ApplicationController
     puts params
 
     @data_object = DataUpload.find_by(id: params[:data_upload])
+    persona = @data_object.campaign.persona
     LeadUploadJob.perform_later(@data_object)
-
+    redirect_to client_companies_campaigns_path(persona), :flash => { :notice => "Contacts are being save and uploaded. Wait for task to finish!" }
   end
 
 
