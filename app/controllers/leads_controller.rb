@@ -343,17 +343,20 @@ class LeadsController < ApplicationController
 
     elsif rule.include? "delete string"
 
-      puts rule.split("'")[1]
       rule_column  = rule.split("'")[3]
       string_delete = rule.split("'")[1]
       puts "delete string " + string_delete + " with string " + contact[rule_column]
 
-      if contact[rule_column].include? string_delete
-          puts "CONTACT HAS STRING"
-          contact[rule_column].slice!(string_delete)
-          return false, contact
+      #lower case sensitive check
+      val_cop = contact[rule_column].downcase
+      string_del_cop = string_delete.downcase
+
+      if val_cop.include? string_del_cop
+        contact[rule_column] = val_cop.gsub(string_delete, '')        
+        puts contact[rule_column]
       end
 
+      
       return false, contact
 
     elsif rule.include? "change casing"

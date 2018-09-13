@@ -63,8 +63,14 @@
 
       <div class="form-group">
           <%= f.label :rules, "Write down rules below.", class: "control-label" %>
+          <p> example:<br>
+              delete row if 'email' contains '.edu',<br>
+              delete string 'llc' from 'company_name',<br>
+              delete string '.' from 'company_name',<br>
+              delete string 'inc' from 'company_name',<br>
+              change casing for 'company_name' if longer than '3' characters<br><br>
 
-          <%= f.text_area :rules, :rows => 5, :col => 5, class: "form-control" %>
+          <%= f.text_area :rules, :rows => 5, :col => 5,  class: "form-control" %>
 
       </div>
 

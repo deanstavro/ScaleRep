@@ -11,9 +11,12 @@
   <h4>of  <%= @campaign.client_company.name if @campaign.client_company.name %></h4>
   <br>
 
-  <div>
-  <%= link_to '+ export csv', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
- </div>
+  <% if false %>
+      <div>
+      <%= link_to '+ export csv', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+     </div>
+ <% end %>
+
  <div style="margin-top:10px">
   <%= form_tag import_to_current_campaign_leads_path(@user.client_company, data_upload: @data_upload)  do %>
   	 <%= submit_tag "+ campaign", :class=>"btn btn-primary page-scroll" %>
