@@ -42,7 +42,7 @@ form do |f|
       f.input :count
       f.input :headers
       f.input :actions
-      f.input :rules, as: :json
+      f.input :rules
       f.input :cleaned_data, as: :json
       f.input :data, as: :json
       f.input :imported, as: :json

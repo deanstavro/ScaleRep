@@ -66,7 +66,10 @@ class LeadsController < ApplicationController
     @headers = @data_upload.data[0].keys
     @values = []
 
+    rules_array = params[:data_upload][:rules].split(",")
+    params[:data_upload].delete :rules
     if  @data_upload.update_attributes(secure_params)
+      @data_upload.update_attribute(:rules, rules_array)
       clean_data(@data_upload, @client_company)
       @cleaned_data = @data_upload.cleaned_data
       
@@ -80,6 +83,7 @@ class LeadsController < ApplicationController
 
   end
 
+  #POST - save cleaned_data contacts and upload into reply
   def import_to_current_campaign
     puts params
 
@@ -89,7 +93,7 @@ class LeadsController < ApplicationController
   end
 
 
-
+  #POST - save csv file into jsonb, redirect to import page
   def import_to_campaign
 
     # User account we are logged into
@@ -251,12 +255,14 @@ class LeadsController < ApplicationController
     puts "Starting to clean data"
     client_leads = client_company.leads
     data_copy = Marshal.load(Marshal.dump(data_upload.data))
-    data_rules = data_upload.rules.dup
     all_hash = []
     duplicates = []
     not_imported = []
 
     data_copy.each_with_index do |contact, index|
+      puts "WE HERE"
+      puts contact["email"]
+      delete_row = false
 
       if contact["email"].present? and contact["first_name"].present?
 
@@ -271,10 +277,21 @@ class LeadsController < ApplicationController
                       all_hash << contact.to_h
                   else
 
-                    hash_rules = eval(data_rules.to_json)
+                    # Loop through rules and apply to row. if we need to delete row, break loop and delete!
+                    rules_array = data_upload.rules
+                    
+                    rules_array.each_with_index do |rule, index|
+                      delete_row, contact =  apply_rule(rule, contact)
+                      if delete_row == true
+                        break
+                      end
+                    end
 
-                    puts hash_rules
-                    puts "WE NEED TO RUN THROUGH RULES"
+                    if !delete_row
+                      all_hash << contact.to_h
+                    end
+
+
                   end
               else
                 duplicates << contact
@@ -301,6 +318,70 @@ class LeadsController < ApplicationController
 
     data_upload.update_attributes(:cleaned_data => all_hash, :duplicates => duplicates, :not_imported => not_imported)
     puts "ALL HASH " + all_hash.to_s
+
+  end
+
+
+
+
+  #Apply rule to contact
+  def apply_rule(rule, contact)
+    
+    puts "cleaning " + contact["email"] + " with rule " + rule
+    
+  begin
+
+    if rule.include? "delete row"
+      rule_column = rule.split("'")[1]
+      puts "delete row " + rule_column + " with string " + contact[rule_column]
+
+        if contact[rule_column].include? rule.split("'")[3]
+            return true, contact
+        else
+            return false, contact
+        end
+
+    elsif rule.include? "delete string"
+
+      puts rule.split("'")[1]
+      rule_column  = rule.split("'")[3]
+      string_delete = rule.split("'")[1]
+      puts "delete string " + string_delete + " with string " + contact[rule_column]
+
+      if contact[rule_column].include? string_delete
+          puts "CONTACT HAS STRING"
+          contact[rule_column].slice!(string_delete)
+          return false, contact
+      end
+
+      return false, contact
+
+    elsif rule.include? "change casing"
+      rule_column  = rule.split("'")[1]
+      check_length = rule.split("'")[3]
+      puts "delete casing " + rule_column + "for length greater than " + check_length.to_s
+
+      if contact[rule_column].length > check_length.to_i
+        new_value = contact[rule_column].split.map(&:capitalize).join(' ')
+        contact[rule_column] = new_value
+      end
+      
+      return false, contact
+
+    else 
+
+      puts "can't understand rule"
+      return false, contact
+
+    end   
+
+  rescue
+  puts "ERROR"
+  return false, contact
+  end 
+
+
+
 
   end
 
