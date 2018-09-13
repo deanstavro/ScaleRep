@@ -8,8 +8,8 @@
           <tr>
                 <th scope = 'col'>Date Sourced</th>
                 <th scope = 'col'>Company</th>
-                <th scope = 'col'>Referree Name</th>
                 <th scope = 'col'>Referree E-mail</th>
+                <th scope = 'col'>Referree Name</th>
                 <th scope = 'col'>Referral First Name</th>
                 <th scope = 'col'>Referral Email</th>
                 <th scope = 'col'>Status</th>
@@ -24,6 +24,8 @@
 
               <td> <%= lead.client_company.name %></td>
 
+              <td> <%= lead.email %></td>
+
               <%= form_tag update_reply_from_portal_leads_path(:email => lead.email, :company_id => lead.client_company.id) do %>
 
                 <%= hidden_field_tag 'campaign_reply_id', lead.id %>
@@ -34,11 +36,6 @@
                   <td><input type="text" name="full_name"></td>
                 <% end %>
 
-                <% if lead.email? %>
-                  <td><input type="text" name="email" value="<%= lead.email %>"></td>
-                <% else %>
-                  <td><input type="text" name="email"></td>
-                <% end %>
 
                 <% if lead.referral_name? %>
                   <td><input type="text" name="referralName" value="<%= lead.referral_name %>"></td>
