@@ -265,7 +265,7 @@ class LeadsController < ApplicationController
 
               # check for duplicates
               if client_leads.where(:email => contact["email"]).count == 0
-                  default = '"'+ data_upload.rules.to_s + '"'
+                  default = data_upload.rules.to_s
                   if default == DataUpload.columns_hash["rules"].default
                       # Insert the hash into the main hash
                       all_hash << contact.to_h

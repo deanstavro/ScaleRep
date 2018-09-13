@@ -41,15 +41,14 @@ form do |f|
       f.input :client_company
       f.input :count
       f.input :headers
-      f.input :rules
       f.input :actions
-      f.input :cleaned_data
+      f.input :rules, as: :json
+      f.input :cleaned_data, as: :json
       f.input :data, as: :json
-      f.input :imported
-      f.input :not_imported
-      f.input :duplicates
-      f.input :ignore_duplicates
-
+      f.input :imported, as: :json
+      f.input :not_imported, as: :json
+      f.input :duplicates, as: :json
+      
     end
 
     f.actions
