@@ -53,7 +53,7 @@ class LeadsController < ApplicationController
   end
 
 
-  # Patch - cleans data, displays data and allows export or upload into campaign
+  # PATCH - cleans data, displays data and allows export or upload into campaign
   def clean_imports
     @user = User.find(current_user.id)
     @campaign = Campaign.find_by(id: params[:data_upload][:campaign_id])
@@ -122,21 +122,16 @@ class LeadsController < ApplicationController
 
         new_cleaned_hash = []
         row_array = []
-
-
         params_copy = params.dup.except(:controller,:action, :commit, :authenticity_token, :data_upload, :utf8)
 
         #puts params_copy
         previous_row = "0"
         params_copy.each do |key, value|
 
-            puts key
-            puts value
             row_column_array = key.split("_")
             row_index_string = row_column_array[0].to_s
             column_index_string = row_column_array[1].to_s
 
-            
             if row_index_string == previous_row
               row_array << value
             else
@@ -147,26 +142,9 @@ class LeadsController < ApplicationController
               row_array = []
               row_array << value
             end
-
-
-              #zip
         end
 
         @data_upload.update_attribute(:cleaned_data, new_cleaned_hash)
-
-        
-
-        puts new_cleaned_hash.to_s
-
-
-    
-    #respond_to do |format|
-    #    format.html { 
-    #}
-    #    format.js { } #By not adding anything in the brackets here, you're telling rails to fetch a js view file that follows standard rails convention and so it should be named 'create.js.erb'
-    #    return
-   #end
-
 
    redirect_to export_or_import_campaign_leads_path(:data_upload => params["data_upload"]), :flash => { :notice => "Your changes have been included. Click '+ campaign' to add to the the list to the campaign!" }
    return
@@ -175,7 +153,6 @@ class LeadsController < ApplicationController
 
   #POST - save csv file into jsonb, redirect to import page
   def import_to_campaign
-
     # User account we are logged into
     @user = User.find(current_user.id)
     # persona of the company we are inserting leads into
@@ -189,8 +166,7 @@ class LeadsController < ApplicationController
     col =  Lead.column_names - %w{id client_company_id campaign_id account_id}
     # Column Names
     # ["decision_maker", "internal_notes", "email_in_contact_with", "date_sourced", "created_at", "updated_at", "contract_sent", "contract_amount", "timeline", "project_scope", "email_handed_off_too", "meeting_time", "email", "first_name", "last_name", "hunter_score", "hunter_date", "title", "phone_type", "phone_number", "city", "state", "country", "linkedin", "timezone", "address", "meeting_taken", "full_name", "status", "company_name", "company_website"]
-    
-    #begin
+    begin
         if (params[:file].content_type).to_s == 'text/csv'
           if (params[:file].size).to_i < 1000000
 
@@ -205,20 +181,16 @@ class LeadsController < ApplicationController
             redirect_to client_companies_campaigns_path(persona), :flash => { :error => "The CSV is too large. Please upload a shorter CSV!" }
             return
           end
-
-
         else
-
           redirect_to client_companies_campaigns_path(persona), :flash => { :error => "The file was not uploaded. Please Upload a CSV!" }
           return
-
         end
-    #rescue
-        #redirect_to client_companies_campaigns_path(persona), :flash => { :error => "No file chosen. Please upload a CSV!" }
-        #return
-
-    #end
+    rescue
+        redirect_to client_companies_campaigns_path(persona), :flash => { :error => "No file chosen. Please upload a CSV!" }
+        return
+    end
   end
+
 
   def import_blacklist
 
@@ -368,8 +340,6 @@ class LeadsController < ApplicationController
                     if !delete_row
                       all_hash << contact.to_h
                     end
-
-
                   end
               else
                 duplicates << contact
@@ -411,8 +381,6 @@ class LeadsController < ApplicationController
     puts "ALL HASH " + all_hash.to_s
 
   end
-
-
 
 
   #Apply rule to contact
@@ -473,9 +441,6 @@ class LeadsController < ApplicationController
   puts "ERROR"
   return false, contact
   end 
-
-
-
 
   end
 

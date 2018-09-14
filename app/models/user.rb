@@ -1,6 +1,7 @@
 class User < ApplicationRecord
   
   belongs_to :client_company, optional: true
+  #has_many :data_uploads
   enum role: [:user, :scalerep, :admin]
   after_initialize :set_default_role, :if => :new_record?
   after_create :generate_key
