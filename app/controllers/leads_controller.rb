@@ -45,24 +45,22 @@ class LeadsController < ApplicationController
 
   # GET - Shows CSV Info of import, and allows user to add clean options
   def import
-
     @user = User.find(current_user.id)
     @campaign = Campaign.find_by(id: params[:campaign])
     @persona = @campaign.persona
-
     @data_upload = DataUpload.find_by(id: params[:data])
-
     @headers = @data_upload.headers.tr('[]"', '').split(',').map(&:to_s)
   end
+
 
   # Patch - cleans data, displays data and allows export or upload into campaign
   def clean_imports
     @user = User.find(current_user.id)
-    
     @campaign = Campaign.find_by(id: params[:data_upload][:campaign_id])
+    @data_upload = DataUpload.find_by(id: params[:data_upload][:data_upload_id])
+
     @client_company = @campaign.client_company
     @persona = @campaign.persona
-    @data_upload = DataUpload.find_by(id: params[:data_upload][:data_upload_id])
     @headers = @data_upload.data[0].keys
     @values = []
 
@@ -80,6 +78,14 @@ class LeadsController < ApplicationController
       render 'export_or_import_campaign'
       return
     end
+
+  end
+
+
+  def export_or_import_campaign
+      # Need data_upload.cleaned_data
+
+      puts params
 
   end
 
