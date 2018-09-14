@@ -43,7 +43,7 @@ class LeadsController < ApplicationController
   end
 
 
-  # GET - Shows CSV Info of import, and allows user to add clean options
+  # GET - STEP 2, Shows CSV Info of import, and allows user to add clean options
   def import
     @user = User.find(current_user.id)
     @campaign = Campaign.find_by(id: params[:campaign])
@@ -75,18 +75,30 @@ class LeadsController < ApplicationController
         @values << value_hash.values
       end
 
-      render 'export_or_import_campaign'
+      #redirect_to 'export_or_import_campaign'
+      redirect_to export_or_import_campaign_leads_path(:data_upload => @data_upload), :flash => { :notice => "Contacts are being save and uploaded. Wait for task to finish!" }
+
       return
     end
 
   end
 
-
+  # GET = STEP 3, page rendered after rules inputted and data cleaned
   def export_or_import_campaign
       # Need data_upload.cleaned_data
+      @user = User.find(current_user.id)
+      @data_upload = DataUpload.find_by(id: params["data_upload"])
+      @campaign = @data_upload.campaign
+      @client_company = @campaign.client_company
+      @persona = @campaign.persona
+      @headers = @data_upload.data[0].keys
+      
+      @cleaned_data = @data_upload.cleaned_data
 
-      puts params
-
+      @values = []
+      @cleaned_data.each do |value_hash|
+        @values << value_hash.values
+      end
   end
 
   #POST - save cleaned_data contacts and upload into reply
@@ -99,18 +111,65 @@ class LeadsController < ApplicationController
     redirect_to client_companies_campaigns_path(persona), :flash => { :notice => "Contacts are being save and uploaded. Wait for task to finish!" }
   end
 
+  # POST, Reclean data, and show STEP 3 page, the page rendered after rules and inputted data cleaned
   def update_lead_import
 
-    puts "HERRO"
-    puts params
+        @user = User.find(current_user.id)
+        @data_upload = DataUpload.find_by(id: params[:data_upload])
+        @headers = @data_upload.data[0].keys
+        @campaign = @data_upload.campaign
+        @client_company = @campaign.client_company
+
+        new_cleaned_hash = []
+        row_array = []
+
+
+        params_copy = params.dup.except(:controller,:action, :commit, :authenticity_token, :data_upload, :utf8)
+
+        #puts params_copy
+        previous_row = "0"
+        params_copy.each do |key, value|
+
+            puts key
+            puts value
+            row_column_array = key.split("_")
+            row_index_string = row_column_array[0].to_s
+            column_index_string = row_column_array[1].to_s
+
+            
+            if row_index_string == previous_row
+              row_array << value
+            else
+
+              previous_row = row_index_string
+              new_cleaned_hash_row = Hash[@headers.zip(row_array)]
+              new_cleaned_hash << new_cleaned_hash_row
+              row_array = []
+              row_array << value
+            end
+
+
+              #zip
+        end
+
+        @data_upload.update_attribute(:cleaned_data, new_cleaned_hash)
+
+        
+
+        puts new_cleaned_hash.to_s
+
 
     
-    respond_to do |format|
-        format.html { render 'export_or_import_campaign'}
-        format.js {render inline: "location.reload();" } #By not adding anything in the brackets here, you're telling rails to fetch a js view file that follows standard rails convention and so it should be named 'create.js.erb'
-        return
-   end
+    #respond_to do |format|
+    #    format.html { 
+    #}
+    #    format.js { } #By not adding anything in the brackets here, you're telling rails to fetch a js view file that follows standard rails convention and so it should be named 'create.js.erb'
+    #    return
+   #end
 
+
+   redirect_to export_or_import_campaign_leads_path(:data_upload => params["data_upload"]), :flash => { :notice => "Your changes have been included. Click '+ campaign' to add to the the list to the campaign!" }
+   return
   end
 
 
@@ -281,13 +340,11 @@ class LeadsController < ApplicationController
     not_imported = []
 
     data_copy.each_with_index do |contact, index|
-      puts "WE HERE"
-      puts contact["email"]
       delete_row = false
 
       if contact["email"].present? and contact["first_name"].present?
 
-          # Check duplicates setting
+          # Check if admin wants to ignore duplicates
           if data_upload.ignore_duplicates == false
 
               # check for duplicates
@@ -320,14 +377,27 @@ class LeadsController < ApplicationController
               end
           else
             # We are ignoring dups, we are only checking for rules
+
+            #Check for rules
             default = '"'+ data_upload.rules.to_s + '"'
             if default == DataUpload.columns_hash["rules"].default
               # Insert the hash into the main hash
               all_hash << contact.to_h
             else
 
+                # Loop through rules and apply to row. if we need to delete row, break loop and delete!
+                rules_array = data_upload.rules
+                
+                rules_array.each_with_index do |rule, index|
+                  delete_row, contact =  apply_rule(rule, contact)
+                  if delete_row == true
+                    break
+                  end
+                end
 
-                puts "WE NEED TO RUN THROUGH RULES"
+                if !delete_row
+                  all_hash << contact.to_h
+                end
             end
 
           end

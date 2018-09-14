@@ -13,12 +13,12 @@
 
   <% if false %>
       <div>
-      <%= link_to '+ export csv', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+      <%= link_to '+ export csv', new_client_companies_campaign_path(persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
      </div>
  <% end %>
 
  <div style="margin-top:10px">
-  <%= form_tag import_to_current_campaign_leads_path(@user.client_company, data_upload: @data_upload)  do %>
+  <%= form_tag import_to_current_campaign_leads_path(data_upload: @data_upload)  do %>
   	 <%= submit_tag "+ campaign", :class=>"btn btn-primary page-scroll" %>
   <% end %>
  </div>
@@ -40,26 +40,20 @@
 
     <tbody>
      
-      <%= form_tag update_lead_import_leads_path, method: :post do %>
+      <%= form_tag update_lead_import_leads_path(data_upload: @data_upload), method: :post do %>
           
           <% @values.each_with_index do |value,index_row| %>
               <tr>
               	<% value.each_with_index do |column_value, column_index| %>
-
-                      <% class_name = index_row.to_s+"_"+column_index.to_s %>
-
                       <% if !(column_value == nil) %>
-                          <td><input class="td-import-table-settings" type="text" name="<%= index_row %>_<%=column_index %> " value="<%= column_value %>"></td>
+                          <td><input class="td-import-table-settings" type="text" name="<%= index_row %>_<%=column_index%>" value="<%= column_value %>"></td>
                       <% else %>
-                          <td><input class="td-import-table-settings" type="text" name="<%= index_row %>_<%=column_index %>"></td>
+                          <td><input class="td-import-table-settings" type="text" name="<%= index_row %>_<%=column_index%>"></td>
                       <% end %>
-                  
-                
                 <% end %>
               </tr>
           <% end %>
-          
-          <%= submit_tag "Update Import" %>
+          <%= submit_tag "Save", :class=>"btn btn-primary page-scroll" %>
       <% end %>
 
     </tbody>

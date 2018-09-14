@@ -70,12 +70,15 @@
               delete row if 'company_name' contains '.org',<br>
               delete row if 'email' contains '.gov',<br>
               delete row if 'company_name' contains '.gov',<br>
-              delete string 'llc' from 'company_name',<br>
-              delete string 'inc' from 'company_name',<br>
               delete string '.' from 'company_name',<br>
-              delete string ',' from 'company_name'<br>
-              
-              change casing for 'company_name' if longer than '3' characters<br><br>
+              delete string ',' from 'company_name',<br>
+              delete string ' llc' from 'company_name',<br>
+              delete string ' inc' from 'company_name',<br>
+              delete string ' ltd' from 'company_name',<br>
+              delete string ' llp' from 'company_name',<br>
+              delete string ' lp' from 'company_name',<br>
+              change casing for 'company_name' if longer than '3' characters,<br>
+              change casing for 'first_name' if longer than '3' characters<br>
 
           <%= f.text_area :rules, :rows => 5, :col => 5,  class: "form-control" %>
 
