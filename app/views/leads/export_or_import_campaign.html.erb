@@ -28,6 +28,8 @@
 
   <table class="import-table-settings table">
     <thead class="thead">
+
+
       <tr>
       	<% @headers.each_with_index do |header, index| %>
         	<th scope="col"><%= header %></th>
@@ -37,17 +39,29 @@
     </thead>
 
     <tbody>
-    	
-      <% @values.each do |value| %>
-      <tr>
-      	<% value.each do |column_value| %>
-        
-          <td class="td-import-table-settings"> <%= column_value %></td>
-        
+     
+      <%= form_tag update_lead_import_leads_path, method: :post do %>
+          
+          <% @values.each_with_index do |value,index_row| %>
+              <tr>
+              	<% value.each_with_index do |column_value, column_index| %>
+
+                      <% class_name = index_row.to_s+"_"+column_index.to_s %>
+
+                      <% if !(column_value == nil) %>
+                          <td><input class="td-import-table-settings" type="text" name="<%= index_row %>_<%=column_index %> " value="<%= column_value %>"></td>
+                      <% else %>
+                          <td><input class="td-import-table-settings" type="text" name="<%= index_row %>_<%=column_index %>"></td>
+                      <% end %>
+                  
+                
+                <% end %>
+              </tr>
+          <% end %>
+          
+          <%= submit_tag "Update Import" %>
       <% end %>
-      </tr>
-      <% end %>
-      
+
     </tbody>
 
   </table>

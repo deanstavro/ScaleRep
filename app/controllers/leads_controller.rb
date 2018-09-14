@@ -93,6 +93,20 @@ class LeadsController < ApplicationController
     redirect_to client_companies_campaigns_path(persona), :flash => { :notice => "Contacts are being save and uploaded. Wait for task to finish!" }
   end
 
+  def update_lead_import
+
+    puts "HERRO"
+    puts params
+
+    
+    respond_to do |format|
+        format.html { render 'export_or_import_campaign'}
+        format.js {render inline: "location.reload();" } #By not adding anything in the brackets here, you're telling rails to fetch a js view file that follows standard rails convention and so it should be named 'create.js.erb'
+        return
+   end
+
+  end
+
 
   #POST - save csv file into jsonb, redirect to import page
   def import_to_campaign
