@@ -16,7 +16,7 @@ class Lead < ApplicationRecord
 	after_initialize :init
 
 
-	def self.import_to_campaign(file, company, leads, campaign_id, column_names)
+	def self.import_to_campaign(file, company, leads, campaign_id, column_names, user)
 
 		puts "Starting lead import to campaign"
 
@@ -81,6 +81,7 @@ class Lead < ApplicationRecord
 		data_object = DataUpload.new
 		data_object.count = count
 		data_object.data = data
+		data_object.user = user
 		data_object.headers = keys_array.to_s
 		data_object.campaign = Campaign.find_by(id: campaign_id)
 		data_object.client_company = data_object.campaign.client_company

@@ -3,7 +3,7 @@ ActiveAdmin.register DataUpload do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 # permit_params :list, :of, :attributes, :on, :model
-permit_params :campaign, :client_company, :data, :count, :imported, :imported_count, :not_imported, :not_imported_count, :duplicates, :duplicates_count, :headers, :rules, :cleaned_data, :actions
+permit_params :campaign, :client_company, :user, :imported_to_campaigns, :data, :count, :imported, :imported_count, :not_imported, :not_imported_count, :duplicates, :duplicates_count, :headers, :rules, :cleaned_data, :actions
 
 	json_editor
 # or
@@ -20,12 +20,14 @@ index do
 
     column :campaign
     column :client_company
+    column :user
     column :count
     
     column :headers
     column :rules
     column :actions
     column :ignore_duplicates
+    column :imported_to_campaigns
 
     column :created_at
     column :updated_at
@@ -39,7 +41,9 @@ form do |f|
       
       f.input :campaign
       f.input :client_company
+      f.input :user
       f.input :count
+      f.inpu :imported_to_campaigns
       f.input :headers
       f.input :actions
       f.input :rules

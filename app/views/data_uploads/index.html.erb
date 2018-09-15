@@ -1,0 +1,47 @@
+<div id="title" class="jumbotron">
+  <center>
+    <p class="container text-danger"><%= flash[:error] %></p>
+    <p class="container text-success"><%= flash[:notice] %></p>
+  </center>
+
+  <br/>
+  <h1>Cleaned Data Lists</h1>
+  <h3>for <%= @user.first_name if @user.first_name %></h3>
+  <br>
+</div>
+
+<div class="table-display">
+    <table class="table table-hover">
+        <thead class ="thead">
+            <tr>
+                <th scope="col">Date</th>
+                <th scope="col">Company</th>
+                <th scope="col">Campaign</th>
+                <th scope="col">Imported to Campaigns?</th>
+                <th scope="col">Delete</th>
+              </tr>
+        </thead>
+
+        <tbody>
+          <% @data_uploads.each do |data_upload| %>
+              <tr>
+                  <td><%= data_upload.created_at.to_time.strftime('%m/%d/%Y') %></td>
+                  <td><%= data_upload.client_company.name %></td>
+                  <td><%= link_to data_upload.campaign.campaign_name, data_upload_path(:id => data_upload.id) %></td>
+                  
+                  <% if data_upload.imported_to_campaigns == true %>
+                    <td> yes </td>
+                  <% else %>
+                    <td> no </td>
+                  <% end %>
+                    
+                  <td>
+                      <%= link_to data_upload, method: :delete, data: { confirm: 'Are you sure?' }  do %>
+                          <%= octicon "trashcan", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+                      <% end %>
+                  </td>
+              </tr>
+          <% end %>
+        </tbody>
+    </table>
+</div>

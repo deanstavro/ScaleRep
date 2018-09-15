@@ -1,5 +1,5 @@
 
-<nav class="navbar navbar-expand-lg navbar-light bg-light sticky-top" style="margin-bottom:0px;">
+<nav class="navbar navbar-expand-lg navbar-light" style="margin-bottom:0px;">
   <a class="navbar-brand" href="/">ScaleRep</a>
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
@@ -8,22 +8,59 @@
   <div class="collapse navbar-collapse" id="navbarSupportedContent">
     <ul class="navbar-nav ml-auto nav-fill w-50">
       <% if user_signed_in? %>
+
+        <% if current_user.role == "scalerep" %>
+          <li class="nav-item active"><%= link_to data_uploads_path() do %>
+              <%= octicon "cloud-upload", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+          <% end %>
+          </li>
+        <% end %>
+
+        <li class="nav-item active"><%= link_to client_companies_personas_path() do %>
+          <%= octicon "list-ordered", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+        <% end %>
+        </li>
+
+
+        <li class="nav-item active"><%= link_to leads_path  do %>
+          <%= octicon "organization", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+        <% end %>
+        </li>
+
+        <li class="dropdown nav-item active">
+          <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= octicon "gear", :height => 20,  :class => "right left", :"aria-label" => "hi" %><span class="caret"></span></a>
+          <ul class="dropdown-menu">
+
+                <li class="na-left"><%= link_to edit_user_registration_path  do %>
+                    edit user
+                <% end %>
+                </li>
+
+                <li class="na-left"><%= link_to edit_client_companies_path()  do %>
+                    edit company
+                <% end %>
+                </li>
+          </ul>
+
+
+
+        <li class="nav-item active"><%= link_to destroy_user_session_path, :method=>'delete'  do %>
+          <%= octicon "link-external", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+        <% end %>
+        </li>
+
+
+        <% if false %>
         <li class="nav-item active"> <%= link_to 'Personas', client_companies_personas_path() %></li>
-
-        <% if false %>
         <li class="nav-item active"> <%= link_to 'Campaigns', client_company_campaigns_path(@user.client_company) %></li>
-        <% end %>
-
         <li class="nav-item active"> <%= link_to 'Leads', leads_path %></li>
-
-        <% if false %>
-          <li class="nav-item active"> <%= link_to 'Reports', client_reports_index_path %></li>
-
-          <li class="nav-item active"> <%= link_to 'Metrics', metrics_index_path %></li>
-        <% end %>
+        <li class="nav-item active"> <%= link_to 'Reports', client_reports_index_path %></li>
+        <li class="nav-item active"> <%= link_to 'Metrics', metrics_index_path %></li>
         <li class="nav-item active"> <%= link_to 'Edit User', edit_user_registration_path %></li>
         <li class="nav-item active"> <%= link_to 'Edit Account', edit_client_companies_path()%> </li>
         <li class="nav-item active"> <%= link_to 'Sign out', destroy_user_session_path, :method=>'delete' %></li>
+        <% end %>
+
       <% end %>
     </ul>
   </div>

@@ -51,6 +51,7 @@ Rails.application.routes.draw do
     get 'metrics/index'
 
     resources :users
+    resources :data_uploads
 
     # Nested In Client Companies
     resource :client_companies, path: '', only: [:edit, :update, :delete] do

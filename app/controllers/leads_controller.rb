@@ -58,27 +58,19 @@ class LeadsController < ApplicationController
     @user = User.find(current_user.id)
     @campaign = Campaign.find_by(id: params[:data_upload][:campaign_id])
     @data_upload = DataUpload.find_by(id: params[:data_upload][:data_upload_id])
-
     @client_company = @campaign.client_company
-    @persona = @campaign.persona
-    @headers = @data_upload.data[0].keys
-    @values = []
-
+    #@persona = @campaign.persona
+    #@headers = @data_upload.data[0].keys
     rules_array = params[:data_upload][:rules].split(",")
     params[:data_upload].delete :rules
+    
     if  @data_upload.update_attributes(secure_params)
-      @data_upload.update_attribute(:rules, rules_array)
-      clean_data(@data_upload, @client_company)
-      @cleaned_data = @data_upload.cleaned_data
-      
-      @cleaned_data.each do |value_hash|
-        @values << value_hash.values
-      end
-
-      #redirect_to 'export_or_import_campaign'
-      redirect_to export_or_import_campaign_leads_path(:data_upload => @data_upload), :flash => { :notice => "Contacts are being save and uploaded. Wait for task to finish!" }
-
-      return
+        
+        @data_upload.update_attribute(:rules, rules_array)
+        
+        CleanUploadJob.perform_later(@data_upload, @client_company)
+        redirect_to data_uploads_path(), :flash => { :notice => "Contacts are being saved and uploaded. Wait for task to finish!" }
+        return
     end
 
   end
@@ -108,6 +100,7 @@ class LeadsController < ApplicationController
     @data_object = DataUpload.find_by(id: params[:data_upload])
     persona = @data_object.campaign.persona
     LeadUploadJob.perform_later(@data_object)
+    @data_object.update_attribute(:imported_to_campaigns, true)
     redirect_to client_companies_campaigns_path(persona), :flash => { :notice => "Contacts are being save and uploaded. Wait for task to finish!" }
   end
 
@@ -172,7 +165,7 @@ class LeadsController < ApplicationController
 
           puts "Starting upload method"
           
-          upload_message, @uploaded_data = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign], col)
+          upload_message, @uploaded_data = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign], col, @user)
           puts "Finished uploading. Redirecting!"
           flash[:notice] = upload_message
           redirect_to import_leads_path(:campaign => params[:campaign], :data => @uploaded_data.id)
@@ -294,153 +287,69 @@ class LeadsController < ApplicationController
     redirect_to leads_path
   end
 
-
-
   private
 
-
   def secure_params
-    params.require(:data_upload).permit(:ignore_duplicates, :rules)
+      params.require(:data_upload).permit(:ignore_duplicates, :rules)
   end
-
-  def clean_data(data_upload, client_company)
-    puts "Starting to clean data"
-    client_leads = client_company.leads
-    data_copy = Marshal.load(Marshal.dump(data_upload.data))
-    all_hash = []
-    duplicates = []
-    not_imported = []
-
-    data_copy.each_with_index do |contact, index|
-      delete_row = false
-
-      if contact["email"].present? and contact["first_name"].present?
-
-          # Check if admin wants to ignore duplicates
-          if data_upload.ignore_duplicates == false
-
-              # check for duplicates
-              if client_leads.where(:email => contact["email"]).count == 0
-                  default = data_upload.rules.to_s
-                  if default == DataUpload.columns_hash["rules"].default
-                      # Insert the hash into the main hash
-                      all_hash << contact.to_h
-                  else
-
-                    # Loop through rules and apply to row. if we need to delete row, break loop and delete!
-                    rules_array = data_upload.rules
-                    
-                    rules_array.each_with_index do |rule, index|
-                      delete_row, contact =  apply_rule(rule, contact)
-                      if delete_row == true
-                        break
-                      end
-                    end
-
-                    if !delete_row
-                      all_hash << contact.to_h
-                    end
-                  end
-              else
-                duplicates << contact
-                puts contact["email"] + " exists for client. Checking duplicates. Not included into cleaned data set"
-              end
-          else
-            # We are ignoring dups, we are only checking for rules
-
-            #Check for rules
-            default = '"'+ data_upload.rules.to_s + '"'
-            if default == DataUpload.columns_hash["rules"].default
-              # Insert the hash into the main hash
-              all_hash << contact.to_h
-            else
-
-                # Loop through rules and apply to row. if we need to delete row, break loop and delete!
-                rules_array = data_upload.rules
-                
-                rules_array.each_with_index do |rule, index|
-                  delete_row, contact =  apply_rule(rule, contact)
-                  if delete_row == true
-                    break
-                  end
-                end
-
-                if !delete_row
-                  all_hash << contact.to_h
-                end
-            end
-
-          end
-      else
-          puts "row has not e-mail or first name. Not included into cleaned data set"
-          not_imported << contact
-      end
-    end
-
-    data_upload.update_attributes(:cleaned_data => all_hash, :duplicates => duplicates, :not_imported => not_imported)
-    puts "ALL HASH " + all_hash.to_s
-
-  end
-
 
   #Apply rule to contact
   def apply_rule(rule, contact)
-    
     puts "cleaning " + contact["email"] + " with rule " + rule
     
-  begin
+    begin
 
-    if rule.include? "delete row"
-      rule_column = rule.split("'")[1]
-      puts "delete row " + rule_column + " with string " + contact[rule_column]
+      if rule.include? "delete row"
+        rule_column = rule.split("'")[1]
+        puts "delete row " + rule_column + " with string " + contact[rule_column]
 
-        if contact[rule_column].include? rule.split("'")[3]
-            return true, contact
-        else
-            return false, contact
+          if contact[rule_column].include? rule.split("'")[3]
+              return true, contact
+          else
+              return false, contact
+          end
+
+      elsif rule.include? "delete string"
+
+        rule_column  = rule.split("'")[3]
+        string_delete = rule.split("'")[1]
+        puts "delete string " + string_delete + " with string " + contact[rule_column]
+
+        #lower case sensitive check
+        val_cop = contact[rule_column].downcase
+        string_del_cop = string_delete.downcase
+
+        if val_cop.include? string_del_cop
+          contact[rule_column] = val_cop.gsub(string_delete, '')        
+          puts contact[rule_column]
         end
 
-    elsif rule.include? "delete string"
+        
+        return false, contact
 
-      rule_column  = rule.split("'")[3]
-      string_delete = rule.split("'")[1]
-      puts "delete string " + string_delete + " with string " + contact[rule_column]
+      elsif rule.include? "change casing"
+        rule_column  = rule.split("'")[1]
+        check_length = rule.split("'")[3]
+        puts "delete casing " + rule_column + "for length greater than " + check_length.to_s
 
-      #lower case sensitive check
-      val_cop = contact[rule_column].downcase
-      string_del_cop = string_delete.downcase
+        if contact[rule_column].length > check_length.to_i
+          new_value = contact[rule_column].split.map(&:capitalize).join(' ')
+          contact[rule_column] = new_value
+        end
+        
+        return false, contact
 
-      if val_cop.include? string_del_cop
-        contact[rule_column] = val_cop.gsub(string_delete, '')        
-        puts contact[rule_column]
-      end
+      else 
 
-      
-      return false, contact
+        puts "can't understand rule"
+        return false, contact
 
-    elsif rule.include? "change casing"
-      rule_column  = rule.split("'")[1]
-      check_length = rule.split("'")[3]
-      puts "delete casing " + rule_column + "for length greater than " + check_length.to_s
+      end   
 
-      if contact[rule_column].length > check_length.to_i
-        new_value = contact[rule_column].split.map(&:capitalize).join(' ')
-        contact[rule_column] = new_value
-      end
-      
-      return false, contact
-
-    else 
-
-      puts "can't understand rule"
-      return false, contact
-
-    end   
-
-  rescue
-  puts "ERROR"
-  return false, contact
-  end 
+    rescue
+        puts "ERROR"
+        return false, contact
+    end 
 
   end
 
