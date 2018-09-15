@@ -8,21 +8,19 @@
 	<h1>Cleaned Data</h1>
 	<h4>Campaign: <%= @campaign.campaign_name if @campaign.campaign_name %></h4>
 	<h4>Company:  <%= @campaign.client_company.name if @campaign.client_company.name %></h4>
+  <p><%= link_to 'Back', data_uploads_path %></p>
 	<br>
 
-	<% if false %>
-		<div>
-			<%= link_to '+ export csv', new_client_companies_campaign_path(persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
-		</div>
-	<% end %>
 
-	<div style="margin-top:10px">
-		<%= form_tag import_to_current_campaign_leads_path(data_upload: @data_upload)  do %>
-			<%= submit_tag "+ import to campaign", :class=>"btn btn-primary page-scroll" %>
-		<% end %>
-	</div>
+  <% if @data_upload.imported_to_campaigns == false %>
+	     <div style="margin-top:10px">
+		       <%= form_tag import_to_current_campaign_leads_path(data_upload: @data_upload)  do %>
+			     <%= submit_tag "+ import to campaign", :class=>"btn btn-primary page-scroll" %>
+		        <% end %>
+  <% end %>
+</div>
 	
-	<%= link_to 'Back', data_uploads_path %>
+	
 </div>
 
 <div>
@@ -54,7 +52,9 @@
                 <% end %>
               </tr>
           <% end %>
-          <%= submit_tag "Save", :class=>"btn btn-primary page-scroll" %>
+          <% if @data_upload.imported_to_campaigns == false %>
+              <%= submit_tag "Save", :class=>"btn btn-primary page-scroll" %>
+          <% end %>
       <% end %>
 
     </tbody>

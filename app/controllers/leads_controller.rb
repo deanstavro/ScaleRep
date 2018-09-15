@@ -69,28 +69,10 @@ class LeadsController < ApplicationController
         @data_upload.update_attribute(:rules, rules_array)
         
         CleanUploadJob.perform_later(@data_upload, @client_company)
-        redirect_to data_uploads_path(), :flash => { :notice => "Contacts are being saved and uploaded. Wait for task to finish!" }
+        redirect_to data_upload_path(:id => @data_upload.id), :flash => { :notice => "Contacts are being saved and uploaded. Wait and refresh. This task should only take a couple seconds!" }
         return
     end
 
-  end
-
-  # GET = STEP 3, page rendered after rules inputted and data cleaned
-  def export_or_import_campaign
-      # Need data_upload.cleaned_data
-      @user = User.find(current_user.id)
-      @data_upload = DataUpload.find_by(id: params["data_upload"])
-      @campaign = @data_upload.campaign
-      @client_company = @campaign.client_company
-      @persona = @campaign.persona
-      @headers = @data_upload.data[0].keys
-      
-      @cleaned_data = @data_upload.cleaned_data
-
-      @values = []
-      @cleaned_data.each do |value_hash|
-        @values << value_hash.values
-      end
   end
 
   #POST - save cleaned_data contacts and upload into reply
@@ -139,7 +121,7 @@ class LeadsController < ApplicationController
 
         @data_upload.update_attribute(:cleaned_data, new_cleaned_hash)
 
-   redirect_to export_or_import_campaign_leads_path(:data_upload => params["data_upload"]), :flash => { :notice => "Your changes have been included. Click '+ campaign' to add to the the list to the campaign!" }
+   redirect_to data_upload_path(:id => @data_upload.id), :flash => { :notice => "Your changes have been included. Click '+ campaign' to add to the the list to the campaign!" }
    return
   end
 
