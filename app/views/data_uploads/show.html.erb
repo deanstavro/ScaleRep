@@ -11,37 +11,42 @@
   <p><%= link_to 'Back', data_uploads_path %></p>
 	<br>
 
-
   <% if @data_upload.imported_to_campaigns == false %>
 	     <div style="margin-top:10px">
 		       <%= form_tag import_to_current_campaign_leads_path(data_upload: @data_upload)  do %>
 			     <%= submit_tag "+ import to campaign", :class=>"btn btn-primary page-scroll" %>
-		        <% end %>
-  <% end %>
-</div>
-	
-	
+		          <% end %>
+          <% end %>
+        </div>
 </div>
 
 <div>
 
+  <div class="digg_pagination">
+      <div class="page_info">
+          <%= page_entries_info @page_results %>
+      </div>
+        <%= will_paginate @page_results, :container => false %>
+  </div>
+
   <table class="import-table-settings table">
     <thead class="thead">
-
-
       <tr>
       	<% @headers.each_with_index do |header, index| %>
         	<th scope="col"><%= header %></th>
         <% end %>
       </tr>
-
     </thead>
 
     <tbody>
      
-      <%= form_tag update_lead_import_leads_path(data_upload: @data_upload), method: :post do %>
+      <%= form_tag update_lead_import_leads_path(:data_upload => @data_upload), method: :post do %>
           
-          <% @values.each_with_index do |value,index_row| %>
+          <%= hidden_field_tag :page, @page %>
+
+          <%= hidden_field_tag :per_page, @per_page %>
+
+          <% @page_results.each_with_index do |value,index_row| %>
               <tr>
               	<% value.each_with_index do |column_value, column_index| %>
                       <% if !(column_value == nil) %>
@@ -52,16 +57,24 @@
                 <% end %>
               </tr>
           <% end %>
+
           <% if @data_upload.imported_to_campaigns == false %>
               <%= submit_tag "Save", :class=>"btn btn-primary page-scroll" %>
           <% end %>
-      <% end %>
-
     </tbody>
 
   </table>
+
+    <% if @data_upload.imported_to_campaigns == false %>
+        <%= submit_tag "Save", :class=>"btn btn-primary page-scroll" %>
+    <% end %>
+
+  <% end %>
+
+  <div class="digg_pagination">
+      <div class="page_info">
+          <%= page_entries_info @page_results %>
+      </div>
+            <%= will_paginate @page_results, :container => false %>
+  </div> 
 </div>
-
-
-
-
