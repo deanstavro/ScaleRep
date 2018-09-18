@@ -61,7 +61,7 @@ class LeadsController < ApplicationController
     @client_company = @campaign.client_company
     #@persona = @campaign.persona
     #@headers = @data_upload.data[0].keys
-    rules_array = params[:data_upload][:rules].split(",")
+    rules_array = params[:data_upload][:rules].split(",/")
     params[:data_upload].delete :rules
     
     if  @data_upload.update_attributes(secure_params)

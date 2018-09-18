@@ -124,9 +124,12 @@ class CleanUploadJob < ApplicationJob
 		      end
 
 		  elsif rule.include? "delete string"
-
+		  	puts "RULE"
+		  	puts rule.to_s
 		    rule_column  = rule.split("'")[3]
+		    puts rule_column
 		    string_delete = rule.split("'")[1]
+		    puts string_delete
 		    puts "delete string " + string_delete + " with string " + contact[rule_column]
 
 		    #lower case sensitive check

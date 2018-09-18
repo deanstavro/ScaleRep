@@ -43,7 +43,7 @@ form do |f|
       f.input :client_company
       f.input :user
       f.input :count
-      f.inpu :imported_to_campaigns
+      f.input :imported_to_campaigns
       f.input :headers
       f.input :actions
       f.input :rules
