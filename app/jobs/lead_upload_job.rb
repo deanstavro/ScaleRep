@@ -161,10 +161,17 @@ class LeadUploadJob < ApplicationJob
 						
 						lead_list_copy.shift
 					else
-
-						duplicates << le
-						puts le["email"] + " is a duplicate"
+						begin
+							puts le["email"] + " is a duplicate"
+							dup_lead = clients_leads.find_by(email: le["email"])
+							dup_lead.update_attribute(:campaign_id, campaign.id)
+							duplicates << dup_lead
+						rescue
+							puts "could not update existing lead to this campaign"
+						end
 						lead_list_copy.shift
+						leads_left_to_upload_in_campaign = leads_left_to_upload_in_campaign - 1
+
 					end
 				else
 					puts "row does not have email"
@@ -177,9 +184,12 @@ class LeadUploadJob < ApplicationJob
 				lead_list_copy.shift
 			end
 		end
-
+		puts "YOLO"
 		Lead.import(all_hash)
-		AddContactsToReplyJob.perform_now(all_hash,campaign.id)
+		dups_and_import = all_hash + duplicates
+		puts "ALL HASH"
+		puts dups_and_import.to_s
+		AddContactsToReplyJob.perform_now(dups_and_import,campaign.id)
 		return lead_list_copy, imported, duplicates, not_imported
 	end
 
