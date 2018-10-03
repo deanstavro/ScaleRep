@@ -1,5 +1,40 @@
 class Api::V1::ReplyController < Api::V1::BaseController
 
+    def email_sent
+        puts "e-mail sent notification has been received."
+
+        if emptyPostParams(params["reply"])
+            render json: {response: "Empty payload.", :status => 400}, status: 400
+            return
+        end
+
+        #if something goes wrong, catch it and have client contact us
+        begin
+            client_company = ClientCompany.find_by(api_key: params["api_key"])
+            campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
+            lead = Lead.find_by(client_company: client_company, email: params["reply"]["email"])
+
+            #Get lead, or create if needed
+            if lead.nil?
+              #create lead
+                puts "lead to associate touchpoint does not exist. Creating now"
+                lead = Lead.create!(:email => params["reply"]["email"], :first_name => params["reply"]["first_name"], :last_name => params["reply"]["last_name"], :full_name => params["reply"]["first_name"]+" "+params["reply"]["last_name"], :client_company => client_company, :campaign => campaign)
+            end
+
+            #Create touchpoint and associate to lead
+            puts "creating touchpoint. Associating to lead and campaign"
+            touchpoint = Touchpoint.create!(:channel => :email, :sender_email => params["reply"]["sender_email"], :email_subject => params["reply"]["email_subject"], :email_body => params["reply"]["email_body"], :campaign => campaign, :lead => lead)
+        
+        rescue
+            render json: {response: "Something went wrong. Contact ScaleRep's tech department", :status => 400}, status: 400
+            return
+        end
+    end
+
+
+
+
+
     def email_open
       puts "e-mail has been opened. Webhook for Reply.io"
       puts params.to_s
@@ -195,11 +230,19 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
     private
 
+    # Check for empty post params
+    def emptyPostParams(params)
+        params.empty? ? true : false
+    end
 
     # Never trust parameters from the scary internet,
     # only allow the white list through.
     def auto_reply_params
         @params_content.permit(:first_name, :last_name, :full_name, :last_conversation_subject, :last_conversation_summary, :email, :date_sourced, :status)
+    end
+
+    def email_sent_params
+        @params_content.permit(:email_subject, :email_body, :sender_email, :channel, :lead, :campaign)
     end
 
     def get_reply_statuses

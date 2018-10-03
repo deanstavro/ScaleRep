@@ -1,6 +1,8 @@
 class Campaign < ApplicationRecord
 	has_many :leads
 	has_many :data_uploads
+	has_many :touchpoints
+	
 	belongs_to :client_company
     belongs_to :persona
 
