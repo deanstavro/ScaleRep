@@ -255,11 +255,9 @@ class Api::V1::ReplyController < Api::V1::BaseController
           #check for first and last name
           
       else
-          for lead in @lead
               lead.update(status: status)
               campaign_reply.update_attribute(:lead, lead)
               campaign_reply.save!
-          end
       end
     end
 
