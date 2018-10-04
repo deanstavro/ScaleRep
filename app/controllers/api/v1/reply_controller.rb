@@ -238,7 +238,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
       @lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", campaign_reply.email.downcase, client_company]).first
 
-      if @lead.empty?
+      if @lead.nil?
           
           if params_content[:full_name].split.length < 2
               f_name = @campaign_reply[:full_name]
