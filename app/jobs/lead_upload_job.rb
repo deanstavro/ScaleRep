@@ -151,6 +151,7 @@ class LeadUploadJob < ApplicationJob
 
 						le[:client_company] = campaign.client_company
 						le[:campaign_id] = campaign.id
+						le[:status] = "cold"
 
 						all_hash << Lead.new(le.to_h)
 

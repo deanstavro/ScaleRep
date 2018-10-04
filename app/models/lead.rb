@@ -7,23 +7,20 @@ class Lead < ApplicationRecord
 	belongs_to :client_company, optional: true
 	belongs_to :account, optional: true
 	belongs_to :campaign, optional: true
+	
 	has_many :campaign_replies
 	has_many :touchpoints
 
-	enum status: [:cold, :in_campaign, :not_interested, :blacklist, :interested, :handed_off, :sent_meeting_invite, :handed_off_with_questions]
 	validates_uniqueness_of :email, scope: :client_company
 	validates :email, presence: true
 	validates :first_name, presence: true
 	after_initialize :init
 
+	enum status: [:cold, :in_campaign, :not_interested, :blacklist, :interested, :handed_off, :sent_meeting_invite, :handed_off_with_questions]
+
 
 	def self.import_to_campaign(file, company, leads, campaign_id, column_names, user)
-
 		puts "Starting lead import to campaign"
-
-		# Removes columns that are nil or not accept
-		# Saves in object
-		# Send to actions page
 		
 		lines = CSV.open(file.path).readlines
 		keys = lines.delete lines.first

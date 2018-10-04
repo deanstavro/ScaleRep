@@ -1,14 +1,15 @@
 class Api::V1::ReplyController < Api::V1::BaseController
 
+    # A touchpoint is created, and is associated with the campaign and lead. A lead is created if one can't be found
     def email_sent
-        puts "e-mail sent notification has been received."
+        puts "e-mail sent notification has been received from reply.io"
 
         if emptyPostParams(params["reply"])
             render json: {response: "Empty payload.", :status => 400}, status: 400
             return
         end
 
-        #if something goes wrong, catch it and have client contact us
+        # catch any errors and have client contact us
         begin
             client_company = ClientCompany.find_by(api_key: params["api_key"])
             campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
@@ -16,9 +17,11 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             #Get lead, or create if needed
             if lead.nil?
-              #create lead
+                #create lead
                 puts "lead to associate touchpoint does not exist. Creating now"
-                lead = Lead.create!(:email => params["reply"]["email"], :first_name => params["reply"]["first_name"], :last_name => params["reply"]["last_name"], :full_name => params["reply"]["first_name"]+" "+params["reply"]["last_name"], :client_company => client_company, :campaign => campaign)
+                lead = Lead.create!(:email => params["reply"]["email"], :first_name => params["reply"]["first_name"], :last_name => params["reply"]["last_name"], :client_company => client_company, :campaign => campaign, :status => "in_campaign")
+            else
+                lead.update_attribute(:status, "in_campaign")
             end
 
             #Create touchpoint and associate to lead
@@ -27,7 +30,6 @@ class Api::V1::ReplyController < Api::V1::BaseController
         
             render json: {response: "Touchpoint created", :status => 200}, status: 200
             return
-        
         rescue
             render json: {response: "Something went wrong. Contact ScaleRep's tech department", :status => 400}, status: 400
             return
@@ -37,21 +39,19 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
 
 
-
+    # Captures all e-mail opens from reply
+    # API payload example: {"opens_count":"4", "campaign_step":"1", "last_name":"Lussier", "first_name":"Samantha", "first_time_open":"False", "campaign_name":"Better | Email Dump | 3110-3410", "email":"samanthalussierpsyd@gmail.com"},"api_key"=>"b4e330f5cda737343261c5c978266211", "controller"=>"api/v1/reply", "action"=>"email_open", "reply"=><ActionController::Parameters {"opens_count"=>"4", "campaign_step"=>"1", "last_name"=>"Lussier", "first_name"=>"Samantha","first_time_open"=>"False", "campaign_name"=>"Better | Email Dump | 3110-3410", "email"=>"samanthalussierpsyd@gmail.com"} permitted: false>}
     def email_open
-      puts "e-mail has been opened. Webhook for Reply.io"
-      puts params.to_s
+        puts "e-mail has been opened front reply.io"
 
-      unless params.empty?
-        #{"opens_count":"4", "campaign_step":"1", "last_name":"Lussier", "first_name":"Samantha", "first_time_open":"False", "campaign_name":"Better | Email Dump | 3110-3410", "email":"samanthalussierpsyd@gmail.com"}
-        #"api_key"=>"b4e330f5cda737343261c5c978266211", "controller"=>"api/v1/reply", "action"=>"email_open", 
-        #"reply"=><ActionController::Parameters {"opens_count"=>"4", "campaign_step"=>"1", "last_name"=>"Lussier", "first_name"=>"Samantha",
-        # "first_time_open"=>"False", "campaign_name"=>"Better | Email Dump | 3110-3410", "email"=>"samanthalussierpsyd@gmail.com"} 
-        #permitted: false>}
+        if emptyPostParams(params["reply"])
+            render json: {response: "Empty payload.", :status => 400}, status: 400
+            return
+        end
+
         begin
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
-
             campaign_to_update = Campaign.find_by client_company: client_company, campaign_name: params["campaign_name"]
 
             # update the total_opens in the campaign
@@ -59,20 +59,15 @@ class Api::V1::ReplyController < Api::V1::BaseController
             if total_opens.present?
                 count = campaign_to_update.opensCount
                 campaign_to_update.update_attribute(:opensCount, count + 1)
-
             else
                 campaign_to_update.update_attribute(:opensCount, 1)
 
             end
             
             if campaign_to_update.uniqueOpens.present?
-              
 
               # update the unqiue opens in the campaign
               if params["first_time_open"] != "False"
-
-
-              
                 begin
                   old_count = campaign_to_update.uniqueOpens # Create new campaign reply
                   count = old_count + 1
@@ -90,48 +85,21 @@ class Api::V1::ReplyController < Api::V1::BaseController
                 puts "User has already opened"
                 render json: {response: "Campaign total opens updated. Unique contacts opened not updated", :status => 200}, status: 200
                 return
-
               end
-
-              
-
             end
 
             render json: {response: "Campaign total opens updated. Unique contacts opened not updated", :status => 200}, status: 200
             return
-            # @campaign_reply = CampaignReply.new(auto_reply_params)
-
-            # Check if lead exists
-              # if it does, update
-                # Update the campaign it is in
-              # if not, create a new lead
-                # Find the campaign, update
-
-            
-
         rescue
-
             puts "could not find company or campaign for company"
             render json: {error: "could not find company or campaign for company", :status => 200}, status: 200
             return
-
         end
-
-      else
-            puts "params empty"
-            render json: {error: "Empty params received from Reply.io", :status => 400}, status: 400
-            return
-      end
-
-
-
     end
 
-    # API to catch all from front app
-    # This api adds a new campaign_reply object, and then updates the lead's status
 
-    # API example payload
-    # {"status": "auto_reply","last_conversation_subject": "Thank you for your email! Re: insurance question","email": "info@caninetherapycorps.org","last_conversation_summary": " Thank you so much for contacting Canine Therapy Corps! Your inquiry is important to us. We have a small staff, so please be patient. We will get back to you as soon as we can. If you do not receive a","full_name": "Canine Therapy Corps Inc."}
+    # API to catch all tags from front app. Adds a new campaign_reply object, and then updates the lead's status
+    # API example payload: {"status": "auto_reply","last_conversation_subject": "Thank you for your email! Re: insurance question","email": "info@caninetherapycorps.org","last_conversation_summary": " Thank you so much for contacting Canine Therapy Corps! Your inquiry is important to us. We have a small staff, so please be patient. We will get back to you as soon as we can. If you do not receive a","full_name": "Canine Therapy Corps Inc."}
     def new_reply
         puts "New Tag from FrontApp received. Running new_reply API"
         puts "DATA IN: " + params.to_s
