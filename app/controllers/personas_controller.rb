@@ -19,31 +19,33 @@ def index
     @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
   end
 
-    @metrics_hash = Hash.new
-    @personas.each do |persona|
+  @touchpoints = Touchpoint.where(client_company_id: @user.client_company_id)
 
-        @campaigns = persona.campaigns
-        count = 0
-        @campaigns.each do |campaign|
-            array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.created_at]
-            count = count + 1
-            if @metrics_hash[persona]
-              @metrics_hash[persona][0] = @metrics_hash[persona][0].to_i + array[0].to_i
-              @metrics_hash[persona][1] = @metrics_hash[persona][1].to_i + array[1].to_i
-              @metrics_hash[persona][2] = @metrics_hash[persona][2].to_i + array[2].to_i
-              @metrics_hash[persona][3] = @metrics_hash[persona][3].to_i + array[3].to_i
-              @metrics_hash[persona][4] = @metrics_hash[persona][4].to_i + array[4].to_i
+  @metrics_hash = Hash.new
+  @personas.each do |persona|
 
-              # add
-            else
-              @metrics_hash[persona] = array
-            end
+      @campaigns = persona.campaigns
+      count = 0
+      @campaigns.each do |campaign|
+          array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.created_at]
+          count = count + 1
+          if @metrics_hash[persona]
+            @metrics_hash[persona][0] = @metrics_hash[persona][0].to_i + array[0].to_i
+            @metrics_hash[persona][1] = @metrics_hash[persona][1].to_i + array[1].to_i
+            @metrics_hash[persona][2] = @metrics_hash[persona][2].to_i + array[2].to_i
+            @metrics_hash[persona][3] = @metrics_hash[persona][3].to_i + array[3].to_i
+            @metrics_hash[persona][4] = @metrics_hash[persona][4].to_i + array[4].to_i
 
-            @metrics_hash[persona][5] = count
-            @metrics_hash[persona][6] = campaign.created_at.strftime("%m-%d-%Y")
-
+            # add
+          else
+            @metrics_hash[persona] = array
           end
-      end
+
+          @metrics_hash[persona][5] = count
+          @metrics_hash[persona][6] = campaign.created_at.strftime("%m-%d-%Y")
+
+        end
+    end
   end
 
 

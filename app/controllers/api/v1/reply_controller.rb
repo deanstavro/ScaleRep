@@ -36,7 +36,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             #Create touchpoint and associate to lead
             puts "creating touchpoint. Associating to lead and campaign"
-            touchpoint = Touchpoint.create!(:channel => :email, :sender_email => params["reply"]["sender_email"], :email_subject => params["reply"]["email_subject"], :email_body => params["reply"]["email_body"], :campaign => campaign, :lead => lead)
+            touchpoint = Touchpoint.create!(:channel => :email, :sender_email => params["reply"]["sender_email"], :email_subject => params["reply"]["email_subject"], :email_body => params["reply"]["email_body"], :campaign => campaign, :lead => lead, :client_company => client_company)
         
             render json: {response: "Touchpoint created", :status => 200}, status: 200
             return

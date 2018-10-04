@@ -7,6 +7,7 @@ class ClientCompany < ApplicationRecord
 	has_many :campaign_replies
 	has_many :accounts
 	has_many :data_uploads
+	has_many :touchpoints
 
 	validates :name, presence: true, uniqueness: true
 	validates :company_domain, presence: true, uniqueness: true

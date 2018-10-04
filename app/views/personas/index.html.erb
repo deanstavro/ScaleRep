@@ -16,8 +16,13 @@
 
 
 <% if @user.role == 'scalerep' %>
+<div>
   <%= link_to '+ Add Persona', new_client_companies_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+</div>
 <% end %>
+
+<br>
+<%= column_chart @touchpoints.group_by_day_of_week(:created_at, format: "%a").count %>
 
 </div>
 

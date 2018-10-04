@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181003205029) do
+ActiveRecord::Schema.define(version: 20181004225227) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -252,9 +252,11 @@ ActiveRecord::Schema.define(version: 20181003205029) do
     t.string   "email_body"
     t.integer  "lead_id"
     t.integer  "campaign_id"
-    t.datetime "created_at",    null: false
-    t.datetime "updated_at",    null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.integer  "client_company_id"
     t.index ["campaign_id"], name: "index_touchpoints_on_campaign_id", using: :btree
+    t.index ["client_company_id"], name: "index_touchpoints_on_client_company_id", using: :btree
     t.index ["lead_id"], name: "index_touchpoints_on_lead_id", using: :btree
   end
 
@@ -294,6 +296,7 @@ ActiveRecord::Schema.define(version: 20181003205029) do
   add_foreign_key "leads", "client_companies"
   add_foreign_key "personas", "client_companies"
   add_foreign_key "touchpoints", "campaigns"
+  add_foreign_key "touchpoints", "client_companies"
   add_foreign_key "touchpoints", "leads"
   add_foreign_key "users", "client_companies"
 end
