@@ -25,6 +25,9 @@ class Api::V1::ReplyController < Api::V1::BaseController
             puts "creating touchpoint. Associating to lead and campaign"
             touchpoint = Touchpoint.create!(:channel => :email, :sender_email => params["reply"]["sender_email"], :email_subject => params["reply"]["email_subject"], :email_body => params["reply"]["email_body"], :campaign => campaign, :lead => lead)
         
+            render json: {response: "Touchpoint created", :status => 200}, status: 200
+            return
+        
         rescue
             render json: {response: "Something went wrong. Contact ScaleRep's tech department", :status => 400}, status: 400
             return
