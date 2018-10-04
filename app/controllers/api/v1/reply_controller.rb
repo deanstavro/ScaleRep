@@ -21,7 +21,9 @@ class Api::V1::ReplyController < Api::V1::BaseController
                 puts "lead to associate touchpoint does not exist. Creating now"
                 lead = Lead.create!(:email => params["reply"]["email"], :first_name => params["reply"]["first_name"], :last_name => params["reply"]["last_name"], :client_company => client_company, :campaign => campaign, :status => "in_campaign")
             else
-                lead.update_attribute(:status, "in_campaign")
+                if lead.status != :in_campaign
+                  lead.update_attribute(:status, "in_campaign")
+                end
             end
 
             #Create touchpoint and associate to lead
