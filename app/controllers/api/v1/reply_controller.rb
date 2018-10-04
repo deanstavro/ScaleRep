@@ -34,7 +34,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             render json: {response: "Touchpoint created", :status => 200}, status: 200
             return
         rescue
-            render json: {response: "Something went wrong. Contact ScaleRep's tech department", :status => 400}, status: 400
+            render json: {error: "error. contact ScaleRep's tech department", :status => 400}, status: 400
             return
         end
     end
