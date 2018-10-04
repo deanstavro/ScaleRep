@@ -4,13 +4,14 @@ class Api::V1::ReplyController < Api::V1::BaseController
     def email_sent
         puts "e-mail sent notification has been received from reply.io"
 
-        if emptyPostParams(params["reply"])
-            render json: {response: "Empty payload.", :status => 400}, status: 400
-            return
-        end
-
         # catch any errors and have client contact us
         begin
+
+            if emptyPostParams(params["reply"])
+                render json: {response: "Empty payload.", :status => 400}, status: 400
+                return
+            end
+
             client_company = ClientCompany.find_by(api_key: params["api_key"])
             campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
             lead = Lead.find_by(client_company: client_company, email: params["reply"]["email"])
