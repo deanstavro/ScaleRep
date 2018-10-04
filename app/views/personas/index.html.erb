@@ -22,7 +22,10 @@
 <% end %>
 
 <br>
+<div>
+<h4> Emails sent today:</h4>
 <%= column_chart @touchpoints.group_by_day_of_week(:created_at, format: "%a").count %>
+</div>
 
 </div>
 
