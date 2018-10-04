@@ -235,8 +235,8 @@ class Api::V1::ReplyController < Api::V1::BaseController
     end
 
     def update_lead(params_content, client_company, campaign_reply, status)
-      d_email = campaign_reply.email.downcase
-      @lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", d_email, client_company]).first
+
+      @lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", campaign_reply.email.downcase, client_company]).first
 
       if @lead.nil?
           
@@ -248,7 +248,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
               l_name = @campaign_reply[:full_name].split[-1]
           end
 
-          new_lead = @lead.create!(:email => campaign_reply.email, :status => status, :full_name => params_content[:full_name], :first_name => f_name, :last_name => l_name, :client_company => client_company)
+          new_lead = Lead.create!(:email => campaign_reply.email, :status => status, :full_name => params_content[:full_name], :first_name => f_name, :last_name => l_name, :client_company => client_company)
           campaign_reply.update_attribute(:lead, new_lead)
           campaign_reply.save!
 
