@@ -5,7 +5,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
         puts "e-mail sent notification has been received from reply.io"
 
         # catch any errors and have client contact us
-        begin
+        #begin
 
             if emptyPostParams(params["reply"])
                 render json: {response: "Empty payload.", :status => 400}, status: 400
@@ -20,7 +20,14 @@ class Api::V1::ReplyController < Api::V1::BaseController
             if lead.nil?
                 #create lead
                 puts "lead to associate touchpoint does not exist. Creating now"
-                lead = Lead.create!(:email => params["reply"]["email"], :first_name => params["reply"]["first_name"], :last_name => params["reply"]["last_name"], :client_company => client_company, :campaign => campaign, :status => "in_campaign")
+
+                begin
+                    full_name = params["reply"]["first_name"] + " " + params["reply"]["last_name"]
+                rescue
+                    full_name = params["reply"]["first_name"]
+                end
+
+                lead = Lead.create!(:email => params["reply"]["email"], :first_name => params["reply"]["first_name"], :last_name => params["reply"]["last_name"], :full_name => full_name, :client_company => client_company, :campaign => campaign, :status => "in_campaign")
             else
                 if lead.status != :in_campaign
                   lead.update_attribute(:status, "in_campaign")
@@ -33,10 +40,10 @@ class Api::V1::ReplyController < Api::V1::BaseController
         
             render json: {response: "Touchpoint created", :status => 200}, status: 200
             return
-        rescue
-            render json: {error: "contact ScaleRep's tech department", :status => 400}, status: 400
-            return
-        end
+        #rescue
+        #    render json: {error: "contact ScaleRep's tech department", :status => 400}, status: 400
+        #    return
+        #end
     end
 
 
