@@ -235,8 +235,8 @@ class Api::V1::ReplyController < Api::V1::BaseController
     end
 
     def update_lead(params_content, client_company, campaign_reply, status)
-
-      @lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", campaign_reply.email.downcase, client_company]).first
+      d_email = campaign_reply.email.downcase
+      @lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", d_email, client_company]).first
 
       if @lead.nil?
           
