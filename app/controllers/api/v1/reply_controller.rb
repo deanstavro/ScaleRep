@@ -5,7 +5,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
         puts "e-mail sent notification has been received from reply.io"
 
         # catch any errors and have client contact us
-        begin
+        #begin
 
             if emptyPostParams(params["reply"])
                 render json: {response: "Empty payload.", :status => 400}, status: 400
@@ -14,7 +14,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
             campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
-            lead = Lead.find_by(client_company: client_company, email: params["reply"]["email"])
+            lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["reply"]["email"].downcase, client_company]).first
 
             #Get lead, or create if needed
             if lead.nil?
@@ -33,10 +33,10 @@ class Api::V1::ReplyController < Api::V1::BaseController
         
             render json: {response: "Touchpoint created", :status => 200}, status: 200
             return
-        rescue
-            render json: {error: "error. contact ScaleRep's tech department", :status => 400}, status: 400
-            return
-        end
+        #rescue
+         #   render json: {error: "contact ScaleRep's tech department", :status => 400}, status: 400
+         #   return
+        #end
     end
 
 
