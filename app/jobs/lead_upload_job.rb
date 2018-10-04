@@ -143,7 +143,7 @@ class LeadUploadJob < ApplicationJob
 			end
 
 			begin
-				if le["email"].present?
+				if le["email"].present? and le["first_name"].present?
 					# check for duplicates
 					if clients_leads.where(:email => le["email"]).count == 0
 
@@ -152,6 +152,13 @@ class LeadUploadJob < ApplicationJob
 						le[:client_company] = campaign.client_company
 						le[:campaign_id] = campaign.id
 						le[:status] = "cold"
+						
+						begin
+							le[:full_name] = le["first_name"] + " " + le["last_name"]
+						rescue
+							le[:full_name] = le["first_name"]
+						end
+
 
 						all_hash << Lead.new(le.to_h)
 
@@ -175,7 +182,7 @@ class LeadUploadJob < ApplicationJob
 
 					end
 				else
-					puts "row does not have email"
+					puts "row does not have email or first_name"
 					lead_list_copy.shift
 					not_imported << le
 				end
