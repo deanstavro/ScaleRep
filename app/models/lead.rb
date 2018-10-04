@@ -116,7 +116,7 @@ class Lead < ApplicationRecord
 
   			one_hash = new_hash.to_hash
 			# If e-mail field is included
-			if one_hash["email"].present?
+			if one_hash["email"].present? and one_hash["first_name"].present?
 				email = one_hash["email"]
 
 				puts one_hash

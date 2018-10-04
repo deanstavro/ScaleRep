@@ -5,7 +5,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
         puts "e-mail sent notification has been received from reply.io"
 
         # catch any errors and have client contact us
-        #begin
+        begin
 
             if emptyPostParams(params["reply"])
                 render json: {response: "Empty payload.", :status => 400}, status: 400
@@ -40,10 +40,10 @@ class Api::V1::ReplyController < Api::V1::BaseController
         
             render json: {response: "Touchpoint created", :status => 200}, status: 200
             return
-        #rescue
+        rescue
         #    render json: {error: "contact ScaleRep's tech department", :status => 400}, status: 400
         #    return
-        #end
+        end
     end
 
 
