@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181004225227) do
+ActiveRecord::Schema.define(version: 20181005202759) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -194,6 +194,21 @@ ActiveRecord::Schema.define(version: 20181004225227) do
     t.datetime "updated_at",   null: false
   end
 
+  create_table "lead_actions", force: :cascade do |t|
+    t.integer  "action"
+    t.string   "email_open_number"
+    t.string   "first_time"
+    t.integer  "touchpoint_id"
+    t.integer  "lead_id"
+    t.integer  "client_company_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.datetime "email_sent_time"
+    t.index ["client_company_id"], name: "index_lead_actions_on_client_company_id", using: :btree
+    t.index ["lead_id"], name: "index_lead_actions_on_lead_id", using: :btree
+    t.index ["touchpoint_id"], name: "index_lead_actions_on_touchpoint_id", using: :btree
+  end
+
   create_table "leads", force: :cascade do |t|
     t.boolean  "decision_maker"
     t.text     "internal_notes"
@@ -291,6 +306,9 @@ ActiveRecord::Schema.define(version: 20181004225227) do
   add_foreign_key "client_reports", "client_companies"
   add_foreign_key "data_uploads", "client_companies"
   add_foreign_key "data_uploads", "users"
+  add_foreign_key "lead_actions", "client_companies"
+  add_foreign_key "lead_actions", "leads"
+  add_foreign_key "lead_actions", "touchpoints"
   add_foreign_key "leads", "accounts"
   add_foreign_key "leads", "campaigns"
   add_foreign_key "leads", "client_companies"

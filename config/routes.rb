@@ -48,8 +48,8 @@ Rails.application.routes.draw do
 
 
     #ALL ROUTES FOR USERS SIGNED IN
-    get 'client_reports/index'
-    get 'metrics/index'
+    get 'client_reports/index' 
+    get 'metrics', to: 'metrics#index'
 
     resources :users
     resources :data_uploads

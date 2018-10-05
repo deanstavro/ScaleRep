@@ -19,8 +19,6 @@ def index
     @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
   end
 
-  @touchpoints = Touchpoint.where(client_company_id: @user.client_company_id)
-
   @metrics_hash = Hash.new
   @personas.each do |persona|
 

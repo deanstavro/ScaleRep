@@ -10,8 +10,9 @@ class Lead < ApplicationRecord
 	
 	has_many :campaign_replies
 	has_many :touchpoints
+	has_many :lead_actions
 
-	validates_uniqueness_of :email, scope: :client_company
+	validates_uniqueness_of :email, scope: :client_company, :case_sensitive => false
 	validates :email, presence: true
 	validates :first_name, presence: true
 	validates :full_name, presence: true

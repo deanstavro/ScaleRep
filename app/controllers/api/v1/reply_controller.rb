@@ -63,46 +63,64 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
             campaign_to_update = Campaign.find_by client_company: client_company, campaign_name: params["campaign_name"]
+            lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["email"].downcase, client_company]).first
+            num = params["reply"]["campaign_step"].to_i - 1
 
-            # update the total_opens in the campaign
-            total_opens = campaign_to_update.opensCount
-            if total_opens.present?
-                count = campaign_to_update.opensCount
-                campaign_to_update.update_attribute(:opensCount, count + 1)
-            else
-                campaign_to_update.update_attribute(:opensCount, 1)
 
-            end
+            lead_touchpoint = lead.touchpoints[num]
+            email_sent_time = lead_touchpoint.created_at
+            lead_action = LeadAction.create!(:lead => lead, :client_company => client_company, :touchpoint => lead_touchpoint, :action => :open, :first_time => params["first_time_open"], :email_open_number => params["opens_count"], :email_sent_time => email_sent_time)
+
             
-            if campaign_to_update.uniqueOpens.present?
 
-              # update the unqiue opens in the campaign
-              if params["first_time_open"] != "False"
-                begin
-                  old_count = campaign_to_update.uniqueOpens # Create new campaign reply
-                  count = old_count + 1
-                rescue
-                  count = 1
-                end
 
-                campaign_to_update.update_attribute(:uniqueOpens, count)
+            #get touchpoint
 
-                render json: {response: "Campaign total opens updated. E-mail unique opened updated", :status => 200}, status: 200
-                return
+            # save
+            #################### TO REMOVE ###############################
 
-              else
+            
+                        # update the total_opens in the campaign
+                        total_opens = campaign_to_update.opensCount
+                        if total_opens.present?
+                            count = campaign_to_update.opensCount
+                            campaign_to_update.update_attribute(:opensCount, count + 1)
+                        else
+                            campaign_to_update.update_attribute(:opensCount, 1)
 
-                puts "User has already opened"
-                render json: {response: "Campaign total opens updated. Unique contacts opened not updated", :status => 200}, status: 200
-                return
-              end
-            end
+                        end
+                        
+                        if campaign_to_update.uniqueOpens.present?
 
-            render json: {response: "Campaign total opens updated. Unique contacts opened not updated", :status => 200}, status: 200
-            return
+                          # update the unqiue opens in the campaign
+                          if params["first_time_open"] != "False"
+                            begin
+                              old_count = campaign_to_update.totalOpens # Create new campaign reply
+                              count = old_count + 1
+                            rescue
+                              count = 1
+                            end
+
+                            campaign_to_update.update_attribute(:uniqueOpens, count)
+
+                            render json: {response: "Campaign total opens updated. E-mail unique opened updated", :status => 200}, status: 200
+                            return
+
+                          else
+
+                            puts "User has already opened"
+                            render json: {response: "Campaign total opens updated. Unique contacts opened not updated", :status => 200}, status: 200
+                            return
+                          end
+                        end
+
+                        render json: {response: "Campaign total opens updated. Unique contacts opened not updated", :status => 200}, status: 200
+                        return
+
+            #####################################
+
         rescue
-            puts "could not find company or campaign for company"
-            render json: {error: "could not find company or campaign for company", :status => 200}, status: 200
+            render json: {error: "error - contact ScaleRep's tech department.", :status => 200}, status: 200
             return
         end
     end
