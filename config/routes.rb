@@ -33,7 +33,7 @@ Rails.application.routes.draw do
 
     # Set Root Url
     authenticated :user do
-        root 'personas#index'
+        root 'metrics#index'
     end
     root to: 'homepage#index'
 

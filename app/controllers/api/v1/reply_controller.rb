@@ -63,11 +63,22 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
             campaign_to_update = Campaign.find_by client_company: client_company, campaign_name: params["campaign_name"]
-            lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["email"].downcase, client_company]).first
+            
+            begin
+                lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["email"].downcase, client_company]).first
+            rescue
+                render json: {response: "Couldn't find lead", :status => 400}, status: 400
+                return
+            end
+
             num = params["reply"]["campaign_step"].to_i - 1
 
-
-            lead_touchpoint = lead.touchpoints[num]
+            begin
+                lead_touchpoint = lead.touchpoints[num]
+            rescue
+                render json: {response: "Couldn't find touchpoint", :status => 400}, status: 400
+                return
+            end
             email_sent_time = lead_touchpoint.created_at
             lead_action = LeadAction.create!(:lead => lead, :client_company => client_company, :touchpoint => lead_touchpoint, :action => :open, :first_time => params["first_time_open"], :email_open_number => params["opens_count"], :email_sent_time => email_sent_time)
 

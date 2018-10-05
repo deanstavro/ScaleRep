@@ -9,6 +9,11 @@
     <ul class="navbar-nav ml-auto nav-fill w-50">
       <% if user_signed_in? %>
 
+        <li class="nav-item active"><%= link_to metrics_path() do %>
+          <%= octicon "graph", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+        <% end %>
+        </li>
+
         <% if current_user.role == "scalerep" %>
           <li class="nav-item active"><%= link_to data_uploads_path() do %>
               <%= octicon "cloud-upload", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
