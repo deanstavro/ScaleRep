@@ -23,7 +23,7 @@
     <div class="campaign_info_section">
       <span class="campaign_info_header">People in campaign</span>
       <% if (@campaign.peopleCount).to_i > 0 %>
-        <span class="campaign_info"><%= @campaign.peopleCount %></span>
+        <span class="campaign_info"><%= @campaign.peopleCount.to_s %></span>
       <% else %>
         0
       <% end %>

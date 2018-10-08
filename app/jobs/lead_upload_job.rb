@@ -21,22 +21,23 @@ class LeadUploadJob < ApplicationJob
 		campaign_contact_count = @base_campaign.contactLimit
 		# Grab the count and figure out how many campaigns are needed
 		count_of_data_set = data_upload_object.count
+		puts "COUNT"
+		puts count_of_data_set.to_s
 		# Check if current campaign has leads
 		number_leads_in_campaign = @base_campaign.leads.count
 
 		if (campaign_contact_count - number_leads_in_campaign) > 0
 
 			lead_list_copy, imported, duplicated, not_imported = upload_leads(clients_leads, campaign_contact_count, number_leads_in_campaign, data_copy, @base_campaign)
-
 			# If more leads don't exist on the lead list, we are done
 			if lead_list_copy.empty?
-				puts "LEAD LIST IS EMPTY"
+				puts "lead list is empty"
 				
 				data_upload_object.update_attributes(:imported => imported, :duplicates => duplicated, :not_imported => not_imported)
 				puts "Contacts Added to Current Campaign. Job finished"
 				return
 			else
-				puts "have more leads"
+				puts "more leads to upload"
 				# Create campaigns and upload leads for the remain contacts
 				createCampaignsUploadLeads(lead_list_copy, data_upload_object, campaign_contact_count, client_company, @base_campaign, imported, duplicated, not_imported)
 			end	
@@ -192,12 +193,18 @@ class LeadUploadJob < ApplicationJob
 				lead_list_copy.shift
 			end
 		end
-		puts "YOLO"
-		Lead.import(all_hash)
+
 		dups_and_import = all_hash + duplicates
-		puts "ALL HASH"
-		puts dups_and_import.to_s
-		AddContactsToReplyJob.perform_now(dups_and_import,campaign.id)
+		uploaded_hash = AddContactsToReplyJob.perform_now(dups_and_import,campaign.id)
+		if !all_hash.empty?
+			Lead.import(all_hash)
+		end
+		puts "RESULTS"
+		puts lead_list_copy.to_s
+		puts imported.to_s
+		puts duplicates.to_s
+		puts not_imported.to_s
+		
 		return lead_list_copy, imported, duplicates, not_imported
 	end
 

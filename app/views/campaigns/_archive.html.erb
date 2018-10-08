@@ -47,8 +47,8 @@
 
           <td><%= campaign.emailAccount %></td>
 
-          <% if (campaign.peopleCount).to_i > 0 %>
-            <td><%= campaign.peopleCount %></td>
+          <% if campaign.leads.count > 0 %>
+            <td><%= campaign.leads.count %></td>
           <% else %>
             <td> 0 </td>
           <% end %>

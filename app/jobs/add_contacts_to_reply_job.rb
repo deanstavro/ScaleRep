@@ -6,8 +6,12 @@ class AddContactsToReplyJob < ApplicationJob
       @campaign = Campaign.find_by(id: campaign)
       puts "Starting to upload into reply"
 
+      upload_count = 0
+      return_hash = []
   		all_contacts.each do |one_hash|
-      #ACCEPTED FIELDS ==> {"campaignId": 121, "email": "name@company.com", "firstName": "James", "lastName": "Smith", "company": "Global Tech", "city": "San Francisco", "state": "CA", "country": "US", "title": "VP of Marketing"}
+          
+          
+          #ACCEPTED FIELDS ==> {"campaignId": 121, "email": "name@company.com", "firstName": "James", "lastName": "Smith", "company": "Global Tech", "city": "San Francisco", "state": "CA", "country": "US", "title": "VP of Marketing"}
           
           puts "Reply.io upload stats"
           puts "Reply Id: " + @campaign.reply_id
@@ -47,13 +51,20 @@ class AddContactsToReplyJob < ApplicationJob
       					)
 
                 sleep(10)
-      				  puts response
+      				  puts response.code.to_s
+                if response.code == 200
+                    return_hash << one_hash
+                    upload_count = upload_count + 1
+                    puts upload_count.to_s
+                    @campaign.update_attribute(:peopleCount, upload_count)
+                end
+                
 
       		rescue
-      				  puts "did not input into reply"
+      				  puts  "did not input into reply"
       		end
-
   		end
 
+      return return_hash
   end
 end
