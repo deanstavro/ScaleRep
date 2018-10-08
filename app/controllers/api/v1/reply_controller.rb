@@ -1,6 +1,9 @@
 class Api::V1::ReplyController < Api::V1::BaseController
 
-    # A touchpoint is created, and is associated with the campaign and lead. A lead is created if one can't be found
+    
+    # Touchpoint is created
+    # Associated to a found lead, or a new lead is created
+    # Lead is moved to in_campaign
     def email_sent
         puts "e-mail sent notification has been received from reply.io"
 
@@ -51,11 +54,15 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
     # Captures all e-mail opens from reply
     # API payload example: {"opens_count":"4", "campaign_step":"1", "last_name":"Lussier", "first_name":"Samantha", "first_time_open":"False", "campaign_name":"Better | Email Dump | 3110-3410", "email":"samanthalussierpsyd@gmail.com"},"api_key"=>"b4e330f5cda737343261c5c978266211", "controller"=>"api/v1/reply", "action"=>"email_open", "reply"=><ActionController::Parameters {"opens_count"=>"4", "campaign_step"=>"1", "last_name"=>"Lussier", "first_name"=>"Samantha","first_time_open"=>"False", "campaign_name"=>"Better | Email Dump | 3110-3410", "email"=>"samanthalussierpsyd@gmail.com"} permitted: false>}
+    
+    # Associated to lead, or returned
+    # Associated to touchpoint, or returned
+    # If lead_action can be associated to touchpoint and lead, it is created
     def email_open
         puts "e-mail has been opened front reply.io"
 
         if emptyPostParams(params["reply"])
-            render json: {response: "Empty payload.", :status => 400}, status: 400
+            render json: {error: "Empty payload.", :status => 400}, status: 400
             return
         end
 
@@ -64,15 +71,14 @@ class Api::V1::ReplyController < Api::V1::BaseController
             client_company = ClientCompany.find_by(api_key: params["api_key"])
             campaign_to_update = Campaign.find_by client_company: client_company, campaign_name: params["campaign_name"]
             
-            begin
-                lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["email"].downcase, client_company]).first
-            rescue
-                render json: {response: "Couldn't find lead", :status => 400}, status: 400
+            lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["email"].downcase, client_company]).first
+            
+            if lead.nil?
+                render json: {response: "Couldn't find lead", :status => 200}, status: 200
                 return
             end
 
             num = params["reply"]["campaign_step"].to_i - 1
-
             lead_touchpoint = lead.touchpoints[num]
 
             if lead_touchpoint.nil?
@@ -129,7 +135,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             #####################################
 
         rescue
-            render json: {error: "error - contact ScaleRep's tech department.", :status => 200}, status: 200
+            render json: {error: "error - contact ScaleRep's tech department.", :status => 400}, status: 400
             return
         end
     end

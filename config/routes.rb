@@ -31,7 +31,8 @@ Rails.application.routes.draw do
         end
     end
 
-    # Set Root Url
+
+    # SET ROOT URLS
     authenticated :user do
         root 'metrics#index'
     end
@@ -45,15 +46,9 @@ Rails.application.routes.draw do
     devise_for :users
 
 
-
-
     #ALL ROUTES FOR USERS SIGNED IN
     get 'client_reports/index' 
     get 'metrics', to: 'metrics#index'
-
-    resources :users
-    resources :data_uploads
-
     # Nested In Client Companies
     resource :client_companies, path: '', only: [:edit, :update, :delete] do
       resources :personas do
@@ -63,21 +58,20 @@ Rails.application.routes.draw do
         collection {put :archive}
       end
     end
-
     resources :leads do
-      collection { post :import_to_campaign}
       collection { post :import_blacklist}
       collection { post :update_reply_from_portal}
       collection { get :fields}
-      collection { get :import}
-      collection { patch :clean_imports}
-      collection { get :cleaned_data}
-      collection { get :export_or_import_campaign}
       collection { post :import_to_current_campaign}
       collection { post :update_lead_import}
     end
+    
     resources :contacts
     resources :accounts
     resources :campaign
+    resources :users
+    resources :data_uploads do
+      collection { post :campaign_data}
+    end
 
 end

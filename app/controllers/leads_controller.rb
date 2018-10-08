@@ -43,38 +43,6 @@ class LeadsController < ApplicationController
   end
 
 
-  # GET - STEP 2, Shows CSV Info of import, and allows user to add clean options
-  def import
-    @user = User.find(current_user.id)
-    @campaign = Campaign.find_by(id: params[:campaign])
-    @persona = @campaign.persona
-    @data_upload = DataUpload.find_by(id: params[:data])
-    @headers = @data_upload.headers.tr('[]"', '').split(',').map(&:to_s)
-  end
-
-
-  # PATCH - cleans data, displays data and allows export or upload into campaign
-  def clean_imports
-    @user = User.find(current_user.id)
-    @campaign = Campaign.find_by(id: params[:data_upload][:campaign_id])
-    @data_upload = DataUpload.find_by(id: params[:data_upload][:data_upload_id])
-    @client_company = @campaign.client_company
-    #@persona = @campaign.persona
-    #@headers = @data_upload.data[0].keys
-    rules_array = params[:data_upload][:rules].split(",/")
-    params[:data_upload].delete :rules
-    
-    if  @data_upload.update_attributes(secure_params)
-        
-        @data_upload.update_attribute(:rules, rules_array)
-        
-        CleanUploadJob.perform_later(@data_upload, @client_company)
-        redirect_to data_upload_path(:id => @data_upload.id), :flash => { :notice => "Contacts are being saved and uploaded. Wait and refresh. This task should only take a couple seconds!" }
-        return
-    end
-
-  end
-
   #POST - save cleaned_data contacts and upload into reply
   def import_to_current_campaign
     puts params
@@ -85,6 +53,7 @@ class LeadsController < ApplicationController
     @data_object.update_attribute(:imported_to_campaigns, true)
     redirect_to client_companies_campaigns_path(persona), :flash => { :notice => "Contacts are being save and uploaded. Wait for task to finish!" }
   end
+
 
   # POST, Reclean data, and show STEP 3 page, the page rendered after rules and inputted data cleaned
   def update_lead_import
@@ -166,48 +135,6 @@ class LeadsController < ApplicationController
    redirect_to data_upload_path(:id => @data_upload.id), :flash => { :notice => "Your changes have been included. Click '+ campaign' to add to the the list to the campaign!" }
    return
   end
-
-
-  #POST - save csv file into jsonb, redirect to import page
-  def import_to_campaign
-    # User account we are logged into
-    @user = User.find(current_user.id)
-    # persona of the company we are inserting leads into
-    persona_id = params[:persona].to_i
-    persona = Persona.find(persona_id)
-    # company we are inserting leads into
-    @company = persona.client_company
-    # leads we are checking against
-    @leads = Lead.where(client_company: @company)
-
-    col =  Lead.column_names - %w{id client_company_id campaign_id account_id}
-    # Column Names
-    # ["decision_maker", "internal_notes", "email_in_contact_with", "date_sourced", "created_at", "updated_at", "contract_sent", "contract_amount", "timeline", "project_scope", "email_handed_off_too", "meeting_time", "email", "first_name", "last_name", "hunter_score", "hunter_date", "title", "phone_type", "phone_number", "city", "state", "country", "linkedin", "timezone", "address", "meeting_taken", "full_name", "status", "company_name", "company_website"]
-    begin
-        if (params[:file].content_type).to_s == 'text/csv'
-          if (params[:file].size).to_i < 1000000
-
-          puts "Starting upload method"
-          
-          upload_message, @uploaded_data = Lead.import_to_campaign(params[:file], @company, @leads, params[:campaign], col, @user)
-          puts "Finished uploading. Redirecting!"
-          flash[:notice] = upload_message
-          redirect_to import_leads_path(:campaign => params[:campaign], :data => @uploaded_data.id)
-          else
-
-            redirect_to client_companies_campaigns_path(persona), :flash => { :error => "The CSV is too large. Please upload a shorter CSV!" }
-            return
-          end
-        else
-          redirect_to client_companies_campaigns_path(persona), :flash => { :error => "The file was not uploaded. Please Upload a CSV!" }
-          return
-        end
-    rescue
-        redirect_to client_companies_campaigns_path(persona), :flash => { :error => "No file chosen. Please upload a CSV!" }
-        return
-    end
-  end
-
 
   def import_blacklist
 
@@ -309,12 +236,6 @@ class LeadsController < ApplicationController
 
     #redirect
     redirect_to leads_path
-  end
-
-  private
-
-  def secure_params
-      params.require(:data_upload).permit(:ignore_duplicates, :rules)
   end
 
 

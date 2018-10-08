@@ -14,94 +14,147 @@ class CleanUploadJob < ApplicationJob
 
 	private
 
+	# Ignores rows missing first_name or email, and stores in data_upload.not_imported
+	# Ignores dups if ignore_duplicates = false, stores dups in data_upload.duplicates
+	# Ignores leads that are blacklisted or handed off ==> %w{handed_off sent_meeting_invite blacklist handed_off_with_questions}
+	# Cleans other data and uploads into imported 
   	def clean_data(data_upload, client_company)
-	    puts "Starting to clean data"
+	    puts "Starting to clean data" 
 	    client_leads = client_company.leads
 	    data_copy = Marshal.load(Marshal.dump(data_upload.data))
 	    all_hash = []
 	    duplicates = []
 	    not_imported = []
+	    rules_array = data_upload.rules
 
-	    puts "we got here"
 	    data_copy.each_with_index do |contact, index|
+			
 			delete_row = false
-			puts "and here"
+			blacklist_contact = false
 
-			if contact["email"].present? and contact["first_name"].present?
+			blacklist_array = ["handed_off","sent_meeting_invite","handed_off_with_questions", "blacklist"]
 
-				# Check if admin wants to ignore duplicates
-				if data_upload.ignore_duplicates == false
-					puts "herro"
-				  	# check for duplicates
-				  	if client_leads.where(:email => contact["email"]).count == 0
-				  		puts "not a duplicate"
-				      	default = data_upload.rules.to_s
-
-				      	puts "check wat rules equal"
-				      	if data_upload.rules.empty?
-				      		puts "empty rules"
-				          	# Insert the hash into the main hash
-				          	all_hash << contact.to_h
-				      	else
-
-				      		begin
-				      			puts "defaul different, going through rules"
-					        	# Loop through rules and apply to row. if we need to delete row, break loop and delete!
-					        	rules_array = data_upload.rules
-					        
-						        rules_array.each_with_index do |rule, index|
-					          		delete_row, contact =  apply_rule(rule, contact)
-					          		if delete_row == true
-					            		break
-					          		end
-					        	end
-
-					        	if !delete_row
-					          		all_hash << contact.to_h
-					        	end
-					        rescue
-					        	puts "could not go through data cleaning"
-					        	all_hash << contact.to_h
-					        end
-				      	end
-			  		else
-			    		duplicates << contact
-			    		puts contact["email"] + " exists for client. Checking duplicates. Not included into cleaned data set"
-			  		end
-				else
-					# We are ignoring dups, we are only checking for rules
-					#Check for rules
-					default = '"'+ data_upload.rules.to_s + '"'
-					if default == DataUpload.columns_hash["rules"].default
-					  # Insert the hash into the main hash
-					  all_hash << contact.to_h
-					else
-
-					    # Loop through rules and apply to row. if we need to delete row, break loop and delete!
-					    rules_array = data_upload.rules
-					    
-					    rules_array.each_with_index do |rule, index|
-					      	delete_row, contact =  apply_rule(rule, contact)
-					      	if delete_row == true
-					        	break
-					      	end
-					    end
-
-					    if !delete_row
-					      	all_hash << contact.to_h
-					    end
-					end
-
-				end
-			else
-				puts "row has not e-mail or first name. Not included into cleaned data set"
+			# Check if email and first_name exist
+			if !contact["email"].present? or !contact["first_name"].present?
 				not_imported << contact
+				puts "email or first_name does not exist. Not uploaded"
+				next
 			end
-		end
-		puts "ALL HASH " + all_hash.to_s
-		data_upload.update_attributes(:cleaned_data => all_hash, :duplicates => duplicates, :not_imported => not_imported)
-		
 
+
+			lead_count = client_leads.where(["lower(email) = ?", contact["email"].downcase]).count
+			puts lead_count.to_s
+			# If lead exists and should not be created, continue
+			if data_upload.ignore_duplicates != true and lead_count > 0
+				duplicates << contact
+		    	puts contact["email"] + " exists. Not uploaded"
+		    	next
+		    end
+		    # If lead is blacklist or one of the handed_off enums, skip
+		    if lead_count > 0
+		    	lead_array = client_leads.where(["lower(email) = ?", contact["email"].downcase])
+		    	for le in lead_array
+		    		if %w{handed_off sent_meeting_invite blacklist handed_off_with_questions}.include?(le.status)
+		    			puts "lead is " + le.status.to_s 
+		    			blacklist_contact = true
+		    			not_imported << le
+		    		end
+		    	end
+		    end
+		    if blacklist_contact == true
+		    	next
+		    end
+
+
+		    if !data_upload.rules.empty?
+	      		begin
+		        	# Loop through rules and apply to row. if we need to delete row, break loop and delete!
+			        rules_array.each_with_index do |rule, index|
+		          		delete_row, contact =  apply_rule(rule, contact)
+		          		if delete_row == true
+		          			not_imported << contact
+		            		break
+		          		end
+		        	end
+		        rescue
+		        	puts "could not go through data cleaning"
+		        end
+			end
+		    
+		    # Add contact if cleaning dictates we should delete
+		    if !delete_row
+		        all_hash << contact.to_h
+		        puts contact["email"] + " uploaded"
+		    end
+
+
+
+
+		    	if false
+
+						# Check if admin wants to ignore duplicates
+						if data_upload.ignore_duplicates == false
+
+						  	# check for duplicates
+						  	if client_leads.where(["lower(:email) = ?", contact["email"].downcase]).count == 0
+					      		default = data_upload.rules.to_s
+						      	if !data_upload.rules.empty?
+						      		begin
+							        	# Loop through rules and apply to row. if we need to delete row, break loop and delete!
+							        	rules_array = data_upload.rules
+							        
+								        rules_array.each_with_index do |rule, index|
+							          		delete_row, contact =  apply_rule(rule, contact)
+							          		if delete_row == true
+							            		break
+							          		end
+							        	end
+							        rescue
+							        	puts "could not go through data cleaning"
+							        end
+							    end
+							    # Add contact if cleaning dictates we should delete
+							    if !delete_row
+							        all_hash << contact.to_h
+							        puts contact["email"] + " uploaded"
+							    end
+					  		else
+					    		duplicates << contact
+					    		puts contact["email"] + " exists. Not uploaded"
+					  		end
+						else
+							# We are ignoring dups, we are only checking for rules
+							#Check for rules
+							if !data_upload.rules.empty?
+							  	# Insert the hash into the main hash
+							  	begin
+								 	# Loop through rules and apply to row. if we need to delete row, break loop and delete!
+								    rules_array = data_upload.rules
+								    
+								    rules_array.each_with_index do |rule, index|
+								      	delete_row, contact =  apply_rule(rule, contact)
+								      	if delete_row == true
+								        	break
+								      	end
+								    end
+								rescue
+									puts "could not go through data cleaning"
+								end
+							end
+
+						    if !delete_row
+					      		lead = client_leads.where(["lower(email) = ?", contact["email"].downcase]).first
+
+					      		#### ignore leads of status blacklist, handed_off
+					      		all_hash << contact.to_h
+					      		puts contact["email"] + " uploaded"
+						    end
+
+						end
+				end
+		end
+
+		data_upload.update_attributes(:cleaned_data => all_hash, :duplicates => duplicates, :not_imported => not_imported)
   	end
 
   	private

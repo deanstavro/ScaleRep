@@ -173,6 +173,11 @@ class LeadUploadJob < ApplicationJob
 						begin
 							puts le["email"] + " is a duplicate"
 							dup_lead = clients_leads.find_by(email: le["email"])
+
+							#### update status to cold ####
+
+
+
 							dup_lead.update_attribute(:campaign_id, campaign.id)
 							duplicates << dup_lead
 						rescue
@@ -199,12 +204,6 @@ class LeadUploadJob < ApplicationJob
 		if !all_hash.empty?
 			Lead.import(all_hash)
 		end
-		puts "RESULTS"
-		puts lead_list_copy.to_s
-		puts imported.to_s
-		puts duplicates.to_s
-		puts not_imported.to_s
-		
 		return lead_list_copy, imported, duplicates, not_imported
 	end
 

@@ -34,7 +34,7 @@
           </td>
 
           <td>
-            <%= form_tag import_to_campaign_leads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true, class:"shorter-column" do %>
+            <%= form_tag campaign_data_data_uploads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true, class:"shorter-column" do %>
               <div class= "fileUpload btn btn-sm btn-light">
                 <span id="uploadPath">upload csv</span>
                 <%= file_field_tag :file, class:"upload uploadBtn"%>
