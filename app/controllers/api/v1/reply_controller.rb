@@ -41,8 +41,8 @@ class Api::V1::ReplyController < Api::V1::BaseController
             render json: {response: "Touchpoint created", :status => 200}, status: 200
             return
         rescue
-        #    render json: {error: "contact ScaleRep's tech department", :status => 400}, status: 400
-        #    return
+            render json: {error: "contact ScaleRep's tech department", :status => 400}, status: 400
+            return
         end
     end
 
@@ -73,17 +73,15 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             num = params["reply"]["campaign_step"].to_i - 1
 
-            begin
-                lead_touchpoint = lead.touchpoints[num]
-            rescue
-                render json: {response: "Couldn't find touchpoint", :status => 400}, status: 400
+            lead_touchpoint = lead.touchpoints[num]
+
+            if lead_touchpoint.nil?
+                render json: {response: "Couldn't find touchpoint associate to email open", :status => 400}, status: 400
                 return
             end
+
             email_sent_time = lead_touchpoint.created_at
             lead_action = LeadAction.create!(:lead => lead, :client_company => client_company, :touchpoint => lead_touchpoint, :action => :open, :first_time => params["first_time_open"], :email_open_number => params["opens_count"], :email_sent_time => email_sent_time)
-
-            
-
 
             #get touchpoint
 
