@@ -76,7 +76,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             lead_touchpoint = lead.touchpoints[num]
 
             if lead_touchpoint.nil?
-                render json: {response: "Couldn't find touchpoint associate to email open", :status => 400}, status: 400
+                render json: {response: "Couldn't find touchpoint associate to email open", :status => 200}, status: 200
                 return
             end
 
