@@ -12,7 +12,7 @@ class AddCampaignToReplyJob < ApplicationJob
         "settings": {
         "EmailsCountPerDay": 10,
         "daysToFinishProspect": 3,
-        "daysFromLastProspectContact": 15,
+        "daysFromLastProspectContact": 3,
         "emailSendingDelaySeconds": 600,
         "emailPriorityType": "Equally divided between",
         "disableOpensTracking": false,
