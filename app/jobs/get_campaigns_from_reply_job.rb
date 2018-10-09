@@ -37,6 +37,8 @@ class GetCampaignsFromReplyJob < ApplicationJob
                                 response.delete(:name)
                                 response.delete(:opensCount)
                                 response.delete(:peopleCount)
+                                response.delete(:deliveriesCount)
+                                response.delete(:repliesCount)
                                 response.delete(:id)
                                 response.delete(:created)
                                 response.delete_if { |k, v| v.nil? }
