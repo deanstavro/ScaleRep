@@ -59,17 +59,11 @@
           <% end %>
 
           
-          <% if (campaign.opensCount).to_i > 0 %>
-            <td>
-              <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
-                <%= campaign.opensCount-campaign.bouncesCount %>
-              <% else %>
-                0
-              <% end %> 
-            </td>
-          <% else %>
-            <td>0</td>
-          <% end %>
+          <% email_open_count = getEmailOpens(campaign) %>
+          <td>
+              <%= email_open_count %>
+          </td>
+
 
           <% if @user.role == 'scalerep' %>          
               <td>
@@ -86,64 +80,20 @@
               </td>
           <% end %>
 
-          <% if !campaign.uniqueOpens.present? %>
-              <td>0</td>
-          <% else %>
+          
 
-              <% if campaign.bouncesCount.present? %>
-
-                <% if (campaign.deliveriesCount).to_i > (campaign.peopleCount).to_i %>
-                    <td> <%= reply_rate_calculator(campaign.uniqueOpens - campaign.bouncesCount, campaign.peopleCount-campaign.bouncesCount)%>% 
-
-                    <span class="pct">
-                        (<%= campaign.uniqueOpens - campaign.bouncesCount %>) 
-                    </span>
-
-                    </td>
-
-                <% else %>
-                    <td> <%= reply_rate_calculator(campaign.uniqueOpens - campaign.bouncesCount, campaign.deliveriesCount-campaign.bouncesCount) %>%
-
-                    <span class="pct">
-                      (<%= campaign.uniqueOpens - campaign.bouncesCount %>) 
-                    </span>
-
-                    </td>
-
-                <% end %>
-
-              <% else %>
-                  <td>0%</td>
-              <% end %>
-          <% end %>
+          <% unique_email_open_count = getUniqueEmailOpens(campaign) %>
+          <td>
+              <%= unique_email_open_count %>
+          </td>
 
 
           
+          <% replies_count = getEmailReplies(campaign) %>
+          <td>
+              <%= replies_count %>
+          </td>
 
-          <% if (campaign.repliesCount).to_i > 0 %>
-            <td>
-              <% if (campaign.deliveriesCount).to_i > (campaign.peopleCount).to_i %>
-                 <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
-                   
-                   <%= reply_rate_calculator(campaign.repliesCount, campaign.peopleCount - campaign.bouncesCount) %>%
-                 <% end %>
-                
-                <span class="pct">
-                    (<%= campaign.repliesCount %>)
-                </span>
-              <% else %>
-                  <% if campaign && campaign.deliveriesCount && campaign.deliveriesCount >0 %>
-                    <%= reply_rate_calculator(campaign.repliesCount, campaign.deliveriesCount-campaign.bouncesCount) %>%
-                  <% end %>
-                
-                <span class="pct">
-                    (<%= campaign.repliesCount %>)
-                </span>
-              <% end %>
-            </td>
-          <% else %>
-            <td>0%</td>
-          <% end %>
 
           <% if @user.role == 'scalerep' %>
               <td>
@@ -152,6 +102,9 @@
                 <% end %>
               </td>
           <% end %>
+
+
+
 
         </tr>
       <% end %>

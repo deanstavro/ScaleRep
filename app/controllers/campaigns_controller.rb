@@ -7,12 +7,8 @@ class CampaignsController < ApplicationController
 	def index
 			@user = get_user
 			@client_company = get_company(@user)
-
-			puts 'printing params'
-			puts params
-
-
 			@persona = get_persona(params)
+      
 
 			if @user.role != 'scalerep' and wrong_campaign(@persona, @client_company)
         flash[:notice] = "Campaign does not exist"
