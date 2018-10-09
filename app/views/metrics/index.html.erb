@@ -1,25 +1,37 @@
 <div id="title" class="jumbotron">
+    
+    <% if flash[:error].present? or flash[:notice].present? %>
+      <center>
+        <p class="container text-danger"><%= flash[:error] %></p>
+        <p class="container text-success"><%= flash[:notice] %></p>
+      </center>
+    <% end %>
+
+    <br>
 
     <h1><%= @user.client_company.name if @user.client_company %> Metrics</h1>
-		<h4>viewer: <%= @user.email if @user.email %></h4>
 
 </div>
 
-<div>
+<div class="container">
 <h4> Conversion Metrics</h4>
 
-<%= column_chart [{ name: "Emails Sent", data: @touchpoints.group_by_day(:created_at, format: "%B %d", range: Date.tomorrow - 7.days..Time.now).count}, { name: "Email Opens", data: @email_opens.group_by_day(:email_sent_time, format: "%B %d", range: Date.tomorrow - 7.days..Time.now).count}, { name: "Email Replies", data: @email_replies.group_by_day(:email_sent_time, format: "%B %d", range: Date.tomorrow - 7.days..Time.now).count}], colors: ["#ADD8E6", "#0000FF", "#90EE90"] %>
+<%= column_chart [{ name: "Emails Sent", data: @touchpoints.group_by_day(:created_at, format: "%B %d", range: Date.today - 7.days..Date.today).count}, { name: "Emails Opened", data: @email_opens.group_by_day(:email_sent_time, format: "%B %d", range: Date.today - 7.days..Date.today).count}, { name: "Emails Replied To", data: @email_replies.group_by_day(:email_sent_time, format: "%B %d", range: Date.today - 7.days..Date.today).count}], colors: ["#ADD8E6", "#0000FF", "#90EE90"] %>
 </div>
-<br><br>
-<div>
-<h4> Handed Off Leads </h4>
 
-      <div class="card-body">
+
+<br><br><br><br>
+
+
+<div class="container">
+  <h4> Handed Off Leads </h4>
+
       <% if @meetings_set.count == 0 %>
         <p> No Leads Handed Off </p>
       <% else %>
         <div style="overflow: auto;">
           <p style="margin-bottom: 30px;"><i>Handed-off leads have a meeting set with your team or were sent to you for a follow-up conversation</i></p>
+          
           <table class = " airtable_data table table-hover">
             <thead class = "thead">
               <tr>
@@ -52,13 +64,12 @@
                     <td> <%= lead.client_company.name %> </td>
                   <% end %>
                     <td> <%= lead.status.to_s %></td>
-                  
-
-
                 </tr>
               <% end %>
             </tbody>
+
           </table>
+          
           <div class="digg_pagination">
               <div class="page_info">
                 <%= page_entries_info @meetings_set %>
@@ -68,6 +79,5 @@
 
         </div>
       <% end %>
-</div>
 
 </div>

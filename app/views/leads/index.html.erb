@@ -1,10 +1,13 @@
 <div id="title" class="jumbotron">
-  <br/>
+  
+  <% if flash[:error].present? or flash[:notice].present? %>
+      <center>
+        <p class="container text-danger"><%= flash[:error] %></p>
+        <p class="container text-success"><%= flash[:notice] %></p>
+      </center>
+  <% end %>
 
-  <center>
-    <p class="container text-danger"><%= flash[:error] %></p>
-    <p class="container text-success"><%= flash[:notice] %></p>
-  </center>
+  <br>
 
   <% if  @user.email == "demo@scalerep.com" %>
     <h1>Demo_Company Lead List </h1>
@@ -13,6 +16,8 @@
   <% end %>
 
 </div>
+
+
 <div class = 'thin_margins' data-no-turbolink="true">
   <div id="accordion">
 

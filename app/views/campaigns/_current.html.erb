@@ -46,14 +46,14 @@
 
           <td><%= campaign.emailAccount %></td>
 
-          <% if campaign.leads.count > 0 %>
-            <td><%= campaign.leads.count %></td>
+          <% if campaign.peopleCount > 0 %>
+            <td><%= campaign.peopleCount %></td>
           <% else %>
             <td> 0 </td>
           <% end %>
 
-          <% if (campaign.deliveriesCount).to_i > 0 %>
-            <td><%= campaign.deliveriesCount %></td>
+          <% if (campaign.touchpoints.count > 0 %>
+            <td><%= campaign.touchpoints.count %></td>
           <% else %>
             <td> 0 </td>
           <% end %>

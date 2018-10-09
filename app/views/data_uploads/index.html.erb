@@ -1,13 +1,16 @@
 <div id="title" class="jumbotron">
-  <center>
-    <p class="container text-danger"><%= flash[:error] %></p>
-    <p class="container text-success"><%= flash[:notice] %></p>
-  </center>
+  
+  <% if flash[:error].present? or flash[:notice].present? %>
+      <center>
+        <p class="container text-danger"><%= flash[:error] %></p>
+        <p class="container text-success"><%= flash[:notice] %></p>
+      </center>
+  <% end %>
 
-  <br/>
-  <h1>Data Uploads</h1>
-  <h3>for <%= @user.first_name if @user.first_name %></h3>
   <br>
+
+  <h1>Data Uploads</h1>
+
 </div>
 
 <div class="table-display">

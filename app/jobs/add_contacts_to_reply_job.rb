@@ -7,7 +7,8 @@ class AddContactsToReplyJob < ApplicationJob
       puts "Starting to upload into reply"
 
       upload_count = 0
-      return_hash = []
+      uploaded_hash = []
+      not_uploaded_hash = []
   		all_contacts.each do |one_hash|
           
           
@@ -53,10 +54,12 @@ class AddContactsToReplyJob < ApplicationJob
                 sleep(10)
       				  puts response.code.to_s
                 if response.code == 200
-                    return_hash << one_hash
+                    uploaded_hash << one_hash
                     upload_count = upload_count + 1
                     puts upload_count.to_s
                     @campaign.update_attribute(:peopleCount, upload_count)
+                else
+                    not_uploaded_hash << one_hash
                 end
                 
 
@@ -65,6 +68,6 @@ class AddContactsToReplyJob < ApplicationJob
       		end
   		end
 
-      return return_hash
+      return uploaded_hash, not_uploaded_hash
   end
 end

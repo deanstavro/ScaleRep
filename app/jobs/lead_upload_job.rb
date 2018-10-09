@@ -174,12 +174,12 @@ class LeadUploadJob < ApplicationJob
 							puts le["email"] + " is a duplicate"
 							dup_lead = clients_leads.find_by(email: le["email"])
 
-							#### update status to cold ####
+							#double check not lead
+							if !(%w{handed_off sent_meeting_invite blacklist handed_off_with_questions}.include?(dup_lead.status))
+								dup_lead.update_attributes(:campaign_id => campaign.id, :status => cold)
+								duplicates << dup_lead
+							end
 
-
-
-							dup_lead.update_attribute(:campaign_id, campaign.id)
-							duplicates << dup_lead
 						rescue
 							puts "could not update existing lead to this campaign"
 						end
@@ -200,7 +200,7 @@ class LeadUploadJob < ApplicationJob
 		end
 
 		dups_and_import = all_hash + duplicates
-		uploaded_hash = AddContactsToReplyJob.perform_now(dups_and_import,campaign.id)
+		uploaded_hash, not_upload = AddContactsToReplyJob.perform_now(dups_and_import,campaign.id)
 		if !all_hash.empty?
 			Lead.import(all_hash)
 		end
