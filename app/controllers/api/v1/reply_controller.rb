@@ -21,7 +21,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             end
 
             num = params["reply"]["campaign_step"].to_i - 1
-            lead_touchpoint = lead.touchpoints[num]
+            lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign])[num]
 
             if lead_touchpoint.nil?
                 render json: {response: "Couldn't find touchpoint associate to email open", :status => 200}, status: 200
@@ -69,8 +69,13 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
                 lead = Lead.create!(:email => params["reply"]["email"], :first_name => params["reply"]["first_name"], :last_name => params["reply"]["last_name"], :full_name => full_name, :client_company => client_company, :campaign => campaign, :status => "in_campaign")
             else
-                if lead.status != :in_campaign
-                  lead.update_attribute(:status, "in_campaign")
+                if lead.campaign != campaign
+                    render json: {error: "Lead campaign does not equal campaign from the email sent. Contact ScaleRep's tech department", :status => 400}, status: 400
+                    return
+                else 
+                    if lead.status != :in_campaign
+                        lead.update_attribute(:status, "in_campaign")
+                    end
                 end
             end
 
@@ -116,7 +121,10 @@ class Api::V1::ReplyController < Api::V1::BaseController
             end
 
             num = params["reply"]["campaign_step"].to_i - 1
-            lead_touchpoint = lead.touchpoints[num]
+            puts "NUM: " + num.to_s
+
+            lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign_to_update])[num]
+            puts lead_touchpoint
 
             if lead_touchpoint.nil?
                 render json: {response: "Couldn't find touchpoint associate to email open", :status => 200}, status: 200
