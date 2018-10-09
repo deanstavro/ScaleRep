@@ -2,35 +2,40 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
     
     def email_reply
-        puts "e-mail reply notification has been received from reply.io"
+        begin
+            puts "e-mail reply notification has been received from reply.io"
 
-        if emptyPostParams(params["reply"])
-            render json: {response: "Empty payload.", :status => 400}, status: 400
+            if emptyPostParams(params["reply"])
+                render json: {response: "Empty payload.", :status => 400}, status: 400
+                return
+            end
+
+            client_company = ClientCompany.find_by(api_key: params["api_key"])
+            campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
+            lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["reply"]["email"].downcase, client_company]).first
+
+            #Get lead, or create if needed
+            if lead.nil?
+                render json: {response: "Couldn't find lead", :status => 200}, status: 200
+                return
+            end
+
+            num = params["reply"]["campaign_step"].to_i - 1
+            lead_touchpoint = lead.touchpoints[num]
+
+            if lead_touchpoint.nil?
+                render json: {response: "Couldn't find touchpoint associate to email open", :status => 200}, status: 200
+                return
+            end
+
+            email_sent_time = lead_touchpoint.created_at
+            lead_action = LeadAction.create!(:lead => lead, :client_company => client_company, :touchpoint => lead_touchpoint, :action => :reply, :email_open_number => params["opens_count"], :email_sent_time => email_sent_time)
+            render json: {response: "new reply created", :status => 200}, status: 200
+            return
+        rescue
+            render json: {response: "Error - contact ScaleRep's tech department.", :status => 400}, status: 400
             return
         end
-
-        client_company = ClientCompany.find_by(api_key: params["api_key"])
-        campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
-        lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["reply"]["email"].downcase, client_company]).first
-
-        #Get lead, or create if needed
-        if lead.nil?
-            render json: {response: "Couldn't find lead", :status => 200}, status: 200
-            return
-        end
-
-        num = params["reply"]["campaign_step"].to_i - 1
-        lead_touchpoint = lead.touchpoints[num]
-
-        if lead_touchpoint.nil?
-            render json: {response: "Couldn't find touchpoint associate to email open", :status => 200}, status: 200
-            return
-        end
-
-        email_sent_time = lead_touchpoint.created_at
-        lead_action = LeadAction.create!(:lead => lead, :client_company => client_company, :touchpoint => lead_touchpoint, :action => :reply, :email_open_number => params["opens_count"], :email_sent_time => email_sent_time)
-        render json: {response: "new reply created", :status => 200}, status: 200
-        return
     end
 
     # Touchpoint is created

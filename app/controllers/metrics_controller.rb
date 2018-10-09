@@ -8,7 +8,7 @@ class MetricsController < ApplicationController
 
 	@touchpoints = Touchpoint.where(['client_company_id = ? and created_at >= ?', @company, Date.today - 7.days])
 
-	@lead_actions = LeadAction.where(['client_company_id = ? and created_at >= ?',@company, Date.today - 7.days ])
+	@lead_actions = LeadAction.where(['client_company_id = ? and email_sent_time >= ?',@company, Date.today - 7.days ])
 	@email_opens = @lead_actions.where(['action = ? and first_time = ?', LeadAction.actions[:open], 'True'])
     @email_replies = @lead_actions.where(['action = ?', LeadAction.actions[:reply]])
     
