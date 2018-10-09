@@ -25,6 +25,7 @@ Rails.application.routes.draw do
                     post :new_reply
                     post :email_open
                     post :email_sent
+                    post :email_reply
                 end
             end
 
