@@ -8,7 +8,7 @@
 <div>
 <h4> Conversion Metrics</h4>
 
-<%= column_chart [{ name: "Emails Sent", data: @touchpoints.group_by_day(:created_at, format: "%a", range: Date.tomorrow - 7.days..Time.now).count}, { name: "Email Opens", data: @lead_actions.group_by_day(:email_sent_time, format: "%a", range: Date.tomorrow - 7.days..Time.now).count}], colors: ["#ADD8E6", "#0000FF"] %>
+<%= column_chart [{ name: "Emails Sent", data: @touchpoints.group_by_day(:created_at, format: "%a", range: Date.tomorrow - 7.days..Time.now).count}, { name: "Email Opens", data: @email_opens.group_by_day(:email_sent_time, format: "%a", range: Date.tomorrow - 7.days..Time.now).count}, { name: "Email Replies", data: @email_replies.group_by_day(:email_sent_time, format: "%a", range: Date.tomorrow - 7.days..Time.now).count}], colors: ["#ADD8E6", "#0000FF", "#90EE90"] %>
 </div>
 <br><br>
 <div>
