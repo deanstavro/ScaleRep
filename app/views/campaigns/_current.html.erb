@@ -46,14 +46,14 @@
 
           <td><%= campaign.emailAccount %></td>
 
-          <% if campaign.peopleCount > 0 %>
+          <% if !campaign.peopleCount.nil? or !campaign.peopleCount == 0 %>
             <td><%= campaign.peopleCount %></td>
           <% else %>
             <td> 0 </td>
           <% end %>
 
-          <% if (campaign.touchpoints.count > 0 %>
-            <td><%= campaign.touchpoints.count %></td>
+          <% if !campaign.touchpoints.count == 0 or !campaign.touchpoints.count.nil? %>
+            <td><%= campaign.touchpoints.count.to_s %></td>
           <% else %>
             <td> 0 </td>
           <% end %>
