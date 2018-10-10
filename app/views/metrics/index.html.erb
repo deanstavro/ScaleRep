@@ -47,6 +47,7 @@
                     <th scope = 'col'>Date Sourced</th>
                     <th scope = 'col'>E-mail</th>
                     <th scope = 'col'>Name</th>
+                    <th scope = 'col'>Campaign</th>
                     <th scope = 'col'>Persona</th>
                     <th scope = 'col'>Status</th>      
               </tr>
@@ -67,11 +68,17 @@
 
                   <% if lead.campaign.nil? %>
                     <td>N/A</td>
+                    <td>N/A</td>
                   <% else %>
                     <td><%= lead.campaign.campaign_name %></td>
-                  <% end %>
 
-                    <td> <%= lead.status.to_s %></td>
+                    <% if lead.campaign.persona.nil? %>
+                        </tr>N/A</tr>
+                    <% else %>
+                        <td><%= lead.campaign.persona.name %></td>
+                    <% end %>
+                  <% end %>
+                  <td> <%= lead.status.to_s %></td>
                 </tr>
               <% end %>
             </tbody>
