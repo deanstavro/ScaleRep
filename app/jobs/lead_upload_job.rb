@@ -176,7 +176,7 @@ class LeadUploadJob < ApplicationJob
 
 							#double check not lead
 							if !(%w{handed_off sent_meeting_invite blacklist handed_off_with_questions}.include?(dup_lead.status))
-								dup_lead.update_attributes(:campaign_id => campaign.id, :status => cold)
+								dup_lead.update_attributes(:campaign_id => campaign.id, :status => :cold)
 								duplicates << dup_lead
 							end
 
