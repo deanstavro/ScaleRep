@@ -69,14 +69,14 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
                 lead = Lead.create!(:email => params["reply"]["email"], :first_name => params["reply"]["first_name"], :last_name => params["reply"]["last_name"], :full_name => full_name, :client_company => client_company, :campaign => campaign, :status => "in_campaign")
             else
-                if lead.campaign != campaign
-                    render json: {error: "Lead campaign does not equal campaign from the email sent. Contact ScaleRep's tech department", :status => 400}, status: 400
-                    return
-                else 
-                    if lead.status != :in_campaign
-                        lead.update_attribute(:status, "in_campaign")
-                    end
+                #if lead.campaign != campaign
+                #    render json: {error: "Lead campaign does not equal campaign from the email sent. Contact ScaleRep's tech department", :status => 400}, status: 400
+                #    return
+                #else 
+                if lead.status != :in_campaign
+                    lead.update_attribute(:status, "in_campaign")
                 end
+                #end
             end
 
             #Create touchpoint and associate to lead
