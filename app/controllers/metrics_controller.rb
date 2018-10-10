@@ -4,8 +4,21 @@ class MetricsController < ApplicationController
 
   def index
     @user = User.find(current_user.id)
-    @company = ClientCompany.find_by(id: @user.client_company_id)
+    @client_companies = ClientCompany.all.pluck(:name)
+    
+    if @user.role == "scalerep"
+      if params.has_key?(:client_company)
 
+          @company = ClientCompany.find_by(name: params["client_company"])
+      else
+          @company = ClientCompany.find_by(id: @user.client_company_id)
+
+      end
+    else
+          @company = ClientCompany.find_by(name: @user.client_company_id)
+    end
+
+    
   	@touchpoints = Touchpoint.where(['client_company_id = ? and created_at >= ?', @company, Date.today - 7.days])
 
   	@lead_actions = LeadAction.where(['client_company_id = ? and email_sent_time >= ?',@company, Date.today - 7.days ])

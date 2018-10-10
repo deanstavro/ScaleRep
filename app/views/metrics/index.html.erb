@@ -9,7 +9,16 @@
 
     <br>
 
-    <h1><%= @user.client_company.name if @user.client_company %> Metrics</h1>
+    <h1><%= @company.name if @company %> Metrics</h1>
+
+    <% if @user.role == "scalerep" %>
+      <div>
+          <%= form_tag({}, {:method => :get}) do %>
+            <%= label_tag  'select company:' %>      
+            <%= select_tag :client_company, options_for_select(@client_companies, @company.name), :onchange => "this.form.submit();" %>
+          <% end %>
+      </div>
+    <% end %>
 
 </div>
 
