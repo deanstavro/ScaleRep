@@ -15,7 +15,7 @@ class MetricsController < ApplicationController
 
       end
     else
-          @company = ClientCompany.find_by(name: @user.client_company_id)
+          @company = ClientCompany.find_by(id: @user.client_company_id)
     end
 
     
