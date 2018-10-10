@@ -4,20 +4,17 @@ class MetricsController < ApplicationController
 
   def index
     @user = User.find(current_user.id)
-    @client_companies = ClientCompany.all.pluck(:name)
-    
+  
     if @user.role == "scalerep"
+      @client_companies = ClientCompany.all.pluck(:name)
       if params.has_key?(:client_company)
-
           @company = ClientCompany.find_by(name: params["client_company"])
       else
           @company = ClientCompany.find_by(id: @user.client_company_id)
-
       end
     else
           @company = ClientCompany.find_by(id: @user.client_company_id)
     end
-
     
   	@touchpoints = Touchpoint.where(['client_company_id = ? and created_at >= ?', @company, Date.today - 7.days])
 

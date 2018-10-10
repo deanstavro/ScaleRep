@@ -9,9 +9,23 @@ def index
   @user = User.find(current_user.id)
 
   if @user.role == "scalerep"
-    @personas = Persona.order('created_at DESC')
-    @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
-    @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
+
+      @client_companies = ClientCompany.all.pluck(:name)
+
+      if params.has_key?(:client_company)
+
+          @company = ClientCompany.find_by(name: params["client_company"])
+          @personas = Persona.where("client_company_id = ?", @company.id ).order('created_at DESC')
+          @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
+          @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
+      else
+          @company = ClientCompany.find_by(id: @user.client_company_id)
+          @personas = Persona.where("client_company_id =?", @company).order('created_at DESC')
+          @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
+          @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
+
+      end
+    
   else
     @company = ClientCompany.find_by(id: @user.client_company_id)
     @personas = Persona.where("client_company_id =?", @company).order('created_at DESC')

@@ -10,16 +10,23 @@
     <br>
 
     <% if @user.role == 'scalerep' %>
-      <h1>All Company Personas</h1>
+      <h1><%= @company.name %> Personas </h1>
     <% else %>
       <h1>Personas</h1>
-      <h3>for <%= @user.client_company.name if @user.client_company %></h3>
+      <h1>for <%= @user.client_company.name if @user.client_company %></h1>
     <% end %>
 
 
     <% if @user.role == 'scalerep' %>
         <div>
           <%= link_to '+ Add Persona', new_client_companies_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+        </div>
+        <br> <br>
+        <div>
+            <%= form_tag({}, {:method => :get}) do %>
+              <%= label_tag  'select company:' %>      
+              <%= select_tag :client_company, options_for_select(@client_companies, @company.name), :onchange => "this.form.submit();" %>
+            <% end %>
         </div>
     <% end %>
     
