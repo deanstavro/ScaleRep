@@ -47,12 +47,8 @@
                     <th scope = 'col'>Date Sourced</th>
                     <th scope = 'col'>E-mail</th>
                     <th scope = 'col'>Name</th>
-
-                    <% if @user.role == "scalerep" %>
-                        <th scope = 'col'>Client Company</th>
-                    <% end %>
-                        <th scope = 'col'>Status</th>
-                    
+                    <th scope = 'col'>Persona</th>
+                    <th scope = 'col'>Status</th>      
               </tr>
             </thead>
 
@@ -69,9 +65,12 @@
                     <td> <%= lead.full_name %></td>
                   <% end %>
 
-                  <% if @user.role == "scalerep" %>
-                    <td> <%= lead.client_company.name %> </td>
+                  <% if lead.campaign.nil? %>
+                    <td>N/A</td>
+                  <% else %>
+                    <td><%= lead.campaign.campaign_name %></td>
                   <% end %>
+
                     <td> <%= lead.status.to_s %></td>
                 </tr>
               <% end %>
