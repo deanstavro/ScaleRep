@@ -9,11 +9,6 @@
         <th scope="col">People</th>
         <th scope="col">Delivered</th>
         <th scope="col">Opens</th>
-
-        <% if @user.role == 'scalerep' %>
-            <th scope="col">Bounces</th>
-        <% end %>
-
         <th scope="col">Unique Opens</th>
         <th scope="col">Replies</th>
         
@@ -34,8 +29,8 @@
           <td>
             <%= form_tag campaign_data_data_uploads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true, class:"shorter-column" do %>
               <div class= "fileUpload btn btn-sm btn-light">
-                <span id="uploadPath">upload csv</span>
-                <%= file_field_tag :file, class:"upload uploadBtn"%>
+                  <span id="uploadPath">upload csv</span>
+                  <%= file_field_tag :file, class:"upload uploadBtn"%>
               </div>
               <br/>
               <%= submit_tag "Submit", class: "btn btn-sm btn-outline-primary"%>
@@ -48,47 +43,16 @@
           <td><%= campaign.peopleCount %></td>
 
 
-          <% if !campaign.touchpoints.count == 0 or !campaign.touchpoints.count.nil? %>
-            <td><%= campaign.touchpoints.count.to_s %></td>
-          <% else %>
-            <td> 0 </td>
-          <% end %>
+          <td><%= campaign.deliveriesCount %></td>
 
           
-          <% email_open_count = getEmailOpens(campaign) %>
-          <td>
-              <%= email_open_count %>
-          </td>
-
-
-          <% if @user.role == 'scalerep' %>          
-              <td>
-                <% if campaign && campaign.deliveriesCount && campaign.bouncesCount >0 %>
-                   <%= number_to_percentage(campaign.bouncesCount / campaign.deliveriesCount.to_f * 100, precision:0) %>
-
-                  <span class="pct">
-                      (<%= campaign.bouncesCount %>)
-                  </span>
-
-                <% else %>
-                    0%
-                 <% end %>
-              </td>
-          <% end %>
-
+          <td><%= campaign.opensCount %></td>
           
 
-          <% unique_email_open_count = getUniqueEmailOpens(campaign) %>
-          <td>
-              <%= unique_email_open_count %>
-          </td>
+          <td><%= campaign.uniqueOpens %></td>
 
 
-          
-          <% replies_count = getEmailReplies(campaign) %>
-          <td>
-              <%= replies_count %>
-          </td>
+          <td><%= campaign.repliesCount %></td>
 
 
           <% if @user.role == 'scalerep' %>
@@ -98,8 +62,6 @@
                 <% end %>
               </td>
           <% end %>
-
-
 
 
         </tr>

@@ -30,6 +30,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             email_sent_time = lead_touchpoint.created_at
             lead_action = LeadAction.create!(:lead => lead, :client_company => client_company, :touchpoint => lead_touchpoint, :action => :reply, :email_open_number => params["opens_count"], :email_sent_time => email_sent_time)
+            campaign.update_attribute(:repliesCount, campaign.repliesCount + 1)
             render json: {response: "new reply created", :status => 200}, status: 200
             return
         rescue
@@ -59,7 +60,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             #Get lead, or create if needed
             if lead.nil?
                 #create lead
-                puts "lead to associate touchpoint does not exist. Creating now"
+                puts "lead to associate touchpoint does not exist. return"
 
                 begin
                     full_name = params["reply"]["first_name"] + " " + params["reply"]["last_name"]
@@ -67,7 +68,10 @@ class Api::V1::ReplyController < Api::V1::BaseController
                     full_name = params["reply"]["first_name"]
                 end
 
+                client_leads = client_company.leads
+
                 lead = Lead.create!(:email => params["reply"]["email"], :first_name => params["reply"]["first_name"], :last_name => params["reply"]["last_name"], :full_name => full_name, :client_company => client_company, :campaign => campaign, :status => "in_campaign")
+                campaign.update_attribute(:peopleCount, campaign.peopleCount + 1)
             else
                 #if lead.campaign != campaign
                 #    render json: {error: "Lead campaign does not equal campaign from the email sent. Contact ScaleRep's tech department", :status => 400}, status: 400
@@ -82,7 +86,8 @@ class Api::V1::ReplyController < Api::V1::BaseController
             #Create touchpoint and associate to lead
             puts "creating touchpoint. Associating to lead and campaign"
             touchpoint = Touchpoint.create!(:channel => :email, :sender_email => params["reply"]["sender_email"], :email_subject => params["reply"]["email_subject"], :email_body => params["reply"]["email_body"], :campaign => campaign, :lead => lead, :client_company => client_company)
-        
+            campaign.update_attribute(:deliveriesCount, campaign.deliveriesCount + 1)
+
             render json: {response: "Touchpoint created", :status => 200}, status: 200
             return
         rescue
@@ -112,7 +117,6 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
             campaign_to_update = Campaign.find_by client_company: client_company, campaign_name: params["campaign_name"]
-            
             lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["email"].downcase, client_company]).first
             
             if lead.nil?
@@ -123,8 +127,23 @@ class Api::V1::ReplyController < Api::V1::BaseController
             num = params["reply"]["campaign_step"].to_i - 1
             puts "NUM: " + num.to_s
 
+            tps = lead.touchpoints.where(['campaign_id = ?', campaign_to_update])
+            opened_email = false
+            for t in tps
+                if !t.lead_actions.first.nil?
+                    opened_email = true
+                    break
+                end
+                
+            end 
+            if !opened_email 
+                campaign_to_update.update_attributes(:opensCount => campaign_to_update.opensCount + 1, :uniqueOpens => campaign_to_update.uniqueOpens + 1)
+            elsif params["reply"]["opens_count"].to_i == 1
+                campaign_to_update.update_attribute(:opensCount, campaign_to_update.opensCount + 1)
+            end
+
             lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign_to_update])[num]
-            puts lead_touchpoint
+
 
             if lead_touchpoint.nil?
                 render json: {response: "Couldn't find touchpoint associate to email open", :status => 200}, status: 200
@@ -134,50 +153,9 @@ class Api::V1::ReplyController < Api::V1::BaseController
             email_sent_time = lead_touchpoint.created_at
             lead_action = LeadAction.create!(:lead => lead, :client_company => client_company, :touchpoint => lead_touchpoint, :action => :open, :first_time => params["first_time_open"], :email_open_number => params["opens_count"], :email_sent_time => email_sent_time)
 
-            #get touchpoint
+            render json: {response: "email open posted", :status => 200}, status: 200
+            return
 
-            # save
-            #################### TO REMOVE ###############################
-
-            
-                        # update the total_opens in the campaign
-                        total_opens = campaign_to_update.opensCount
-                        if total_opens.present?
-                            count = campaign_to_update.opensCount
-                            campaign_to_update.update_attribute(:opensCount, count + 1)
-                        else
-                            campaign_to_update.update_attribute(:opensCount, 1)
-
-                        end
-                        
-                        if campaign_to_update.uniqueOpens.present?
-
-                          # update the unqiue opens in the campaign
-                          if params["first_time_open"] != "False"
-                            begin
-                              old_count = campaign_to_update.totalOpens # Create new campaign reply
-                              count = old_count + 1
-                            rescue
-                              count = 1
-                            end
-
-                            campaign_to_update.update_attribute(:uniqueOpens, count)
-
-                            render json: {response: "Campaign total opens updated. E-mail unique opened updated", :status => 200}, status: 200
-                            return
-
-                          else
-
-                            puts "User has already opened"
-                            render json: {response: "Campaign total opens updated. Unique contacts opened not updated", :status => 200}, status: 200
-                            return
-                          end
-                        end
-
-                        render json: {response: "Campaign total opens updated. Unique contacts opened not updated", :status => 200}, status: 200
-                        return
-
-            #####################################
 
         rescue
             render json: {error: "error - contact ScaleRep's tech department.", :status => 400}, status: 400

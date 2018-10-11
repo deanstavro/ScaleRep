@@ -12,41 +12,5 @@ module CampaignsHelper
    percentage
   end
 
-  def getEmailOpens(campaign)
-    email_open_count = 0
-    touchpoints = campaign.touchpoints
-    
-    for tp in touchpoints
-      l_a = tp.lead_actions.where(["action = ?", LeadAction.actions[:open]])
-      email_open_count += l_a.count
-    end
-    
-    return email_open_count
-  end
-
-  def getUniqueEmailOpens(campaign)
-    email_open_count = 0
-    touchpoints = campaign.touchpoints
-    
-    for tp in touchpoints
-      l_a = tp.lead_actions.where(["action = ? and email_open_number = ?", LeadAction.actions[:open], "1"])
-      email_open_count += l_a.count
-    end
-    
-    return email_open_count
-  end
-
-  def getEmailReplies(campaign)
-    email_open_count = 0
-    touchpoints = campaign.touchpoints
-    
-    for tp in touchpoints
-      l_a = tp.lead_actions.where(["action = ?", LeadAction.actions[:reply]])
-      email_open_count += l_a.count
-    end
-    
-    return email_open_count
-  end
-
 
 end
