@@ -328,6 +328,10 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
           new_lead = Lead.create!(:email => campaign_reply.email, :status => status, :full_name => params_content[:full_name], :first_name => f_name, :last_name => l_name, :client_company => client_company)
           campaign_reply.update_attribute(:lead, new_lead)
+
+          if %w{handed_off sent_meeting_invite handed_off_with_questions}.include?(status)
+            campaign_reply.update_attribute(:date_sourced, Date.today)
+          end
           campaign_reply.save!
 
           #check for first and last name

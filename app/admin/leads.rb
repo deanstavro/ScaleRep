@@ -26,7 +26,6 @@ index do
     column :full_name
     column :status
     column :client_company
-    column :account
     column :email
     column :title
     column :account

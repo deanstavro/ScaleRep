@@ -56,9 +56,12 @@
             <tbody>
               <% @meetings_set.each do |lead| %>
                 <tr>
-                  <td> <%= lead.updated_at.strftime("%b %d, %Y") %> </td>
+
+                  <td> <%= lead.date_sourced.strftime("%b %d, %Y") %> </td>
+
                   
                   <td> <%= lead.email %> </td>
+                  
 
                   <% if lead.first_name.present? && lead.last_name.present? %>
                     <td> <%= lead.first_name + " " + lead.last_name %></td>

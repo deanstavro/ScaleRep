@@ -29,9 +29,7 @@
 
           <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
           
-          <td>
-            <%= link_to "#{campaign.campaign_name}", campaign_path(campaign.id) %></td>
-          </td>
+          <td><%= link_to "#{campaign.campaign_name}", campaign_path(campaign.id) %></td>
 
           <td>
             <%= form_tag campaign_data_data_uploads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true, class:"shorter-column" do %>

@@ -218,17 +218,17 @@ class LeadsController < ApplicationController
         if ["do_not_contact", "opt_out"].include?(params[:status])
           @reply.lead.update_attribute(:status, "blacklist")
         elsif ["handed_off"].include?(params[:status])
-          @reply.lead.update_attribute(:status, "handed_off")
+          @reply.lead.update_attributes(:status => "handed_off", :date_sourced => Date.today)
         elsif ["interested"].include?(params[:status])
-          @reply.lead.update_attribute(:status, "interested")
-        elsif ['not_interested'].include?(params[:status])
-          @reply.lead.update_attribute(:status, "not_interested")
-        elsif ['handed_off_with_questions'].include?(params[:status])
-          @reply.lead.update_attribute(:status, "handed_off_with_questions")
-        elsif ['sent_meeting_invite'].include?(params[:status])
-          @reply.lead.update_attribute(:status, "sent_meeting_invite")
+          @reply.lead.update_attribute(:status => "interested")
+        elsif ["not_interested"].include?(params[:status])
+          @reply.lead.update_attribute(:status => "not_interested")
+        elsif ["handed_off_with_questions"].include?(params[:status])
+          @reply.lead.update_attributes(:status => "handed_off_with_questions", :date_sourced => Date.today)
+        elsif ["sent_meeting_invite"].include?(params[:status])
+          @reply.lead.update_attributes(:status => "sent_meeting_invite", :date_sourced => Date.today)
         else # auto_reply, auto_reply_referral, etc
-          @reply.lead.update_attribute(:status, "in_campaign")
+          @reply.lead.update_attribute(:status => "in_campaign")
         end
     rescue
       puts "no associated lead with reply_campaign"
