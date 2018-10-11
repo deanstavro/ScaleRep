@@ -5,6 +5,9 @@ ActiveAdmin.register User do
 
 permit_params :client_company_id, :email, :encrypted_password, :first_name, :last_name, :role, :password, :password_confirmation, :api_key
 
+remove_filter :data_uploads
+
+
 index do
     selectable_column
     id_column

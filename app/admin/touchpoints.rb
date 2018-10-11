@@ -13,5 +13,6 @@ ActiveAdmin.register Touchpoint do
 # end
 remove_filter :lead
 remove_filter :campaign
+remove_filter :lead_actions
 
 end

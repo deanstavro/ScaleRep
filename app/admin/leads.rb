@@ -17,6 +17,10 @@ permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_o
 remove_filter :account
 remove_filter :campaign_replies
 remove_filter :campaign
+remove_filter :touchpoints
+remove_filter :lead_actions
+
+
 index do
     selectable_column
     id_column

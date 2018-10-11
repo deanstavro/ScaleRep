@@ -11,6 +11,8 @@ remove_filter :personas
 remove_filter :accounts
 remove_filter :campaigns
 remove_filter :data_uploads
+remove_filter :touchpoints
+remove_filter :lead_actions
 
 index do
     selectable_column

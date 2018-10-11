@@ -4,8 +4,9 @@ ActiveAdmin.register DataUpload do
 #
 # permit_params :list, :of, :attributes, :on, :model
 permit_params :campaign, :client_company, :user, :imported_to_campaigns, :data, :count, :imported, :imported_count, :not_imported, :not_imported_count, :duplicates, :duplicates_count, :headers, :rules, :cleaned_data, :actions
+remove_filter :campaign
 
-	json_editor
+json_editor
 # or
 #
 # permit_params do

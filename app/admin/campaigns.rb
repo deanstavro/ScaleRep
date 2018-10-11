@@ -16,6 +16,8 @@ permit_params :reply_id, :reply_key, :contactLimit, :persona, :user_notes, :indu
 # end
 remove_filter :leads
 remove_filter :persona
+remove_filter :touchpoints
+remove_filter :data_uploads
 
 form do |f|
   f.inputs "Admin Details" do
