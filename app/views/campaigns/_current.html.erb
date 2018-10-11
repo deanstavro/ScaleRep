@@ -46,11 +46,9 @@
 
           <td><%= campaign.emailAccount %></td>
 
-          <% if !campaign.peopleCount.nil? or !campaign.peopleCount == 0 %>
-            <td><%= campaign.peopleCount %></td>
-          <% else %>
-            <td> 0 </td>
-          <% end %>
+
+          <td><%= campaign.peopleCount %></td>
+
 
           <% if !campaign.touchpoints.count == 0 or !campaign.touchpoints.count.nil? %>
             <td><%= campaign.touchpoints.count.to_s %></td>
@@ -67,14 +65,12 @@
 
           <% if @user.role == 'scalerep' %>          
               <td>
-                <% if campaign && campaign.deliveriesCount && campaign.bouncesCount %>
-                  <% if   campaign.bouncesCount> 0 %>
-                     <%= number_to_percentage(campaign.bouncesCount / campaign.deliveriesCount.to_f * 100, precision:0) %>
+                <% if campaign && campaign.deliveriesCount && campaign.bouncesCount >0 %>
+                   <%= number_to_percentage(campaign.bouncesCount / campaign.deliveriesCount.to_f * 100, precision:0) %>
 
-                    <span class="pct">
-                        (<%= campaign.bouncesCount %>)
-                    </span>
-                  <% end %>
+                  <span class="pct">
+                      (<%= campaign.bouncesCount %>)
+                  </span>
 
                 <% else %>
                     0%
