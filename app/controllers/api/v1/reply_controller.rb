@@ -315,8 +315,13 @@ class Api::V1::ReplyController < Api::V1::BaseController
           #check for first and last name
           
       else
-              @lead.update(status: status)
+              @lead.update_attribute(:status, status)
               campaign_reply.update_attribute(:lead, @lead)
+
+              if %w{handed_off sent_meeting_invite handed_off_with_questions}.include?(status)
+                    campaign_reply.update_attribute(:date_sourced, Date.today)
+                    @lead.update_attribute(:date_sourced, Date.today)
+              end
       end
     end
 
