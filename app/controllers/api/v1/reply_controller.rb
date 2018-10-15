@@ -308,7 +308,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
           campaign_reply.update_attribute(:lead, new_lead)
 
           if %w{handed_off sent_meeting_invite handed_off_with_questions}.include?(status)
-            campaign_reply.update_attribute(:date_sourced, Date.today)
+            #campaign_reply.update_attribute(:date_sourced, Date.today)
             new_lead.update_attribute(:date_sourced, Date.today)
           end
 
@@ -319,7 +319,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
               campaign_reply.update_attribute(:lead, @lead)
 
               if %w{handed_off sent_meeting_invite handed_off_with_questions}.include?(status)
-                    campaign_reply.update_attribute(:date_sourced, Date.today)
+                    #campaign_reply.update_attribute(:date_sourced, Date.today)
                     @lead.update_attribute(:date_sourced, Date.today)
               end
       end
