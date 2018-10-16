@@ -183,7 +183,7 @@ class LeadsController < ApplicationController
     @company = ClientCompany.find_by(id: params[:company_id])
     @reply = CampaignReply.find_by(id: params[:campaign_reply_id])
     #update attributes
-    if params[:status] == "referral" or "auto_reply_referral"
+    if params[:status] == "referral" or params[:status] == "auto_reply_referral"
         #update params if they exist and added for referrals
         @reply.update_attributes(:referral_name => params[:referralName], :referral_email => params[:referralEmail], :company => params[:company], :status => params[:status], :full_name => params[:full_name] )
 

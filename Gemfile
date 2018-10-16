@@ -44,7 +44,7 @@ end
 group :development, :test do
   gem 'byebug', platform: :mri
   gem 'sqlite3'
-  gem 'factory_girl_rails', :require => true
+  gem 'factory_bot_rails', :require => true
   gem 'faker'
   gem 'rspec-rails'
   gem 'rails-erd'

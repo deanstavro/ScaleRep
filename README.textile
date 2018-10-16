@@ -6,14 +6,14 @@ h2. Prerequisites
 * github
 * postgres
 * ruby 2.4.2
-* rails 5.0
+* rails 5.0.7
 
 
 h2. Installation and Setup
 
 1. Download ScaleRep from the github repository
-2. Create the necessary user and database on your local postgres database
-3. Run these commands to start the project
+2. Create the necessary user and database on your local postgres database. The config/database.yml file contains development credentials for postgres
+3. Start the project
 ```
 $ rails db:drop
 $ rails db:create

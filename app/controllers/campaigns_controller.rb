@@ -178,7 +178,7 @@ class CampaignsController < ApplicationController
   	end
 
 
-  	def choose_email(count_dict= count_dict)
+  	def choose_email(count_dict)
 
   		current_value = 1000
     		current_email = ""
