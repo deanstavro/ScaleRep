@@ -1,20 +1,20 @@
-# ScaleRep
+h1. ScaleRep
 
 
-## Prerequisites
+h2. Prerequisites
 
 * github
-* postgresql
+* postgres
 * ruby 2.4.2
 * rails 5.0
 
 
-## Installation and Setup
+h2. Installation and Setup
+
 
 1. Download ScaleRep from the github repository
 2. Create the necessary user and database on your local postgres database
 3. Run these commands to start the project
-
 ```
 $ rails db:drop
 $ rails db:create
@@ -24,197 +24,29 @@ $ rails s
 ```
 
 
-
-
-
-
 h4. Front-end Framework
+The example in the GitHub repository was built with the Bootstrap 3 front-end framework. The "rails_layout":https://github.com/RailsApps/rails_layout gem is included so you can switch to the Foundation front-end framework.
 
-The example application (here in the GitHub repository) integrates Bootstrap for a navigation bar and flash messages. The "rails_layout":https://github.com/RailsApps/rails_layout gem is included so you can switch to the Foundation front-end framework.
 
-
-h2. Accounts You Will Need
-
+h4. Accounts You Will Need
 Devise provides a "Forgot Password?" feature that resets a password and sends instructions to the user. You'll need an email service provider to send email from the application. You can use "Gmail":https://accounts.google.com/SignUp?service=mail during development. You can get a free "Gmail":https://accounts.google.com/SignUp?service=mail account if you don't already have one. For production, Gmail is not robust. Use transactional email services, such as "Mandrill":http://mandrill.com/, to send email in production. See the article "Send Email with Rails":http://railsapps.github.io/rails-send-email.html for more information.
 
 We provide instructions to deploy the application to "Heroku":https://www.heroku.com/ which provides Rails application hosting. It costs nothing to set up a Heroku account and deploy as many applications as you want. To deploy an app to Heroku, you must have a Heroku account. Visit Heroku "to set up an account":https://id.heroku.com/signup/devcenter.
 
-h2. Dependencies
-
-Before generating your application, you will need:
-
-* The Ruby language - version 2.3.1
-* The Rails gem - version 5.0
-
-
-
-h2. Getting the Application
-
-h3. Local
-
-You have several options for getting the code on your own machine. You can _fork_, _clone_, or _generate_.
-
-h4. Fork
-
-If you'd like to add features (or bug fixes) to improve the example application, you can fork the GitHub repo and "make pull requests":http://help.github.com/send-pull-requests/. Your code contributions are welcome!
-
-h4. Clone
-
-If you want to copy and customize the app with changes that are only useful for your own project, you can clone the GitHub repo. You'll need to search-and-replace the project name throughout the application. You probably should generate the app instead (see below). To clone:
-
-<pre>
-$ git clone git://github.com/RailsApps/rails-devise-roles.git
-</pre>
-
-You'll need "git":http://git-scm.com/ on your machine. See "Rails and Git":http://railsapps.github.io/rails-git.html.
-
-h4. Generate
-
-
-1. To build the example application, Rails 5.0 must be installed in your development environment. Run the command:
-2. $ rails new scalerep -m https://raw.github.com/RailsApps/rails-composer/master/composer.rb. This creates a new Rails app named scalerep on your computer. You can use a different name if you wish.
-3. You'll see a prompt:
-
-<pre>
-option  Build a starter application?
-    1)  Build a RailsApps example application
-    2)  Contributed applications
-    3)  Custom application
-</pre>
-
-Enter "1" to select *Build a RailsApps example application*. You'll see a prompt:
-
-<pre>
-option  Choose a starter application.
-    1)  learn-rails
-    2)  rails-bootstrap
-    3)  rails-foundation
-    4)  rails-mailinglist-activejob
-    5)  rails-omniauth
-    6)  rails-devise
-    7)  rails-devise-roles
-    8)  rails-devise-pundit
-    9)  rails-signup-download
-   10)  rails-stripe-checkout
-</pre>
-
-Choose *rails-devise-roles*. The Rails Composer tool may give you other options (other applications may have been added since these notes were written).
-
-The application generator template will ask you for additional preferences:
-
-<pre>
-  option  Web server for development?
-      1)  WEBrick (default)
-      2)  Thin
-      3)  Unicorn
-      4)  Puma
-      5)  Phusion Passenger (Apache/Nginx)
-      6)  Phusion Passenger (Standalone)
-  option  Web server for production?
-      1)  Same as development
-      2)  Thin
-      3)  Unicorn
-      4)  Puma
-      5)  Phusion Passenger (Apache/Nginx)
-      6)  Phusion Passenger (Standalone)
-  option  Database used in development?
-      1)  SQLite
-      2)  PostgreSQL
-      3)  MySQL
-  option  Template engine?
-      1)  ERB
-      2)  Haml
-      3)  Slim
-  option  Test framework?
-      1)  None
-      2)  RSpec with Capybara
-  option  Front-end framework?
-      1)  None
-      2)  Twitter Bootstrap 3.3
-      3)  Twitter Bootstrap 2.3
-      4)  Zurb Foundation 5.5
-      5)  Zurb Foundation 4.0
-      6)  Simple CSS
-   setup  The Devise 'forgot password' feature requires email.
-  option  Add support for sending email?
-      1)  None
-      2)  Gmail
-      3)  SMTP
-      4)  SendGrid
-      5)  Mandrill
-  option  Devise modules?
-      1)  Devise with default modules
-      2)  Devise with Confirmable module
-     3)  Devise with Confirmable and Invitable modules
-  option  Use a form builder gem?
-      1)  None
-      2)  SimpleForm
-  option  Install page-view analytics?
-      1)  None
-      2)  Google Analytics
-      3)  Segment.io
-  extras  Set a robots.txt file to ban spiders? (y/n)
-  extras  Create a GitHub repository? (y/n)
-  extras  Use or create a project-specific rvm gemset? (y/n)
-</pre>
-
-h4. Web Servers
-
-If you plan to deploy to Heroku, select Unicorn as your production webserver. Unicorn is recommended by Heroku.
-
-h4. Database
-
-Use SQLite for development on Mac or Linux, unless you already have PostgreSQL installed locally. Use PostgreSQL if you plan to deploy to Heroku. You can easily change the database later if you select SQLite to start.
-
-h4. Template Engine
-
-The example application uses the default "ERB" Rails template engine. Optionally, you can use another template engine, such as Haml or Slim. See instructions for "Haml and Rails":http://railsapps.github.io/rails-haml.html.
 
 h4. Testing
-
 The example application includes tests for RSpec with Capybara.
 
-h4. Front-end Framework
-
-The example in the GitHub repository was built with the Bootstrap 3 front-end framework. Use Zurb Foundation 5 if you like. Choosing either Bootstrap or Foundation will automatically install views with attractive styling.
-
-h4. Email
-
-Choose Gmail for development if you already have a Gmail account. Choose SendGrid or Mandrill for production if your site will be heavily used.
 
 h4. Devise Modules
-
 The example in the GitHub repository uses Devise with default modules.
 
 
 h4. Troubleshooting
-
 If you get an error "OpenSSL certificate verify failed" or "Gem::RemoteFetcher::FetchError: SSL_connect" see the article "OpenSSL errors and Rails":http://railsapps.github.io/openssl-certificate-verify-failed.html.
 
 
-h4. Changing the Front-end Framework
-
-The version of the application in the repository includes Bootstrap. If you wish to install Foundation instead, use the "rails_layout":https://github.com/RailsApps/rails_layout gem to generate new files. First add a gem to the Gemfile:
-
-<pre>
-gem 'foundation-rails'
-</pre>
-
-Use Bundler to install the gem:
-
-<pre>
-$ bundle install
-</pre>
-
-To create layout files for use with Zurb Foundation 5.5:
-
-<pre>
-$ rails generate layout:install foundation5
-</pre>
-
-
-h3. Configuration File
-
+h4. Configuration File
 To consolidate configuration settings in a single location, we store credentials in the *config/secrets.yml* file. To keep your credentials private, use Unix environment variables to set your credentials. See the article "Rails Environment Variables":http://railsapps.github.io/rails-environment-variables.html for more information.
 
 Add your credentials to the file *config/secrets.yml*:
@@ -257,8 +89,7 @@ The variable @domain_name@ is used for sending email. You can use @example.com@ 
 
 If you don't want to use Unix environment variables, you can set each value directly in the *config/secrets.yml* file. The file must be in your git repository when you deploy to Heroku. However, you shouldn't save the file to a public GitHub repository where other people can see your credentials.
 
-h3. Roles
-
+h4. Roles
 Roles are defined in the *app/models/User.rb* file (the @User@ model).
 
 <pre>
@@ -290,18 +121,14 @@ user.role  # => "admin"
 See documentation for "ActiveRecord::Enum":http://edgeapi.rubyonrails.org/classes/ActiveRecord/Enum.html for details.
 
 
-
 h3. RSpec Test Suite
-
 The application contains a suite of RSpec tests. To run:
-
 <pre>
 $ rspec
 </pre>
 
 
-h3. Useful Links
-
+h4. Useful Links
 * "Active Record Enum":http://api.rubyonrails.org/classes/ActiveRecord/Enum.html for roles
 * "Devise":https://github.com/plataformatec/devise for user management and authentication
 * "Bootstrap":http://getbootstrap.com/ or "Foundation":http://foundation.zurb.com/ front-end frameworks
