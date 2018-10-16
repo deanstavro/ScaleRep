@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181005202759) do
+ActiveRecord::Schema.define(version: 20181016210038) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -153,16 +153,6 @@ ActiveRecord::Schema.define(version: 20181005202759) do
     t.string   "referral_campaign_id"
   end
 
-  create_table "client_reports", force: :cascade do |t|
-    t.datetime "week_of"
-    t.text     "report"
-    t.string   "potential_deal_sizes"
-    t.datetime "created_at",           null: false
-    t.datetime "updated_at",           null: false
-    t.integer  "client_company_id"
-    t.index ["client_company_id"], name: "index_client_reports_on_client_company_id", using: :btree
-  end
-
   create_table "data_uploads", force: :cascade do |t|
     t.jsonb    "data"
     t.integer  "campaign_id"
@@ -303,7 +293,6 @@ ActiveRecord::Schema.define(version: 20181005202759) do
   add_foreign_key "campaign_replies", "leads"
   add_foreign_key "campaigns", "client_companies"
   add_foreign_key "campaigns", "personas"
-  add_foreign_key "client_reports", "client_companies"
   add_foreign_key "data_uploads", "client_companies"
   add_foreign_key "data_uploads", "users"
   add_foreign_key "lead_actions", "client_companies"

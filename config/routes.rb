@@ -48,7 +48,6 @@ Rails.application.routes.draw do
 
 
     #ALL ROUTES FOR USERS SIGNED IN
-    get 'client_reports/index' 
     get 'metrics', to: 'metrics#index'
     # Nested In Client Companies
     resource :client_companies, path: '', only: [:edit, :update, :delete] do

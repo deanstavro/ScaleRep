@@ -10,7 +10,7 @@ def index
 
   if @user.role == "scalerep"
 
-      @client_companies = ClientCompany.all.pluck(:name)
+      @client_companies = ClientCompany.where("account_live = ?", true).pluck(:name)
 
       if params.has_key?(:client_company)
 
@@ -71,7 +71,7 @@ def index
     @user = User.find(current_user.id)
     @persona = Persona.new
 
-    @client_companies = ClientCompany.all.pluck(:name)
+    @client_companies = ClientCompany.where("account_live = ?", true).pluck(:name)
   end
 
   # GET /personas/1/edit

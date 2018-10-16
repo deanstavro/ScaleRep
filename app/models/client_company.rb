@@ -1,7 +1,6 @@
 class ClientCompany < ApplicationRecord
 	has_many :users
 	has_many :leads
-	has_many :client_reports
 	has_many :campaigns
 	has_many :personas
 	has_many :campaign_replies
@@ -11,20 +10,22 @@ class ClientCompany < ApplicationRecord
 	has_many :lead_actions
 
 	validates :name, presence: true, uniqueness: true
-	validates :company_domain, presence: true, uniqueness: true
+	validates :company_domain, presence: true
 	validates :account_manager, presence: true
 	validates :replyio_keys, presence: true
 
+	# JSON Serialized Column
 	serialize :replyio_keys
-
+	# Allows us to call @company.campaign.build
+	attr_accessor :campaign_id
 	after_create :generate_key
 
-	attr_accessor :campaign_id
+	
 
 	def generate_key
-    begin
-      self.api_key = SecureRandom.hex
-    end while self.class.exists?(api_key: api_key)
-    self.save!
-  end
+	    begin
+	      self.api_key = SecureRandom.hex
+	    end while self.class.exists?(api_key: api_key)
+	    self.save!
+  	end
 end
