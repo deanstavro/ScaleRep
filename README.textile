@@ -15,11 +15,11 @@ h2. Installation and Setup
 2. Create the necessary user and database on your local postgres database. The config/database.yml file contains development credentials for postgres
 3. Start the project
 <pre>
-$ rails db:drop
-$ rails db:create
-$ rails db:migrate
-$ rails db:seed
-$ rails s
+  $ rails db:drop
+  $ rails db:create
+  $ rails db:migrate
+  $ rails db:seed
+  $ rails s
 </pre>
 
 
