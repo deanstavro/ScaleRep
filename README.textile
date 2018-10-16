@@ -36,14 +36,16 @@ Devise provides a "Forgot Password?" feature that resets a password and sends in
 We provide instructions to deploy the application to "Heroku":https://www.heroku.com/ which provides Rails application hosting. It costs nothing to set up a Heroku account and deploy as many applications as you want. To deploy an app to Heroku, you must have a Heroku account. Visit Heroku "to set up an account":https://id.heroku.com/signup/devcenter.
 
 
-h2. Testing
-
-The example application includes tests for RSpec with Capybara.
-
-
 h2. Devise Modules
 
 The example in the GitHub repository uses Devise with default modules.
+
+h2. RSpec Test Suite
+
+The example application includes tests for RSpec with Capybara. To run:
+<pre>
+$ rspec
+</pre>
 
 
 h2. Troubleshooting
@@ -94,46 +96,6 @@ The values for @admin_email@ and @admin_password@ are used when the database is 
 The variable @domain_name@ is used for sending email. You can use @example.com@ in development. If you already have a custom domain name you'll use when you deploy the application, you can set @domain_name@. If you deploy the application to Heroku, you'll set @domain_name@ with the unique name you've given your application on Heroku. You'll have to wait until you deploy to know the name you'll use on Heroku.
 
 If you don't want to use Unix environment variables, you can set each value directly in the *config/secrets.yml* file. The file must be in your git repository when you deploy to Heroku. However, you shouldn't save the file to a public GitHub repository where other people can see your credentials.
-
-h2. Roles
-
-Roles are defined in the *app/models/User.rb* file (the @User@ model).
-
-<pre>
-class User < ActiveRecord::Base
-  enum role: [:user, :vip, :admin]
-  after_initialize :set_default_role, :if => :new_record?
-
-  def set_default_role
-    self.role ||= :user
-  end
-
-  # Include default devise modules. Others available are:
-  # :confirmable, :lockable, :timeoutable and :omniauthable
-  devise :database_authenticatable, :registerable,
-         :recoverable, :rememberable, :trackable, :validatable
-end
-</pre>
-
-You can change the available roles by changing the array @[:user, :vip, :admin]@.
-
-The application uses the ActiveRecord @enum@ method to manage roles. ActiveRecord provides convenient methods to query the role attribute:
-
-<pre>
-user.admin! # sets the role to "admin"
-user.admin? # => true
-user.role  # => "admin"
-</pre>
-
-See documentation for "ActiveRecord::Enum":http://edgeapi.rubyonrails.org/classes/ActiveRecord/Enum.html for details.
-
-
-h2. RSpec Test Suite
-
-The application contains a suite of RSpec tests. To run:
-<pre>
-$ rspec
-</pre>
 
 
 h2. Useful Links
