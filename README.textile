@@ -11,7 +11,7 @@ h2. Prerequisites
 
 h2. Installation and Setup
 
-1. Download ScaleRep from the github repository
+1. Clone the ScaleRep codebase from github
 2. Create the necessary user and database on your local postgres database. The config/database.yml file contains development credentials for postgres
 3. Start the project
 <pre>
