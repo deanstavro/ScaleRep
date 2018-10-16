@@ -8,7 +8,7 @@ class DataUploadsController < ApplicationController
   # GET /data_uploads.json
   def index
     @user = User.find(current_user.id)
-    @data_uploads = DataUpload.where("user_id =?", @user.id).order('created_at DESC').paginate(:page => params[:page], :per_page => 20)
+    @data_uploads = DataUpload.where(["user_id = ? and campaign_id != ?", @user.id, nil]).order('created_at DESC').paginate(:page => params[:page], :per_page => 20)
   end
 
   # GET /data_uploads/1
