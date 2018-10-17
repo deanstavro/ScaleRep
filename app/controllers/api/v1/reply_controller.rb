@@ -160,9 +160,11 @@ class Api::V1::ReplyController < Api::V1::BaseController
             end
 
             # Find campaign step number
-            num = params["reply"]["campaign_step"].to_i - 1
+            num = params["reply"]["campaign_step"].to_i
             puts "NUM: " + num.to_s
-            lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign_to_update])[num]
+            # Find how many total touchpoints
+            lead_toucpoint_count = tps.count
+            lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign_to_update])[lead_toucpoint_count-num]
 
 
             if lead_touchpoint.nil?
