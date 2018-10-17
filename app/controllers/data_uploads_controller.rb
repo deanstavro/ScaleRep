@@ -111,10 +111,16 @@ class DataUploadsController < ApplicationController
     begin
         if (params[:file].content_type).to_s == 'text/csv'
           if (params[:file].size).to_i < 1000000
-            upload_message, uploaded_data = DataUpload.campaign_data_upload(params[:file], company, leads, campaign, col, user)
+            upload_message, uploaded_data = DataUpload.campaign_data_upload(params[:file], company, campaign, col, user)
             puts "Finished uploading. Redirecting!"
-            flash[:notice] = upload_message
-            redirect_to edit_data_upload_path(uploaded_data.id)
+            # If error in upload (because of duplicate columns, or columns missing)
+            if uploaded_data.nil?
+              redirect_to client_companies_campaigns_path(persona), :flash => { :error => upload_message }
+              return
+            else
+              flash[:notice] = upload_message
+              redirect_to edit_data_upload_path(uploaded_data.id)
+            end
           else
 
             redirect_to client_companies_campaigns_path(persona), :flash => { :error => "The CSV is too large. Please upload a shorter CSV!" }

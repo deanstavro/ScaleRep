@@ -7,7 +7,7 @@ class DataUpload < ApplicationRecord
 
   # Loops through a file. Checks if first_name and email are present
   # Save Data_Upload object with data as a hash
-  def self.campaign_data_upload(file, company, leads, campaign, column_names, user)
+  def self.campaign_data_upload(file, company, campaign, column_names, user)
 		puts "Starting lead import to campaign"
 		
 		lines = CSV.open(file.path).readlines
@@ -22,10 +22,15 @@ class DataUpload < ApplicationRecord
 		keys.each_with_index do |key, index|
 			begin
 				key_to_insert = key.downcase
-				if column_names.include? key_to_insert 
-					new_keys[key_to_insert] = index
-					email_exists = true if key_to_insert == "email"
-					first_name_exists = true if key_to_insert == "first_name"
+				if column_names.include? key_to_insert
+					if new_keys[key_to_insert].nil?
+						new_keys[key_to_insert] = index
+						email_exists = true if key_to_insert == "email"
+						first_name_exists = true if key_to_insert == "first_name"
+					else
+						# Duplicate columns
+						return "error. Two columns named " + key_to_insert, nil
+					end
 				else
 					puts "empty header"
 					keys_unused << index
@@ -39,9 +44,9 @@ class DataUpload < ApplicationRecord
 
 		# check for required fields in the header
 		if first_name_exists == false
-			return "first_name header not included. List not uploaded"
+			return "first_name header not included. List not uploaded", nil
 		elsif email_exists == false
-			return "email header not included. List not uploaded"
+			return "email header not included. List not uploaded", nil
 		end
 
 		count = 0
@@ -62,7 +67,7 @@ class DataUpload < ApplicationRecord
 
 		new_data_upload = DataUpload.create(client_company: company, campaign: campaign, user: user, data: data, count: count, headers: keys_array.to_s)
 		
-		return count.to_s + " records uploaded. Columns " + keys_array.to_s + " included. A report will be generated when upload completes", new_data_upload
+		return count.to_s + " records uploaded. Columns " + keys_array.to_s + " included.", new_data_upload
 
 	end
 
