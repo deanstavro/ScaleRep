@@ -11,20 +11,23 @@ class Api::V1::ReplyController < Api::V1::BaseController
             end
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
+            # Find campaign or return if nil
             campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
-            lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["reply"]["email"].downcase, client_company]).first
-
-            #Get lead, or create if needed
-            if lead.nil?
-                render json: {response: "Couldn't find lead", :status => 200}, status: 200
+            if campaign_to_update.nil?
+                render json: {response: "Couldn't find campaign for campaign name " + params["reply"]["campaign_name"], :status => 200}, status: 200
                 return
             end
-
+            # Find lead or return if nil
+            lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["reply"]["email"].downcase, client_company]).first
+            if lead.nil?
+                render json: {response: "Couldn't find lead for email " + params["reply"]["email"], :status => 200}, status: 200
+                return
+            end
+            # Find touchpoint or return nil
             num = params["reply"]["campaign_step"].to_i - 1
             lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign])[num]
-
             if lead_touchpoint.nil?
-                render json: {response: "Couldn't find touchpoint associate to email open", :status => 200}, status: 200
+                render json: {response: "Couldn't find touchpoint to associate to email open", :status => 200}, status: 200
                 return
             end
 
@@ -54,14 +57,18 @@ class Api::V1::ReplyController < Api::V1::BaseController
             end
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
-            campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
-            lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["reply"]["email"].downcase, client_company]).first
 
+            campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
+            if campaign.nil?
+                render json: {response: "Couldn't find campaign", :status => 200}, status: 200
+                return
+            end
+            
+            lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["reply"]["email"].downcase, client_company]).first
             #Get lead, or create if needed
             if lead.nil?
                 #create lead
                 puts "lead to associate touchpoint does not exist. return"
-
                 begin
                     full_name = params["reply"]["first_name"] + " " + params["reply"]["last_name"]
                 rescue
@@ -116,18 +123,27 @@ class Api::V1::ReplyController < Api::V1::BaseController
         begin
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
+            # Find campaign or return
             campaign_to_update = Campaign.find_by client_company: client_company, campaign_name: params["campaign_name"]
+            if campaign_to_update.nil?
+                render json: {response: "Couldn't find campaign for campaign name " + params["campaign_name"], :status => 200}, status: 200
+                return
+            end
+            # Find lead or return
             lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["email"].downcase, client_company]).first
-            
             if lead.nil?
-                render json: {response: "Couldn't find lead", :status => 200}, status: 200
+                render json: {response: "Couldn't find lead for email " + params["email"], :status => 200}, status: 200
                 return
             end
 
-            num = params["reply"]["campaign_step"].to_i - 1
-            puts "NUM: " + num.to_s
-
+            # Find if any touchpoints exist or return error
             tps = lead.touchpoints.where(['campaign_id = ?', campaign_to_update])
+            if tps.empty?
+                render json: {response: "Couldn't find any touchpoints for campaign " + campaign_to_update.campaign_name + " and for lead " + lead.email, :status => 200}, status: 200
+                return
+            end
+
+            #For touchpoints, check if an action has been taken
             opened_email = false
             for t in tps
                 if !t.lead_actions.first.nil?
@@ -135,13 +151,17 @@ class Api::V1::ReplyController < Api::V1::BaseController
                     break
                 end
                 
-            end 
+            end
+
             if !opened_email 
                 campaign_to_update.update_attributes(:opensCount => campaign_to_update.opensCount + 1, :uniqueOpens => campaign_to_update.uniqueOpens + 1)
             elsif params["reply"]["opens_count"].to_i == 1
                 campaign_to_update.update_attribute(:opensCount, campaign_to_update.opensCount + 1)
             end
 
+            # Find campaign step number
+            num = params["reply"]["campaign_step"].to_i - 1
+            puts "NUM: " + num.to_s
             lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign_to_update])[num]
 
 
