@@ -12,11 +12,13 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
             # Find campaign or return if nil
+            
             campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
             if campaign.nil?
                 render json: {response: "Couldn't find campaign for campaign name " + params["reply"]["campaign_name"], :status => 200}, status: 200
                 return
             end
+            
             # Find lead or return if nil
             lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["reply"]["email"].downcase, client_company]).first
             if lead.nil?
@@ -26,6 +28,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             # Find campaign step number
             num = params["reply"]["campaign_step"].to_i
+            
             # Find how many total touchpoints
             tp_count = lead.touchpoints.where(["campaign_id = ?", campaign]).count
 
@@ -34,7 +37,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
                 return
             end
                 
-            lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign_to_update])[tp_count-num]
+            lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign])[tp_count - num]
             if lead_touchpoint.nil?
                     render json: {response: "Couldn't find touchpoint to associate to email open", :status => 200}, status: 200
                     return
