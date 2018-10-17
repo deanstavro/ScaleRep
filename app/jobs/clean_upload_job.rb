@@ -31,7 +31,6 @@ class CleanUploadJob < ApplicationJob
 			
 			delete_row = false
 			blacklist_contact = false
-
 			blacklist_array = ["handed_off","sent_meeting_invite","handed_off_with_questions", "blacklist"]
 
 			# Check if email and first_name exist
@@ -41,7 +40,6 @@ class CleanUploadJob < ApplicationJob
 				next
 			end
 
-
 			lead_count = client_leads.where(["lower(email) = ?", contact["email"].downcase]).count
 			puts lead_count.to_s
 			# If lead exists and should not be created, continue
@@ -50,6 +48,7 @@ class CleanUploadJob < ApplicationJob
 		    	puts contact["email"] + " exists. Not uploaded"
 		    	next
 		    end
+		    
 		    # If lead is blacklist or one of the handed_off enums, skip
 		    if lead_count > 0
 		    	lead_array = client_leads.where(["lower(email) = ?", contact["email"].downcase])

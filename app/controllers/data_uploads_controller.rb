@@ -22,16 +22,14 @@ class DataUploadsController < ApplicationController
     @persona = @campaign.persona
     @headers = @data_upload.data[0].keys
     @cleaned_data = @data_upload.cleaned_data
-
-    @page = params[:page]
-    @per_page = 150
-
     @values = []
+    
     @cleaned_data.each do |value_hash|
       @values << value_hash.values
     end
 
-    @page_results = @values.paginate(:page => @page, :per_page => @per_page)
+    @page = params[:page]
+    @page_results = @values.paginate(:page => @page, :per_page => 150)
   end
 
   # GET /data_uploads/new
