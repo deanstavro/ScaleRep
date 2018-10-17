@@ -23,12 +23,21 @@ class Api::V1::ReplyController < Api::V1::BaseController
                 render json: {response: "Couldn't find lead for email " + params["reply"]["email"], :status => 200}, status: 200
                 return
             end
-            # Find touchpoint or return nil
-            num = params["reply"]["campaign_step"].to_i - 1
-            lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign])[num]
-            if lead_touchpoint.nil?
-                render json: {response: "Couldn't find touchpoint to associate to email open", :status => 200}, status: 200
+
+            # Find campaign step number
+            num = params["reply"]["campaign_step"].to_i
+            # Find how many total touchpoints
+            tp_count = lead.touchpoints.where(["campaign_id = ?", campaign]).count
+
+            if tp_count == 0
+                render json: {response: "Couldn't find any touchpoints for lead", :status => 200}, status: 200
                 return
+            end
+                
+            lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign_to_update])[tp_count-num]
+            if lead_touchpoint.nil?
+                    render json: {response: "Couldn't find touchpoint to associate to email open", :status => 200}, status: 200
+                    return
             end
 
             email_sent_time = lead_touchpoint.created_at
@@ -161,10 +170,9 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             # Find campaign step number
             num = params["reply"]["campaign_step"].to_i
-            puts "NUM: " + num.to_s
             # Find how many total touchpoints
-            lead_toucpoint_count = tps.count
-            lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign_to_update])[lead_toucpoint_count-num]
+            lead_touchpoint_count = tps.count
+            lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign_to_update])[lead_touchpoint_count-num]
 
 
             if lead_touchpoint.nil?
