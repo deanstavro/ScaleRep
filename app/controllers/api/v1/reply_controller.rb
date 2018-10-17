@@ -13,7 +13,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             client_company = ClientCompany.find_by(api_key: params["api_key"])
             # Find campaign or return if nil
             campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
-            if campaign_to_update.nil?
+            if campaign.nil?
                 render json: {response: "Couldn't find campaign for campaign name " + params["reply"]["campaign_name"], :status => 200}, status: 200
                 return
             end
