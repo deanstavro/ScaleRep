@@ -6,52 +6,39 @@ class LeadUploadJob < ApplicationJob
 	include Reply
 
 	def perform(data_upload_object)
-
 		puts "upload lead job has been started"
-
 		data_copy = Marshal.load(Marshal.dump(data_upload_object.cleaned_data))
-
-		#From campaign, grab the number of contacts per campaign
 		@base_campaign = Campaign.find_by(id: data_upload_object.campaign_id)
-		puts "CAMPAIGN BASE: " + @base_campaign.to_s
-		puts @base_campaign.id
 		client_company = @base_campaign.client_company
 		clients_leads = Lead.where("client_company_id =? " , data_upload_object.client_company)
-		# Campaign Contact Limit
 		campaign_contact_count = @base_campaign.contactLimit
 		# Grab the count and figure out how many campaigns are needed
 		count_of_data_set = data_upload_object.count
-		puts "COUNT"
-		puts count_of_data_set.to_s
 		# Check if current campaign has leads
 		number_leads_in_campaign = @base_campaign.leads.count
 
 		if (campaign_contact_count - number_leads_in_campaign) > 0
-
-			lead_list_copy, imported, duplicated, not_imported = upload_leads(clients_leads, campaign_contact_count, number_leads_in_campaign, data_copy, @base_campaign)
+			lead_list_copy, imported, not_imported = upload_leads(clients_leads, campaign_contact_count, number_leads_in_campaign, data_copy, @base_campaign)
 			# If more leads don't exist on the lead list, we are done
 			if lead_list_copy.empty?
-				puts "lead list is empty"
-				
-				data_upload_object.update_attributes(:imported => imported, :duplicates => duplicated, :not_imported => not_imported)
-				puts "Contacts Added to Current Campaign. Job finished"
+				puts "lead list is empty. Contacts Added to Current Campaign. Job finished"
+				data_upload_object.update_attributes(:imported => imported, :not_imported => not_imported)
 				return
 			else
 				puts "more leads to upload"
-				# Create campaigns and upload leads for the remain contacts
-				createCampaignsUploadLeads(lead_list_copy, data_upload_object, campaign_contact_count, client_company, @base_campaign, imported, duplicated, not_imported)
+				createCampaignsUploadLeads(lead_list_copy, data_upload_object, campaign_contact_count, client_company, @base_campaign, imported, not_imported)
 			end	
 		else
 			puts "no more space in current campaign"
-			# The current campaign is full
-			createCampaignsUploadLeads(data_copy, data_upload_object, campaign_contact_count, client_company, @base_campaign, [], [], [])	
+			createCampaignsUploadLeads(data_copy, data_upload_object, campaign_contact_count, client_company, @base_campaign, [], [])	
 		end
 	end
+
 
 	private
 
 
-	def createCampaignsUploadLeads(remaining_leads_json, data_upload_object, campaign_contact_count, client_company, base_campaign, imported, duplicated, not_imported)
+	def createCampaignsUploadLeads(remaining_leads_json, data_upload_object, campaign_contact_count, client_company, base_campaign, imported, not_imported)
 		puts "private method to create campaigns and upload leads"
 		clients_leads = Lead.where("client_company_id =? " , client_company)
 		campaigns_left =  (remaining_leads_json.count.to_f/campaign_contact_count).ceil
@@ -69,16 +56,8 @@ class LeadUploadJob < ApplicationJob
 		    # Get Array of all emails
 		  	email_array = get_email_accounts(client_company.replyio_keys)
 		    count_dict = email_count(email_array, @campaigns)
-
-		    puts "email count_dict"
-		    puts count_dict
-
 		    # Choose correct email based on which email is running the least campaigns
 		    email_to_use = choose_email(count_dict)
-
-		    puts "email to use: "
-		    puts email_to_use
-
 		    # Find the correct keys for that email to upload the campaign to that email
 		    for email in email_array
 	  			if email_to_use == email["emailAddress"]
@@ -90,25 +69,22 @@ class LeadUploadJob < ApplicationJob
 		    # Add the email account we will use to the local campaign object
 		  	puts email_to_use.to_s + "  " + reply_key
 		    @campaign[:emailAccount] = email_to_use.to_s
-
-
 		    # Save the campaign locally
 			if @campaign.save
 
 		        # If the campaign saves, post the campaign to reply
 				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, @campaign.campaign_name))
 				#Add in contact_limit amount of data
-				remaining_leads_json, imports, duplicates, not_imports = upload_leads(clients_leads, campaign_contact_count, 0, remaining_leads_json, @campaign)
+				remaining_leads_json, imports, not_imports = upload_leads(clients_leads, campaign_contact_count, 0, remaining_leads_json, @campaign)
 
 				imported << imports
-				duplicated << duplicates
 				not_imported << not_imports
 
 				# If more leads don't exist on the lead list, we are done
 				if remaining_leads_json.empty?
 					puts "LEAD LIST IS EMPTY"
 
-					data_upload_object.update_attributes(:imported => imported, :duplicates => duplicated, :not_imported => not_imported)
+					data_upload_object.update_attributes(:imported => imported, :not_imported => not_imported)
 					puts "Contacts Added to Current Campaign. Job finished"
 					return
 				else
@@ -121,16 +97,11 @@ class LeadUploadJob < ApplicationJob
 	end
 
 
+
 	def upload_leads(clients_leads, campaign_contact_count, number_leads_in_campaign, upload_lead_list, campaign)
 		not_imported = []
-		duplicates = []
 		imported = []
-		rows_email_not_present = 0
-		#Hash of all rows that will be inputted to reply
-		all_hash = []
-
 		leads_left_to_upload_in_campaign = campaign_contact_count - number_leads_in_campaign
-		
 		# Fill in the rest of leads in the campaign
 		lead_list = upload_lead_list
 		lead_list_copy = []
@@ -144,67 +115,69 @@ class LeadUploadJob < ApplicationJob
 			end
 
 			begin
-				if le["email"].present? and le["first_name"].present?
-					# check for duplicates
-					if clients_leads.where(:email => le["email"]).count == 0
+				#Looping through contact. Strip from master list
+				lead_list_copy.shift
 
-						puts "Client Lead is not a duplicate. Will be created: "
+				if le["email"].present? and le["first_name"].present?
+					if clients_leads.where(:email => le["email"]).count == 0
 
 						le[:client_company] = campaign.client_company
 						le[:campaign_id] = campaign.id
 						le[:status] = "cold"
-						
 						begin
 							le[:full_name] = le["first_name"] + " " + le["last_name"]
 						rescue
 							le[:full_name] = le["first_name"]
 						end
 
-
-						all_hash << Lead.new(le.to_h)
-
-						imported << le
-
-						leads_left_to_upload_in_campaign = leads_left_to_upload_in_campaign - 1
-						puts "NUMBER OF LEADS LEFT THAT WE CAN INPUT TO CAMPAIGN: " + leads_left_to_upload_in_campaign.to_s
+						# Call Reply
+						uploaded_contact  = AddContactToReplyJob.perform_now(le,campaign.id)
 						
-						lead_list_copy.shift
+						if uploaded_contact
+							new_lead = Lead.create!(le)
+							imported << new_lead
+							leads_left_to_upload_in_campaign = leads_left_to_upload_in_campaign - 1
+						else
+							not_imported << new_lead
+						end
 					else
+
 						begin
 							puts le["email"] + " is a duplicate"
 							dup_lead = clients_leads.find_by(email: le["email"])
 
 							#double check not lead
 							if !(%w{handed_off sent_meeting_invite blacklist handed_off_with_questions}.include?(dup_lead.status))
-								dup_lead.update_attributes(:campaign_id => campaign.id, :status => :cold)
-								duplicates << dup_lead
+								
+								# Call Reply
+								uploaded_contact  = AddContactToReplyJob.perform_now(le,campaign.id)
+								# If reply was a success
+								if uploaded_contact
+									dup_lead.update_attributes(:campaign_id => campaign.id, :status => :cold)
+									imported << dup_lead
+									leads_left_to_upload_in_campaign = leads_left_to_upload_in_campaign - 1
+								else
+									not_imported << dup_lead
+								end
+							else
+								puts "lead is on the blacklist"
+								not_imported << dup_lead
 							end
-
 						rescue
 							puts "could not update existing lead to this campaign"
 						end
-						lead_list_copy.shift
-						leads_left_to_upload_in_campaign = leads_left_to_upload_in_campaign - 1
-
 					end
 				else
-					puts "row does not have email or first_name"
-					lead_list_copy.shift
+					puts "not imported because email or first_name missing"
 					not_imported << le
 				end
 			rescue Exception => e
 				not_imported << le
-				puts le["email"] + " not imported"
-				lead_list_copy.shift
+				puts "Row not imported due to an error"
 			end
 		end
 
-		dups_and_import = all_hash + duplicates
-		uploaded_hash, not_upload = AddContactsToReplyJob.perform_now(dups_and_import,campaign.id)
-		if !all_hash.empty?
-			Lead.import(all_hash)
-		end
-		return lead_list_copy, imported, duplicates, not_imported
+		return lead_list_copy, imported, not_imported
 	end
 
 

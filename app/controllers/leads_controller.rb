@@ -132,7 +132,7 @@ class LeadsController < ApplicationController
 
         @data_upload.update_attribute(:cleaned_data, new_cleaned_hash)
 
-   redirect_to data_upload_path(:id => @data_upload.id), :flash => { :notice => "Your changes have been included. Click '+ import to campaign' to add to the the list to the campaign!" }
+   redirect_to data_upload_path(:id => @data_upload.id), :flash => { :notice => "Your changes have been saved. Click '+ import to campaign' to add to the the list to the campaign!" }
    return
   end
 

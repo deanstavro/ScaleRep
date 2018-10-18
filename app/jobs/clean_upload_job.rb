@@ -6,10 +6,8 @@ class CleanUploadJob < ApplicationJob
 	include Reply
 
 	def perform(data_upload, client_company)
-    	
     	# Starting job to clean data
     	clean_data(data_upload, client_company)
-      	cleaned_data = data_upload.cleaned_data
     end
 
 	private
