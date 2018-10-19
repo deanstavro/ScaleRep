@@ -1,173 +1,146 @@
 class PersonasController < ApplicationController
-  #before_action :set_persona, only: [:show, :edit, :update, :destroy]
-  before_action :authenticate_user!
+    before_action :authenticate_user!
 
 
-# GET /personas
-# GET /personas.json
-def index
-  @user = User.find(current_user.id)
+    # GET /personas
+    # GET /personas.json
+    def index
+        @user = find_current_user(current_user.id)
+        
+        if is_scalerep_admin(@user)
 
-  if @user.role == "scalerep"
+            @client_companies = scalerep_director_client_company()
 
-      @client_companies = ClientCompany.where("account_live = ?", true).pluck(:name)
+            if params.has_key?(:client_company)
+                @company = ClientCompany.find_by(name: params["client_company"])
+                @personas = @company.personas.order('created_at DESC')
+                @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
+                @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
+            else
+                @company = @user.client_company
+                @personas = @company.personas.order('created_at DESC')
+                @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
+                @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
 
-      if params.has_key?(:client_company)
+            end
+        else
+            @company = @user.client_company
+            @personas = @company.personas.order('created_at DESC')
+            @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
+            @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
+        end
 
-          @company = ClientCompany.find_by(name: params["client_company"])
-          @personas = Persona.where("client_company_id = ?", @company.id ).order('created_at DESC')
-          @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
-          @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
-      else
-          @company = ClientCompany.find_by(id: @user.client_company_id)
-          @personas = Persona.where("client_company_id =?", @company).order('created_at DESC')
-          @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
-          @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
+        @metrics_hash = Hash.new
+        @personas.each do |persona|
 
-      end
-    
-  else
-    @company = ClientCompany.find_by(id: @user.client_company_id)
-    @personas = Persona.where("client_company_id =?", @company).order('created_at DESC')
-    @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
-    @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
-  end
+            @campaigns = persona.campaigns
+            count = 0
+            @campaigns.each do |campaign|
+                array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.created_at]
+                count = count + 1
+                if @metrics_hash[persona]
+                    @metrics_hash[persona][0] = @metrics_hash[persona][0].to_i + array[0].to_i
+                    @metrics_hash[persona][1] = @metrics_hash[persona][1].to_i + array[1].to_i
+                    @metrics_hash[persona][2] = @metrics_hash[persona][2].to_i + array[2].to_i
+                    @metrics_hash[persona][3] = @metrics_hash[persona][3].to_i + array[3].to_i
+                    @metrics_hash[persona][4] = @metrics_hash[persona][4].to_i + array[4].to_i
+                else
+                    @metrics_hash[persona] = array
+                end
+                    @metrics_hash[persona][5] = count
+                    @metrics_hash[persona][6] = campaign.created_at.strftime("%m-%d-%Y")
+            end
+        end
+    end
 
-  @metrics_hash = Hash.new
-  @personas.each do |persona|
 
-      @campaigns = persona.campaigns
-      count = 0
-      @campaigns.each do |campaign|
-          array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.created_at]
-          count = count + 1
-          if @metrics_hash[persona]
-            @metrics_hash[persona][0] = @metrics_hash[persona][0].to_i + array[0].to_i
-            @metrics_hash[persona][1] = @metrics_hash[persona][1].to_i + array[1].to_i
-            @metrics_hash[persona][2] = @metrics_hash[persona][2].to_i + array[2].to_i
-            @metrics_hash[persona][3] = @metrics_hash[persona][3].to_i + array[3].to_i
-            @metrics_hash[persona][4] = @metrics_hash[persona][4].to_i + array[4].to_i
+    # GET /personas/new
+    def new
+        @user = find_current_user(current_user.id)
+        @persona = Persona.new
+        @client_companies = scalerep_director_client_company()
+    end
 
-            # add
+
+    # POST /personas
+    # POST /personas.json
+    def create
+        @user = find_current_user(current_user.id)
+        @company = ClientCompany.find_by(name: params[:persona][:client_company])
+        params[:persona].delete :client_company
+        @persona = @company.personas.build(persona_params)
+
+        respond_to do |format|
+          if @persona.save
+            format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully created.' }
+            format.json { render :index, status: :created}
           else
-            @metrics_hash[persona] = array
+            format.html { render :new }
+            format.json { render json: @persona.errors, status: :unprocessable_entity }
           end
-
-          @metrics_hash[persona][5] = count
-          @metrics_hash[persona][6] = campaign.created_at.strftime("%m-%d-%Y")
-
         end
     end
-  end
 
 
-  # GET /personas/1
-  # GET /personas/1.json
-  #def show
-  #end
-
-  # GET /personas/new
-  def new
-    @user = User.find(current_user.id)
-    @persona = Persona.new
-
-    @client_companies = ClientCompany.where("account_live = ?", true).pluck(:name)
-  end
-
-  # GET /personas/1/edit
-  def edit
-    @user = User.find(current_user.id)
-    @client_company = ClientCompany.find_by(id: @user.client_company_id)
-    @persona = Persona.find_by(id: params[:id])
-  end
-
-  def archive
-    @persona = Persona.find_by(id: params[:format])
-
-    # update archive setting
-    @persona.update_attribute(:archive, !@persona.archive)
-    redirect_to client_companies_personas_path
-  end
-
-  # POST /personas
-  # POST /personas.json
-  def create
-    @user = User.find(current_user.id)
-
-    @company = ClientCompany.find_by(name: params[:persona][:client_company])
-    params[:persona].delete :client_company
-
-    @persona = Persona.new(persona_params)
-    @persona.client_company = @company
-
-
-    respond_to do |format|
-      if @persona.save
-        format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully created.' }
-        format.json { render :index, status: :created}
-      else
-        format.html { render :new }
-        format.json { render json: @persona.errors, status: :unprocessable_entity }
-      end
+    # GET /personas/1/edit
+    def edit
+        @user = find_current_user(current_user.id)
+        @persona = Persona.find_by(id: params[:id])
     end
-  end
 
-  # PATCH/PUT /personas/1
-  # PATCH/PUT /personas/1.json
-  def update
-    puts "PERSONA PARAMS"
 
-    @user = User.find(current_user.id)
-    @persona = Persona.find_by(id: params[:id])
-
-    puts persona_params
-
-    respond_to do |format|
-      if @persona.update(persona_params)
-        format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully updated.' }
-        format.json { render :index, status: :ok }
-      else
-        format.html { render :edit }
-        format.json { render json: @persona.errors, status: :unprocessable_entity }
-      end
-    end
-  end
-
-  # DELETE /personas/1
-  # DELETE /personas/1.json
-  def destroy
-    persona = Persona.find_by(id: params[:id])
-
-    begin
-
-        persona.destroy
-        respond_to do |format|
-          format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully deleted' }
-          format.json { head :no_content }
-        end
-
-    rescue
+    # PATCH/PUT /personas/1
+    # PATCH/PUT /personas/1.json
+    def update
+        @user = find_current_user(current_user.id)
+        @persona = Persona.find_by(id: params[:id])
 
         respond_to do |format|
-          format.html { redirect_to client_companies_personas_path, notice: 'Delete associated campaigns before deleting persona!' }
-          format.json { head :no_content }
+          if @persona.update(persona_params)
+            format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully updated.' }
+            format.json { render :index, status: :ok }
+          else
+            format.html { render :edit }
+            format.json { render json: @persona.errors, status: :unprocessable_entity }
+          end
+        end
+    end
+
+    # PUT - update archive of a persona
+    def archive
+        @persona = Persona.find_by(id: params[:format])
+        @persona.update_attribute(:archive, !@persona.archive)
+        redirect_to client_companies_personas_path
+    end
+
+    
+    # DELETE /personas/1
+    # DELETE /personas/1.json
+    def destroy
+        persona = Persona.find_by(id: params[:id])
+
+        begin
+            persona.destroy
+            respond_to do |format|
+                format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully deleted' }
+                format.json { head :no_content }
+            end
+        rescue
+            respond_to do |format|
+                format.html { redirect_to client_companies_personas_path, notice: 'Delete associated campaigns before deleting persona!' }
+                format.json { head :no_content }
+            end
         end
     end
 
 
+    private
 
-    end
-
-  private
-
-
-    # Use callbacks to share common setup or constraints between actions.
-    def set_persona
-      @persona = Persona.find(params[:id])
-    end
 
     # Never trust parameters from the scary internet, only allow the white list through.
     def persona_params
-      params.require(:persona).permit(:name, :description, :special_instructions, :archive)
+        params.require(:persona).permit(:name, :description, :special_instructions, :archive)
     end
+
+
 end

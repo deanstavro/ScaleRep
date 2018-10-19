@@ -1,0 +1,46 @@
+<div id="title" class="jumbotron">
+    <% if flash[:error].present? or flash[:notice].present? %>
+        <center>
+            <p class="container text-danger"><%= flash[:error] %></p>
+            <p class="container text-success"><%= flash[:notice] %></p>
+        </center>
+    <% end %>
+
+    <br>
+    
+    <h1><%= @campaign.campaign_name %></h1>
+</div>
+
+<div class = 'thin_margins'>
+    <div class = "campaign_data">
+    
+        <div class="campaign_info_section">
+            <span class="campaign_info_header">People in campaign</span>
+            <span class="campaign_info"><%= @campaign.peopleCount.to_s %></span>
+        </div>
+        
+
+        <div class="campaign_info_section">
+            <span class="campaign_info_header">Emails Delivered</span>
+            <span class="campaign_info"><%= @campaign.deliveriesCount %></span>
+        </div>
+
+
+        <div class="campaign_info_section">
+            <span class="campaign_info_header">Emails Opened</span>
+            <span class="campaign_info"><%= @campaign.opensCount %></span>
+        </div>
+
+
+        <div class="campaign_info_section">
+          <span class="campaign_info_header">Email Replies</span>
+          <span class="campaign_info"><%= @campaign.repliesCount %></span> 
+        </div>
+
+        <div class="campaign_info_section">
+          <span class="campaign_info_header">Bounces</span>
+          <span class="campaign_info"><%= @campaign.bouncesCount %></span>
+        </div>
+
+    </div>
+</div>
