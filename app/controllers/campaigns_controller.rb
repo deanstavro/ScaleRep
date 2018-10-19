@@ -21,6 +21,29 @@ class CampaignsController < ApplicationController
   			@current = @campaigns.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
   	    @archive = @campaigns.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
 
+        
+
+        @metrics_array = [['peopleCount', 0], ['emails_delivered', 0], ['emails_unique_opened', 0], ['emails_reply', 0] ]
+        @people_count = 0
+        @emails_delivered = 0
+        @emails_unique_opened = 0
+        @emails_reply = 0
+        @total_opens = 0
+        @campaigns.each do |campaign|
+            array = [campaign.peopleCount, campaign.deliveriesCount, campaign.repliesCount, campaign.uniqueOpens, campaign.opensCount]
+            @people_count += array[0].to_i
+            @emails_delivered += array[1].to_i
+            @emails_reply += array[2].to_i
+            @emails_unique_opened +=array[3].to_i
+            @total_opens +=array[4].to_i
+        end
+
+        puts @people_count.to_s + ": people count"
+        puts @emails_delivered.to_s + ": delivered"
+        puts @emails_unique_opened.to_s + ": unique"
+        puts @emails_reply.to_s + ": reply"
+        puts @total_opens.to_s + ": reply"
+
     end
 
     #Display individual controller
@@ -61,10 +84,10 @@ class CampaignsController < ApplicationController
     		email_array = get_email_accounts(@company.replyio_keys)
         count_dict = email_count(email_array, @campaigns)
 
-      	puts "email count_dict: "+ count_dict
+      	puts "email count_dict: "+ count_dict.to_s
         # Choose correct email based on which email is running the least campaigns
       	email_to_use = choose_email(count_dict)
-      	puts "email to use: " + email_to_use
+      	puts "email to use: " + email_to_use.to_s
 
         # Find the correct keys for that email to upload the campaign to that email
         for email in email_array
@@ -116,13 +139,10 @@ class CampaignsController < ApplicationController
 
 
     def wrong_campaign(campaign, user)
-      puts "HEY"
       begin
           if campaign.client_company != user.client_company
-              puts "YUP"
               return true
           else
-              puts "NOPE"
               return false
           end
       rescue

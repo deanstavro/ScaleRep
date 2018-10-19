@@ -9,17 +9,16 @@
   <h3>for <%= @persona.name if @persona.name %></h3>
   <br>
 
-  <!--
-  <p> Campaigns track messaging and e-mail order to improve overall persona metrics.</p>
-  <p> ex. <br>
-    <i>Baseline campaign</i><br>
-    <i>Shorter outbound campaign, using website messaging as reference</i><br>
-    <i>General Facebook inbound lead campaign</i><br>
-  </p>
-  -->
   <% if @user.role == 'scalerep' %>
       <%= link_to '+ Add Campaign', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
   <% end %>
+</div>
+
+<div class="thin_margins">
+    <h4>Persona Metrics</h4>
+
+    <%= bar_chart [ ["Deliveries", @emails_delivered], ["Opens", @total_opens], ["Contacts Opened", @emails_unique_opened], ["Replies", @emails_reply]], colors: ["#ADD8E6", "#0000FF", "#90EE90", "#90EE90" ] %>
+
 </div>
 
 <div class = 'thin_margins'>
