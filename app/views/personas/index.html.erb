@@ -1,21 +1,15 @@
 <div id="title" class="jumbotron">
 
     <% if flash[:error].present? or flash[:notice].present? %>
-      <center>
-        <p class="container text-danger"><%= flash[:error] %></p>
-        <p class="container text-success"><%= flash[:notice] %></p>
-      </center>
+        <center>
+            <p class="container text-danger"><%= flash[:error] %></p>
+            <p class="container text-success"><%= flash[:notice] %></p>
+        </center>
     <% end %>
 
     <br>
 
-    <% if @user.role == 'scalerep' %>
-      <h1><%= @company.name %> Personas </h1>
-    <% else %>
-      <h1>Personas</h1>
-      <h1>for <%= @user.client_company.name if @user.client_company %></h1>
-    <% end %>
-
+    <h1>Personas</h1>
 
     <% if @user.role == 'scalerep' %>
         <div>

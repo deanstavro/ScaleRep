@@ -37,13 +37,6 @@ class CampaignsController < ApplicationController
             @emails_unique_opened +=array[3].to_i
             @total_opens +=array[4].to_i
         end
-
-        puts @people_count.to_s + ": people count"
-        puts @emails_delivered.to_s + ": delivered"
-        puts @emails_unique_opened.to_s + ": unique"
-        puts @emails_reply.to_s + ": reply"
-        puts @total_opens.to_s + ": reply"
-
     end
 
     #Display individual controller
@@ -79,11 +72,9 @@ class CampaignsController < ApplicationController
         @campaigns = @company.campaigns.all.order('created_at DESC')
         persona = Persona.find_by(id: params[:subaction].to_i)
         @campaign.persona = persona
-
         # Get Array of all emails
     		email_array = get_email_accounts(@company.replyio_keys)
         count_dict = email_count(email_array, @campaigns)
-
       	puts "email count_dict: "+ count_dict.to_s
         # Choose correct email based on which email is running the least campaigns
       	email_to_use = choose_email(count_dict)
