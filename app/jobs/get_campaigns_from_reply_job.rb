@@ -18,7 +18,7 @@ class GetCampaignsFromReplyJob < ApplicationJob
                         # Call API to retrieve campaign detail. Save in Response
                         response = v1_get_campaign(campaign.reply_id.to_i, campaign.reply_key)
                         # {:id=>204390, :name=>"testing 2", :created=>"2018-10-19T23:06:38.6494193+00:00", :emailAccount=>"paul@scalerep.net", :deliveriesCount=>0, :opensCount=>0, :repliesCount=>0, :bouncesCount=>0, :optOutsCount=>0, :outOfOfficeCount=>0, :peopleCount=>0, :peopleFinished=>0, :peopleActive=>0, :peoplePaused=>0}
-                        dup_response = {:campaign_name=>response[:name], :emailAccount=>response[:emailAccount], :bouncesCount => response[:bouncesCount], :outOfOfficeCount =>response[:outOfOfficeCount]}
+                        dup_response = {:campaign_name=>response[:name], :emailAccount=>response[:emailAccount], :bouncesCount => response[:bouncesCount], :outOfOfficeCount =>response[:outOfOfficeCount], :last_poll_from_reply => Time.now }
 
                         # Update the campaign in the local database
                         campaign.update_attributes(dup_response)
