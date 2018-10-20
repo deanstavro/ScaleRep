@@ -47,13 +47,50 @@
           <td><%= campaign.deliveriesCount %></td>
 
           
-          <td><%= campaign.opensCount %></td>
+          <td>
+            <% if campaign.opensCount > 0 and campaign.deliveriesCount > 0 %>
+              <%= number_to_percentage(campaign.opensCount / (campaign.deliveriesCount - campaign.bouncesCount).to_f * 100, precision:1) %>
+            <% else %>
+              0%
+            <% end %>
+            <span class="pct">
+              <%= campaign.opensCount %>
+            </span>
+          </td>
           
 
-          <td><%= campaign.uniqueOpens %></td>
+          <td>
+            <% if campaign.uniqueOpens > 0 and campaign.deliveriesCount > 0 and campaign.peopleCount > 0 %>
+              <% if campaign.deliveriesCount < campaign.peopleCount %>
+                  <%= number_to_percentage(campaign.uniqueOpens / (campaign.deliveriesCount - campaign.bouncesCount).to_f * 100, precision:1) %>
+              <% else %>
+                  <%= number_to_percentage(campaign.uniqueOpens / (campaign.peopleCount - campaign.bouncesCount).to_f * 100, precision:1) %>
+              <% end %>
+            <% else %>
+              0%
+            <% end %>
+
+            <span class="pct">
+                <%= campaign.uniqueOpens %>  
+            </span>
+          </td>
 
 
-          <td><%= campaign.repliesCount %></td>
+          <td>
+            <% if campaign.repliesCount > 0 and campaign.deliveriesCount > 0 and campaign.peopleCount > 0 %>
+              <% if campaign.deliveriesCount < campaign.peopleCount %>
+                  <%= number_to_percentage(campaign.repliesCount / (campaign.deliveriesCount - campaign.bouncesCount).to_f * 100, precision:1) %>
+              <% else %>
+                  <%= number_to_percentage(campaign.repliesCount / (campaign.peopleCount - campaign.bouncesCount).to_f * 100, precision:1) %>
+              <% end %>
+            <% else %>
+              0%
+            <% end %>
+
+            <span class="pct">
+                <%= campaign.repliesCount %>  
+            </span>
+          </td>
           
 
           <% if @user.role == 'scalerep' %>
