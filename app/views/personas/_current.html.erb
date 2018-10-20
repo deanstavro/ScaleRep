@@ -14,8 +14,9 @@
             <% if @user.role == 'scalerep' %>
                 <th scope="col">bounces</th>
             <% end %>
-            
+
             <th scope="col">total opens</th>
+            <th scope="col">unique opens</th>
             <th scope="col">replies</th>
             
             <th scope="col"># campaigns</th>
@@ -84,6 +85,27 @@
                   <td>0</td>
               <% end %>
 
+              <%  if @metrics_hash[persona] && @metrics_hash[persona][3] %>
+                <td>
+                  <% if @metrics_hash[persona] && @metrics_hash[persona][1] > 0 && @metrics_hash[persona][1] >0 %>
+                    <% if  @metrics_hash[persona][0].to_f > @metrics_hash[persona][1].to_f%> 
+                      <%= number_to_percentage(@metrics_hash[persona][5] / (@metrics_hash[persona][1].to_f - @metrics_hash[persona][2]) * 100, precision:1) %>
+                    <% else %>
+                     <%= number_to_percentage(@metrics_hash[persona][5] / (@metrics_hash[persona][0].to_f - @metrics_hash[persona][2]) * 100, precision:1) %>
+                    <% end %>
+                <% else %>
+                    0%
+                <% end %>
+                  
+                  <span class="pct">
+                    (<%= @metrics_hash[persona][5] %>)
+                  </span>
+                </td>
+              <% else %>
+                  <td>0%</td>
+              <% end %>
+
+
 
 
               <%  if @metrics_hash[persona] && @metrics_hash[persona][3] %>
@@ -107,8 +129,8 @@
               <% end %>
 
 
-              <%  if @metrics_hash[persona] && @metrics_hash[persona][5] %>
-                 <td><%= @metrics_hash[persona][5] %></td>
+              <%  if @metrics_hash[persona] && @metrics_hash[persona][6] %>
+                 <td><%= @metrics_hash[persona][6] %></td>
               <% else %>
                   <td>0</td>
               <% end %>
