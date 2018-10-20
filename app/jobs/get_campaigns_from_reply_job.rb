@@ -28,6 +28,10 @@ class GetCampaignsFromReplyJob < ApplicationJob
                         sleep 20
                     end
                 end
+
+                if Time.now > campaign.campaign_end
+                    campaign.update_attribute(:archive, !campaign.archive)
+                end
             end
         end
 	end

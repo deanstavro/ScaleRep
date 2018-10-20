@@ -91,6 +91,7 @@ class CampaignsController < ApplicationController
         # Add the email account we will use to the local campaign object
     		puts email_to_use.to_s + "  " + reply_key
         @campaign[:emailAccount] = email_to_use.to_s
+        @campaign[:campaign_end] = Date.today + 30.days
 
         # Save the campaign locally
   			if @campaign.save
