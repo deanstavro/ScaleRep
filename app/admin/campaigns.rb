@@ -3,7 +3,7 @@ ActiveAdmin.register Campaign do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 
-permit_params :reply_id, :reply_key, :contactLimit, :persona, :user_notes, :industry, :campaign_start, :campaign_end, :client_company_id, :personalized, :persona_id, :last_poll_from_reply, :deliveriesCount, :opensCount, :repliesCount, :bouncesCount, :optOutsCount, :outOfOfficeCount, :peopleCount, :peopleFinished, :peopleActive, :peoplePaused, :campaign_name, :minimum_email_score, :has_minimum_email_score, :campaign_type, :archive, :uniqueOpens
+permit_params :reply_id, :reply_key, :contactLimit, :persona, :user_notes, :industry, :campaign_start, :campaign_end, :client_company_id, :personalized, :persona_id, :last_poll_from_reply, :deliveriesCount, :uniquePeopleContacted, :opensCount, :uniqueOpens, :repliesCount, :bouncesCount, :optOutsCount, :outOfOfficeCount, :peopleCount, :peopleFinished, :peopleActive, :peoplePaused, :campaign_name, :minimum_email_score, :has_minimum_email_score, :campaign_type, :archive
 
 
 
@@ -42,6 +42,7 @@ form do |f|
     f.input :last_poll_from_reply
     f.input :deliveriesCount
     f.input :uniqueOpens
+    f.input :uniquePeopleContacted
     f.input :opensCount
     f.input :repliesCount
     f.input :bouncesCount

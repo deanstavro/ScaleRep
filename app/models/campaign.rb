@@ -23,5 +23,6 @@ class Campaign < ApplicationRecord
         self.optOutsCount ||= 0
         self.outOfOfficeCount ||= 0
         self.repliesCount ||= 0
+        self.uniquePeopleContacted ||= 0
     end
 end

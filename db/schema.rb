@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181016210038) do
+ActiveRecord::Schema.define(version: 20181022205323) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -128,6 +128,7 @@ ActiveRecord::Schema.define(version: 20181016210038) do
     t.boolean  "archive",                 default: false
     t.integer  "uniqueOpens",             default: 0
     t.integer  "contactLimit"
+    t.integer  "uniquePeopleContacted"
     t.index ["client_company_id"], name: "index_campaigns_on_client_company_id", using: :btree
     t.index ["persona_id"], name: "index_campaigns_on_persona_id", using: :btree
   end

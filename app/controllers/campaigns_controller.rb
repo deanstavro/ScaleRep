@@ -20,10 +20,7 @@ class CampaignsController < ApplicationController
         @campaigns = @persona.campaigns.all.order('created_at DESC')
   			@current = @campaigns.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
   	    @archive = @campaigns.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
-
         
-
-        @metrics_array = [['peopleCount', 0], ['emails_delivered', 0], ['emails_unique_opened', 0], ['emails_reply', 0] ]
         @people_count = 0
         @emails_delivered = 0
         @emails_unique_opened = 0
