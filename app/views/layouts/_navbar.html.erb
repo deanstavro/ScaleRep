@@ -10,26 +10,26 @@
       <% if user_signed_in? %>
 
         <li class="nav-item active"><%= link_to metrics_path() do %>
-          <%= octicon "graph", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
-        <% end %>
+          Metrics
+          <% end %>
         </li>
 
         <% if current_user.role == "scalerep" %>
           <li class="nav-item active"><%= link_to data_uploads_path() do %>
-              <%= octicon "cloud-upload", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+              Uploads
           <% end %>
           </li>
         <% end %>
 
         <li class="nav-item active"><%= link_to client_companies_personas_path() do %>
-          <%= octicon "list-ordered", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
-        <% end %>
+          Campaigns
+          <% end %>
         </li>
 
 
         <li class="nav-item active"><%= link_to leads_path  do %>
-          <%= octicon "organization", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
-        <% end %>
+          Leads
+          <% end %>
         </li>
 
         <li class="dropdown nav-item active">
