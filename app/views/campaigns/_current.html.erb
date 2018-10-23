@@ -48,7 +48,7 @@
           
           <td>
             <% if campaign.opensCount > 0 and campaign.deliveriesCount > 0 %>
-              <%= number_to_percentage(campaign.opensCount / (campaign.deliveriesCount - campaign.bouncesCount).to_f * 100, precision:1) %>
+              <%= number_to_percentage((campaign.opensCount - campaign.bouncesCount) / (campaign.deliveriesCount - campaign.bouncesCount).to_f * 100, precision:1) %>
             <% else %>
               0%
             <% end %>
@@ -60,7 +60,7 @@
 
           <td>
             <% if campaign.uniqueOpens > 0 and campaign.uniquePeopleContacted > 0 %>
-                <%= number_to_percentage(campaign.uniqueOpens / (campaign.uniquePeopleContacted - campaign.bouncesCount).to_f * 100, precision:1) %>
+                <%= number_to_percentage((campaign.uniqueOpens - campaign.bouncesCount) / (campaign.uniquePeopleContacted - campaign.bouncesCount).to_f * 100, precision:1) %>
             <% else %>
               0%
             <% end %>
