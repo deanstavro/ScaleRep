@@ -65,6 +65,7 @@ class LeadsController < ApplicationController
         @headers = @data_upload.data[0].keys
         @campaign = @data_upload.campaign
         @client_company = @campaign.client_company
+        @per_page = params[:per_page].to_i
 
         if params[:page].empty?
           @page = 1
@@ -72,7 +73,7 @@ class LeadsController < ApplicationController
           @page = params[:page].to_i
         end
 
-        @per_page = params[:per_page].to_i
+        
         new_cleaned_hash = []
         row_array = []
         params_copy = params.dup.except(:controller,:action, :commit, :authenticity_token, :data_upload, :utf8, :page, :per_page)
@@ -83,8 +84,8 @@ class LeadsController < ApplicationController
         lead_end = ((@page.to_i)*@per_page.to_i)
         puts "ON PAGE: " + @page.to_s
         puts "PER PAGE: " + @per_page.to_s
-        puts "LEAD_START + :" + lead_start.to_s
-        puts "Lead end L " + lead_end.to_s
+        puts "LEAD_START:" + lead_start.to_s
+        puts "Lead end: " + lead_end.to_s
 
         if @page > 1
           #copy cleaned_data into new array up until page

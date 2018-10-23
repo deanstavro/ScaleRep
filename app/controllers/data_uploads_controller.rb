@@ -8,7 +8,10 @@ class DataUploadsController < ApplicationController
   # GET /data_uploads.json
   def index
     @user = User.find(current_user.id)
-    @data_uploads = DataUpload.where(["user_id = ? and campaign_id != ?", @user.id, nil]).order('created_at DESC').paginate(:page => params[:page], :per_page => 20)
+    @data_uploads = DataUpload.where(["user_id = ?", @user.id]).order('created_at DESC').paginate(:page => params[:page], :per_page => 20)
+    @data_uploads.each do |value_hash|
+      puts value_hash.id.to_s
+    end
   end
 
   # GET /data_uploads/1
@@ -28,8 +31,10 @@ class DataUploadsController < ApplicationController
       @values << value_hash.values
     end
 
+    #hidden fields
+    @per_page = 150
     @page = params[:page]
-    @page_results = @values.paginate(:page => @page, :per_page => 150)
+    @page_results = @values.paginate(:page => @page, :per_page => @per_page)
   end
 
   # GET /data_uploads/new
