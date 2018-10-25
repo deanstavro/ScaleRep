@@ -1,8 +1,11 @@
 <div id="title" class="jumbotron">
-  <center>
-    <p class="container text-danger"><%= flash[:error] %></p>
-    <p class="container text-success"><%= flash[:notice] %></p>
-  </center>
+
+  <% if flash[:error].present? or flash[:notice].present? %>
+    <center>
+      <p class="container text-danger"><%= flash[:error] %></p>
+      <p class="container text-success"><%= flash[:notice] %></p>
+    </center>
+  <% end %>
 
   <br/>
   <h1>Campaigns</h1>

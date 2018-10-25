@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181022205323) do
+ActiveRecord::Schema.define(version: 20181024234942) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -251,6 +251,24 @@ ActiveRecord::Schema.define(version: 20181022205323) do
     t.index ["client_company_id"], name: "index_personas_on_client_company_id", using: :btree
   end
 
+  create_table "salesforces", force: :cascade do |t|
+    t.string   "api_version"
+    t.string   "username"
+    t.string   "password"
+    t.string   "security_token"
+    t.string   "app_key"
+    t.string   "app_secret"
+    t.boolean  "salesforce_integration_on",                        default: false
+    t.boolean  "salesforce_integration_authorized",                default: false
+    t.boolean  "upload_contacts_to_salesforce_option",             default: false
+    t.boolean  "check_dup_against_existing_contact_email_option",  default: false
+    t.boolean  "check_dup_against_existing_account_domain_option", default: false
+    t.integer  "client_company_id"
+    t.datetime "created_at",                                                       null: false
+    t.datetime "updated_at",                                                       null: false
+    t.index ["client_company_id"], name: "index_salesforces_on_client_company_id", using: :btree
+  end
+
   create_table "touchpoints", force: :cascade do |t|
     t.integer  "channel"
     t.string   "sender_email"
@@ -303,6 +321,7 @@ ActiveRecord::Schema.define(version: 20181022205323) do
   add_foreign_key "leads", "campaigns"
   add_foreign_key "leads", "client_companies"
   add_foreign_key "personas", "client_companies"
+  add_foreign_key "salesforces", "client_companies"
   add_foreign_key "touchpoints", "campaigns"
   add_foreign_key "touchpoints", "client_companies"
   add_foreign_key "touchpoints", "leads"

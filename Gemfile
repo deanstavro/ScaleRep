@@ -31,6 +31,8 @@ gem 'bootstrap-datepicker-rails'
 gem 'octicons_helper'
 gem 'activerecord-import'
 gem 'activeadmin_json_editor', '~> 0.0.7'
+gem 'restforce', '~> 2.5.3'
+gem 'bootstrap-toggle-rails'
 
 
 group :test do

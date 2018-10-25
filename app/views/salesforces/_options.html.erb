@@ -1,0 +1,45 @@
+<%= form_for(salesforce) do |f| %>
+  <% if salesforce.errors.any? %>
+    <div id="error_explanation">
+      <h2><%= pluralize(salesforce.errors.count, "error") %> prohibited this salesforce from being saved:</h2>
+
+      <ul>
+      <% salesforce.errors.full_messages.each do |message| %>
+        <li><%= message %></li>
+      <% end %>
+      </ul>
+    </div>
+  <% end %>
+
+
+
+
+  <div class="thin_margins">
+
+      <h4> Salesforce Upload Options </h4>
+
+
+          <div class="form-group">
+              <%= f.label :upload_contacts_to_salesforce_option, "Upload contacts to salesforce", class: "control-label" %>
+              <%= f.check_box :upload_contacts_to_salesforce_option, class: "form-control" %>
+          </div>
+
+          <div class="form-group">
+              <%= f.label :check_dup_against_existing_contact_email_option, "Check uploading contacts against existing contacts by email", class: "control-label" %>
+              <%= f.check_box :check_dup_against_existing_contact_email_option, class: "form-control" %>
+          </div>
+
+          <div class="form-group">
+              <%= f.label :check_dup_against_existing_account_domain_option, "Check uploading contacts against existing account domain", class: "control-label" %>
+              <%= f.check_box :check_dup_against_existing_account_domain_option, class: "form-control" %>
+          </div>
+
+
+
+      <br>
+
+      <%= f.submit %>
+  </div>
+
+
+<% end %>

@@ -1,0 +1,42 @@
+<div id="title" class="jumbotron">
+  
+  <% if flash[:error].present? or flash[:notice].present? %>
+      <center>
+          <p class="container text-danger"><%= flash[:error] %></p>
+          <p class="container text-success"><%= flash[:notice] %></p>
+      </center>
+  <% end %>
+
+  <h1>Salesforce</h1>
+  <h4> Salesforce Integration:
+      <% if @salesforce.salesforce_integration_authorized == true %>
+          <% if @salesforce.salesforce_integration_on == true %>
+
+            <%= link_to toggle_salesforces_path(:id => @salesforce.id), method: :put do %>
+                  On
+            <% end %>
+
+          <% else %>
+
+            <%= link_to toggle_salesforces_path(:id => @salesforce.id), method: :put do %>
+                  Off
+            <% end %>
+
+
+          <% end %>
+      <% else %>
+          <input type="checkbox" class="toggle" disabled data-toggle="toggle">
+      <% end %>
+  </h4>
+</div>
+
+<% if @salesforce.salesforce_integration_on == true %>
+
+  <%= render 'options', salesforce: @salesforce %>
+
+
+<% end %>
+
+ 
+
+<%= render 'form', salesforce: @salesforce %>

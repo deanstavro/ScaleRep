@@ -8,6 +8,7 @@ class ClientCompany < ApplicationRecord
 	has_many :data_uploads
 	has_many :touchpoints
 	has_many :lead_actions
+	has_one :salesforce
 
 	validates :name, presence: true, uniqueness: true
 	validates :company_domain, presence: true

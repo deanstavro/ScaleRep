@@ -1,5 +1,6 @@
 Rails.application.routes.draw do
 
+  
     # V1 of API
     namespace :api do
         namespace :v1 do
@@ -72,6 +73,9 @@ Rails.application.routes.draw do
     resources :users
     resources :data_uploads do
       collection { post :campaign_data}
+    end
+    resources :salesforces do
+        collection {put :toggle}
     end
 
 end
