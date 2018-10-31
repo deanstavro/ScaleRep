@@ -44,20 +44,24 @@
 
                   <td><%= data_upload.cleaned_data.count %></td>
 
+                  <td>
                   <% begin %>
-                      <td><%= data_upload.imported.count %></td>
+                      <%= data_upload.imported.count %>
                   <% rescue %>
-                      <td> -- </td>
+                      --
                   <% end %>
+                  </td>
 
 
                   <td><%= data_upload.external_crm_duplicates.count %></td>
 
+                  <td>
                   <% begin %>
-                      <td><%= data_upload.not_imported.count %></td>
+                      <%= data_upload.not_imported.count %>
                   <% rescue %>
-                      <td> -- </td>
+                       --
                   <% end %>
+                  </td>
 
                     
                   <td>
