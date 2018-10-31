@@ -8,21 +8,16 @@
   <% end %>
 
   <h1>Salesforce</h1>
-  <h4> Salesforce Integration:
-      <% if @salesforce.salesforce_integration_authorized == true %>
-          <% if @salesforce.salesforce_integration_on == true %>
-
+  <h4>Integration Status:
+      <% if @salesforce.salesforce_integration_authorized %>
+          <% if @salesforce.salesforce_integration_on %>
             <%= link_to toggle_salesforces_path(:id => @salesforce.id), method: :put do %>
-                  On
+              On
             <% end %>
-
           <% else %>
-
             <%= link_to toggle_salesforces_path(:id => @salesforce.id), method: :put do %>
-                  Off
+              Off
             <% end %>
-
-
           <% end %>
       <% else %>
           <input type="checkbox" class="toggle" disabled data-toggle="toggle">
@@ -30,13 +25,12 @@
   </h4>
 </div>
 
-<% if @salesforce.salesforce_integration_on == true %>
-
-  <%= render 'options', salesforce: @salesforce %>
-
-
+<% if @salesforce.salesforce_integration_on %>
+  <div class="thin_margins">
+    <%= render 'options', salesforce: @salesforce %>
+  </div>
 <% end %>
-
  
-
-<%= render 'form', salesforce: @salesforce %>
+<div class="thin_margins">
+  <%= render 'form', salesforce: @salesforce %>
+</div>

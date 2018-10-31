@@ -54,7 +54,6 @@ class SalesforcesController < InheritedResources::Base
   def update
   	@salesforce = Salesforce.find_by(id: params["id"])
 
-
   	respond_to do |format|
 	    if @salesforce.update_attributes(salesforce_params)
 	      sf_obj = authenticate(@salesforce)
@@ -97,24 +96,9 @@ class SalesforcesController < InheritedResources::Base
 
   private
 
-    def salesforce_params
-      params.require(:salesforce).permit(:api_version, :username, :password, :security_token, :app_key, :app_secret, :client_company_id, :upload_contacts_to_salesforce_option, :check_dup_against_existing_contact_email_option, :check_dup_against_existing_account_domain_option)
-    end
+	def salesforce_params
+	  params.require(:salesforce).permit(:api_version, :username, :password, :security_token, :app_key, :app_secret, :client_company_id, :upload_contacts_to_salesforce_option, :check_dup_against_existing_contact_email_option, :check_dup_against_existing_account_domain_option)
+	end
 
-    def authenticate_salesforce(salesforce_object)
-    	@client = Restforce.new :username => salesforce_object.username,
-                    :password       => salesforce_object.password,
-                    :security_token => salesforce_object.security_token,
-                    :client_id     => salesforce_object.app_key,
-                    :client_secret  => salesforce_object.app_secret
-
-        begin
-        	@client.authenticate!
-        	return 200
-        rescue
-        	return 400
-        end
-
-    end
 end
 

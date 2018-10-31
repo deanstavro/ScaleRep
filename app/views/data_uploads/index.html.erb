@@ -21,6 +21,10 @@
                 <th scope="col">Company</th>
                 <th scope="col">Campaign</th>
                 <th scope="col">Imported to Campaigns?</th>
+                <th scope="col">Total Contacts</th>
+                <th scope="col"># Imported to Campaign</th>
+                <th scope="col"># CRM Dups (not imported)</th>
+                <th scope="col"># Row Errors (not imported)</th>
                 <th scope="col">Delete</th>
               </tr>
         </thead>
@@ -37,6 +41,16 @@
                   <% else %>
                     <td> no </td>
                   <% end %>
+
+                  <td><%= data_upload.cleaned_data.count %></td>
+
+                  <td><%= data_upload.imported.count %></td>
+
+
+                  <td><%= data_upload.external_crm_duplicates.count %></td>
+
+                  <td><%= data_upload.not_imported.count %></td>
+
                     
                   <td>
                       <%= link_to data_upload, method: :delete, data: { confirm: 'Are you sure?' }  do %>
