@@ -20,11 +20,12 @@
                 <th scope="col">Date</th>
                 <th scope="col">Company</th>
                 <th scope="col">Campaign</th>
-                <th scope="col">Imported to Campaigns?</th>
-                <th scope="col">Total Contacts</th>
-                <th scope="col"># Imported to Campaign</th>
-                <th scope="col"># CRM Dups (not imported)</th>
-                <th scope="col"># Row Errors (not imported)</th>
+                <th scope="col">Completed?</th>
+                <th scope="col">Uploaded</th>
+                <th scope="col">Verified & Cleaned</th>
+                <th scope="col"># Imported</th>
+                <th scope="col"># CRM Dups</th>
+                <th scope="col"># Row Errors</th>
                 <th scope="col">Delete</th>
               </tr>
         </thead>
@@ -34,13 +35,17 @@
               <tr>
                   <td><%= data_upload.created_at.to_time.strftime('%m/%d/%Y') %></td>
                   <td><%= data_upload.client_company.name %></td>
-                  <td><%= link_to data_upload.campaign.campaign_name, data_upload_path(:id => data_upload.id) %></td>
+                  <td><%= data_upload.campaign.campaign_name %></td>
                   
-                  <% if data_upload.imported_to_campaigns == true %>
-                    <td> yes </td>
+                  <td>
+                  <% if data_upload.imported_to_campaigns %>
+                     yes 
                   <% else %>
-                    <td> no </td>
+                      <%= link_to "no", data_upload_path(:id => data_upload.id) %>
                   <% end %>
+                  </td>
+
+                  <td><%= link_to data_upload.data.count, show_data_list_data_uploads_path({id: data_upload.id, list: "data"}) %></td>
 
                   <td><%= data_upload.cleaned_data.count %></td>
 

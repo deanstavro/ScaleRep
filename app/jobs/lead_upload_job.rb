@@ -78,9 +78,9 @@ class LeadUploadJob < ApplicationJob
 				#Add in contact_limit amount of data
 				remaining_leads_json, imports, not_imports, cur_crm_dup = upload_leads(clients_leads, campaign_contact_count, 0, remaining_leads_json, @campaign)
 
-				imported << imports
-				not_imported << not_imports
-				crm_dup << cur_crm_dup
+				imported += imports
+				not_imported += not_imports
+				crm_dup += cur_crm_dup
 
 				# If more leads don't exist on the lead list, we are done
 				if remaining_leads_json.empty?

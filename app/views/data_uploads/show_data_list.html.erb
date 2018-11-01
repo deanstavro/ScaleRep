@@ -1,0 +1,51 @@
+<div id="title" class="jumbotron">
+  
+  <% if flash[:error].present? or flash[:notice].present? %>
+      <center>
+        <p class="container text-danger"><%= flash[:error] %></p>
+        <p class="container text-success"><%= flash[:notice] %></p>
+      </center>
+  <% end %>
+
+  <br>
+
+  <h1><%= @list_name.to_s %></h1>
+
+</div>
+
+<div class="thin_margins">
+	<table class="import-table-settings table">
+	    <thead class="thead">
+	      <tr>
+	      	<% @headers.each_with_index do |header, index| %>
+	        	<th scope="col"><%= header %></th>
+	        <% end %>
+	      </tr>
+	    </thead>
+
+	    <tbody>
+	      	<% @list.each do |value| %>
+	      	  <tr>
+	      		<% value.each do |key, val| %>
+	              <td>
+	              	<% if !(val.nil?) %>
+	                  <%= val %>
+	              	<% else %>
+	              	  --
+	              	<% end %>
+	              </td>
+	              
+	            <% end %>
+	          </tr>
+	        <% end %>
+	    </tbody>
+	</table>
+
+	<div class="digg_pagination">
+      <div class="page_info">
+        <%= page_entries_info @list %>
+      </div>
+      <%= will_paginate @list %>
+  </div>
+</div>
+

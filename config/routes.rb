@@ -73,6 +73,7 @@ Rails.application.routes.draw do
     resources :users
     resources :data_uploads do
       collection { post :campaign_data}
+      collection { get :show_data_list}
     end
     resources :salesforces do
         collection {put :toggle}

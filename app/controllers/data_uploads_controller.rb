@@ -37,6 +37,17 @@ class DataUploadsController < ApplicationController
     @page_results = @values.paginate(:page => @page, :per_page => @per_page)
   end
 
+  def show_data_list
+    @user = User.find(current_user.id)
+    @data_upload = DataUpload.find_by(id: params[:id])
+    @headers = @data_upload.data[0].keys
+    @list_name = params[:list]
+    @list_unpa = @data_upload.method(params[:list]).call
+    @list = @list_unpa.paginate(:page => params[:page], :per_page => 100)
+    @campaign = @data_upload.campaign
+    @client_company = @campaign.client_company
+  end
+
   # GET /data_uploads/new
   def new
     @data_upload = DataUpload.new
