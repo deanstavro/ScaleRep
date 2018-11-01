@@ -78,4 +78,10 @@
           <% end %>
         </tbody>
     </table>
+    <div class="digg_pagination">
+      <div class="page_info">
+        <%= page_entries_info @data_uploads %>
+      </div>
+      <%= will_paginate @data_uploads %>
+  </div>
 </div>
