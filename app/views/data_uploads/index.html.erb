@@ -47,22 +47,22 @@
 
                   <td><%= link_to data_upload.data.count, show_data_list_data_uploads_path({id: data_upload.id, list: "data"}) %></td>
 
-                  <td><%= data_upload.cleaned_data.count %></td>
+                  <td><%= link_to data_upload.cleaned_data.count, show_data_list_data_uploads_path({id: data_upload.id, list: "cleaned_data"}) %></td>
 
                   <td>
                   <% begin %>
-                      <%= data_upload.imported.count %>
+                      <%= link_to data_upload.imported.count, show_data_list_data_uploads_path({id: data_upload.id, list: "imported"}) %>
                   <% rescue %>
                       --
                   <% end %>
                   </td>
 
 
-                  <td><%= data_upload.external_crm_duplicates.count %></td>
+                  <td><%= link_to data_upload.external_crm_duplicates.count, show_data_list_data_uploads_path({id: data_upload.id, list: "external_crm_duplicates"}) %></td>
 
                   <td>
                   <% begin %>
-                      <%= data_upload.not_imported.count %>
+                      <%= link_to data_upload.not_imported.count , show_data_list_data_uploads_path({id: data_upload.id, list: "not_imported"}) %>
                   <% rescue %>
                        --
                   <% end %>
