@@ -8,7 +8,7 @@
   <% end %>
 
   <h1>Salesforce</h1>
-  <h4>Integration Status:
+  <h4>Status:
       <% if @salesforce.salesforce_integration_authorized %>
           <% if @salesforce.salesforce_integration_on %>
             <%= link_to toggle_salesforces_path(:id => @salesforce.id), method: :put do %>
@@ -25,70 +25,70 @@
   </h4>
 </div>
 
+<div class="thin_margins">
 
+  <% if @salesforce.salesforce_integration_on %>
+    <div  class="border-sf-option" id = "accordion"> 
+    
 
-<div class = "panel-group thin_margins" id = "accordion">
-  <div class = "panel panel-default">
-      
-    <% if @salesforce.salesforce_integration_on %>
-      <div class = "panel-heading">
-        <h4 class = "panel-title">
-          <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseOne">
-            Data Upload Option
-          </a>
-        </h4>
-      </div>
-        
-      <div id = "collapseOne" class = "panel-collapse collapse in">
-        <div class = "panel-body">
-            Data Upload Option
+    
+        <div>
+          <h4>
+            <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseOne">
+              Data Upload Option</a>
+          </h4>
         </div>
-      </div>  
+        <div id = "collapseOne">
+          <div>
+              Data Upload Option
+          </div>
+        </div>  
     </div>
     <br>
-
-  
-    <div class = "panel panel-success">
-      <div class = "panel-heading">
-         <h4 class = "panel-title">
-            <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseTwo">
-               Duplicate Options
-            </a>
-         </h4>
-      </div>
-      <div id = "collapseTwo" class = "panel-collapse collapse">
-        <div class = "panel-body">
-          <%= render 'options', salesforce: @salesforce %>
+    
+      <div class="border-sf-option" id = "accordion">
+        <div>
+           <h4>
+              <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseTwo">
+                 Duplicate Options</a>
+           </h4>
         </div>
-      </div>
+        <div id = "collapseTwo">
+          <div>
+            <%= render 'options', salesforce: @salesforce %>
+          </div>
+        </div>
     </div>
   <% end %>
   <br>
    
-  <div class = "panel panel-info">
-    <div class = "panel-heading">
+  <div class="border-sf-option" id = "accordion" >
+    <div>
       
         <% if @salesforce.salesforce_integration_on %>
-          <h4 class = "panel-title"><a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseThree">
+          <h4><a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseThree">
             Integration Setup</a></h4>
             </div>
             <div id = "collapseThree" class = "panel-collapse collapse">
         <% else %>
-          <h4 class = "panel-title"><a data-toggle = "collapse" data-parent = "#accordion" href = "#showThree">
+          <h4><a data-toggle = "collapse" data-parent = "#accordion" href = "#showThree">
             Integration Setup</a></h4>
             </div>
-            <div id = "showThree" class = "panel-collapse collapse">
-        <% end %>
-               
-
-    
-      <div class = "panel-body">
+            <div id = "showThree">
+        <% end %>          
+      <div>
           <%= render 'form', salesforce: @salesforce %>
       </div>
     </div>
   </div>
    
 </div>
+
+
+
+
+
+
 
 <script type = "text/javascript">
    $(function () { $('#collapseFour').collapse({

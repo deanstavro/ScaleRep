@@ -28,7 +28,7 @@ class SalesforcesController < InheritedResources::Base
 	      		  @salesforce.update_attribute(:salesforce_integration_authorized, true)
 
 			      format.html  { redirect_to(salesforces_path,
-			                    :notice => 'Salesforce Authorized! Integration Complete.') }
+			                    :notice => 'Salesforce Authorized! Turn your integration status to ON!') }
 			      format.json  { render :json => @salesforce,
 			                    :status => :created, :location => @salesforce }
 		  else
@@ -62,7 +62,7 @@ class SalesforcesController < InheritedResources::Base
 	      		  @salesforce.update_attribute(:salesforce_integration_authorized, true)
 
 			      format.html  { redirect_to(salesforces_path,
-			                    :notice => 'Salesforce Authorized! Update Complete.') }
+			                    :notice => 'Salesforce Authorized! Turn your integration status to ON!') }
 			      format.json  { render :json => @salesforce,
 			                    :status => :created, :location => @salesforce }
 		  else
