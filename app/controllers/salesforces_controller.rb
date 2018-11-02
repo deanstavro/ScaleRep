@@ -7,6 +7,7 @@ class SalesforcesController < InheritedResources::Base
   	@client_company = @user.client_company
   	@client_company_id = @user.client_company.id
   	@salesforce = @client_company.salesforce
+  	@pages = ["options", "duplicates", "fields"]
 
   	if @salesforce.nil?
   		@salesforce = Salesforce.new()

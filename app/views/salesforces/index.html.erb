@@ -25,12 +25,78 @@
   </h4>
 </div>
 
-<% if @salesforce.salesforce_integration_on %>
-  <div class="thin_margins">
-    <%= render 'options', salesforce: @salesforce %>
+
+
+<div class = "panel-group thin_margins" id = "accordion">
+  <div class = "panel panel-default">
+      
+    <% if @salesforce.salesforce_integration_on %>
+      <div class = "panel-heading">
+        <h4 class = "panel-title">
+          <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseOne">
+            Data Upload Option
+          </a>
+        </h4>
+      </div>
+        
+      <div id = "collapseOne" class = "panel-collapse collapse in">
+        <div class = "panel-body">
+            Data Upload Option
+        </div>
+      </div>  
+    </div>
+    <br>
+
+  
+    <div class = "panel panel-success">
+      <div class = "panel-heading">
+         <h4 class = "panel-title">
+            <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseTwo">
+               Duplicate Options
+            </a>
+         </h4>
+      </div>
+      <div id = "collapseTwo" class = "panel-collapse collapse">
+        <div class = "panel-body">
+          <%= render 'options', salesforce: @salesforce %>
+        </div>
+      </div>
+    </div>
+  <% end %>
+  <br>
+   
+  <div class = "panel panel-info">
+    <div class = "panel-heading">
+      
+        <% if @salesforce.salesforce_integration_on %>
+          <h4 class = "panel-title"><a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseThree">
+            Integration Setup</a></h4>
+            </div>
+            <div id = "collapseThree" class = "panel-collapse collapse">
+        <% else %>
+          <h4 class = "panel-title"><a data-toggle = "collapse" data-parent = "#accordion" href = "#showThree">
+            Integration Setup</a></h4>
+            </div>
+            <div id = "showThree" class = "panel-collapse collapse">
+        <% end %>
+               
+
+    
+      <div class = "panel-body">
+          <%= render 'form', salesforce: @salesforce %>
+      </div>
+    </div>
   </div>
-<% end %>
- 
-<div class="thin_margins">
-  <%= render 'form', salesforce: @salesforce %>
+   
 </div>
+
+<script type = "text/javascript">
+   $(function () { $('#collapseFour').collapse({
+      toggle: false
+   })});
+  
+   $(function () { $('#collapseTwo').collapse('show')});
+   $(function () { $('#collapseThree').collapse('hide')});
+   $(function () { $('#showThree').collapse('show')});
+   $(function () { $('#collapseOne').collapse('show')});
+</script>  

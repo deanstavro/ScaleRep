@@ -10,8 +10,6 @@
       </div>
     <% end %>
 
-    <h4> Options </h4>
-
     <%= f.label :upload_contacts_to_salesforce_option do %>
     <%= f.check_box :upload_contacts_to_salesforce_option %>
     Upload all ScaleRep contacts to Salesforce
@@ -31,9 +29,6 @@
         <% end %>
     <% end %>
 
-    <br>
-    <br>
-
+    <br><br>
     <%= f.submit "Submit", class: "btn btn-primary btn-xl page-scroll header-text-space"  %>
-
 <% end %>

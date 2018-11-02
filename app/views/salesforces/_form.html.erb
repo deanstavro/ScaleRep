@@ -1,4 +1,3 @@
-
 <%= form_for(salesforce) do |f| %>
   <% if salesforce.errors.any? %>
     <div id="error_explanation">
@@ -11,50 +10,36 @@
       </ul>
     </div>
   <% end %>
-
-
-
-
-
-
-    <h4> Connect to Salesforce </h4>
     
-    <%= f.hidden_field :client_company_id, value: @client_company_id %>
+  <%= f.hidden_field :client_company_id, value: @client_company_id %>
 
+  <div class="form-group">
+      <%= f.label :security_token, "Token", class: "control-label" %>
+      <%= f.text_field :security_token, required: true, class: "form-control" %>
+  </div>
 
-    <div class="form-group">
-        <%= f.label :security_token, "Token", class: "control-label" %>
-        <%= f.text_field :security_token, required: true, class: "form-control" %>
-    </div>
+  <div class="form-group">
+      <%= f.label :username, "Username", class: "control-label" %>
+      <%= f.text_field :username, required: true, class: "form-control" %>
+  </div>
 
-    <div class="form-group">
-        <%= f.label :username, "Username", class: "control-label" %>
-        <%= f.text_field :username, required: true, class: "form-control" %>
-    </div>
+  <div class="form-group">
+      <%= f.label :password, "Password", class: "control-label" %>
+      <%= f.password_field :password, value: salesforce.password, required: true, class: "form-control" %>
+  </div>
 
-    <div class="form-group">
-        <%= f.label :password, "Password", class: "control-label" %>
-        <%= f.password_field :password, value: salesforce.password, required: true, class: "form-control" %>
-    </div>
+  <div class="form-group">
+      <%= f.label :app_key, "App Key (Consumer Key)", class: "control-label" %>
+      <%= f.text_field :app_key, required: true, class: "form-control" %>
+  </div>
 
+  <div class="form-group">
+      <%= f.label :api_secret, "App Secret Key (Consumer Secret Key)", class: "control-label" %>
+      <%= f.text_field :app_secret, required: true, class: "form-control" %>
+  </div>
 
-    <div class="form-group">
-        <%= f.label :app_key, "App Key (Consumer Key)", class: "control-label" %>
-        <%= f.text_field :app_key, required: true, class: "form-control" %>
-    </div>
+  <br>
 
-    <div class="form-group">
-        <%= f.label :api_secret, "App Secret Key (Consumer Secret Key)", class: "control-label" %>
-        <%= f.text_field :app_secret, required: true, class: "form-control" %>
-    </div>
-
-
-
-    <br>
-
-    <%= f.submit "Submit", class: "btn btn-primary btn-xl page-scroll header-text-space"  %>
-
-
+  <%= f.submit "Submit", class: "btn btn-primary btn-xl page-scroll header-text-space"  %>
 
 <% end %>
-
