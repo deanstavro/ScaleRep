@@ -93,7 +93,8 @@ Rails.application.configure do
 
 
   # Google Analytics
-  GA.tracker = "UA-121634784-1"
+  GA.tracker = "UA-115164024-1"
+  
 
   # Use a different logger for distributed setups.
   # require 'syslog/logger'
