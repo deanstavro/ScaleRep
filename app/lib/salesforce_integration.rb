@@ -18,30 +18,39 @@ module Salesforce_Integration
 
     
 
+    # Creates Lead If Lead Does Not Exist (Fields: FirstName, LastName, Email, Title, LeadSource, Description)
+    # Updates Lead if lead exists (updates LeadSource and Description)
+    # Returns true if lead is created
+    # Returns false if lead is updated
     def create_salesforce_lead(salesforce_object, lead, campaign)
       puts "Starting Salesforce Lead Creation Process"
       client = authenticate(salesforce_object)
-      upload = true
 
       if client == 400
         puts "ERROR"
         return false
       end
 
-      if salesforce_object.check_dup_against_existing_contact_email_option
-          upload = lead_unique_against_salesforce_email(salesforce_object, lead)
-      end
+      upload_contacts = salesforce_contact_by_email(client, salesforce_object, lead)
 
       #if upload and salesforce_object.check_dup_against_existing_account_domain_option
       #      upload = lead_unique_against_salesforce_account(salesforce_object, lead)
       #end
 
-      if upload
-        persona_name = campaign.persona.name
+      persona_name = campaign.persona.name
+      
+
+      if upload_contacts.empty?
         field_dict = createSalesforceHash(lead, persona_name)
         client.create!('Contact', FirstName: field_dict["FirstName"] , LastName: field_dict["LastName"] , Email: field_dict["Email"], Title: field_dict["Title"] , Description: field_dict["Description"] , LeadSource: field_dict["LeadSource"] )
         return true
       else
+        #Update salesforce contacts --> upload = salesforce contacts
+        for contact in upload_contacts
+          puts contact.attributes.to_s.split("/").last.split('"').first
+          contact_salesforce_id = contact.attributes.to_s.split("/").last.split('"').first
+          client.update!('Contact', Id: contact_salesforce_id, Description: persona_name , LeadSource: "ScaleRep" )
+        end
         return false
       end
 
@@ -84,16 +93,10 @@ module Salesforce_Integration
         return field_dict
     end
 
-    def lead_unique_against_salesforce_email(salesforce_object, lead)
-        client = authenticate(salesforce_object)
-        if client != 400
-          contacts = client.search('FIND {'+lead["email"]+'} RETURNING Contact (Email)').map(&:Email)
-          if contacts.empty?
-            return true
-          else
-            return false
-          end
-        end
+    # Returns contacts if contacts exist
+    def salesforce_contact_by_email(client, salesforce_object, lead)
+        contacts = client.search('FIND {'+lead["email"]+'} RETURNING Contact (Email)')
+        return contacts
     end
 
 

@@ -54,7 +54,8 @@
                     </div>
                     <div class="modal-body">
                       <h5>Contacts</h5>
-                      <p>* Below are the contact fields/values uploaded into Salesforce
+                      <p>* Duplicate Contacts will be updated so LeadSource = "ScaleRep" and Description = Persona
+                      <br>* Fields/values uploaded into Salesforce are below
                       <br>{salesforce_field}:{scalerep_value_uploaded}
                       <p>
                       <p style="color:black">
@@ -96,7 +97,7 @@
 
 
 
-    <% if false %>
+
     <!--############################# Section 2: Salesforce Blacklist ########################-->
     <div class="border-sf-option" id = "accordion">
       <div>
@@ -106,9 +107,19 @@
          </h4>
       </div>
       <div id = "collapseTwo">
+        <div>
+              <%= render 'options', salesforce: @salesforce %>
+          </div>
+        
+
+        <% if false %>
         <button type="button" data-toggle="modal" data-target="#salesforceBlacklist" class="btn btn-primary btn-xl page-scroll header-text-space">
           + Blacklist Field
         </button>
+        <% end %>
+
+
+
       </div>
 
 
@@ -161,7 +172,6 @@
     </div>
   <% end %>
   <br>
-  <% end %>
   
 
   <!--############################# Section 3: Salesforce Setup ########################-->

@@ -125,6 +125,8 @@ class LeadUploadJob < ApplicationJob
 				if le["email"].present? and le["first_name"].present?
 					if clients_leads.where(:email => le["email"]).count == 0
 
+						
+						###### Update Lead Fields ############
 						le[:client_company] = campaign.client_company
 						le[:campaign_id] = campaign.id
 						le[:status] = "cold"
@@ -133,24 +135,38 @@ class LeadUploadJob < ApplicationJob
 						rescue
 							le[:full_name] = le["first_name"]
 						end
-						include_contact = true
-						##### Call Salesforce Integration #####
-						salesforce = campaign.client_company.salesforce
 						
+						
+
+						##### Call Salesforce Integration #####
+						include_contact = true
+						salesforce = campaign.client_company.salesforce
 						if !salesforce.nil? and salesforce.salesforce_integration_on
-							if salesforce.upload_contacts_to_salesforce_option
-								puts "Check SF against dups and upload if not a dup"
-								include_contact = create_salesforce_lead(salesforce, le, campaign)
-							elsif salesforce.check_dup_against_existing_contact_email_option # or salesforce.check_dup_against_existing_account_domain_option
-								# call method to check against dup
-								puts "Check SF agains dups but do not upload contact"
-								include_contact = lead_unique_against_salesforce_email(salesforce, le)
+							
+							salesforce_client = authenticate(salesforce)
+							puts "Salesforce Client Authenticated"
+							# Check Blacklist
+							if salesforce.check_dup_against_existing_contact_email_option
+								puts "checking against email dups"
+								salesforce_contacts = salesforce_contact_by_email(salesforce_client, salesforce, le)
+								if !salesforce_contacts.empty?
+									include_contact = false
+									crm_dup << le # Add le to dup
+								end
 							end
-							if !include_contact
-								crm_dup << le
+
+							# Upload Contact/Account to Salesforce if options toggled on
+							if include_contact
+								puts "create Contact"
+								if salesforce.upload_contacts_to_salesforce_option
+									lead_created = create_salesforce_lead(salesforce, le, campaign)
+								end
 							end
 						end
 
+
+
+						######### Upload to Campaign if Not Blacklisted #############
 						if include_contact
 							##### Call Reply To Upload #####
 							uploaded_contact  = AddContactToReplyJob.perform_now(le,campaign.id)
@@ -162,8 +178,11 @@ class LeadUploadJob < ApplicationJob
 								not_imported << new_lead
 							end
 						end
+
 					else
-						##### Duplicate Lead ######
+
+
+						#################### Duplicate Lead ###########################
 						begin
 							puts le["email"] + " is a duplicate"
 							dup_lead = clients_leads.find_by(email: le["email"])
