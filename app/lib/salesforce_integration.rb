@@ -18,7 +18,7 @@ module Salesforce_Integration
 
     
 
-    def create_salesforce_lead(salesforce_object, lead)
+    def create_salesforce_lead(salesforce_object, lead, campaign)
       puts "Starting Salesforce Lead Creation Process"
       client = authenticate(salesforce_object)
       upload = true
@@ -27,22 +27,19 @@ module Salesforce_Integration
         puts "ERROR"
         return false
       end
-        #Use create method to call
 
       if salesforce_object.check_dup_against_existing_contact_email_option
           upload = lead_unique_against_salesforce_email(salesforce_object, lead)
       end
 
-      puts upload.to_s
-
       #if upload and salesforce_object.check_dup_against_existing_account_domain_option
       #      upload = lead_unique_against_salesforce_account(salesforce_object, lead)
       #end
 
-      puts upload.to_s
-
       if upload
-        client.create!('Contact',FirstName: lead["first_name"], LastName: lead["last_name"],Email: lead["email"],LeadSource: "ScaleRep")
+        persona_name = campaign.persona.name
+        field_dict = createSalesforceHash(lead, persona_name)
+        client.create!('Contact', FirstName: field_dict["FirstName"] , LastName: field_dict["LastName"] , Email: field_dict["Email"], Title: field_dict["Title"] , Description: field_dict["Description"] , LeadSource: field_dict["LeadSource"] )
         return true
       else
         return false
@@ -57,6 +54,35 @@ module Salesforce_Integration
 
 
     protected
+
+    def createSalesforceHash(lead, persona)
+        field_dict = Hash.new
+        
+        if lead["first_name"]
+          field_dict["FirstName"] = lead["first_name"]
+        end
+
+        if lead["last_name"]
+          field_dict["LastName"] = lead["last_name"]
+        else
+          field_dict["LastName"] = 'n/a'
+        end
+
+        if lead["email"]
+          field_dict["Email"] = lead["email"]
+        end
+
+        if lead["title"]
+          field_dict["Title"] = lead["title"]
+        else
+          field_dict["Title"] = "n/a"
+        end
+
+        field_dict["LeadSource"] = "ScaleRep"
+        field_dict["Description"] = persona
+
+        return field_dict
+    end
 
     def lead_unique_against_salesforce_email(salesforce_object, lead)
         client = authenticate(salesforce_object)

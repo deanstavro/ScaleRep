@@ -28,45 +28,143 @@
 <div class="thin_margins">
 
   <% if @salesforce.salesforce_integration_on %>
-    
-
-
-  <% if false %>
     <div  class="border-sf-option" id = "accordion"> 
     
 
-    
+
+
+        <!--############################# Section 1: Upload Data to salesforce ########################-->
         <div>
           <h4>
             <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseOne">
-              Data Upload Option</a>
-          </h4>
+              Upload to Salesforce</a>
+              <button type="button" data-toggle="modal" data-target="#salesforceDataUploadInfo" style="border:none;">
+                <%= octicon "info" %>
+            </button>
+          </h4>   
+            
+              <!-- Modal 1 - Data Upload to Salesforce -->
+              <div class="modal fade" id="salesforceDataUploadInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="myModalLabel">Uploading to Salesforce</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      
+                    </div>
+                    <div class="modal-body">
+                      <h5>Contacts</h5>
+                      <p>* Below are the contact fields/values uploaded into Salesforce
+                      <br>{salesforce_field}:{scalerep_value_uploaded}
+                      <p>
+                      <p style="color:black">
+                          LeadSource  :  "ScaleRep"
+                      <br>Description : {persona}
+                      <br>FirstName : {contact_last_name}
+                      <br>LastName : {contact_first_name}
+                      <br>Email : {contact_email}
+                      <br>Title : {contact_title}
+                      <p>
+                    
+                      <h5>Accounts</h5>
+
+                      <p>* Below are the account fields/values uploaded into Salesforce
+                      <br>{salesforce_field}:{scalerep_value_uploaded}
+                      <p>
+                      <p style="color:black">
+                      lead_source  :  "ScaleRep"
+                      <br>account_name : {company_name}
+                      <br>account_website : {company_website}
+                      <p>
+                    
+                    </div>
+                    <div class="modal-footer">
+                      <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
         </div>
         <div id = "collapseOne">
           <div>
-              Data Upload Option
+              <%= render 'data_upload_options', salesforce: @salesforce %>
           </div>
         </div>  
     </div>
     <br>
-  <% end %>
-    
-      <div class="border-sf-option" id = "accordion">
-        <div>
-           <h4>
-              <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseTwo">
-                 Duplicate Options</a>
-           </h4>
-        </div>
-        <div id = "collapseTwo">
-          <div>
-            <%= render 'options', salesforce: @salesforce %>
-          </div>
-        </div>
+
+
+
+    <% if false %>
+    <!--############################# Section 2: Salesforce Blacklist ########################-->
+    <div class="border-sf-option" id = "accordion">
+      <div>
+         <h4>
+            <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseTwo">
+               Check Salesforce Blacklist</a>
+         </h4>
+      </div>
+      <div id = "collapseTwo">
+        <button type="button" data-toggle="modal" data-target="#salesforceBlacklist" class="btn btn-primary btn-xl page-scroll header-text-space">
+          + Blacklist Field
+        </button>
+      </div>
+
+
+
+              <!-- Modal 2 - Data Upload to Salesforce -->
+              <div class="modal fade" id="salesforceBlacklist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+                <div class="modal-dialog" role="document">
+                  <div class="modal-content">
+                    <div class="modal-header">
+                      <h4 class="modal-title" id="myModalLabel">Add Blacklist Field</h4>
+                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                      
+                    </div>
+                    <div class="modal-body">
+                      <h5>Salesforce Field : Salesforce Value</h5>
+                        <%= form_for(@salesforce) do |f| %>
+                            <% if @salesforce.errors.any? %>
+                              <div id="error_explanation">
+                                <h2><%= pluralize(@salesforce.errors.count, "error") %> prohibited this salesforce from being saved:</h2>
+                                <ul>
+                                <% @salesforce.errors.full_messages.each do |message| %>
+                                  <li><%= message %></li>
+                                <% end %>
+                                </ul>
+                              </div>
+                            <% end %>
+
+                            <%= f.label :upload_contacts_to_salesforce_option do %>
+                            <%= f.check_box :upload_contacts_to_salesforce_option %>
+                            Upload all ScaleRep contacts to Salesforce
+                            <% end %>
+
+
+                            <br>
+
+
+                        
+                    </div>
+                    <div class="modal-footer">
+                            <%= f.submit "Update", class: "btn btn-primary btn-xl page-scroll header-text-space"  %>
+                            <% end %>
+                      <button type="button" class="btn btn-primary btn-xl page-scroll header-text-space" data-dismiss="modal">Close</button>
+                    </div>
+                  </div>
+                </div>
+              </div>
+
+
+
     </div>
   <% end %>
   <br>
-   
+  <% end %>
+  
+
+  <!--############################# Section 3: Salesforce Setup ########################-->
   <div class="border-sf-option" id = "accordion" >
     <div>
       
@@ -77,7 +175,7 @@
             <div id = "collapseThree" class = "panel-collapse collapse">
         <% else %>
           <h4><a data-toggle = "collapse" data-parent = "#accordion" href = "#showThree">
-            Integration Setup</a></h4>
+            Connect to Salesforce</a></h4>
             </div>
             <div id = "showThree">
         <% end %>          

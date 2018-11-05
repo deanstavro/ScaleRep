@@ -62,7 +62,7 @@ class SalesforcesController < InheritedResources::Base
 	      		  @salesforce.update_attribute(:salesforce_integration_authorized, true)
 
 			      format.html  { redirect_to(salesforces_path,
-			                    :notice => 'Salesforce Authorized! Turn your integration status to ON!') }
+			                    :notice => 'Salesforce Options Updated!') }
 			      format.json  { render :json => @salesforce,
 			                    :status => :created, :location => @salesforce }
 		  else

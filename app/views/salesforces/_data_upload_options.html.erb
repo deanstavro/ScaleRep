@@ -10,12 +10,17 @@
       </div>
     <% end %>
 
-
-    <%= f.label :check_dup_against_existing_contact_email_option do %>
-    <%= f.check_box :check_dup_against_existing_contact_email_option %>
-    Check ScaleRep contacts against existing contacts in Salesforce by email
+    <%= f.label :upload_contacts_to_salesforce_option do %>
+    <%= f.check_box :upload_contacts_to_salesforce_option %>
+    Upload all ScaleRep contacts to Salesforce
     <% end %>
-
     <br>
-    <%= f.submit "Submit", class: "btn btn-primary btn-xl page-scroll header-text-space"  %>
+    <%= f.label :check_dup_against_existing_contact_email_option do %>
+        <%= f.check_box :check_dup_against_existing_contact_email_option %>
+        Check contact duplicates against existing contact emails
+    <% end %>
+    <br>
+
+
+    <%= f.submit "Update", class: "btn btn-primary btn-xl page-scroll header-text-space"  %>
 <% end %>

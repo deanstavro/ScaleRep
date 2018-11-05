@@ -140,7 +140,7 @@ class LeadUploadJob < ApplicationJob
 						if !salesforce.nil? and salesforce.salesforce_integration_on
 							if salesforce.upload_contacts_to_salesforce_option
 								puts "Check SF against dups and upload if not a dup"
-								include_contact = create_salesforce_lead(salesforce, le)
+								include_contact = create_salesforce_lead(salesforce, le, campaign)
 							elsif salesforce.check_dup_against_existing_contact_email_option # or salesforce.check_dup_against_existing_account_domain_option
 								# call method to check against dup
 								puts "Check SF agains dups but do not upload contact"
