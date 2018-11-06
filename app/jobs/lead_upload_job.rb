@@ -13,15 +13,13 @@ class LeadUploadJob < ApplicationJob
 		base_campaign = Campaign.find_by(id: data_upload_object.campaign_id)
 		client_company = base_campaign.client_company
 		clients_leads = Lead.where("client_company_id =? " , data_upload_object.client_company)
-		campaign_contact_limit = base_campaign.contactLimit
-		number_leads_in_campaign = base_campaign.peopleCount
 
 		crm_dup = []
 		not_imported = []
 		imported = []
 
 		# Check if current campaign still has leads to be upload
-		if (campaign_contact_limit - number_leads_in_campaign) > 0
+		if (base_campaign.contactLimit - base_campaign.peopleCount) > 0
 			# Upload leads into the campaign, up until the contactLimit of campaign has been reached, or until data finishes uploading
 			data_list, imported, not_imported, crm_dup = upload_leads(clients_leads, data_list, base_campaign)
 			if data_list.empty?
@@ -58,21 +56,18 @@ class LeadUploadJob < ApplicationJob
 	private
 
 	def createCampaign(client_company, base_campaign)
-	    campaign = Campaign.new
-	    campaign = base_campaign.dup
-	    campaign.campaign_name = base_campaign.campaign_name + " " +Time.now.getutc.to_s
+		campaign = Campaign.new(:campaign_name => base_campaign.campaign_name + " " +Time.now.getutc.to_s, :client_company => client_company, :persona => base_campaign.persona, :contactLimit => base_campaign.contactLimit)
+	    puts "NEW CAMPAIGN: " + campaign.to_s
 	    campaigns = Campaign.where("client_company_id =?", client_company).order('created_at DESC')
 
 	    # Get Array of all emails
 	  	email_array = get_email_accounts(client_company.replyio_keys)
 	    count_dict = email_count(email_array, campaigns)
-
 	    # Choose correct email based on which email is running the least campaigns
 	    email_to_use = choose_email(count_dict)
 
 	    # Find the correct keys for that email to upload the campaign to that email
 	    for email in email_array
-	    	puts email.to_s
   			if email_to_use == email["emailAddress"]
   				reply_key = email["key"]
   				break

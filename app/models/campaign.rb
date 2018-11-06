@@ -9,7 +9,6 @@ class Campaign < ApplicationRecord
 	# enum
 	enum campaign_type: [ :standard, :auto_reply, :direct_referral, :auto_reply_referrall]
 	validates :campaign_name, uniqueness: { scope: :client_company }, presence: true
-	validates :contactLimit, presence: true
 
 	before_save :default_campaign_metrics
 
@@ -24,5 +23,8 @@ class Campaign < ApplicationRecord
         self.outOfOfficeCount ||= 0
         self.repliesCount ||= 0
         self.uniquePeopleContacted ||= 0
+        self.campaign_end ||= Date.today + 30.days
+        self.minimum_email_score ||= 85
+        self.contactLimit ||= 100
     end
 end
