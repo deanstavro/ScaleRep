@@ -30,16 +30,18 @@ class LeadUploadJob < ApplicationJob
 
 		#loop until the data_list is empty. Create campaigns and upload leds
 		loop do 
-			puts "More campaigns will be created"
 			break if data_list.empty?
+			
 			# Create campaign
 			current_campaign_id = createCampaign(client_company, base_campaign)
 			current_campaign = Campaign.find_by(id: current_campaign_id)
 			puts "New Campaign Created: " + current_campaign.campaign_name
+			
 			# Upload leads into new campaign
 			clients_leads = Lead.where("client_company_id =? " , data_upload_object.client_company)
 			data_list, imports, not_imports, current_crm_dup = upload_leads(clients_leads, data_list, current_campaign)
 
+			# Update lead counts
 			imported += imports
 			not_imported += not_imports
 			crm_dup += current_crm_dup
@@ -63,7 +65,6 @@ class LeadUploadJob < ApplicationJob
 	    # Get Array of all emails
 	  	email_array = get_email_accounts(client_company.replyio_keys)
 	    count_dict = email_count(email_array, campaigns)
-	    # Choose correct email based on which email is running the least campaigns
 	    email_to_use = choose_email(count_dict)
 
 	    # Find the correct keys for that email to upload the campaign to that email

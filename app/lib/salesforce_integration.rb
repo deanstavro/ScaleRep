@@ -33,7 +33,6 @@ module Salesforce_Integration
 
       upload_contacts = salesforce_contact_by_email(client, salesforce, lead)
       persona_name = campaign.persona.name
-
       if upload_contacts.empty?
         field_dict = createSalesforceHash(lead, persona_name)
 
@@ -114,7 +113,7 @@ module Salesforce_Integration
         end
 
         if lead["email"]
-          field_dict["Email"] = lead["email"]
+          field_dict["Email"] = lead["email"].gsub("\u2014","-")
         end
 
         if lead["title"]
@@ -131,7 +130,14 @@ module Salesforce_Integration
 
     # Returns contacts if contacts exist
     def salesforce_contact_by_email(client, salesforce_object, lead)
-        contacts = client.search('FIND {'+lead["email"]+'} RETURNING Contact (Email)')
+        lead_email = lead["email"]
+
+        if lead_email.include? "-"
+          lead_email = lead["email"].gsub!("-","\u2014")
+        end
+
+        puts lead_email
+        contacts = client.search('FIND {'+lead_email+'} RETURNING Contact (Email)')
         return contacts
     end
 
@@ -158,6 +164,7 @@ module Salesforce_Integration
           lead["company_website"] = domain
         end
 
+        lead["company_website"]
         account_search_term = lead["company_website"]
 
       else
