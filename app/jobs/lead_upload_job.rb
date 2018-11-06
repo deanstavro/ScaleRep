@@ -6,113 +6,104 @@ class LeadUploadJob < ApplicationJob
 	include Reply
 	include Salesforce_Integration
 
+	
 	def perform(data_upload_object)
 		puts "upload lead job has been started"
-		data_copy = Marshal.load(Marshal.dump(data_upload_object.cleaned_data))
-		@base_campaign = Campaign.find_by(id: data_upload_object.campaign_id)
-		client_company = @base_campaign.client_company
+		data_list = Marshal.load(Marshal.dump(data_upload_object.cleaned_data))
+		base_campaign = Campaign.find_by(id: data_upload_object.campaign_id)
+		client_company = base_campaign.client_company
 		clients_leads = Lead.where("client_company_id =? " , data_upload_object.client_company)
-		campaign_contact_count = @base_campaign.contactLimit
-		# Grab the count and figure out how many campaigns are needed
-		count_of_data_set = data_upload_object.count
-		# Check if current campaign has leads
-		number_leads_in_campaign = @base_campaign.leads.count
+		campaign_contact_limit = base_campaign.contactLimit
+		number_leads_in_campaign = base_campaign.peopleCount
 
-		if (campaign_contact_count - number_leads_in_campaign) > 0
-			lead_list_copy, imported, not_imported, crm_dup = upload_leads(clients_leads, campaign_contact_count, number_leads_in_campaign, data_copy, @base_campaign)
-			# If more leads don't exist on the lead list, we are done
-			if lead_list_copy.empty?
-				puts "lead list is empty. Contacts Added to Current Campaign. Job finished"
+		crm_dup = []
+		not_imported = []
+		imported = []
+
+		# Check if current campaign still has leads to be upload
+		if (campaign_contact_limit - number_leads_in_campaign) > 0
+			# Upload leads into the campaign, up until the contactLimit of campaign has been reached, or until data finishes uploading
+			data_list, imported, not_imported, crm_dup = upload_leads(clients_leads, data_list, base_campaign)
+			if data_list.empty?
 				data_upload_object.update_attributes(:imported => imported, :not_imported => not_imported, :external_crm_duplicates => crm_dup)
 				return
-			else
-				puts "more leads to upload"
-				createCampaignsUploadLeads(lead_list_copy, data_upload_object, campaign_contact_count, client_company, @base_campaign, imported, not_imported, crm_dup)
-			end	
-		else
-			puts "no more space in current campaign"
-			createCampaignsUploadLeads(data_copy, data_upload_object, campaign_contact_count, client_company, @base_campaign, [], [], [])	
+			end
 		end
+
+		#loop until the data_list is empty. Create campaigns and upload leds
+		loop do 
+			puts "More campaigns will be created"
+			break if data_list.empty?
+			# Create campaign
+			current_campaign_id = createCampaign(client_company, base_campaign)
+			current_campaign = Campaign.find_by(id: current_campaign_id)
+			puts "New Campaign Created: " + current_campaign.campaign_name
+			# Upload leads into new campaign
+			clients_leads = Lead.where("client_company_id =? " , data_upload_object.client_company)
+			data_list, imports, not_imports, current_crm_dup = upload_leads(clients_leads, data_list, current_campaign)
+
+			imported += imports
+			not_imported += not_imports
+			crm_dup += current_crm_dup
+		end
+
+		# update data_upload fields when upload is complete
+		data_upload_object.update_attributes(:imported => imported, :not_imported => not_imported, :external_crm_duplicates => crm_dup)
+		return
 	end
+
+
 
 
 	private
 
+	def createCampaign(client_company, base_campaign)
+	    campaign = Campaign.new
+	    campaign = base_campaign.dup
+	    campaign.campaign_name = base_campaign.campaign_name + " " +Time.now.getutc.to_s
+	    campaigns = Campaign.where("client_company_id =?", client_company).order('created_at DESC')
 
-	def createCampaignsUploadLeads(remaining_leads_json, data_upload_object, campaign_contact_count, client_company, base_campaign, imported, not_imported, crm_dup)
-		puts "private method to create campaigns and upload leads"
-		clients_leads = Lead.where("client_company_id =? " , client_company)
-		campaigns_left =  (remaining_leads_json.count.to_f/campaign_contact_count).ceil
-		puts "NUMBER OF CAMPAIGNS LEFT: " + campaigns_left.to_s
+	    # Get Array of all emails
+	  	email_array = get_email_accounts(client_company.replyio_keys)
+	    count_dict = email_count(email_array, campaigns)
 
-		# For each number of campaigns
-		(1..campaigns_left).each do |i|
-			
-			# Create the campaign on the frontend
-		    @campaign = Campaign.new
-		    @campaign = base_campaign.dup
-		    @campaign.campaign_name = base_campaign.campaign_name + " " +Time.now.getutc.to_s
-		    @campaigns = Campaign.where("client_company_id =?", client_company).order('created_at DESC')
+	    # Choose correct email based on which email is running the least campaigns
+	    email_to_use = choose_email(count_dict)
 
-		    # Get Array of all emails
-		  	email_array = get_email_accounts(client_company.replyio_keys)
-		    count_dict = email_count(email_array, @campaigns)
-		    # Choose correct email based on which email is running the least campaigns
-		    email_to_use = choose_email(count_dict)
-		    # Find the correct keys for that email to upload the campaign to that email
-		    for email in email_array
-	  			if email_to_use == email["emailAddress"]
-	  				reply_key = email["key"]
-	  				break
-	  			end
-		  	end
+	    # Find the correct keys for that email to upload the campaign to that email
+	    for email in email_array
+	    	puts email.to_s
+  			if email_to_use == email["emailAddress"]
+  				reply_key = email["key"]
+  				break
+  			end
+	  	end
 
-		    # Add the email account we will use to the local campaign object
-		  	puts email_to_use.to_s + "  " + reply_key
-		    @campaign[:emailAccount] = email_to_use.to_s
-		    # Save the campaign locally
-			if @campaign.save
-
-		        # If the campaign saves, post the campaign to reply
-				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, @campaign.campaign_name))
-				#Add in contact_limit amount of data
-				remaining_leads_json, imports, not_imports, cur_crm_dup = upload_leads(clients_leads, campaign_contact_count, 0, remaining_leads_json, @campaign)
-
-				imported += imports
-				not_imported += not_imports
-				crm_dup += cur_crm_dup
-
-				# If more leads don't exist on the lead list, we are done
-				if remaining_leads_json.empty?
-					puts "LEAD LIST IS EMPTY"
-
-					data_upload_object.update_attributes(:imported => imported, :not_imported => not_imported, :external_crm_duplicates => crm_dup)
-					puts "Contacts Added to Current Campaign. Job finished"
-					return
-				else
-					puts "more leads"
-				end
-			else
-				puts "Campaign Did Not Save"
-			end
+	    # Add the email account we will use to the local campaign object
+	  	puts "email to use for reply campaign: " + email_to_use.to_s + "  " + reply_key
+	    campaign[:emailAccount] = email_to_use.to_s
+	    
+	    # Save the campaign locally
+		if campaign.save
+	        # If the campaign saves, post the campaign to reply
+			response = JSON.parse(post_campaign(campaign,reply_key, email_to_use))
 		end
+
+		return campaign.id
 	end
 
 
-
-	def upload_leads(clients_leads, campaign_contact_count, number_leads_in_campaign, upload_lead_list, campaign)
+	def upload_leads(clients_leads, upload_lead_list, campaign)
 		not_imported = []
 		imported = []
 		crm_dup = []
-		lead_list = upload_lead_list
-		leads_left_to_upload_in_campaign = campaign_contact_count - number_leads_in_campaign
-		
+		leads_left_to_upload_in_campaign = campaign.contactLimit - campaign.peopleCount
 		# Fill in the rest of leads in the campaign
 		lead_list_copy = []
-		lead_list_copy.replace(lead_list)
+		lead_list_copy.replace(upload_lead_list)
 
 		# Loop through data_object_lead list
-		for le in lead_list
+		for le in upload_lead_list
 
 			if leads_left_to_upload_in_campaign == 0
 				break
@@ -139,6 +130,7 @@ class LeadUploadJob < ApplicationJob
 						
 
 						##### Call Salesforce Integration #####
+
 						include_contact = true
 						salesforce = campaign.client_company.salesforce
 						if !salesforce.nil? and salesforce.salesforce_integration_on
@@ -158,8 +150,21 @@ class LeadUploadJob < ApplicationJob
 							# Upload Contact/Account to Salesforce if options toggled on
 							if include_contact
 								puts "create Contact"
-								if salesforce.upload_contacts_to_salesforce_option
-									lead_created = create_salesforce_lead(salesforce, le, campaign)
+
+								### Check if user would like account and contact to be uploaded. ###
+								#### If so, call method to create_salesforce_account_and_lead
+								if salesforce.upload_accounts_to_salesforce_option
+									# Create or Find id of salesforce acocunt
+									puts "finding or creating account"
+									account_id = create_of_find_salesforce_account(salesforce, le, campaign)
+									puts "ACCOUNT ID: " + account_id
+
+									if salesforce.upload_contacts_to_salesforce_option
+										lead_created = create_or_find_salesforce_lead(account_id,salesforce, le, campaign)
+									end
+								# If create contact but not account, don't uplaod account reference
+								elsif salesforce.upload_contacts_to_salesforce_option
+									lead_created = create_or_find_salesforce_lead("nil",salesforce, le, campaign)
 								end
 							end
 						end
@@ -222,6 +227,8 @@ class LeadUploadJob < ApplicationJob
 	end
 
 
+
+
 	def choose_email(count_dict)
 
   		current_value = 1000
@@ -240,18 +247,14 @@ class LeadUploadJob < ApplicationJob
 
 
   	def email_count(email_array, campaign_array)
-
   		count_dic = Hash.new
 		for email in email_array
 			count_dic[email["emailAddress"]] = 0
 		end
-
-
 		for campaign in campaign_array
 			for reply_email in email_array
 
 				if campaign.emailAccount == reply_email["emailAddress"]
-
 					if count_dic[campaign.emailAccount]
 						count_dic[campaign.emailAccount] = count_dic[campaign.emailAccount] + 1
 					else
@@ -262,7 +265,8 @@ class LeadUploadJob < ApplicationJob
 		end
 
 		return count_dic
-
   	end
+
+
 
 end

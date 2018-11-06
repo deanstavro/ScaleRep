@@ -98,7 +98,7 @@ class SalesforcesController < InheritedResources::Base
   private
 
 	def salesforce_params
-	  params.require(:salesforce).permit(:api_version, :username, :password, :security_token, :app_key, :app_secret, :client_company_id, :upload_contacts_to_salesforce_option, :check_dup_against_existing_contact_email_option, :check_dup_against_existing_account_domain_option)
+	  params.require(:salesforce).permit(:api_version, :username, :password, :security_token, :app_key, :app_secret, :client_company_id, :upload_contacts_to_salesforce_option, :check_dup_against_existing_contact_email_option, :check_dup_against_existing_account_domain_option, :upload_accounts_to_salesforce_option)
 	end
 
 end

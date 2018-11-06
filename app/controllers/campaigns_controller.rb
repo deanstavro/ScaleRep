@@ -93,7 +93,7 @@ class CampaignsController < ApplicationController
         # Save the campaign locally
   			if @campaign.save
           # If the campaign saves, post the campaign to reply
-  				post_campaign = JSON.parse(post_campaign(reply_key, email_to_use, params[:campaign][:campaign_name]))
+  				post_campaign = JSON.parse(post_campaign(@campaign, reply_key, email_to_use))
   				redirect_to client_companies_campaigns_path(persona), :notice => "Campaign created"
   			else
   				redirect_to client_companies_campaigns_path(persona), :notice => @campaign.errors.full_messages

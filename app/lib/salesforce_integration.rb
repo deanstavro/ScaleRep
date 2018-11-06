@@ -22,27 +22,28 @@ module Salesforce_Integration
     # Updates Lead if lead exists (updates LeadSource and Description)
     # Returns true if lead is created
     # Returns false if lead is updated
-    def create_salesforce_lead(salesforce_object, lead, campaign)
+    def create_or_find_salesforce_lead(account_id, salesforce, lead, campaign)
       puts "Starting Salesforce Lead Creation Process"
-      client = authenticate(salesforce_object)
+      client = authenticate(salesforce)
 
       if client == 400
         puts "ERROR"
         return false
       end
 
-      upload_contacts = salesforce_contact_by_email(client, salesforce_object, lead)
-
-      #if upload and salesforce_object.check_dup_against_existing_account_domain_option
-      #      upload = lead_unique_against_salesforce_account(salesforce_object, lead)
-      #end
-
+      upload_contacts = salesforce_contact_by_email(client, salesforce, lead)
       persona_name = campaign.persona.name
-      
 
       if upload_contacts.empty?
         field_dict = createSalesforceHash(lead, persona_name)
-        client.create!('Contact', FirstName: field_dict["FirstName"] , LastName: field_dict["LastName"] , Email: field_dict["Email"], Title: field_dict["Title"] , Description: field_dict["Description"] , LeadSource: field_dict["LeadSource"] )
+
+        # Account for creating a contact with and without an account
+        if account_id == "nil"
+          client.create!('Contact', FirstName: field_dict["FirstName"] , LastName: field_dict["LastName"] , Email: field_dict["Email"], Title: field_dict["Title"] , Description: field_dict["Description"] , LeadSource: field_dict["LeadSource"]  )
+        else
+          client.create!('Contact', AccountId: account_id, FirstName: field_dict["FirstName"] , LastName: field_dict["LastName"] , Email: field_dict["Email"], Title: field_dict["Title"] , Description: field_dict["Description"] , LeadSource: field_dict["LeadSource"]  )
+        end
+
         return true
       else
         #Update salesforce contacts --> upload = salesforce contacts
@@ -55,6 +56,41 @@ module Salesforce_Integration
       end
 
     end
+
+
+
+    # Returns Account Id of the Salesforce Account Created Or Found
+    def create_of_find_salesforce_account(salesforce, lead, campaign)
+      puts "Finding or creating salesforce account"
+      client = authenticate(salesforce)
+
+      if client == 400
+        puts "ERROR"
+        return false
+      end
+      account_ids, account_search_term = salesforce_search_account(client, salesforce, lead)
+      
+      if account_ids.empty?
+        puts "ACCOUNT ID EMPTY"
+
+        if !lead["company_name"]
+          lead["company_name"] = account_search_term
+        end
+        # Create Account if it does not exist
+        account_id = client.create!('Account', Website: account_search_term, Name: lead["company_name"]  )
+        sleep(1)
+        puts "CREATED ID: " + account_id.to_s
+        return account_id
+      else
+        # Get Account ID of the first
+        account_id = account_ids.first.Id
+        puts "ACCOUNT ID EXISTS: " + account_id.to_s
+      end
+      
+      return account_id
+    end
+
+
 
 
     def update(salesforce_object, lead)
@@ -100,15 +136,29 @@ module Salesforce_Integration
     end
 
 
-    def lead_unique_against_salesforce_account(salesforce_object, lead)
-        client = authenticate(salesforce_object)
+    # Takes in a salesforce object, a salesforce client, and a lead to upload its account
+    #
+    # This first determines the search term by company website or by the end of the email
+    # We then make a search call to salesforce, which returns an array of ids based on the search
+    #
+    # We return the account_ids array, and the search term
+    def salesforce_search_account(client, salesforce_object, lead)
+      puts "Search for salesforce account"
+      if lead["company_website"]
+        account_search_term = lead["company_website"]
+      else
+        account_search_term = lead["email"].split("@").last
+      end
+      puts "ACCOUNT SEARCH TERM: " + account_search_term
+      account_ids = client.search('FIND {' + account_search_term + '} RETURNING Account (Id)')
 
-        accounts = client.search('FIND {'+lead["company_website"]+'} RETURNING Account (Domain)').map(&:Domain)
-        if accounts.empty?
-          return true
-        else
-          return false
-        end
+      begin
+        puts "ID: " + account_ids.first.Id.to_s
+      rescue
+        account_ids = []
+      end
+
+      return account_ids, account_search_term
     end
 
 

@@ -171,43 +171,20 @@ module Reply
              :url => 'https://api.reply.io/v1/actions/addandpushtocampaign?apiKey='+ reply_key,
              :payload => payload
           )
-          #sleep(5)
-
-          #update with custom fields --> this is the only endpoint where you can add custom fields
-          #payload_for_custom_fields = { "email": contact.referral_email, "firstName": contact.referral_name.split[0...-1].join(" "), "customFields": [{"key": "custom-variable-18927", "value": contact.full_name}]}
-
-          #custom_field_response = RestClient::Request.execute(
-          #   :method => :post,
-          #   :url => 'https://api.reply.io/v1/people?apiKey='+ reply_key,
-          #   :payload => payload_for_custom_fields
-          #)
-
-          #puts custom_field_response.to_s
-          #puts custom_field_response.code
 
         end
 
-        #sleep(5)
-
         return response
     rescue
-
         puts "did not input into reply"
         return "did not input into reply"
-
     end
-
   end
 
 
 
 
-
-
-
   def get_email_accounts(company_key)
-
-
       keys = JSON.parse(company_key)
 
       # Get the correct reply keys, and call API to retrieve
@@ -225,11 +202,7 @@ module Reply
             for email in un
               email["key"] = accounts["key"]
             end
-
-
             email_accounts << un
-
-
         rescue RestClient::ExceptionWithResponse => e
             return e
         end
@@ -240,33 +213,24 @@ module Reply
       for accounts in email_accounts
         for email in accounts
             email_arr << email
-
         end
       end
 
       return email_arr
-
   end
 
 
 
-
-
-  def post_campaign(key, email_to_use, persona_name)
-
-
+  def post_campaign(scalerep_campaign, key, email_to_use)
       begin
-
-          payload = {"name": persona_name, "emailAccount": email_to_use, "settings": { "EmailsCountPerDay": 400, "daysToFinishProspect": 3, "daysFromLastProspectContact": 3, "emailSendingDelaySeconds": 560, "emailPriorityType": "Equally divided between", "disableOpensTracking": false, "repliesHandlingType": "Mark person as finished", "enableLinksTracking": false }, "steps": [{ "number": "1", "InMinutesCount": "25", "templates": [{ "body": "Hello World!", "subject": "Im here!"}]}]}.to_json
+          payload = {"name": scalerep_campaign.campaign_name, "emailAccount": email_to_use, "settings": { "EmailsCountPerDay": 400, "daysToFinishProspect": 3, "daysFromLastProspectContact": 3, "emailSendingDelaySeconds": 560, "emailPriorityType": "Equally divided between", "disableOpensTracking": false, "repliesHandlingType": "Mark person as finished", "enableLinksTracking": false }, "steps": [{ "number": "1", "InMinutesCount": "25", "templates": [{ "body": "Hello World!", "subject": "Im here!"}]}]}.to_json
           response = RestClient.post "https://api.reply.io/v2/campaigns?apiKey="+key, payload, :content_type => "application/json"
           data_hash = JSON.parse(response)
 
-
-          @campaign.update_attribute(:reply_id, data_hash["id"])
-          @campaign.update_attribute(:reply_key, key)
+          scalerep_campaign.update_attribute(:reply_id, data_hash["id"])
+          scalerep_campaign.update_attribute(:reply_key, key)
 
           return response
-
       rescue RestClient::ExceptionWithResponse => e
 
           puts e
