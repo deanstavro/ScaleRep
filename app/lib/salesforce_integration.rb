@@ -145,7 +145,21 @@ module Salesforce_Integration
     def salesforce_search_account(client, salesforce_object, lead)
       puts "Search for salesforce account"
       if lead["company_website"]
+
+        if lead["company_website"].include? "//"
+          lead_array = lead["company_website"].split("//").last
+          lead["company_website"] = lead_array
+        end
+
+        if lead["company_website"].include? "www."
+          lead_array = lead["company_website"].split(".")
+          lead_array.shift
+          domain = lead_array.join(".")
+          lead["company_website"] = domain
+        end
+
         account_search_term = lead["company_website"]
+
       else
         account_search_term = lead["email"].split("@").last
       end
