@@ -10,8 +10,10 @@ module Salesforce_Integration
                     :client_secret  => salesforce_object.app_secret
       begin
         @client.authenticate!
+        puts "Salesforce Client Authenticated"
         return @client
       rescue
+        puts "Salesforce Client Unable to Authenticate"
         return 400
       end
     end
@@ -133,11 +135,13 @@ module Salesforce_Integration
         lead_email = lead["email"]
 
         if lead_email.include? "-"
+          puts "HEYYYYYYYYY"
           lead_email = lead["email"].gsub!("-","\u2014")
         end
 
-        puts lead_email
+        
         contacts = client.search('FIND {'+lead_email+'} RETURNING Contact (Email)')
+        puts lead_email
         return contacts
     end
 
