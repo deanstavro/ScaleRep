@@ -115,7 +115,7 @@ module Salesforce_Integration
         end
 
         if lead["email"]
-          field_dict["Email"] = lead["email"].gsub("\u2014","-")
+          field_dict["Email"] = lead["email"]
         end
 
         if lead["title"]
@@ -135,12 +135,15 @@ module Salesforce_Integration
         lead_email = lead["email"]
 
         if lead_email.include? "-"
-          puts "HEYYYYYYYYY"
-          lead_email = lead["email"].gsub!("-","\u2014")
+          lead_email = lead["email"].gsub!("-","\u2013")
         end
-
         
         contacts = client.search('FIND {'+lead_email+'} RETURNING Contact (Email)')
+
+        if lead_email.include? "\u2013"
+          lead["email"].gsub!("\u2013","-")
+        end
+
         puts lead_email
         return contacts
     end
@@ -174,8 +177,17 @@ module Salesforce_Integration
       else
         account_search_term = lead["email"].split("@").last
       end
+
+      if account_search_term.include? "-"
+          account_search_term.gsub!("-","\u2013")
+      end
+      
       puts "ACCOUNT SEARCH TERM: " + account_search_term
       account_ids = client.search('FIND {' + account_search_term + '} RETURNING Account (Id)')
+
+      if account_search_term.include? "\u2013"
+          account_search_term.gsub!("\u2013","-")
+      end
 
       begin
         puts "ID: " + account_ids.first.Id.to_s

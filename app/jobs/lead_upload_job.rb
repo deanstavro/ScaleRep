@@ -136,12 +136,10 @@ class LeadUploadJob < ApplicationJob
 							if salesforce.check_dup_against_existing_contact_email_option
 								puts "checking against email dups"
 								salesforce_contacts = salesforce_contact_by_email(salesforce_client, salesforce, le)
-								puts "WE OUTTA HERE!"
 								if !salesforce_contacts.empty?
 									include_contact = false
 									crm_dup << le # Add le to dup
 								end
-								puts "HERRO"
 							end
 
 							# Upload Contact/Account to Salesforce if options toggled on

@@ -37,15 +37,21 @@ class DataUploadsController < ApplicationController
     @page_results = @values.paginate(:page => @page, :per_page => @per_page)
   end
 
+
+  # GET /data_uploads/show_data_list - Shows Upload Data Lists (Imported, Not Imported, CRM Dups, Cleaned, Uploaded)
   def show_data_list
     @user = User.find(current_user.id)
     @data_upload = DataUpload.find_by(id: params[:id])
     @headers = @data_upload.data[0].keys
-    @list_name = params[:list]
-    @list_unpa = @data_upload.method(params[:list]).call
-    @list = @list_unpa.paginate(:page => params[:page], :per_page => 100)
     @campaign = @data_upload.campaign
     @client_company = @campaign.client_company
+    
+    @list_name = params[:list]
+    @list_unpa = @data_upload.method(params[:list]).call
+    @list_unpa.each_with_index do |record, index|
+      @list_unpa[index] = record.slice(*@headers)
+    end
+    @list = @list_unpa.paginate(:page => params[:page], :per_page => 100)
   end
 
   # GET /data_uploads/new
