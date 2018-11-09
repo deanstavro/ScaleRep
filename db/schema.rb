@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181105222124) do
+ActiveRecord::Schema.define(version: 20181109010938) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -269,6 +269,9 @@ ActiveRecord::Schema.define(version: 20181105222124) do
     t.datetime "updated_at",                                                       null: false
     t.jsonb    "blacklist_fields",                                 default: []
     t.boolean  "upload_accounts_to_salesforce_option",             default: false
+    t.string   "instance_url"
+    t.string   "oauth_token"
+    t.string   "refresh_token"
     t.index ["client_company_id"], name: "index_salesforces_on_client_company_id", using: :btree
   end
 

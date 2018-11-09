@@ -15,6 +15,13 @@ class SalesforcesController < InheritedResources::Base
   end
 
 
+  def web_authentication
+  	
+  	redirect_to(salesforces_path,:notice => 'Salesforce Authorized! Turn your integration status to ON!')
+
+  end
+
+
   def create
   	@salesforce = Salesforce.new(salesforce_params)
 

@@ -137,6 +137,7 @@
             <div id = "showThree">
         <% end %>          
       <div>
+          <%= link_to "Sign in with Salesforce", "/auth/salesforce", id: "sign_in" %>
           <%= render 'form', salesforce: @salesforce %>
       </div>
     </div>

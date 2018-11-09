@@ -13,6 +13,12 @@ Rails.application.routes.draw do
                 end
             end
 
+            resources :salesforce do
+                collection do
+                    post :authentication
+                end
+            end
+
             resources :lead do
                 collection { post :import}
                 collection do
@@ -78,5 +84,9 @@ Rails.application.routes.draw do
     resources :salesforces do
         collection {put :toggle}
     end
+
+    match 'auth/:provider/callback', to: 'salesforces#web_authentication', via: [:get, :post]
+    match 'auth/failure', to: redirect('/'), via: [:get, :post]
+    #match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
 
 end
