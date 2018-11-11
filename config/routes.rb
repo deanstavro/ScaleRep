@@ -86,7 +86,6 @@ Rails.application.routes.draw do
     end
 
     match 'auth/:provider/callback', to: 'salesforces#web_authentication', via: [:get, :post]
-    match 'auth/failure', to: redirect('/'), via: [:get, :post]
-    #match 'signout', to: 'sessions#destroy', as: 'signout', via: [:get, :post]
-
+    match 'auth/:provider/setup', to: 'salesforces#setup', via: [:get, :post]
+    match 'auth/failure', to: 'salesforces#index', via: [:get, :post]
 end

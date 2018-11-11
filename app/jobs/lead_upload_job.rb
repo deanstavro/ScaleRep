@@ -121,6 +121,7 @@ class LeadUploadJob < ApplicationJob
 							le[:full_name] = le["first_name"] + " " + le["last_name"]
 						rescue
 							le[:full_name] = le["first_name"]
+							le["last_name"] = 'n/a'
 						end
 						
 						
@@ -135,8 +136,10 @@ class LeadUploadJob < ApplicationJob
 							# Check Blacklist
 							if salesforce.check_dup_against_existing_contact_email_option
 								puts "checking against email dups"
-								salesforce_contacts = salesforce_contact_by_email(salesforce_client, salesforce, le)
+								salesforce_contacts = salesforce_contact_by_email(salesforce_client, le)
+								puts salesforce_contacts.to_s
 								if !salesforce_contacts.empty?
+									puts "Lead is blacklisted on salesforce. Skip"
 									include_contact = false
 									crm_dup << le # Add le to dup
 								end

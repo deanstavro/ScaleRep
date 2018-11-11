@@ -3,11 +3,13 @@ require 'restforce'
 module Salesforce_Integration
   
     def authenticate(salesforce_object)
-      @client = Restforce.new :username => salesforce_object.username,
-                    :password       => salesforce_object.password,
-                    :security_token => salesforce_object.security_token,
+      @client = Restforce.new :oauth_token => salesforce_object.oauth_token,
+                    :instance_url       => salesforce_object.instance_url,
                     :client_id     => salesforce_object.app_key,
-                    :client_secret  => salesforce_object.app_secret
+                    :client_secret  => salesforce_object.app_secret,
+                    :refresh_token => salesforce_object.refresh_token,
+                    :authentication_callback => Proc.new { |x| Rails.logger.debug x.to_s },
+                    :api_version => '39.0'
       begin
         @client.authenticate!
         puts "Salesforce Client Authenticated"
@@ -19,7 +21,6 @@ module Salesforce_Integration
     end
 
     
-
     # Creates Lead If Lead Does Not Exist (Fields: FirstName, LastName, Email, Title, LeadSource, Description)
     # Updates Lead if lead exists (updates LeadSource and Description)
     # Returns true if lead is created
@@ -29,11 +30,11 @@ module Salesforce_Integration
       client = authenticate(salesforce)
 
       if client == 400
-        puts "ERROR"
+        puts "ERROR Authenticating. Returning"
         return false
       end
 
-      upload_contacts = salesforce_contact_by_email(client, salesforce, lead)
+      upload_contacts = salesforce_contact_by_email(client, lead)
       persona_name = campaign.persona.name
       if upload_contacts.empty?
         field_dict = createSalesforceHash(lead, persona_name)
@@ -91,9 +92,6 @@ module Salesforce_Integration
       return account_id
     end
 
-
-
-
     def update(salesforce_object, lead)
       @client.update(sf_object, parse_fields_map(fields_map, entity_hash))
     end
@@ -131,7 +129,7 @@ module Salesforce_Integration
     end
 
     # Returns contacts if contacts exist
-    def salesforce_contact_by_email(client, salesforce_object, lead)
+    def salesforce_contact_by_email(client, lead)
         lead_email = lead["email"]
 
         if lead_email.include? "-"
@@ -143,9 +141,10 @@ module Salesforce_Integration
         if lead_email.include? "\u2013"
           lead["email"].gsub!("\u2013","-")
         end
-
-        puts lead_email
-        return contacts
+        puts contacts.first.last
+        puts contacts.first.last.empty?
+        puts contacts.length.to_s
+        return contacts.first.last
     end
 
 
@@ -198,6 +197,4 @@ module Salesforce_Integration
       return account_ids, account_search_term
     end
 
-
 end
-
