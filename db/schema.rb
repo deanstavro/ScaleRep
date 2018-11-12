@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20181109010938) do
+ActiveRecord::Schema.define(version: 20181112225646) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -254,9 +254,6 @@ ActiveRecord::Schema.define(version: 20181109010938) do
 
   create_table "salesforces", force: :cascade do |t|
     t.string   "api_version"
-    t.string   "username"
-    t.string   "password"
-    t.string   "security_token"
     t.string   "app_key"
     t.string   "app_secret"
     t.boolean  "salesforce_integration_on",                        default: false

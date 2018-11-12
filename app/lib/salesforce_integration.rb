@@ -2,6 +2,8 @@ require 'restforce'
 
 module Salesforce_Integration
   
+    # Authenticates Restforce Gem (Salesforce Client)
+    # Returns @client or 400, and accepts salesforce db object
     def authenticate(salesforce_object)
       @client = Restforce.new :oauth_token => salesforce_object.oauth_token,
                     :instance_url       => salesforce_object.instance_url,
@@ -19,7 +21,6 @@ module Salesforce_Integration
         return 400
       end
     end
-
     
     # Creates Lead If Lead Does Not Exist (Fields: FirstName, LastName, Email, Title, LeadSource, Description)
     # Updates Lead if lead exists (updates LeadSource and Description)
@@ -58,8 +59,6 @@ module Salesforce_Integration
       end
 
     end
-
-
 
     # Returns Account Id of the Salesforce Account Created Or Found
     def create_of_find_salesforce_account(salesforce, lead, campaign)
