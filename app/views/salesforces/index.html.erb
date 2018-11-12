@@ -1,10 +1,6 @@
 <div id="title" class="jumbotron">
 
-  <% if params[:message].present?%>
-      <center>
-          <p class="container text-danger"><%= params[:message] %></p>
-      </center>
-  <% elsif flash[:error].present? or flash[:notice].present? %>
+  <% if flash[:error].present? or flash[:notice].present? %>
       <center>
           <p class="container text-danger"><%= flash[:error] %></p>
           <p class="container text-success"><%= flash[:notice] %></p>
@@ -29,129 +25,150 @@
   </h4>
 </div>
 
-<div class="thin_margins">
-
-  <% if @salesforce.salesforce_integration_on %>
-    
-
-    <!--############################# Section 1: Upload Data to salesforce ########################-->
-    <div  class="border-sf-option" id = "accordion"> 
-        <div>
-          <h4>
-            <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseOne">
-              Upload to Salesforce</a>
-          </h4>   
-        </div>
-        <div id = "collapseOne">
-          <div>
-              <%= render 'data_upload_options', salesforce: @salesforce %>
-          </div>
-        </div>  
-    </div>
-    <br>
 
 
-    <!--############################# Section 2: Salesforce Blacklist ########################-->
-    <div class="border-sf-option" id = "accordion">
+<% if @salesforce.salesforce_integration_on %>
+
+  <!--############################# Section 1: Upload Data to salesforce ########################-->
+  <div  class="border-sf-option thin_margins" id = "accordion"> 
       <div>
-         <h4>
-            <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseTwo">
-               Blacklist</a>
-         </h4>
+        <h4>
+          <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseOne">
+            Upload to Salesforce</a>
+        </h4>   
       </div>
-      <div id = "collapseTwo">
+      <div id = "collapseOne">
         <div>
-              <%= render 'options', salesforce: @salesforce %>
-          </div>
-        
-          <br>
-        <div>
-        <% if false %>
-          <button type="button" data-toggle="modal" data-target="#salesforceBlacklist" class="btn btn-primary btn-xl page-scroll header-text-space">
-            + Blacklist Field
-          </button>
-        <% end %>
-      </div>
+            <%= render 'data_upload_options', salesforce: @salesforce %>
+        </div>
+      </div>  
+  </div>
+  <br>
 
-      </div>
+  <!--############################# Section 2: Salesforce Blacklist ########################-->
+  <div class="border-sf-option thin_margins" id = "accordion">
+    <div>
+       <h4>
+          <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseTwo">
+             Blacklist</a>
+       </h4>
+    </div>
+    <div id = "collapseTwo">
+      <div>
+            <%= render 'options', salesforce: @salesforce %>
+        </div>
+      
+        <br>
+      <div>
+      <% if false %>
+        <button type="button" data-toggle="modal" data-target="#salesforceBlacklist" class="btn btn-primary btn-xl page-scroll header-text-space">
+          + Blacklist Field
+        </button>
+      <% end %>
+    </div>
 
+    </div>
 
+            <!-- Modal 2 - Data Upload to Salesforce -->
+            <div class="modal fade" id="salesforceBlacklist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+              <div class="modal-dialog" role="document">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <h4 class="modal-title" id="myModalLabel">Add Blacklist Field</h4>
+                    <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                    
+                  </div>
+                  <div class="modal-body">
+                    <h5>Salesforce Field : Salesforce Value</h5>
+                      <%= form_for(@salesforce) do |f| %>
+                          <% if @salesforce.errors.any? %>
+                            <div id="error_explanation">
+                              <h2><%= pluralize(@salesforce.errors.count, "error") %> prohibited this salesforce from being saved:</h2>
+                              <ul>
+                              <% @salesforce.errors.full_messages.each do |message| %>
+                                <li><%= message %></li>
+                              <% end %>
+                              </ul>
+                            </div>
+                          <% end %>
 
-              <!-- Modal 2 - Data Upload to Salesforce -->
-              <div class="modal fade" id="salesforceBlacklist" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
-                <div class="modal-dialog" role="document">
-                  <div class="modal-content">
-                    <div class="modal-header">
-                      <h4 class="modal-title" id="myModalLabel">Add Blacklist Field</h4>
-                      <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                      
-                    </div>
-                    <div class="modal-body">
-                      <h5>Salesforce Field : Salesforce Value</h5>
-                        <%= form_for(@salesforce) do |f| %>
-                            <% if @salesforce.errors.any? %>
-                              <div id="error_explanation">
-                                <h2><%= pluralize(@salesforce.errors.count, "error") %> prohibited this salesforce from being saved:</h2>
-                                <ul>
-                                <% @salesforce.errors.full_messages.each do |message| %>
-                                  <li><%= message %></li>
-                                <% end %>
-                                </ul>
-                              </div>
-                            <% end %>
+                          <%= f.label :upload_contacts_to_salesforce_option do %>
+                          <%= f.check_box :upload_contacts_to_salesforce_option %>
+                          Upload all ScaleRep contacts to Salesforce
+                          <% end %>
 
-                            <%= f.label :upload_contacts_to_salesforce_option do %>
-                            <%= f.check_box :upload_contacts_to_salesforce_option %>
-                            Upload all ScaleRep contacts to Salesforce
-                            <% end %>
-
-
-                            <br>
-
-
-                        
-                    </div>
-                    <div class="modal-footer">
-                            <%= f.submit "Update", class: "btn btn-primary btn-xl page-scroll header-text-space"  %>
-                            <% end %>
-                      <button type="button" class="btn btn-primary btn-xl page-scroll header-text-space" data-dismiss="modal">Close</button>
-                    </div>
+                          <br>
+                  </div>
+                  <div class="modal-footer">
+                          <%= f.submit "Update", class: "btn btn-primary btn-xl page-scroll header-text-space"  %>
+                          <% end %>
+                    <button type="button" class="btn btn-primary btn-xl page-scroll header-text-space" data-dismiss="modal">Close</button>
                   </div>
                 </div>
               </div>
+            </div>
+  </div>
+<% end %>
+<br>
 
 
-
-    </div>
-  <% end %>
-  <br>
-  
-
-  <!--############################# Section 3: Salesforce Setup ########################-->
-  <div class="border-sf-option" id = "accordion" >
+<!--############################# Section 3: Salesforce Setup ########################-->
+<div class="border-sf-option thin_margins" id = "accordion" >
+  <div>
+    
+      <% if @salesforce.salesforce_integration_on %>
+        <h4><a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseThree">
+          Integration Setup</a>
+        </h4>
+          </div>
+          <div id = "collapseThree" class = "panel-collapse collapse">
+      <% else %>
+        <h4><a data-toggle = "collapse" data-parent = "#accordion" href = "#showThree">
+          Connect to Salesforce</a>
+          <button type="button" data-toggle="modal" data-target="#salesforceIntegrationModal" style="border:none;">
+                <%= octicon "info" %>
+          </button>
+        </h4>
+          </div>
+          <div id = "showThree">
+      <% end %>          
     <div>
-      
-        <% if @salesforce.salesforce_integration_on %>
-          <h4><a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseThree">
-            Integration Setup</a></h4>
-            </div>
-            <div id = "collapseThree" class = "panel-collapse collapse">
-        <% else %>
-          <h4><a data-toggle = "collapse" data-parent = "#accordion" href = "#showThree">
-            Connect to Salesforce</a></h4>
-            </div>
-            <div id = "showThree">
-        <% end %>          
-      <div>
-          <%= render 'form', salesforce: @salesforce %>
-      </div>
+        <%= render 'form', salesforce: @salesforce %>
     </div>
   </div>
-   
 </div>
-
-
-
+      <!-- Modal - Salesforce Integration Details -->
+      <div class="modal fade" id="salesforceIntegrationModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+        <div class="modal-dialog" role="document">
+          <div class="modal-content">
+            <div class="modal-header">
+              <h4 class="modal-title" style="color:#007bff; id="myModalLabel">Salesforce Setup</h4>
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>  
+            </div>
+            <div class="modal-body">
+              <h5 style="color:#007bff;">Step 1</h5>
+                <p> Login to Salesforce and create a new connected app
+                <br><br> "Setup" (top right) > "Create" (Under Build in left Panel) > "Manage Your Custom Apps" > "New" (Under Connected Apps)
+                </p>
+              <h5 style="color:#007bff;">Step 2: Basic Information</h5>
+                <p> - Fill in required fields (App Name, API Name, and Email)</p>
+              <h5 style="color:#007bff;">Step 3: API (Enable OAuth Settings)</h5>
+                <p>- Check "Enable OAuth Settings" 
+                <br> - Check "Enable for Device Flow"
+                <br> - Change "Callback URL" to "https://www.scalerep.com/auth/salesforce/callback"
+                <br> - For "Selected OAuth Scopes", choose "Access and manage your data (api)" AND "Perform requests on yor behalf at any time (resfresh_token, offline_access)"
+                </p>
+              <h5 style="color:#007bff;">Step 4: Save</h5>
+                <p> - Scroll down and save
+                <br> - Visit the created app and copy and paste "Consumer Key" and "Consumer Secret" into this ScaleRep page
+                </p>
+            </div>
+            <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+            </div>
+          </div>
+        </div>
+      </div>
 
 
 
@@ -160,7 +177,6 @@
    $(function () { $('#collapseFour').collapse({
       toggle: false
    })});
-  
    $(function () { $('#collapseTwo').collapse('show')});
    $(function () { $('#collapseThree').collapse('hide')});
    $(function () { $('#showThree').collapse('show')});

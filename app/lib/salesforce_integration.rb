@@ -9,7 +9,7 @@ module Salesforce_Integration
                     :client_secret  => salesforce_object.app_secret,
                     :refresh_token => salesforce_object.refresh_token,
                     :authentication_callback => Proc.new { |x| Rails.logger.debug x.to_s },
-                    :api_version => '39.0'
+                    :api_version => salesforce_object.api_version
       begin
         @client.authenticate!
         puts "Salesforce Client Authenticated"
