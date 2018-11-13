@@ -1,6 +1,7 @@
 require 'restforce'
 
 module Salesforce_Integration
+  protected
   
     # Authenticates Restforce Gem (Salesforce Client)
     # Returns @client or 400, and accepts salesforce db object
@@ -35,7 +36,7 @@ module Salesforce_Integration
         return false
       end
 
-      upload_contacts = salesforce_contact_by_email(client, lead)
+      upload_contacts = find_salesforce_contact_by_email(client, lead["email"])
       persona_name = campaign.persona.name
       if upload_contacts.empty?
         field_dict = createSalesforceHash(lead, persona_name)
@@ -69,7 +70,7 @@ module Salesforce_Integration
         puts "ERROR"
         return false
       end
-      account_ids, account_search_term = salesforce_search_account(client, salesforce, lead)
+      account_ids, account_search_term = find_salesforce_account_by_domain(client, salesforce, lead)
       
       if account_ids.empty?
         puts "ACCOUNT ID EMPTY"
@@ -96,7 +97,7 @@ module Salesforce_Integration
     end
 
 
-    protected
+    
 
     def createSalesforceHash(lead, persona)
         field_dict = Hash.new
@@ -127,22 +128,16 @@ module Salesforce_Integration
         return field_dict
     end
 
+    
     # Returns contacts if contacts exist
-    def salesforce_contact_by_email(client, lead)
-        lead_email = lead["email"]
+    def find_salesforce_contact_by_email(client, lead_email)
+        copy_email = lead_email.dup
 
-        if lead_email.include? "-"
-          lead_email = lead["email"].gsub!("-","\u2013")
+        if copy_email.include? "-"
+          copy_email = copy_email.gsub!("-","\u2013")
         end
         
-        contacts = client.search('FIND {'+lead_email+'} RETURNING Contact (Email)')
-
-        if lead_email.include? "\u2013"
-          lead["email"].gsub!("\u2013","-")
-        end
-        puts contacts.first.last
-        puts contacts.first.last.empty?
-        puts contacts.length.to_s
+        contacts = client.search('FIND {'+copy_email+'} RETURNING Contact (Email)')
         return contacts.first.last
     end
 
@@ -153,27 +148,28 @@ module Salesforce_Integration
     # We then make a search call to salesforce, which returns an array of ids based on the search
     #
     # We return the account_ids array, and the search term
-    def salesforce_search_account(client, salesforce_object, lead)
+    def find_salesforce_account_by_domain(client, salesforce_object, lead)
       puts "Search for salesforce account"
       if lead["company_website"]
+        # If company website exists, strip to host and use as search term
+        com_website = lead["company_website"]
 
-        if lead["company_website"].include? "//"
-          lead_array = lead["company_website"].split("//").last
-          lead["company_website"] = lead_array
+        if com_website.include? "//"
+          lead_array = com_website.split("//").last
+          com_website = lead_array
         end
-
-        if lead["company_website"].include? "www."
-          lead_array = lead["company_website"].split(".")
+        if com_website.include? "www."
+          lead_array = com_website.split(".")
           lead_array.shift
           domain = lead_array.join(".")
-          lead["company_website"] = domain
+          com_website = domain
         end
 
-        lead["company_website"]
-        account_search_term = lead["company_website"]
-
+        account_search_term = com_website
       else
-        account_search_term = lead["email"].split("@").last
+        # if company website doesn't exist, use email to find domain
+        con_email = lead["email"].dup
+        account_search_term = con_email.split("@").last
       end
 
       if account_search_term.include? "-"
@@ -182,10 +178,6 @@ module Salesforce_Integration
       
       puts "ACCOUNT SEARCH TERM: " + account_search_term
       account_ids = client.search('FIND {' + account_search_term + '} RETURNING Account (Id)')
-
-      if account_search_term.include? "\u2013"
-          account_search_term.gsub!("\u2013","-")
-      end
 
       begin
         puts "ID: " + account_ids.first.Id.to_s

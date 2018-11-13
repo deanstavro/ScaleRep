@@ -78,7 +78,6 @@ class LeadUploadJob < ApplicationJob
 	    # Add the email account we will use to the local campaign object
 	  	puts "email to use for reply campaign: " + email_to_use.to_s + "  " + reply_key
 	    campaign[:emailAccount] = email_to_use.to_s
-	    
 	    # Save the campaign locally
 		if campaign.save
 	        # If the campaign saves, post the campaign to reply
@@ -112,7 +111,6 @@ class LeadUploadJob < ApplicationJob
 				if le["email"].present? and le["first_name"].present?
 					if clients_leads.where(:email => le["email"]).count == 0
 
-						
 						###### Update Lead Fields ############
 						le[:client_company] = campaign.client_company
 						le[:campaign_id] = campaign.id
@@ -121,53 +119,50 @@ class LeadUploadJob < ApplicationJob
 							le[:full_name] = le["first_name"] + " " + le["last_name"]
 						rescue
 							le[:full_name] = le["first_name"]
-							le["last_name"] = 'n/a'
+							le[:last_name] = "n/a"
 						end
 						
 						
-
 						##### Call Salesforce Integration #####
-
 						include_contact = true
 						salesforce = campaign.client_company.salesforce
 						if !salesforce.nil? and salesforce.salesforce_integration_on
-							
 							salesforce_client = authenticate(salesforce)
-							# Check Blacklist
-							if salesforce.check_dup_against_existing_contact_email_option
-								puts "checking against email dups"
-								salesforce_contacts = salesforce_contact_by_email(salesforce_client, le)
-								puts salesforce_contacts.to_s
-								if !salesforce_contacts.empty?
-									puts "Lead is blacklisted on salesforce. Skip"
-									include_contact = false
-									crm_dup << le # Add le to dup
-								end
-							end
-
-							# Upload Contact/Account to Salesforce if options toggled on
-							if include_contact
-								puts "create Contact"
-
-								### Check if user would like account and contact to be uploaded. ###
-								#### If so, call method to create_salesforce_account_and_lead
-								if salesforce.upload_accounts_to_salesforce_option
-									# Create or Find id of salesforce acocunt
-									puts "finding or creating account"
-									account_id = create_of_find_salesforce_account(salesforce, le, campaign)
-									puts "ACCOUNT ID: " + account_id
-
-									if salesforce.upload_contacts_to_salesforce_option
-										lead_created = create_or_find_salesforce_lead(account_id,salesforce, le, campaign)
+							if salesforce_client != 400
+								# Check Blacklist
+								if salesforce.check_dup_against_existing_contact_email_option
+									puts "checking against email dups"
+									salesforce_contacts = find_salesforce_contact_by_email(salesforce_client, le["email"])
+									puts salesforce_contacts.to_s
+									if !salesforce_contacts.empty?
+										puts "Lead is blacklisted on salesforce. Skip"
+										include_contact = false
+										crm_dup << le # Add le to dup
 									end
-								# If create contact but not account, don't uplaod account reference
-								elsif salesforce.upload_contacts_to_salesforce_option
-									lead_created = create_or_find_salesforce_lead("nil",salesforce, le, campaign)
 								end
+
+								# Upload Contact/Account to Salesforce if options toggled on
+								if include_contact
+									### Check if user would like account and contact to be uploaded. ###
+									#### If so, call method to create_salesforce_account_and_lead
+									if salesforce.upload_accounts_to_salesforce_option
+										# Create or Find id of salesforce acocunt
+										puts "finding or creating account"
+										account_id = create_of_find_salesforce_account(salesforce, le, campaign)
+										puts "ACCOUNT ID: " + account_id
+
+										if salesforce.upload_contacts_to_salesforce_option
+											lead_created = create_or_find_salesforce_lead(account_id,salesforce, le, campaign)
+										end
+									# If create contact but not account, don't uplaod account reference
+									elsif salesforce.upload_contacts_to_salesforce_option
+										lead_created = create_or_find_salesforce_lead("nil",salesforce, le, campaign)
+									end
+								end
+							else
+								puts "not uploaded to salesforce. couldn't authenticate client"
 							end
 						end
-
-
 
 						######### Upload to Campaign if Not Blacklisted #############
 						if include_contact
@@ -183,7 +178,6 @@ class LeadUploadJob < ApplicationJob
 						end
 
 					else
-
 
 						#################### Duplicate Lead ###########################
 						begin
@@ -223,7 +217,6 @@ class LeadUploadJob < ApplicationJob
 
 		return lead_list_copy, imported, not_imported, crm_dup
 	end
-
 
 
 
