@@ -27,4 +27,8 @@ class Campaign < ApplicationRecord
         self.minimum_email_score ||= 85
         self.contactLimit ||= 100
     end
+
+    def self.defaultCampaignChoice
+        return "-- Default --"
+    end
 end

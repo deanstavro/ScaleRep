@@ -3,8 +3,12 @@ require 'rest-client'
 require 'json'
 
 module Reply
+  protected
+
+
   API_V1 = 'https://api.reply.io/v1'
   API_V2 = 'https://api.reply.io/v2'
+
 
   def v1_get_campaigns(key)
     keys = JSON.parse(key, symbolize_names: true)
@@ -138,15 +142,6 @@ module Reply
 
   def add_referral_contact(reply_key, reply_id, contact)
     begin
-        #puts "REPLY_KEY: " + reply_key
-        #puts "REPLY_ID: " + reply_id
-        #puts contact.email
-        puts reply_key
-        puts reply_id
-        puts contact.referral_email
-        puts contact.referral_name.split[0...-1].join(" ")
-        puts contact.referral_name.split[-1]
-        #puts contact.full_name
 
         #check if contact exists. If so, pushtocampaign. If not, addandpushtocampaign
         # do this through nested begin/rescue
@@ -184,39 +179,33 @@ module Reply
 
 
 
+  # Accepts client_Company Key
+  # Returns array of email_objects from Reply.io
+  # This call Reply for each reply account, and returns all email account object in an array
   def get_email_accounts(company_key)
       keys = JSON.parse(company_key)
 
       # Get the correct reply keys, and call API to retrieve
       email_accounts = []
       for accounts in keys["accounts"]
-
         begin
             response = RestClient::Request.execute(
               :method => :get,
               :url => "https://api.reply.io/v1/emailAccounts?apiKey="+ accounts["key"],
             )
-
-            #add reply key to the response
+            #add reply key to each the response and push to one array
             un = JSON.parse(response)
             for email in un
               email["key"] = accounts["key"]
+              email_accounts << email
             end
-            email_accounts << un
         rescue RestClient::ExceptionWithResponse => e
             return e
         end
       end
 
-      # Loop through response to grab campaigns
-      email_arr = []
-      for accounts in email_accounts
-        for email in accounts
-            email_arr << email
-        end
-      end
-
-      return email_arr
+      # Return Array of reply email accounts
+      return email_accounts
   end
 
 
@@ -237,6 +226,39 @@ module Reply
           return e
       end
 
+  end
+
+
+  def count_campaigns_per_email(email_array, campaign_array)
+      count_dic = Hash.new
+      
+      for email in email_array
+        count_dic[email["emailAddress"]] = 0
+      end
+
+      for campaign in campaign_array
+          for reply_email in email_array
+              if campaign.emailAccount == reply_email["emailAddress"]
+                  if count_dic[campaign.emailAccount]
+                      count_dic[campaign.emailAccount] = count_dic[campaign.emailAccount] + 1
+                  else
+                      count_dic[campaign.emailAccount] = 1
+                  end
+              end
+         end
+      end
+      return count_dic
+  end
+
+  # Find the correct keys for that email to upload the campaign to that email
+  def get_reply_key_for_campaign(email_to_match, reply_array) 
+      for email in reply_array
+        if email_to_match == email["emailAddress"]
+          reply_key = email["key"]
+          break
+        end
+      end
+      return reply_key
   end
 
 

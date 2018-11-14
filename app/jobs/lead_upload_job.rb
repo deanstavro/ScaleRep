@@ -59,31 +59,31 @@ class LeadUploadJob < ApplicationJob
 
 	def createCampaign(client_company, base_campaign)
 		campaign = Campaign.new(:campaign_name => base_campaign.campaign_name + " " +Time.now.getutc.to_s, :client_company => client_company, :persona => base_campaign.persona, :contactLimit => base_campaign.contactLimit)
-	    puts "NEW CAMPAIGN: " + campaign.to_s
 	    campaigns = Campaign.where("client_company_id =?", client_company).order('created_at DESC')
 
 	    # Get Array of all emails
 	  	email_array = get_email_accounts(client_company.replyio_keys)
-	    count_dict = email_count(email_array, campaigns)
-	    email_to_use = choose_email(count_dict)
-
-	    # Find the correct keys for that email to upload the campaign to that email
-	    for email in email_array
-  			if email_to_use == email["emailAddress"]
-  				reply_key = email["key"]
-  				break
-  			end
-	  	end
+	    
+	    if base_campaign.email_pool and base_campaign.email_pool.count > 0
+	    	puts "Choosing email from pool to create campaign"
+	    	campaign_email_pool = base_campaign.email_pool
+          	email_to_use = campaign_email_pool.key(campaign_email_pool.values.min)
+          	campaign_email_pool[email_to_use] += 1
+          	campaign[:email_pool] = campaign_email_pool
+        else
+        	puts "Following default rules to create campaign"
+          	count_dict = count_campaigns_per_email(email_array, campaigns)
+         	email_to_use = count_dict.key(count_dict.values.min) 
+        end
+	    reply_key = get_reply_key_for_campaign(email_to_use, email_array)
 
 	    # Add the email account we will use to the local campaign object
 	  	puts "email to use for reply campaign: " + email_to_use.to_s + "  " + reply_key
 	    campaign[:emailAccount] = email_to_use.to_s
-	    # Save the campaign locally
-		if campaign.save
-	        # If the campaign saves, post the campaign to reply
-			response = JSON.parse(post_campaign(campaign,reply_key, email_to_use))
-		end
-
+	    
+	    # Create campaign on Reply and Locally
+		response = JSON.parse(post_campaign(campaign,reply_key, email_to_use))
+		campaign.save
 		return campaign.id
 	end
 
@@ -217,46 +217,6 @@ class LeadUploadJob < ApplicationJob
 
 		return lead_list_copy, imported, not_imported, crm_dup
 	end
-
-
-
-	def choose_email(count_dict)
-
-  		current_value = 1000
-		current_email = ""
-		count_dict.each do |key, value|
-
-			if value < current_value
-				current_value = value
-				current_email = key
-			end
-		end
-
-		return current_email
-
-  	end
-
-
-  	def email_count(email_array, campaign_array)
-  		count_dic = Hash.new
-		for email in email_array
-			count_dic[email["emailAddress"]] = 0
-		end
-		for campaign in campaign_array
-			for reply_email in email_array
-
-				if campaign.emailAccount == reply_email["emailAddress"]
-					if count_dic[campaign.emailAccount]
-						count_dic[campaign.emailAccount] = count_dic[campaign.emailAccount] + 1
-					else
-						count_dic[campaign.emailAccount] = 1
-					end
-				end
-			end
-		end
-
-		return count_dic
-  	end
 
 
 
