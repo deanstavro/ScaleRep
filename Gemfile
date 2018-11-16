@@ -34,6 +34,7 @@ gem 'activeadmin_json_editor', '~> 0.0.7'
 gem 'restforce', '~> 2.5.3'
 gem 'bootstrap-toggle-rails'
 gem 'omniauth-salesforce'
+gem "haml-rails", "~> 1.0"
 
 
 group :test do

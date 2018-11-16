@@ -1,0 +1,14 @@
+.section-content-holder.left
+	.content-wrapper
+		.blog-holder.block.center-relative
+		- Medium_News.medium_news.each_with_index do |article, index|
+			%article.relative.blog-item-holder.center-relative
+				.num
+					= "#{index+1}"
+				.info
+					.author.vcard
+						= article[:creator]
+				%h3.entry-title
+					%a{href: article[:link], target: "_blank"}
+						= article[:title]
+					.clear

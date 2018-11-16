@@ -1,5 +1,6 @@
 class HomepageController < ApplicationController
   layout "homepage"
+  include Medium_News
 
   def index
         @demo = Demo.new
