@@ -13,35 +13,32 @@
     display: inline-block;
 }
 
-
-
 /////////////////Original below
 
 
 .navbuttons {
 
-
 }
 
- .button {
-    background-color: #4CAF50; /* Green */
-    border: none;
-    color: white;
-    padding: 16px 32px;
-    text-align: center;
-    text-decoration: none;
-    display: inline-block;
-    font-size: 16px;
-    margin: 4px 2px;
-    -webkit-transition-duration: 0.4s; /* Safari */
-    transition-duration: 0.4s;
-    cursor: pointer;
+.button {
+  background-color: #4CAF50; /* Green */
+  border: none;
+  color: white;
+  padding: 16px 32px;
+  text-align: center;
+  text-decoration: none;
+  display: inline-block;
+  font-size: 16px;
+  margin: 4px 2px;
+  -webkit-transition-duration: 0.4s; /* Safari */
+  transition-duration: 0.4s;
+  cursor: pointer;
 }
 
 .button1 {
-    background-color: white;
-    color: black;
-    border: 2px solid #4CAF50;
+  background-color: white;
+  color: black;
+  border: 2px solid #4CAF50;
 }
 
 html,
@@ -51,7 +48,7 @@ body {
 }
 
 body {
-    font-family: 'Helvetica Neue',Arial,sans-serif;
+    font-family: 'Helvetica Neue', Arial, sans-serif;
 }
 
 hr {
@@ -159,111 +156,109 @@ aside {
 }
 
 @media(min-width:768px) {
-    .navbar-default {
-        border-color: rgba(255,255,255,.3);
-        background-color: transparent;
-    }
+  .navbar-default {
+      border-color: rgba(255,255,255,.3);
+      background-color: transparent;
+  }
 
-    .navbar-default .navbar-header .navbar-brand {
-        color: #f05f40;
-    }
+  .navbar-default .navbar-header .navbar-brand {
+      color: #f05f40;
+  }
 
-    .navbar-default .navbar-header .navbar-brand:hover,
-    .navbar-default .navbar-header .navbar-brand:focus {
-        color: #fff;
-    }
+  .navbar-default .navbar-header .navbar-brand:hover,
+  .navbar-default .navbar-header .navbar-brand:focus {
+      color: #fff;
+  }
 
-    .navbar-default .nav > li>a,
-    .navbar-default .nav>li>a:focus {
-        color: #222;
-    }
+  .navbar-default .nav > li>a,
+  .navbar-default .nav>li>a:focus {
+      color: #222;
+  }
 
-    .navbar-default .nav > li>a:hover,
-    .navbar-default .nav>li>a:focus:hover {
-        color: #222;
-    }
+  .navbar-default .nav > li>a:hover,
+  .navbar-default .nav>li>a:focus:hover {
+      color: #222;
+  }
 
-    .navbar-default.affix {
-        border-color: rgba(34,34,34,.05);
-        background-color: #fff;
-    }
+  .navbar-default.affix {
+      border-color: rgba(34,34,34,.05);
+      background-color: #fff;
+  }
 
-    .navbar-default.affix .navbar-header .navbar-brand {
-        font-size: 14px;
-        color: #f05f40;
-    }
+  .navbar-default.affix .navbar-header .navbar-brand {
+      font-size: 14px;
+      color: #f05f40;
+  }
 
-    .navbar-default.affix .navbar-header .navbar-brand:hover,
-    .navbar-default.affix .navbar-header .navbar-brand:focus {
-        color: #eb3812;
-    }
+  .navbar-default.affix .navbar-header .navbar-brand:hover,
+  .navbar-default.affix .navbar-header .navbar-brand:focus {
+      color: #eb3812;
+  }
 
-    .navbar-default.affix .nav > li>a,
-    .navbar-default.affix .nav>li>a:focus {
-        color: #222;
-    }
+  .navbar-default.affix .nav > li>a,
+  .navbar-default.affix .nav>li>a:focus {
+      color: #222;
+  }
 
-    .navbar-default.affix .nav > li>a:hover,
-    .navbar-default.affix .nav>li>a:focus:hover {
-        color: #f05f40;
-    }
+  .navbar-default.affix .nav > li>a:hover,
+  .navbar-default.affix .nav>li>a:focus:hover {
+      color: #f05f40;
+  }
 }
 header {
-    position: relative;
-    width: 100%;
+  position: relative;
+  width: 100%;
 
-    text-align: center;
-    color: #fff;
-    background: linear-gradient(45deg,#4e3188,#24babc);
-    background-position: center;
-    -webkit-background-size: cover;
-    -moz-background-size: cover;
-    background-size: cover;
-    -o-background-size: cover;
+  text-align: center;
+  color: #fff;
+  background: linear-gradient(45deg,#4e3188,#24babc);
+  background-position: center;
+  -webkit-background-size: cover;
+  -moz-background-size: cover;
+  background-size: cover;
+  -o-background-size: cover;
 }
 
 header .header-content .header-content-inner h1 {
-    margin-top: 0;
-    margin-bottom: 0;
-    text-transform: uppercase;
-    font-weight: 700;
+  margin-top: 0;
+  margin-bottom: 0;
+  text-transform: uppercase;
+  font-weight: 700;
 }
 
 header .header-content .header-content-inner hr {
-    margin: 30px auto;
+  margin: 30px auto;
 }
 
 header .header-content .header-content-inner p {
-    margin-bottom: 50px;
-    font-size: 20px;
-    font-weight: 300;
-    color: #fff;
+  margin-bottom: 50px;
+  font-size: 20px;
+  font-weight: 300;
+  color: #fff;
 }
 
 .header-pic-content {
-    width: 100%;
-    height: 100px;
-    background-position: center;
-    background-image: image-url("web-development-s.png")
+  width: 100%;
+  height: 100px;
+  background-position: center;
+  background-image: image-url("web-development-s.png")
 
 }
 
-
-
 .section-heading {
-    margin-top: 0;
-    font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
+  margin-top: 0;
+  font-family: 'Open Sans','Helvetica Neue',Arial,sans-serif;
 }
 .section-heading p {
   font-size:20px;
 }
 
 .section-heading-2 {
-    margin-top: 10;
+  margin-top: 10;
 }
 
 .alt {
-    color: white;
+  color: white;
 }
 footer {
   background-color: #eee;
@@ -311,8 +306,7 @@ footer {
     .service-box p {
         margin-bottom: 0;
         font-size:20px;
-        font-family: 'Roboto', 'Open Sans', 'Helvetica Nueue';
-
+        font-weight: 200;
     }
 }
 
@@ -353,8 +347,6 @@ footer {
 
   }
 }
-
-
 
 .portfolio-box {
     display: block;
@@ -417,15 +409,12 @@ footer {
 }
 
 .call-to-action {
-
     display: block;
     margin-left: 20%;
     margin-right: 20%;
     text-decoration: none;
     text-color: blue;
     text-align: center;
-
-
 }
 
 .text-primary {
@@ -435,15 +424,13 @@ footer {
 
 .text-secondary {
     color: #003057;
-
+}
 .fill-div {
     display: block;
     height: 100%;
     width: 100%;
     text-decoration: none;
     text-color: blue;
-}
-
 }
 
 .no-gutter > [class*=col-] {
@@ -539,4 +526,10 @@ body {
 .modal-title {
   width:80%;
   float:left;
+}
+
+.blog-titles {
+  width: 100%;
+  height: 100%;
+
 }
