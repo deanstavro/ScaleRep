@@ -35,6 +35,12 @@
   margin-right: 30px;
 }
 
+@media (max-width: 1068px) {
+  .blog_image {
+    width:100%;
+  }
+}
+
 .blog-post {
   margin-left: 10%;
   margin-right: 10%;
