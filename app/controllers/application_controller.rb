@@ -35,4 +35,8 @@ class ApplicationController < ActionController::Base
   	return client_companies
   end
 
+  def after_sign_out_path_for(resource_or_scope)
+    "https://www.scalerep.com"
+  end
+
 end
