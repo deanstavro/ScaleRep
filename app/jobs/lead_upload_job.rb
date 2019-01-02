@@ -129,18 +129,17 @@ class LeadUploadJob < ApplicationJob
 						if !salesforce.nil? and salesforce.salesforce_integration_on
 							salesforce_client = authenticate(salesforce)
 							if salesforce_client != 400
-								
 								# Check Blacklist
-								#if salesforce.check_dup_against_existing_contact_email_option
-								#	puts "checking against email dups"
-								#	salesforce_contacts = find_salesforce_contact_by_email(salesforce_client, le["email"])
-								#	puts salesforce_contacts.to_s
-								#	if !salesforce_contacts.empty?
-								#		puts "Lead is blacklisted on salesforce. Skip"
-								#		include_contact = false
-								#		crm_dup << le # Add le to dup
-								#	end
-								#end
+								if salesforce.check_dup_against_existing_contact_email_option
+									puts "checking against email dups"
+									salesforce_contacts = find_salesforce_contact_by_email(salesforce_client, le["email"])
+									puts salesforce_contacts.to_s
+									if !salesforce_contacts.empty?
+										puts "Lead is blacklisted on salesforce. Skip"
+										include_contact = false
+										crm_dup << le # Add le to dup
+									end
+								end
 
 								# Upload Contact/Account to Salesforce if options toggled on
 								if include_contact
