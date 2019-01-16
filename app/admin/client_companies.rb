@@ -2,7 +2,7 @@ ActiveAdmin.register ClientCompany do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :name, :description, :company_domain, :company_notes, :replyio_keys, :api_key, :number_of_seats, :emails_to_use, :products, :notable_clients, :account_live, :account_manager, :auto_reply_campaign_key, :auto_reply_campaign_id, :referral_campaign_key, :referral_campaign_id
+permit_params :name, :description, :company_domain, :company_notes, :replyio_keys, :api_key, :number_of_seats, :emails_to_use, :products, :notable_clients, :account_live, :account_manager, :auto_reply_campaign_key, :auto_reply_campaign_id, :referral_campaign_key, :referral_campaign_id, :monthlyContactProspectingCount, :monthlyContactEngagementCount
 
 remove_filter :leads
 remove_filter :campaign_replies
@@ -22,6 +22,8 @@ index do
     column :company_domain
     column :account_manager
     column :account_live
+    column :monthlyContactProspectingCount
+    column :monthlyContactEngagementCount
 
     column :replyio_keys
     column :auto_reply_campaign_key
@@ -51,6 +53,8 @@ form do |f|
     f.input :company_domain
     f.input :account_manager
     f.input :account_live, label: "account live - check if client is currently using platform"
+    f.input :monthlyContactProspectingCount
+    f.input :monthlyContactEngagementCount
 
     f.input :replyio_keys
     f.input :auto_reply_campaign_key

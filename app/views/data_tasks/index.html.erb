@@ -1,0 +1,48 @@
+<% if @user.role == 'scalerep' %>
+
+    <div id="title" class="jumbotron">
+
+        <% if flash[:error].present? or flash[:notice].present? %>
+            <center>
+                <p class="container text-danger"><%= flash[:error] %></p>
+                <p class="container text-success"><%= flash[:notice] %></p>
+            </center>
+        <% end %>
+
+        <br>
+        <h1>Data Tasks</h1>
+        <h2> Data Range: 
+            <span style="color:red"> <%= @lastSunday %></span>  -  <span style="color:red"><%= @nextSunday %></span></h2>
+    </div>
+
+
+    <div style="overflow: auto;">
+      <table class = " airtable_data table table-hover">
+        <thead class = "thead">
+          <tr>
+            <th scope="col">Client Company</th>
+            <th scope="col"> Weekly Contact Prospecting</th>
+            <th scope="col"> Weekly Contact Engagement</th>
+            <th scope="col"> Contact Prospecting Remaining</th>
+
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @client_companies.each do |comp| %>
+            <tr >
+
+              <td><%= comp.name %></td>
+              <td><%= comp.monthlyContactProspectingCount/3 %></td>
+              <td><%= comp.monthlyContactEngagementCount/3 %></td>
+              <td><%= comp.leads.where("created_at >= ?", @lastSundayQuery).count %></td>
+
+              
+            </tr>
+          <% end %>
+        </tbody>
+
+      </table>
+
+    </div>
+<% end %>

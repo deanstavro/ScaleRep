@@ -1,6 +1,8 @@
 Rails.application.routes.draw do
 
   
+  get 'data_tasks/index'
+
     # V1 of API
     namespace :api do
         namespace :v1 do
