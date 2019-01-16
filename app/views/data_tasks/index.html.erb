@@ -35,7 +35,7 @@
               <td><%= comp.name %></td>
               <td><%= comp.monthlyContactProspectingCount/3 %></td>
               <td><%= comp.monthlyContactEngagementCount/3 %></td>
-              <td><%= comp.leads.where("created_at >= ?", @lastSundayQuery).count %></td>
+              <td><%= comp.monthlyContactProspectingCount/3 - comp.leads.where("created_at >= ?", @lastSundayQuery).count %></td>
 
               
             </tr>
