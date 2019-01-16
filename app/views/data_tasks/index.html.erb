@@ -24,6 +24,7 @@
             <th scope="col"> Weekly Contact Prospecting</th>
             <th scope="col"> Weekly Contact Engagement</th>
             <th scope="col"> Contact Prospecting Remaining</th>
+            <th scope="col"> Client Director Notes </th>
 
           </tr>
         </thead>
@@ -36,6 +37,7 @@
               <td><%= comp.monthlyContactProspectingCount/3 %></td>
               <td><%= comp.monthlyContactEngagementCount/3 %></td>
               <td><%= comp.monthlyContactProspectingCount/3 - comp.leads.where("created_at >= ?", @lastSundayQuery).count %></td>
+
 
               
             </tr>
