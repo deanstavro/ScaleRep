@@ -16,7 +16,7 @@
     </div>
 
 
-    <div style="overflow: auto;">
+    <div>
       <table class = " airtable_data table table-hover">
         <thead class = "thead">
           <tr>
@@ -25,20 +25,30 @@
             <th scope="col"> Weekly Contact Engagement</th>
             <th scope="col"> Contact Prospecting Remaining</th>
             <th scope="col"> Client Director Notes </th>
+            <th scope="col"> Update </th>
 
           </tr>
         </thead>
 
         <tbody>
           <% @client_companies.each do |comp| %>
-            <tr >
+            <tr>
 
               <td><%= comp.name %></td>
               <td><%= comp.monthlyContactProspectingCount/3 %></td>
               <td><%= comp.monthlyContactEngagementCount/3 %></td>
               <td><%= comp.monthlyContactProspectingCount/3 - comp.leads.where("created_at >= ?", @lastSundayQuery).count %></td>
 
+              <%= form_tag update_client_director_notes_client_companies_path(:company_id => comp.id) do %>
 
+                  <% if comp.clientDirectorNotes? %>
+                      <td><input type="text"  name="clientDirectorNotes" value="<%= comp.clientDirectorNotes %>"></td>
+                  <% else %>
+                      <td><input type="text"  name="clientDirectorNotes"></td>
+                  <% end %>
+
+                  <td><%= submit_tag "OK" %></td>
+              <% end %>
               
             </tr>
           <% end %>

@@ -20,6 +20,12 @@ class ClientCompaniesController < ApplicationController
     @client_company = ClientCompany.find(@company)
   end
 
+
+  def update_client_director_notes
+    client_company = ClientCompany.find_by(id: params[:company_id])
+    client_company.update_attribute(:clientDirectorNotes, params[:clientDirectorNotes])
+  end
+
   private
 
   def model_params

@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190116194800) do
+ActiveRecord::Schema.define(version: 20190116234542) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -155,6 +155,7 @@ ActiveRecord::Schema.define(version: 20190116194800) do
     t.string   "referral_campaign_id"
     t.integer  "monthlyContactProspectingCount"
     t.integer  "monthlyContactEngagementCount"
+    t.text     "clientDirectorNotes"
   end
 
   create_table "data_uploads", force: :cascade do |t|

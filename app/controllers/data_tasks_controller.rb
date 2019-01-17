@@ -19,8 +19,6 @@ class DataTasksController < ApplicationController
 
 	#For Query to grab lead count
 	@lastSundayQuery = (now - now.wday)
-
-
   end
 
 end

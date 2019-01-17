@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-  
-  get 'data_tasks/index'
 
     # V1 of API
     namespace :api do
@@ -60,6 +58,7 @@ Rails.application.routes.draw do
     get 'metrics', to: 'metrics#index'
     # Nested In Client Companies
     resource :client_companies, path: '', only: [:edit, :update, :delete] do
+      collection { post :update_client_director_notes}
       resources :personas do
         collection { put :archive}
       end
@@ -86,6 +85,9 @@ Rails.application.routes.draw do
     resources :salesforces do
         collection {put :toggle}
     end
+
+    get 'data_tasks/index'
+
 
     match 'auth/:provider/callback', to: 'salesforces#web_authentication', via: [:get, :post]
     match 'auth/:provider/setup', to: 'salesforces#setup', via: [:get, :post]

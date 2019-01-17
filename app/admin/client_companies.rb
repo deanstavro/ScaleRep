@@ -2,7 +2,7 @@ ActiveAdmin.register ClientCompany do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-permit_params :name, :description, :company_domain, :company_notes, :replyio_keys, :api_key, :number_of_seats, :emails_to_use, :products, :notable_clients, :account_live, :account_manager, :auto_reply_campaign_key, :auto_reply_campaign_id, :referral_campaign_key, :referral_campaign_id, :monthlyContactProspectingCount, :monthlyContactEngagementCount
+permit_params :name, :description, :company_domain, :company_notes, :replyio_keys, :api_key, :number_of_seats, :emails_to_use, :products, :notable_clients, :account_live, :account_manager, :auto_reply_campaign_key, :auto_reply_campaign_id, :referral_campaign_key, :referral_campaign_id, :monthlyContactProspectingCount, :monthlyContactEngagementCount, :clientDirectorNotes
 
 remove_filter :leads
 remove_filter :campaign_replies
@@ -37,6 +37,7 @@ index do
     column :emails_to_use
     column :products
     column :notable_clients
+    column :clientDirectorNotes
 
     column :api_key
     column :created_at
@@ -70,6 +71,7 @@ form do |f|
     f.input :emails_to_use
     f.input :products
     f.input :notable_clients
+    f.input :clientDirectorNotes
     
     f.input :api_key, label: "api_key - overriden on creation, can edit after"
 
