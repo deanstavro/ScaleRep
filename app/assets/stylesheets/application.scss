@@ -16,11 +16,12 @@
 
 
 @import "bootstrap";
-@import "1st_load_framework";
 @import "campaigns";
 @import "leads";
 @import "metrics";
 @import "salesforces";
+@import "sessions";
+
 
 .tooltip-head{
   color: #fff;
@@ -30,14 +31,57 @@
   margin-bottom: -2px; /* Hide default tooltip rounded corner from top */
 }
 
+/* Notice message default */
 .notice {
   margin-top: 50px;
   color: green;
   background-color: white;
 }
 
+/* Error message default */
 .error {
   margin-top: 50px;
-  color: green;
+  color: red;
   background-color: white;
+}
+
+
+
+
+/* Jumbotron is the header design of each page*/
+.jumbotron {
+  padding-top: 30px;
+  padding-bottom: 30px;
+  margin-bottom: 30px;
+  color: inherit;
+  background: #eee;
+}
+.jumbotron .h1 {
+  color: inherit;
+}
+.jumbotron p {
+  margin-bottom: 15px;
+  font-size: 21px;
+  font-weight: 200;
+}
+.jumbotron > hr {
+  border-top-color: #d5d5d5;
+}
+.jumbotron .container {
+  max-width: 100%;
+}
+@media screen and (min-width: 768px) {
+  .jumbotron {
+    padding-top: 48px;
+    padding-bottom: 48px;
+  }
+  .container .jumbotron,
+  .container-fluid .jumbotron {
+    padding-right: 60px;
+    padding-left: 60px;
+  }
+  .jumbotron h1,
+  .jumbotron .h1 {
+    font-size: 50px;
+  }
 }

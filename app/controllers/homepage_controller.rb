@@ -3,8 +3,7 @@ class HomepageController < ApplicationController
   include Medium_News
 
   def index
-        @demo = Demo.new
-        puts "User not signed in - direct to home"
+        redirect_to new_user_session_path
   end
 
 end

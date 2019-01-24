@@ -1,6 +1,12 @@
-<div class="authform">
+<div id="title" class="jumbotron">
+    
+    <h2> Sign In </h2>
+
+</div>
+
+
+<div class="authform thin_margins">
   <%= form_for(resource, :as => resource_name, :url => session_path(resource_name), :html => { :role => 'form'}) do |f| %>
-    <h3>Sign in</h3>
     <%= devise_error_messages! %>
     <div class="form-group">
 
@@ -16,7 +22,7 @@
       <%= link_to "Forgot password?", new_password_path(resource_name), class: '' %>
     </div>
     <br/>
-      <%= f.submit 'Sign in', :class => 'button' %>
+      <%= f.submit 'Sign in', :class => 'btn btn-primary btn-xl page-scroll' %>
       <% if devise_mapping.rememberable? -%>
         <div class="checkbox" style="width:150px; margin-top:20px;">
           <label>
