@@ -1,5 +1,5 @@
 <div id="title" class="jumbotron">
-    
+
     <% if flash[:error].present? or flash[:notice].present? %>
       <center>
         <p class="container text-danger"><%= flash[:error] %></p>
@@ -14,7 +14,7 @@
     <% if @user.role == "scalerep" %>
       <div>
           <%= form_tag({}, {:method => :get}) do %>
-            <%= label_tag  'select company:' %>      
+            <%= label_tag  'select company:' %>
             <%= select_tag :client_company, options_for_select(@client_companies, @company.name), :onchange => "this.form.submit();" %>
           <% end %>
       </div>
@@ -23,9 +23,29 @@
 </div>
 
 <div class="container">
-<h4> Conversion Metrics</h4>
+<h4 style="margin-bottom:20px;"> Conversion Metrics</h4>
 
-<%= column_chart [{ name: "Emails Sent", data: @touchpoints.group_by_day(:created_at, format: "%B %d", range: Date.today - 7.days..Date.today).count}, { name: "Emails Opened", data: @email_opens.group_by_day(:email_sent_time, format: "%B %d", range: Date.today - 7.days..Date.today).count}, { name: "Emails Replied To", data: @email_replies.group_by_day(:email_sent_time, format: "%B %d", range: Date.today - 7.days..Date.today).count}], colors: ["#ADD8E6", "#0000FF", "#90EE90"] %>
+<div>
+    <%= form_tag({}, {:method => :get}) do %>
+      <%= label_tag  'Time Frame:' %>
+      <% if @time_frame == "By Week" %>
+        <%= select_tag "time_frame","<option>Last 7 Days</option><option selected='selected'>By Week</option><option>By Month</option>".html_safe, :onchange => "this.form.submit();" %>
+      <% elsif @time_frame == "By Month" %>
+        <%= select_tag "time_frame","<option>Last 7 Days</option><option>By Week</option><option selected='selected'>By Month</option>".html_safe, :onchange => "this.form.submit();" %>
+      <% else %>
+        <%= select_tag "time_frame","<option>Last 7 Days</option><option>By Week</option><option>By Month</option>".html_safe, :onchange => "this.form.submit();" %>
+      <% end %>
+    <% end %>
+</div>
+
+<% if @time_frame == "By Week" %>
+  <%= column_chart [{ name: "Emails Sent", data: @touchpoints.group_by_week(:created_at, format: "%B %d", range: Date.today - 7.weeks..Date.today).count}, { name: "Emails Opened", data: @email_opens.group_by_week(:email_sent_time, format: "%B %d", range: Date.today - 7.weeks..Date.today).count}, { name: "Emails Replied To", data: @email_replies.group_by_week(:email_sent_time, format: "%B %d", range: Date.today - 7.weeks..Date.today).count}], colors: ["#ADD8E6", "#0000FF", "#90EE90"] %>
+<% elsif @time_frame == "By Month" %>
+  <%= column_chart [{ name: "Emails Sent", data: @touchpoints.group_by_month(:created_at, format: "%B %d", range: Date.today - 7.months..Date.today).count}, { name: "Emails Opened", data: @email_opens.group_by_month(:email_sent_time, format: "%B %d", range: Date.today - 7.months..Date.today).count}, { name: "Emails Replied To", data: @email_replies.group_by_month(:email_sent_time, format: "%B %d", range: Date.today - 7.months..Date.today).count}], colors: ["#ADD8E6", "#0000FF", "#90EE90"] %>
+<% else %>
+  <%= column_chart [{ name: "Emails Sent", data: @touchpoints.group_by_day(:created_at, format: "%B %d", range: Date.today - 7.days..Date.today).count}, { name: "Emails Opened", data: @email_opens.group_by_day(:email_sent_time, format: "%B %d", range: Date.today - 7.days..Date.today).count}, { name: "Emails Replied To", data: @email_replies.group_by_day(:email_sent_time, format: "%B %d", range: Date.today - 7.days..Date.today).count}], colors: ["#ADD8E6", "#0000FF", "#90EE90"] %>
+<% end %>
+
 </div>
 
 
@@ -40,7 +60,7 @@
       <% else %>
         <div style="overflow: auto;">
           <p style="margin-bottom: 30px;"><i>Handed-off leads have a meeting set with your team or were sent to you for a follow-up conversation</i></p>
-          
+
           <table class = " airtable_data table table-hover">
             <thead class = "thead">
               <tr>
@@ -49,7 +69,7 @@
                     <th scope = 'col'>Name</th>
                     <th scope = 'col'>Campaign</th>
                     <th scope = 'col'>Persona</th>
-                    <th scope = 'col'>Status</th>      
+                    <th scope = 'col'>Status</th>
               </tr>
             </thead>
 
@@ -59,9 +79,9 @@
 
                   <td> <%= lead.date_sourced.strftime("%b %d, %Y") %> </td>
 
-                  
+
                   <td> <%= lead.email %> </td>
-                  
+
 
                   <% if lead.first_name.present? && lead.last_name.present? %>
                     <td> <%= lead.first_name + " " + lead.last_name %></td>
@@ -87,7 +107,7 @@
             </tbody>
 
           </table>
-          
+
           <div class="digg_pagination">
               <div class="page_info">
                 <%= page_entries_info @meetings_set %>
