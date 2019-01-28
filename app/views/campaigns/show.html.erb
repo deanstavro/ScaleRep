@@ -7,18 +7,18 @@
     <% end %>
 
     <br>
-    
+
     <h1><%= @campaign.campaign_name %></h1>
 </div>
 
 <div class = 'thin_margins'>
     <div class = "campaign_data">
-    
+
         <div class="campaign_info_section">
             <span class="campaign_info_header">People in campaign</span>
             <span class="campaign_info"><%= @campaign.peopleCount.to_s %></span>
         </div>
-        
+
 
         <div class="campaign_info_section">
             <span class="campaign_info_header">Emails Delivered</span>
@@ -34,7 +34,7 @@
 
         <div class="campaign_info_section">
           <span class="campaign_info_header">Email Replies</span>
-          <span class="campaign_info"><%= @campaign.repliesCount %></span> 
+          <span class="campaign_info"><%= @campaign.repliesCount %></span>
         </div>
 
         <div class="campaign_info_section">
@@ -42,5 +42,30 @@
           <span class="campaign_info"><%= @campaign.bouncesCount %></span>
         </div>
 
+    </div>
+
+    <div class="sequence">
+      <% @sequence_array.each do |section| %>
+        <div class="card email_template">
+          <div class="card-header">
+            <% if section['number'] == 1 %>
+              First Email
+            <% else %>
+              Sent <%= section['day'] %> days later
+            <% end %>
+          </div>
+          <div class="card-body">
+            <h5 class="card-title">
+              <% if section['subject'] && section['subject'] != "" %>
+                <%= section['subject'] %>
+              <% else %>
+                (no subject) - same thread as above email
+              <% end %>
+            </h5>
+            <h6 class="card-subtitle mb-2 text-muted"></h6>
+            <div class="card-text"><%= section['body'].html_safe %></div>
+          </div>
+        </div>
+      <% end %>
     </div>
 </div>

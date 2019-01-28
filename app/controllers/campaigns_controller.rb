@@ -9,7 +9,7 @@ class CampaignsController < ApplicationController
   			@user = find_current_user(current_user.id)
         @client_company = @user.client_company
   			@persona = Persona.find_by(id: params[:format])
-        
+
         #If user accesses a campaign of another user, return flash
   			if is_non_admin_user(@user) and wrong_persona(@persona, @client_company)
             flash[:notice] = "Campaign does not exist"
@@ -40,12 +40,27 @@ class CampaignsController < ApplicationController
         @user = find_current_user(current_user.id)
         @campaign = Campaign.find_by(id: params[:id])
 
+        # execute reply api
+        # TODO: move this to a job
+        sequence = get_sequence(@campaign)
+
+        # go through and format necessary inforation
+        @sequence_array = []
+        for count in 0..sequence.length-1 do
+          step = {
+            'number'  => sequence[count][:number].to_i,
+            'day'     => sequence[count][:inMinutesCount]/60/24.to_i,
+            'subject' => sequence[count][:templates][0][:subject],
+            'body'    => sequence[count][:templates][0][:body]
+          }
+          @sequence_array.push(step)
+       end
+
         #If user accesses a campaign of another user, return flash
         if is_non_admin_user(@user) and wrong_campaign(@campaign, @user)
             redirect_to root_path, :flash => { :error => "Campaign does not exist" }
             return
         end
-
     end
 
 
@@ -56,7 +71,7 @@ class CampaignsController < ApplicationController
         @persona = Persona.find_by(id: @persona_id)
         @client_company_for_campaign = @persona.client_company
     		@campaign = @client_company_for_campaign.campaigns.build
-        
+
         email_array = get_email_accounts(@client_company_for_campaign.replyio_keys)
         @emails = email_array.map{|x| x["emailAddress"]}
         @emails.unshift(Campaign.defaultCampaignChoice)
@@ -73,7 +88,7 @@ class CampaignsController < ApplicationController
         @campaign.persona = persona
         params[:campaign][:email_pool] = params[:campaign][:email_pool].reject { |c| c.empty? }
         email_array = get_email_accounts(@company.replyio_keys)
-        
+
         if params[:campaign][:email_pool].include? Campaign.defaultCampaignChoice
           puts "Determining best email to use for campaign"
           count_dict = count_campaigns_per_email(email_array, @campaigns)
@@ -85,7 +100,7 @@ class CampaignsController < ApplicationController
           email_hash[@campaign[:emailAccount]] = 1
           @campaign[:email_pool] = email_hash
         end
-        
+
         # Find the correct keys for that email to upload the campaign to that email
         reply_key = get_reply_key_for_campaign(@campaign[:emailAccount], email_array)
         puts @campaign[:emailAccount].to_s + "  " + reply_key.to_s
@@ -116,6 +131,15 @@ class CampaignsController < ApplicationController
   	def campaign_params
         params.require(:campaign).permit(:persona_id, :contactLimit, :user_notes, :create_persona, :campaign_name, :minimum_email_score, :has_minimum_email_score, :email_pool)
   	end
+
+    def get_sequence(campaign)
+      response = RestClient.get(
+        "https://api.reply.io/v2/campaigns/#{campaign.reply_id}/steps",
+        {:'X-Api-Key' => "#{campaign.reply_key}"}
+      )
+
+      response = JSON.parse(response, symbolize_names: true)
+    end
 
 
     # Check if regular user is trying to access persona show page with id that doesn't belong to them.
