@@ -27,6 +27,9 @@
 
 <div>
     <%= form_tag({}, {:method => :get}) do %>
+      <% if @user.role == "scalerep" %>
+        <%= hidden_field_tag :client_company, @company.name  %>
+      <% end %>
       <%= label_tag  'Time Frame:' %>
       <% if @time_frame == "By Week" %>
         <%= select_tag "time_frame","<option>Last 7 Days</option><option selected='selected'>By Week</option><option>By Month</option>".html_safe, :onchange => "this.form.submit();" %>
