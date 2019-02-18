@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190116234542) do
+ActiveRecord::Schema.define(version: 20190218213000) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -276,6 +276,15 @@ ActiveRecord::Schema.define(version: 20190116234542) do
     t.index ["client_company_id"], name: "index_salesforces_on_client_company_id", using: :btree
   end
 
+  create_table "templates", force: :cascade do |t|
+    t.string   "title"
+    t.text     "body"
+    t.integer  "client_company_id"
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
+    t.index ["client_company_id"], name: "index_templates_on_client_company_id", using: :btree
+  end
+
   create_table "touchpoints", force: :cascade do |t|
     t.integer  "channel"
     t.string   "sender_email"
@@ -329,6 +338,7 @@ ActiveRecord::Schema.define(version: 20190116234542) do
   add_foreign_key "leads", "client_companies"
   add_foreign_key "personas", "client_companies"
   add_foreign_key "salesforces", "client_companies"
+  add_foreign_key "templates", "client_companies"
   add_foreign_key "touchpoints", "campaigns"
   add_foreign_key "touchpoints", "client_companies"
   add_foreign_key "touchpoints", "leads"

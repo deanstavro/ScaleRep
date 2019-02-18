@@ -1,6 +1,7 @@
 Rails.application.routes.draw do
 
 
+  resources :templates
     # V1 of API
     namespace :api do
         namespace :v1 do

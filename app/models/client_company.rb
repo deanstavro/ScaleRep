@@ -9,6 +9,7 @@ class ClientCompany < ApplicationRecord
 	has_many :touchpoints
 	has_many :lead_actions
 	has_one :salesforce
+	has_many :templates
 
 	validates :name, presence: true, uniqueness: true
 	validates :company_domain, presence: true
