@@ -23,6 +23,11 @@
         </div>
 
         <div class="form-group">
+           <%= f.label :subject, "Subject Line*", class: "control-label" %>
+            <%= f.text_field :subject, required: true, class: "form-control" %>
+        </div>
+
+        <div class="form-group">
             <%= f.label :body, "Template Body*", class: "control-label" %>
             <%= f.text_area :body, :rows => 5, :col => 5, class: "form-control" %>
         </div>
