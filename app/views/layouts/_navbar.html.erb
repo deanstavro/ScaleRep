@@ -9,13 +9,18 @@
     <ul class="navbar-nav ml-auto nav-fill w-50">
       <% if user_signed_in? %>
 
-        <li class="nav-item active"><%= link_to templates_path() do %>
-          Templates
+        <li class="nav-item active"><%= link_to metrics_path() do %>
+          Metrics
           <% end %>
         </li>
 
-        <li class="nav-item active"><%= link_to metrics_path() do %>
-          Metrics
+        <li class="nav-item active"><%= link_to client_companies_personas_path() do %>
+          Personas
+          <% end %>
+        </li>
+
+        <li class="nav-item active"><%= link_to leads_path  do %>
+          Leads
           <% end %>
         </li>
 
@@ -26,14 +31,13 @@
           </li>
         <% end %>
 
-        <li class="nav-item active"><%= link_to client_companies_personas_path() do %>
-          Personas
+        <li class="nav-item active"><%= link_to templates_path() do %>
+          Templates
           <% end %>
         </li>
 
-
-        <li class="nav-item active"><%= link_to leads_path  do %>
-          Leads
+        <li class="nav-item active"><%= link_to common_replies_path() do %>
+          Replies
           <% end %>
         </li>
 

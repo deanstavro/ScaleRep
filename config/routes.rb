@@ -1,7 +1,5 @@
 Rails.application.routes.draw do
 
-
-  resources :templates
     # V1 of API
     namespace :api do
         namespace :v1 do
@@ -86,6 +84,8 @@ Rails.application.routes.draw do
     resources :salesforces do
         collection {put :toggle}
     end
+    resources :common_replies
+    resources :templates
 
 
     match 'auth/:provider/callback', to: 'salesforces#web_authentication', via: [:get, :post]

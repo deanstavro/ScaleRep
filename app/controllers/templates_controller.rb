@@ -1,64 +1,72 @@
 class TemplatesController < ApplicationController
 	before_action :authenticate_user!
 
+
+  # Display all templates per company
 	def index
 		@user = User.find(current_user.id)
-
+    # ScaleRep Admin has the ability to choose templates by company
 		if @user.role == "scalerep"
-      @client_companies = scalerep_director_client_company()
-      if params.has_key?(:client_company)
-                @company = ClientCompany.find_by(name: params["client_company"])
-      else
-				@company = ClientCompany.find(@user.client_company_id)
-			end
+        @client_companies = scalerep_director_client_company()
+        if params.has_key?(:client_company)
+            @company = ClientCompany.find_by(name: params["client_company"])
+        else
+				  @company = ClientCompany.find(@user.client_company_id)
+			  end
 		else
-			@company = ClientCompany.find(@user.client_company_id)
+			  @company = ClientCompany.find(@user.client_company_id)
 		end
 
 		@templates = @company.templates.order('created_at DESC').paginate(:page => params[:page], :per_page => 20)
-
 	end
 
+
+  # Displays new form to create template
+  # Company Id parameter passed in from index page
 	def new
 		@user = User.find(current_user.id)
 		@client_company = ClientCompany.find_by(id: params[:company_id])
 		@template = Template.new
 	end
 
+
+  # Create new template 
 	def create
-		@user = User.find(current_user.id)
-		@company_id = params[:template][:client_company]
-		@client_company = ClientCompany.find_by(id: @company_id)
+		  @user = User.find(current_user.id)
+		  @company_id = params[:template][:client_company]
+		  @client_company = ClientCompany.find_by(id: @company_id)
 
-        @template = @client_company.templates.build(template_params)
+      @template = @client_company.templates.build(template_params)
 
-        respond_to do |format|
+      respond_to do |format|
           if @template.save
-            format.html { redirect_to templates_path(), notice: 'Template was successfully created.' }
-            format.json { render :index, status: :created}
+              format.html { redirect_to templates_path(), notice: 'Template was successfully created.' }
+              format.json { render :index, status: :created}
           else
-            format.html { render :new }
-            format.json { render json: @template.errors, status: :unprocessable_entity }
+              format.html { render :new }
+              format.json { render json: @template.errors, status: :unprocessable_entity }
           end
-        end
+      end
 	end
 
+
 	def destroy
-		@template = Template.find(params[:id])
+		  @template = Template.find(params[:id])
    		if @template.destroy
   				redirect_to templates_path, notice: 'Template was successfully created.'
-		end
-   	end
+		  end
+   end
 
    	
    	def edit
-   		@template = Template.find(params[:id])
+   		 @template = Template.find(params[:id])
    	end
 
+
    	def update
-   		@user = User.find(current_user.id)
-		@client_company = ClientCompany.find_by(id: @user.client_company.id)
-		@template = Template.find_by(id: params[:id])
+   		  @user = User.find(current_user.id)
+		    @client_company = ClientCompany.find_by(id: @user.client_company.id)
+		    @template = Template.find_by(id: params[:id])
         respond_to do |format|
           if @template.update(template_params)
             format.html { redirect_to templates_path(), notice: 'Template was successfully updated' }
@@ -68,7 +76,6 @@ class TemplatesController < ApplicationController
             format.json { render json: @template.errors, status: :unprocessable_entity }
           end
         end
-
    	end
 
 

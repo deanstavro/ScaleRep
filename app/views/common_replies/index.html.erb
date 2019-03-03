@@ -1,0 +1,63 @@
+<div id="title" class="jumbotron">
+
+    <h1>Common Replies</h1>
+
+    <% if @user.role == 'scalerep' %>
+        <div>
+          <%= form_tag({}, {:method => :get}) do %>
+            <%= label_tag  'select company:' %>      
+                  <%= select_tag :client_company, options_for_select(@client_companies, @company.name), :onchange => "this.form.submit();" %>
+          <% end %>
+        </div>
+    <% end %>
+
+    <div>
+      <%= link_to '+ Reply', new_common_reply_path(company_id: @company.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+    </div>
+</div>
+
+<div class="table-display">
+  <table class="table table-hover">
+    
+    <thead class="thead">
+      <tr>
+        <th scope="col">Created Date</th>
+        <th scope="col">Reply Name</th>
+        <th scope="col">Common Message</th>
+        <th scope="col">Common Reply</th>
+        <th scope="col">Edit</th>
+        <th scope="col">Delete</th>
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @common_replies.each do |common_reply| %>
+        <tr>
+
+          <td><%= common_reply.created_at.to_time.strftime('%m/%d/%Y') %></td>
+          
+          <td><%= common_reply.name %></td>
+
+          <td><%= common_reply.common_message %></td>
+
+          <td><%= common_reply.reply_message %></td>
+
+          <td><%= link_to 'Edit', edit_common_reply_path(common_reply) %></td>
+
+          <td><%= link_to 'Delete', common_reply, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+
+
+        </tr>
+      <% end %>
+    </tbody>
+  </table>
+  
+  <div class="digg_pagination">
+      <div class="page_info">
+          <%= page_entries_info @common_replys %>
+      </div>
+      <%= will_paginate @common_replys, :params => { :tab_id => :current }, :container => false %>
+  </div>
+  
+</div>
+

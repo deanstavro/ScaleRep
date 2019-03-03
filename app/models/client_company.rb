@@ -10,6 +10,7 @@ class ClientCompany < ApplicationRecord
 	has_many :lead_actions
 	has_one :salesforce
 	has_many :templates
+	has_many :common_replies
 
 	validates :name, presence: true, uniqueness: true
 	validates :company_domain, presence: true
