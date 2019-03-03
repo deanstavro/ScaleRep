@@ -12,7 +12,7 @@
     <% end %>
 
     <div>
-      <%= link_to '+ New Template', new_template_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+      <%= link_to '+ New Template', new_template_path(company_id: @company.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
     </div>
 </div>
 

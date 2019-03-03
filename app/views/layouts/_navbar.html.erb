@@ -9,13 +9,6 @@
     <ul class="navbar-nav ml-auto nav-fill w-50">
       <% if user_signed_in? %>
 
-        <% if current_user.role == "scalerep" %>
-          <li class="nav-item active"><%= link_to data_tasks_index_path() do %>
-            Data Tasks
-            <% end %>
-          </li>
-        <% end %>
-
         <li class="nav-item active"><%= link_to templates_path() do %>
           Templates
           <% end %>

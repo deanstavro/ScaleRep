@@ -87,8 +87,6 @@ Rails.application.routes.draw do
         collection {put :toggle}
     end
 
-    get 'data_tasks/index'
-
 
     match 'auth/:provider/callback', to: 'salesforces#web_authentication', via: [:get, :post]
     match 'auth/:provider/setup', to: 'salesforces#setup', via: [:get, :post]

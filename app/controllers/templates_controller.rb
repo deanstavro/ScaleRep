@@ -5,11 +5,10 @@ class TemplatesController < ApplicationController
 		@user = User.find(current_user.id)
 
 		if @user.role == "scalerep"
-
-            @client_companies = scalerep_director_client_company()
-            if params.has_key?(:client_company)
+      @client_companies = scalerep_director_client_company()
+      if params.has_key?(:client_company)
                 @company = ClientCompany.find_by(name: params["client_company"])
-            else
+      else
 				@company = ClientCompany.find(@user.client_company_id)
 			end
 		else
@@ -22,7 +21,7 @@ class TemplatesController < ApplicationController
 
 	def new
 		@user = User.find(current_user.id)
-		@client_company = ClientCompany.find(@user.client_company_id)
+		@client_company = ClientCompany.find_by(id: params[:company_id])
 		@template = Template.new
 	end
 
