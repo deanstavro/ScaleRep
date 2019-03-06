@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190303171918) do
+ActiveRecord::Schema.define(version: 20190306201332) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -136,24 +136,17 @@ ActiveRecord::Schema.define(version: 20190303171918) do
 
   create_table "client_companies", force: :cascade do |t|
     t.string   "name"
-    t.text     "description"
-    t.text     "company_notes"
     t.string   "company_domain"
-    t.datetime "created_at",                                     null: false
-    t.datetime "updated_at",                                     null: false
+    t.datetime "created_at",                                    null: false
+    t.datetime "updated_at",                                    null: false
     t.text     "replyio_keys"
     t.string   "api_key"
-    t.integer  "number_of_seats"
-    t.text     "emails_to_use"
-    t.text     "products"
-    t.text     "notable_clients"
-    t.boolean  "account_live",                   default: false
+    t.boolean  "account_live",                  default: false
     t.string   "account_manager"
     t.string   "auto_reply_campaign_id"
     t.string   "auto_reply_campaign_key"
     t.string   "referral_campaign_key"
     t.string   "referral_campaign_id"
-    t.integer  "monthlyContactProspectingCount"
     t.integer  "monthlyContactEngagementCount"
     t.text     "clientDirectorNotes"
   end
