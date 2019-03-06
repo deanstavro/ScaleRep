@@ -23,6 +23,7 @@
 @import "sessions";
 
 
+/* General Tool Tip */
 .tooltip-head{
   color: #fff;
   background: #000;
@@ -31,6 +32,8 @@
   margin-bottom: -2px; /* Hide default tooltip rounded corner from top */
 }
 
+
+
 /* Notice message default */
 .notice {
   margin-top: 50px;
@@ -38,13 +41,14 @@
   background-color: white;
 }
 
+
+
 /* Error message default */
 .error {
   margin-top: 50px;
   color: red;
   background-color: white;
 }
-
 
 
 
@@ -84,4 +88,12 @@
   .jumbotron .h1 {
     font-size: 50px;
   }
+}
+
+
+
+/* Nav Bar*/
+.na-left {
+  margin-left: 5px;
+  margin-bottom: 2px;
 }

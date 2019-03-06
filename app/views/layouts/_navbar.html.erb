@@ -31,22 +31,17 @@
           </li>
         <% end %>
 
-        <li class="nav-item active"><%= link_to templates_path() do %>
-          Templates
-          <% end %>
-        </li>
-
-        <li class="nav-item active"><%= link_to common_replies_path() do %>
-          Replies
-          <% end %>
-        </li>
-
         <li class="dropdown nav-item active">
           <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false"><%= octicon "gear", :height => 20,  :class => "right left", :"aria-label" => "hi" %><span class="caret"></span></a>
           <ul class="dropdown-menu">
 
-                <li class="na-left"><%= link_to edit_user_registration_path  do %>
-                    Account
+                <li class="na-left"><%= link_to templates_path()  do %>
+                    Templates
+                <% end %>
+                </li>
+
+                <li class="na-left"><%= link_to common_replies_path()  do %>
+                    Replies
                 <% end %>
                 </li>
 
@@ -54,6 +49,13 @@
                     Salesforce
                 <% end %>
                 </li>
+
+                <li class="na-left"><%= link_to edit_user_registration_path  do %>
+                    Account
+                <% end %>
+                </li>
+
+                
           </ul>
 
 
