@@ -16,7 +16,6 @@ class ClientCompany < ApplicationRecord
 	validates :company_domain, presence: true
 	validates :account_manager, presence: true
 	validates :monthlyContactEngagementCount, presence: true
-	validates :monthlyContactProspectingCount, presence: true
 
 	# JSON Serialized Column
 	serialize :replyio_keys
