@@ -14,13 +14,6 @@ class ClientCompaniesController < ApplicationController
   end
 
 
-  def edit
-	  @user = User.find(current_user.id)
-    @company = @user.client_company_id
-    @client_company = ClientCompany.find(@company)
-  end
-
-
   def update_client_director_notes
     client_company = ClientCompany.find_by(id: params[:company_id])
     client_company.update_attribute(:clientDirectorNotes, params[:clientDirectorNotes])
