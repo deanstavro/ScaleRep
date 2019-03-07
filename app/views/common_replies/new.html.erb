@@ -18,7 +18,7 @@
 
     <div class="container">
         
-        <%= f.hidden_field :client_company, value: @client_company.id %>
+        <%= f.hidden_field :client_company, value: @client_company.api_key %>
 
         <div class="form-group">
            <%= f.label :name, "Name*", class: "control-label" %>

@@ -23,7 +23,6 @@ class TemplatesController < ApplicationController
   # Displays new form to create template
   # Company Id parameter passed in from index page
 	def new
-		@user = User.find(current_user.id)
 		@client_company = ClientCompany.find_by(api_key: params[:company_api_key])
 		@template = Template.new
 	end

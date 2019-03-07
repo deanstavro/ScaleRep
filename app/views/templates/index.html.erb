@@ -1,5 +1,13 @@
 <div class="jumbotron">
 
+    <% if flash[:error].present? or flash[:notice].present? %>
+      <center>
+        <p class="container text-danger"><%= flash[:error] %></p>
+        <p class="container text-success"><%= flash[:notice] %></p>
+      </center>
+    <% end %>
+
+
     <h1>Templates</h1>
 
     <% if current_user.role == 'scalerep' %>
