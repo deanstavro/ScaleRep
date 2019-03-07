@@ -43,9 +43,16 @@
             <td><%= template.body %></td>
           <% end %>
 
-          <td><%= link_to 'Edit', edit_template_path(template) %></td>
+          <td><%= link_to edit_template_path(template) do %>
+            <%= octicon "issue-closed", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+            <% end %>
+          </td>
 
-          <td><%= link_to 'Delete', template, method: :delete, data: { confirm: 'Are you sure?' } %></td>
+          <td>
+            <%= link_to template, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <%= octicon "trashcan", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+            <% end %>
+          </td>
 
         </tr>
       <% end %>

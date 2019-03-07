@@ -16,15 +16,14 @@
     </div>
 </div>
 
-<div class="table-display">
-  <table class="table table-hover">
+<div class="table-display thin_margins border-sf-option">
+  <table class="table table-hover template-table">
     
     <thead class="thead">
       <tr>
-        <th scope="col">Created Date</th>
-        <th scope="col">Reply Name</th>
+        <th scope="col">Name</th>
         <th scope="col">Common Message</th>
-        <th scope="col">Common Reply</th>
+        <th scope="col">Reply</th>
         <th scope="col">Edit</th>
         <th scope="col">Delete</th>
       </tr>
@@ -33,19 +32,31 @@
     <tbody>
       <% @common_replies.each do |common_reply| %>
         <tr>
-
-          <td><%= common_reply.created_at.to_time.strftime('%m/%d/%Y') %></td>
           
           <td><%= common_reply.name %></td>
 
-          <td><%= common_reply.common_message %></td>
+          <% if common_reply.common_message.length > 100 %>
+            <td><%= common_reply.common_message[0...100] +"..." %></td>
+          <% else %>
+            <td><%= common_reply.common_message %></td>
+          <% end %>
 
-          <td><%= common_reply.reply_message %></td>
+          <% if common_reply.reply_message.length > 100 %>
+            <td><%= common_reply.reply_message[0...100] +"..." %></td>
+          <% else %>
+            <td><%= common_reply.reply_message %></td>
+          <% end %>
 
-          <td><%= link_to 'Edit', edit_common_reply_path(common_reply) %></td>
+          <td><%= link_to edit_common_reply_path(common_reply) do %>
+            <%= octicon "issue-closed", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+            <% end %>
+          </td>
 
-          <td><%= link_to 'Delete', common_reply, method: :delete, data: { confirm: 'Are you sure?' } %></td>
-
+          <td>
+            <%= link_to common_reply, method: :delete, data: { confirm: 'Are you sure?' } do %>
+            <%= octicon "trashcan", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
+            <% end %>
+          </td>
 
         </tr>
       <% end %>
