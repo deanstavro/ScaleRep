@@ -4,6 +4,5 @@ class Template < ApplicationRecord
 	validates :title, presence: true
 	validates :body, presence: true
 	validates :client_company, presence: true
-	validates :subject, presence: true
 	
 end

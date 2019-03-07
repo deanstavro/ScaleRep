@@ -35,10 +35,14 @@
           
           <td><%= template.title %></td>
 
-          <td><%= template.subject %></td>
+          <% if template.subject.empty? %>
+            <td>Re:</td>
+          <% else %>
+            <td><%= template.subject %></td>
+          <% end %>
 
-          <% if template.body.length > 100 %>
-            <td><%= template.body[0...100] +"..." %></td>
+          <% if template.body.length > 80 %>
+            <td><%= template.body[0...80] +"..." %></td>
           <% else %>
             <td><%= template.body %></td>
           <% end %>

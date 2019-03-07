@@ -35,14 +35,14 @@
           
           <td><%= common_reply.name %></td>
 
-          <% if common_reply.common_message.length > 100 %>
-            <td><%= common_reply.common_message[0...100] +"..." %></td>
+          <% if common_reply.common_message.length > 80 %>
+            <td><%= common_reply.common_message[0...80] +"..." %></td>
           <% else %>
             <td><%= common_reply.common_message %></td>
           <% end %>
 
-          <% if common_reply.reply_message.length > 100 %>
-            <td><%= common_reply.reply_message[0...100] +"..." %></td>
+          <% if common_reply.reply_message.length > 80 %>
+            <td><%= common_reply.reply_message[0...80] +"..." %></td>
           <% else %>
             <td><%= common_reply.reply_message %></td>
           <% end %>
@@ -65,9 +65,9 @@
   
   <div class="digg_pagination">
       <div class="page_info">
-          <%= page_entries_info @common_replys %>
+          <%= page_entries_info @common_replies %>
       </div>
-      <%= will_paginate @common_replys, :params => { :tab_id => :current }, :container => false %>
+      <%= will_paginate @common_replies, :params => { :tab_id => :current }, :container => false %>
   </div>
   
 </div>

@@ -21,18 +21,18 @@
         <%= f.hidden_field :client_company, value: @client_company.id %>
 
         <div class="form-group">
-           <%= f.label :title, "Template Title*", class: "control-label" %>
+           <%= f.label :title, "Name*", class: "control-label" %>
             <%= f.text_field :title, required: true, class: "form-control" %>
         </div>
 
         <div class="form-group">
-            <%= f.label :subject, "Subject Line*", class: "control-label" %>
-            <%= f.text_area :subject, required: true, class: "form-control" %>
+            <%= f.label :subject, "Subject Line (Leave empty if following-up)", class: "control-label" %>
+            <%= f.text_area :subject, :rows => 1, class: "form-control" %>
         </div>
 
         <div class="form-group">
-            <%= f.label :body, "Template Body*", class: "control-label" %>
-            <%= f.text_area :body, :rows => 5, :col => 5, class: "form-control" %>
+            <%= f.label :body, "Template Body* (Don't include your signature)", class: "control-label" %>
+            <%= f.text_area :body, :rows => 8, required: true, class: "form-control" %>
         </div>
 
         <div class="actions">
