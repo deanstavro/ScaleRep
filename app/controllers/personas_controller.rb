@@ -5,9 +5,9 @@ class PersonasController < ApplicationController
     # GET /personas
     # GET /personas.json
     def index
-        @user = find_current_user(current_user.id)
+        @user = current_user
         
-        if is_scalerep_admin(@user)
+        if is_scalerep_admin
 
             @client_companies = scalerep_director_client_company()
 

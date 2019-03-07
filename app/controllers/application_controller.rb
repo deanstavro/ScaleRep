@@ -14,12 +14,8 @@ class ApplicationController < ActionController::Base
   	return user
   end
 
-  def is_scalerep_admin(user)
-  	if user.role == "scalerep"
-  		return true
-  	else
-  		return false
-  	end
+  def is_scalerep_admin()
+  	return is_admin()
   end
 
   def is_non_admin_user(user)
@@ -37,6 +33,18 @@ class ApplicationController < ActionController::Base
 
   def after_sign_out_path_for(resource_or_scope)
     "https://scalerep.com"
+  end
+
+
+  private
+
+
+  def is_admin()
+    if current_user.role == "scalerep"
+      return true
+    else
+      return false
+    end
   end
 
 end
