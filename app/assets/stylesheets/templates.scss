@@ -1,3 +1,15 @@
 // Place all the styles related to the Templates controller here.
 // They will automatically be included in application.css.
 // You can use Sass (SCSS) here: http://sass-lang.com/
+
+.template-table{
+	white-space: nowrap;
+	table-layout: fixed;
+}
+
+.text-truncate {
+    -ms-text-overflow: ellipsis;
+    text-overflow: ellipsis;
+    white-space: nowrap;
+    overflow: hidden;
+}

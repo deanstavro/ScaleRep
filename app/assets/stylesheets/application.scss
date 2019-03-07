@@ -14,14 +14,12 @@
 //= require bootstrap-datepicker
 //= require bootstrap-toggle
 
-
 @import "bootstrap";
 @import "campaigns";
 @import "leads";
 @import "metrics";
 @import "salesforces";
 @import "sessions";
-
 
 /* General Tool Tip */
 .tooltip-head{
@@ -32,8 +30,6 @@
   margin-bottom: -2px; /* Hide default tooltip rounded corner from top */
 }
 
-
-
 /* Notice message default */
 .notice {
   margin-top: 50px;
@@ -41,16 +37,12 @@
   background-color: white;
 }
 
-
-
 /* Error message default */
 .error {
   margin-top: 50px;
   color: red;
   background-color: white;
 }
-
-
 
 /* Jumbotron is the header design of each page*/
 .jumbotron {
@@ -90,10 +82,22 @@
   }
 }
 
-
-
 /* Nav Bar*/
 .na-left {
   margin-left: 5px;
   margin-bottom: 2px;
+}
+
+/* thin borders */
+.thin_margins {
+  margin-left: 30px;
+  margin-right: 30px;
+}
+
+/* blue round border */
+.border-sf-option {
+  border: 1px solid;
+  border-radius: 25px;
+  padding: 20px;
+  border-color: #007bff;
 }
