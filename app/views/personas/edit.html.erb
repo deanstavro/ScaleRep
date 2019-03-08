@@ -1,7 +1,7 @@
 <div id="title" class="jumbotron">
   <div class = "container">
     <br/>
-    <h1>Edit Persona</h1>
+    <h1>Edit Lead Group</h1>
   </div>
 </div>
 
@@ -34,14 +34,6 @@
           <%= f.label :archive, "Archive?", class: "control-label" %>
           <%= f.check_box :archive, class: "form-control" %>
       </div>
-
-      <% if false %>
-          <div class="form-group">
-              <%= f.label :special_instructions, class: "control-label" %>
-              <%= f.text_area :special_instructions, :rows => 5, :col => 5, class: "form-control" %>
-          </div>
-      <% end %>
-
 
   <div class="actions">
     <%= f.submit "Submit", class: "btn btn-default btn-primary" %>

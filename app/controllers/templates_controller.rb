@@ -50,10 +50,7 @@ class TemplatesController < ApplicationController
 
 	def destroy
 		  @template = Template.find(params[:id])
-   		
-      if !is_scalerep_admin && @template.client_company != current_user.client_company
-        redirect_to templates_path, notice: 'You cannot access this template!'
-      end
+      checkUserPrivileges(templates_path, 'You cannot access this template')
 
       if @template.destroy
   				redirect_to templates_path, notice: 'Template was successfully created.'
@@ -64,9 +61,7 @@ class TemplatesController < ApplicationController
   def edit
    	  @template = Template.find(params[:id])
 
-      if !is_scalerep_admin && @template.client_company != current_user.client_company
-        redirect_to templates_path, notice: 'You cannot access this template!'
-      end
+      checkUserPrivileges(templates_path, 'You cannot access this template')
   end
 
 
@@ -74,10 +69,7 @@ class TemplatesController < ApplicationController
 	    
       @template = Template.find_by(id: params[:id])
 
-      if !is_scalerep_admin && @template.client_company != current_user.client_company
-        redirect_to templates_path, notice: 'You cannot access this template!'
-      end
-
+      checkUserPrivileges(templates_path, 'You cannot access this template')
 
       respond_to do |format|
         if @template.update(template_params)
@@ -104,6 +96,12 @@ class TemplatesController < ApplicationController
 
     def getCompanyByName(company_name)
       return ClientCompany.find_by(name: company_name)
+    end
+
+    def checkUserPrivileges(path, message)
+      if !is_scalerep_admin && @template.client_company != current_user.client_company
+        redirect_to path, notice: message
+      end
     end
 
 end

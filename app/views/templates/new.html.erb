@@ -32,11 +32,11 @@
 
         <div class="form-group">
             <%= f.label :body, "Template Body* (Don't include your signature)", class: "control-label" %>
-            <p style="font-size:12px;">- For italics, use a single asterisk (*), show *<i>here</i>* <br>
+            <p style="font-size:13px;">- For italics, use a single asterisk (*), show *<i>here</i>* <br>
                - For bold, use double asterisks (**), show **<b>in this example</b>**<br>
                - To create a link, use [text](link) format, shown in this [<a href="https://www.scalerep.com" target="_blank">ScaleRep</a>](www.scalerep.com) example
             </p>
-            <%= f.text_area :body, :rows => 8, required: true, class: "form-control" %>
+            <%= f.text_area :body, :rows => 10, required: true, class: "form-control" %>
         </div>
 
         <div class="actions">

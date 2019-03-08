@@ -1,30 +1,23 @@
 <div class="card-body">
   <% if @current.count == 0 %>
-    <p> No Personas </p>
+    <p> No Lead Groups </p>
   <% else %>
     <div style="overflow: auto;">
       <table class = " airtable_data table table-hover">
         <thead class = "thead">
           <tr>
-            <th scope="col">created date</th>
-            <th scope="col">persona</th>
+            <th scope="col">group</th>
             <th scope="col">people</th>
             <th scope="col">delivered</th>
-            
-            <% if @user.role == 'scalerep' %>
+            <% if current_user.role == 'scalerep' %>
                 <th scope="col">bounces</th>
             <% end %>
-
             <th scope="col">total opens</th>
             <th scope="col">unique opens</th>
             <th scope="col">replies</th>
-            
-            <th scope="col"># campaigns</th>
 
-            <% if @user.role == 'scalerep' %>
-              <th scope="col">edit </th>
-              <th scope="col">delete</th>
-            <% end %>
+            <th scope="col">edit </th>
+            <th scope="col">delete</th>
 
             <th scope="col">archive</th>
 
@@ -35,9 +28,7 @@
           <% @current.each do |persona| %>
             <tr >
 
-              <td><%= persona.created_at.strftime("%m-%d-%Y") %></td>
-
-              <% if @user.role == "scalerep" %>
+              <% if current_user.role == "scalerep" %>
                 <td><%= link_to "#{persona.client_company.name} -- #{persona.name}", client_companies_campaigns_path(persona) %></td>
               <% else %>
                 <td><%= link_to persona.name, client_companies_campaigns_path(persona) %></td>
@@ -57,7 +48,7 @@
 
 
 
-              <% if @user.role == "scalerep" %>
+              <% if current_user.role == "scalerep" %>
                   <%  if @metrics_hash[persona] && @metrics_hash[persona][2] %>
                      <td>
                        <% if @metrics_hash[persona] && @metrics_hash[persona][1] && @metrics_hash[persona][1] >0 %>
@@ -127,17 +118,7 @@
               <% else %>
                   <td>0%</td>
               <% end %>
-
-
-              <%  if @metrics_hash[persona] && @metrics_hash[persona][6] %>
-                 <td><%= @metrics_hash[persona][6] %></td>
-              <% else %>
-                  <td>0</td>
-              <% end %>
-
               
-
-              <% if @user.role == 'scalerep' %>
 
                 <td>
                     <%= link_to edit_client_companies_persona_path(persona) do %>
@@ -151,18 +132,14 @@
                   <% end %>
                 </td>
 
-              <% end %>
-
-
-                  
-
-
 
               <td>
                     <%= link_to archive_client_companies_personas_path(persona), method: :put  do %>
                       <%= octicon "issue-closed", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
                     <% end %>
               </td>
+
+
             </tr>
           <% end %>
         </tbody>

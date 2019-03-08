@@ -13,7 +13,7 @@ class CampaignsController < ApplicationController
         #If user accesses a campaign of another user, return flash
   			if is_non_admin_user(@user) and wrong_persona(@persona, @client_company)
             flash[:notice] = "Campaign does not exist"
-            redirecemat_to client_companies_personas_path
+              redirect_to client_companies_personas_path
             return
   			end
 
@@ -40,6 +40,13 @@ class CampaignsController < ApplicationController
         @user = find_current_user(current_user.id)
         @campaign = Campaign.find_by(id: params[:id])
 
+        #If user accesses a campaign of another user, return flash
+        if is_non_admin_user(@user) and wrong_campaign(@campaign, @client_company)
+            flash[:notice] = "Campaign does not exist"
+              redirect_to client_companies_personas_path
+            return
+        end
+
         # execute reply api
         # TODO: move this to a job
         sequence = get_sequence(@campaign)
@@ -65,10 +72,8 @@ class CampaignsController < ApplicationController
 
 
     # GET - Create new campaign
-    def new
-      	@user = find_current_user(current_user.id)
-        @persona_id = params[:persona_id]
-        @persona = Persona.find_by(id: @persona_id)
+    def new 
+        @persona = Persona.find_by(id: params[:persona_id])
         @client_company_for_campaign = @persona.client_company
     		@campaign = @client_company_for_campaign.campaigns.build
 
@@ -81,11 +86,12 @@ class CampaignsController < ApplicationController
 
     # POST - create new campaign, call reply
     def create
-    		@company = ClientCompany.find_by(name: params[:campaign][:client_company])
+        @persona = Persona.find_by(id: params[:campaign][:persona_id])
+    		@company = @persona.client_company
         @campaign = @company.campaigns.build(campaign_params)
         @campaigns = @company.campaigns.all.order('created_at DESC')
-        persona = Persona.find_by(id: params[:subaction].to_i)
-        @campaign.persona = persona
+        @campaign.persona = @persona
+
         params[:campaign][:email_pool] = params[:campaign][:email_pool].reject { |c| c.empty? }
         email_array = get_email_accounts(@company.replyio_keys)
 
@@ -109,9 +115,9 @@ class CampaignsController < ApplicationController
           # If the campaign saves, post the campaign to reply
   				post_campaign = JSON.parse(post_campaign(@campaign, reply_key, @campaign[:emailAccount]))
           @campaign.save
-  				redirect_to client_companies_campaigns_path(persona), :notice => "Campaign created"
+  				redirect_to client_companies_campaigns_path(@campaign.persona.id), :notice => "Campaign created"
   			else
-  				redirect_to client_companies_campaigns_path(persona), :notice => @campaign.errors.full_messages
+  				redirect_to client_companies_campaigns_path(@campaign.persona.id), :notice => @campaign.errors.full_messages
   			end
     end
 
@@ -129,7 +135,7 @@ class CampaignsController < ApplicationController
 
     # Secure campaign params
   	def campaign_params
-        params.require(:campaign).permit(:persona_id, :contactLimit, :user_notes, :create_persona, :campaign_name, :minimum_email_score, :has_minimum_email_score, :email_pool)
+        params.require(:campaign).permit(:persona, :contactLimit, :create_persona, :campaign_name, :email_pool)
   	end
 
     def get_sequence(campaign)
@@ -151,7 +157,20 @@ class CampaignsController < ApplicationController
               return false
             end
         rescue
-            puts "persona does not exist for that user"
+            return true
+        end
+    end
+
+
+    # Check if regular user is trying to access persona show page with id that doesn't belong to them.
+    def wrong_campaign(campaign, company)
+        begin
+            if campaign.client_company != company
+              return true
+            else
+              return false
+            end
+        rescue
             return true
         end
     end

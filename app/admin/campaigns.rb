@@ -3,7 +3,7 @@ ActiveAdmin.register Campaign do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 
-permit_params :reply_id, :reply_key, :contactLimit, :persona, :user_notes, :industry, :campaign_start, :campaign_end, :client_company_id, :personalized, :persona_id, :last_poll_from_reply, :deliveriesCount, :uniquePeopleContacted, :opensCount, :uniqueOpens, :repliesCount, :bouncesCount, :optOutsCount, :outOfOfficeCount, :peopleCount, :peopleFinished, :peopleActive, :peoplePaused, :campaign_name, :minimum_email_score, :has_minimum_email_score, :campaign_type, :archive, :email_pool, :emailAccount
+permit_params :reply_id, :reply_key, :contactLimit, :persona, :campaign_start, :campaign_end, :client_company_id, :persona_id, :last_poll_from_reply, :deliveriesCount, :uniquePeopleContacted, :opensCount, :uniqueOpens, :repliesCount, :bouncesCount, :optOutsCount, :outOfOfficeCount, :peopleCount, :peopleFinished, :peopleActive, :peoplePaused, :campaign_name, :archive, :email_pool, :emailAccount
 
 
 
@@ -28,16 +28,10 @@ form do |f|
     f.input :contactLimit
     f.input :emailAccount
     f.input :email_pool, as: :json
-    
-    f.input :personalized
-    f.input :minimum_email_score
-    f.input :has_minimum_email_score
 
     f.input :reply_id
     f.input :reply_key
 
-    f.input :user_notes
-    f.input :industry
     f.input :campaign_start
     f.input :campaign_end
 
@@ -54,7 +48,6 @@ form do |f|
     f.input :peopleFinished
     f.input :peopleActive
     f.input :peoplePaused
-    f.input :campaign_type
 
 end
   f.actions

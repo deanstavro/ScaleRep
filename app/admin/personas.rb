@@ -3,7 +3,7 @@ ActiveAdmin.register Persona do
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
 
-permit_params :name, :client_company, :special_instructions, :description, :client_company_id, :archive
+permit_params :name, :client_company, :description, :client_company_id, :archive
 
 remove_filter :campaigns
 #

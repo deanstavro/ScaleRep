@@ -4,69 +4,50 @@ class PersonasController < ApplicationController
 
     # GET /personas
     # GET /personas.json
-    def index
-        @user = current_user
+    def index        
         
+        #If admin, set client_companies chooser
         if is_scalerep_admin
+            @client_companies = scalerep_director_client_company() 
+        end
 
-            @client_companies = scalerep_director_client_company()
-
-            if params.has_key?(:client_company)
-                @company = ClientCompany.find_by(name: params["client_company"])
-                @personas = @company.personas.order('created_at DESC')
-                @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
-                @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
-            else
-                @company = @user.client_company
-                @personas = @company.personas.order('created_at DESC')
-                @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
-                @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
-
-            end
+        #  If admin and company param exists, show company param's groups
+        if is_scalerep_admin and params.has_key?(:client_company)
+            @company = findCompanyByName(params["client_company"])
         else
-            @company = @user.client_company
-            @personas = @company.personas.order('created_at DESC')
-            @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
-            @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
+            @company = current_user.client_company
         end
 
-        @metrics_hash = Hash.new
-        @personas.each do |persona|
+        @personas = @company.personas.order('created_at DESC')
+        @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
+        @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
 
-            @campaigns = persona.campaigns
-            count = 0
-            @campaigns.each do |campaign|
-                array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.uniqueOpens]
-                count = count + 1
-                if @metrics_hash[persona]
-                    @metrics_hash[persona][0] += array[0].to_i
-                    @metrics_hash[persona][1] += array[1].to_i
-                    @metrics_hash[persona][2] += array[2].to_i
-                    @metrics_hash[persona][3] += array[3].to_i
-                    @metrics_hash[persona][4] += array[4].to_i
-                    @metrics_hash[persona][5] += array[5].to_i
-                else
-                    @metrics_hash[persona] = array
-                end
-                    @metrics_hash[persona][6] = count
-            end
-        end
+        #Get aggregates statistics for persona's campaigns
+        @metrics_hash = getCampaignMetrics(@personas)
     end
 
 
     # GET /personas/new
     def new
-        @user = find_current_user(current_user.id)
         @persona = Persona.new
-        @client_companies = scalerep_director_client_company()
+
+        if is_scalerep_admin
+            @client_companies = scalerep_director_client_company()
+        end
+
     end
 
 
     # POST /personas
     # POST /personas.json
     def create
-        @user = find_current_user(current_user.id)
-        @company = ClientCompany.find_by(name: params[:persona][:client_company])
+
+        if is_scalerep_admin
+            @company = ClientCompany.find_by(name: params[:persona][:client_company])
+        else
+            @company = ClientCompany.find_by(api_key: params[:persona][:client_company])
+        end
+
         params[:persona].delete :client_company
         @persona = @company.personas.build(persona_params)
 
@@ -84,16 +65,17 @@ class PersonasController < ApplicationController
 
     # GET /personas/1/edit
     def edit
-        @user = find_current_user(current_user.id)
         @persona = Persona.find_by(id: params[:id])
+        checkUserPrivileges(client_companies_personas_path, 'You cannot access this Lead Group')
+
     end
 
 
     # PATCH/PUT /personas/1
     # PATCH/PUT /personas/1.json
     def update
-        @user = find_current_user(current_user.id)
         @persona = Persona.find_by(id: params[:id])
+        checkUserPrivileges(client_companies_personas_path, 'You cannot access this Lead Group')
 
         respond_to do |format|
           if @persona.update(persona_params)
@@ -117,10 +99,11 @@ class PersonasController < ApplicationController
     # DELETE /personas/1
     # DELETE /personas/1.json
     def destroy
-        persona = Persona.find_by(id: params[:id])
+        @persona = Persona.find_by(id: params[:id])
+        checkUserPrivileges(client_companies_personas_path, 'You cannot access this Lead Group')
 
         begin
-            persona.destroy
+            @persona.destroy
             respond_to do |format|
                 format.html { redirect_to client_companies_personas_path, notice: 'Persona was successfully deleted' }
                 format.json { head :no_content }
@@ -140,6 +123,41 @@ class PersonasController < ApplicationController
     # Never trust parameters from the scary internet, only allow the white list through.
     def persona_params
         params.require(:persona).permit(:name, :description, :special_instructions, :archive)
+    end
+
+    def findCompanyByName(params_client_company)
+        return ClientCompany.find_by(name: params_client_company)
+    end
+
+    def checkUserPrivileges(path, message)
+      if !is_scalerep_admin && @persona.client_company != current_user.client_company
+        redirect_to path, notice: message
+      end
+    end
+
+    def getCampaignMetrics(personas)
+
+        metrics_hash = Hash.new
+        personas.each do |persona|
+            campaigns = persona.campaigns
+            count = 0
+            campaigns.each do |campaign|
+                array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.uniqueOpens]
+                count = count + 1
+                if metrics_hash[persona]
+                    metrics_hash[persona][0] += array[0].to_i
+                    metrics_hash[persona][1] += array[1].to_i
+                    metrics_hash[persona][2] += array[2].to_i
+                    metrics_hash[persona][3] += array[3].to_i
+                    metrics_hash[persona][4] += array[4].to_i
+                    metrics_hash[persona][5] += array[5].to_i
+                else
+                    metrics_hash[persona] = array
+                end
+                metrics_hash[persona][6] = count
+            end
+        end
+        return metrics_hash
     end
 
 

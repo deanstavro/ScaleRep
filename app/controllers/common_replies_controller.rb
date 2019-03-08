@@ -44,10 +44,7 @@ class CommonRepliesController < ApplicationController
   
   def edit
     @common_reply = CommonReply.find(params[:id])
-
-    if !is_scalerep_admin && @common_reply.client_company != current_user.client_company
-        redirect_to common_replies_path, notice: 'You cannot access this reply!'
-    end
+    checkUserPrivileges(common_replies_path, "You cannot access this reply!")
   end
 
   
@@ -55,9 +52,7 @@ class CommonRepliesController < ApplicationController
       @client_company = ClientCompany.find_by(id: current_user.client_company.id)
       @common_reply = CommonReply.find_by(id: params[:id])
 
-      if !is_scalerep_admin && @common_reply.client_company != current_user.client_company
-        redirect_to common_replies_path, notice: 'You cannot access this reply!'
-    end
+      checkUserPrivileges(common_replies_path, "You cannot access this reply!")
 
       respond_to do |format|
         if @common_reply.update(common_reply_params)
@@ -73,13 +68,11 @@ class CommonRepliesController < ApplicationController
   
   def destroy
     @common_reply = CommonReply.find(params[:id])
-
-    if !is_scalerep_admin && @common_reply.client_company != current_user.client_company
-        redirect_to common_replies_path, notice: 'You cannot access this template!'
+    checkUserPrivileges(common_replies_path, "You cannot access this reply!")
+    
+    if @common_reply.destroy
+      redirect_to common_replies_path, notice: 'Reply was successfully deleted.'
     end
-      if @common_reply.destroy
-          redirect_to common_replies_path, notice: 'Reply was successfully deleted.'
-      end
   end
 
   
@@ -91,6 +84,13 @@ class CommonRepliesController < ApplicationController
 
   def getCompanyByName(company_name)
       return ClientCompany.find_by(name: company_name)
+  end
+
+  def checkUserPrivileges(path, message)
+    if !is_scalerep_admin && @common_reply.client_company != current_user.client_company
+        redirect_to path, notice: message
     end
+  end
+
 
 end

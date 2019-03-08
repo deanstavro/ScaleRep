@@ -9,13 +9,14 @@
 
     <br>
 
-    <h1>Personas</h1>
+    <h1>Lead Groups</h1>
 
-    <% if @user.role == 'scalerep' %>
-        <div>
-          <%= link_to '+ Add Persona', new_client_companies_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
-        </div>
-        <br> <br>
+    <div>
+      <%= link_to '+ Add Group', new_client_companies_persona_path, :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+    </div>
+    <br> <br>
+
+    <% if current_user.role == 'scalerep' %>
         <div>
             <%= form_tag({}, {:method => :get}) do %>
               <%= label_tag  'select company:' %>      

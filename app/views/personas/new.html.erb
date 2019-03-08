@@ -1,7 +1,7 @@
 <div id="title" class="jumbotron">
   <div class = "container">
     <br/>
-    <h1>New Persona</h1>
+    <h1>New Lead Group</h1>
   </div>
 </div>
 
@@ -19,18 +19,23 @@
     <% end %>
 
     <div class="container">
-        <div class="form-group">
-           <%= f.label :client_company, "Company Name*", class: "control-label" %><br>
-            <%= f.select :client_company, @client_companies , required: true, class: "form-control" %>
-        </div>
+
+        <% if current_user.role == 'scalerep' %>
+          <div class="form-group">
+             <%= f.label :client_company, "Company Name*", class: "control-label" %><br>
+              <%= f.select :client_company, @client_companies , required: true, class: "form-control" %>
+          </div>
+        <% else %>
+          <%= f.hidden_field :client_company, value: current_user.client_company.api_key %>
+        <% end %>
 
         <div class="form-group">
-           <%= f.label :name, "Persona Title*", class: "control-label" %>
+           <%= f.label :name, "Title*", class: "control-label" %>
             <%= f.text_field :name, required: true, class: "form-control" %>
         </div>
 
         <div class="form-group">
-            <%= f.label :description, "Persona Description", class: "control-label" %>
+            <%= f.label :description, "Description", class: "control-label" %>
             <%= f.text_area :description, :rows => 5, :col => 5, class: "form-control" %>
         </div>
 

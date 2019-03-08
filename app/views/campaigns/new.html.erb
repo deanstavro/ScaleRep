@@ -11,7 +11,7 @@
 
   <%= form_for @campaign, url: client_companies_campaigns_path, :html => {:class => "form-horizontal center"} do |f| %>
 
-      <%= f.hidden_field :client_company, value: @client_company_for_campaign.name %>
+      <%= f.hidden_field :persona_id, value: @persona.id %>
 
       <div class="form-group">
           <%= f.label :campaign_name, "Campaign name*", class: "control-label" %>
@@ -28,12 +28,6 @@
       <div class="form-group">
           <%= f.label :email_pool, "Set the email account to use (use Shift + Click to select multiple). Do not choose default if you'd like to choose custom emails.", class: "control-label" %><br>
           <%= f.select(:email_pool, @emails , {:selected => @emails[0]},  {:multiple => true, :size => @emails.length}) %>
-      </div>
-      <br>
-
-      <div class="form-group">
-          <%= f.label :user_notes, "Extra notes (Add extra details for ScaleRep reps here)", class: "control-label" %>
-          <%= f.text_area :user_notes, :rows => 5, :col => 5, class: "form-control" %>
       </div>
       <br>
 
