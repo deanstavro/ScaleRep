@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190308194356) do
+ActiveRecord::Schema.define(version: 20190308213412) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -237,9 +237,11 @@ ActiveRecord::Schema.define(version: 20190308194356) do
     t.string   "company_name"
     t.string   "company_website"
     t.integer  "account_id"
+    t.integer  "persona_id"
     t.index ["account_id"], name: "index_leads_on_account_id", using: :btree
     t.index ["campaign_id"], name: "index_leads_on_campaign_id", using: :btree
     t.index ["client_company_id"], name: "index_leads_on_client_company_id", using: :btree
+    t.index ["persona_id"], name: "index_leads_on_persona_id", using: :btree
   end
 
   create_table "personas", force: :cascade do |t|
@@ -334,6 +336,7 @@ ActiveRecord::Schema.define(version: 20190308194356) do
   add_foreign_key "leads", "accounts"
   add_foreign_key "leads", "campaigns"
   add_foreign_key "leads", "client_companies"
+  add_foreign_key "leads", "personas"
   add_foreign_key "personas", "client_companies"
   add_foreign_key "salesforces", "client_companies"
   add_foreign_key "templates", "client_companies"

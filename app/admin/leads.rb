@@ -12,7 +12,7 @@ ActiveAdmin.register Lead do
 #   permitted
 # end
 
-permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :handed_off, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :company_description, :full_name, :status, :account_id, :company_name, :company_website
+permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :persona_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :handed_off, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :company_description, :full_name, :status, :account_id, :company_name, :company_website
 
 remove_filter :account
 remove_filter :campaign_replies
@@ -29,14 +29,17 @@ index do
     column :last_name
     column :full_name
     column :status
-    column :client_company
     column :email
+    column :client_company
+    column :persona
+    column :campaign
+    
     column :title
     column :account
     column :company_name
     column :company_website
 
-    column :campaign
+    
 
     column :hunter_date
     column :hunter_score
@@ -91,6 +94,7 @@ form do |f|
     f.input :company_website
 
     f.input :campaign
+    f.input :persona
     f.input :hunter_date
     f.input :hunter_score
     f.input :phone_type

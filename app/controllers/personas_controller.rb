@@ -70,6 +70,11 @@ class PersonasController < ApplicationController
 
     end
 
+    def show
+
+
+    end
+
 
     # PATCH/PUT /personas/1
     # PATCH/PUT /personas/1.json

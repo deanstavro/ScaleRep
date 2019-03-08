@@ -115,6 +115,7 @@ class LeadUploadJob < ApplicationJob
 						le[:client_company] = campaign.client_company
 						le[:campaign_id] = campaign.id
 						le[:status] = "cold"
+						le[:persona_id] = campaign.persona.id
 						begin
 							le[:full_name] = le["first_name"] + " " + le["last_name"]
 						rescue

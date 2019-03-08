@@ -7,6 +7,7 @@ class Lead < ApplicationRecord
 	belongs_to :client_company, optional: true
 	belongs_to :account, optional: true
 	belongs_to :campaign, optional: true
+	belongs_to :persona
 	
 	has_many :campaign_replies
 	has_many :touchpoints
