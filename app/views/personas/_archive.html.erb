@@ -30,9 +30,9 @@
             <tr >
 
               <% if current_user.role == "scalerep" %>
-                <td><%= link_to "#{persona.client_company.name} -- #{persona.name}", client_companies_campaigns_path(persona) %></td>
+                <td><%= link_to "#{persona.client_company.name} -- #{persona.name}", client_companies_persona_path(persona) %></td>
               <% else %>
-                <td><%= link_to persona.name, client_companies_campaigns_path(persona) %></td>
+                <td><%= link_to persona.name, client_companies_persona_path(persona) %></td>
               <% end %>
 
               <%  if @metrics_hash[persona] && @metrics_hash[persona][0] %>

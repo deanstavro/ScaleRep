@@ -19,6 +19,7 @@ remove_filter :campaign_replies
 remove_filter :campaign
 remove_filter :touchpoints
 remove_filter :lead_actions
+remove_filter :persona
 
 
 index do

@@ -1,0 +1,82 @@
+<div id="title" class="jumbotron">
+
+    <% if flash[:error].present? or flash[:notice].present? %>
+        <center>
+            <p class="container text-danger"><%= flash[:error] %></p>
+            <p class="container text-success"><%= flash[:notice] %></p>
+        </center>
+    <% end %>
+
+    <br>
+
+    <h1>Lead Group</h1>
+    <h2> <%= @persona.name %> </h2>
+    <%= link_to 'View Campaigns', client_companies_campaigns_path(@persona), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+    
+    <br><br> 
+</div>
+
+
+
+<div class="card-body ">
+  <% if @leads.count == 0 %>
+    <p> No leads in this group </p>
+  
+  <% else %>
+
+  	<p>Type something in the input field to search the table for first names, last names, or emails:</p>  
+  	<input class="form-control" id="myInput" type="text" placeholder="Search..">
+  	<br>
+
+    <div style="overflow: auto;">
+      <table class = " airtable_data table table-hover">
+        <thead class = "thead">
+          <tr>
+            <th scope="col">First Name</th>
+            <th scope="col">Last Name</th>
+            <th scope="col">Last Campaign</th>
+            <th scope="col">Status</th>
+
+          </tr>
+        </thead>
+
+        <tbody id="myTable">
+          <% @leads.each do |lead| %>
+            <tr>
+
+                <td> <%= lead.first_name %> </td>
+
+                <td> <%= lead.last_name %> </td>
+
+				<td> <%= lead.campaign.campaign_name %> </td>  
+				
+				<td> <%= lead.status %>
+
+            </tr>
+          <% end %>
+        </tbody>
+
+      </table>
+      
+      <div class="digg_pagination">
+        <div class="page_info">
+          <%= page_entries_info @leads %>
+        </div>
+        <%= will_paginate @leads, :params => { :tab_id => :current }, :container => false %>
+      </div>
+
+    </div>
+  <% end %>
+</div>
+
+<script>
+$(document).ready(function(){
+  $("#myInput").on("keyup", function() {
+    var value = $(this).val().toLowerCase();
+    $("#myTable tr").filter(function() {
+      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
+    });
+  });
+});
+</script>
+

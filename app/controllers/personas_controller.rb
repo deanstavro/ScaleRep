@@ -71,8 +71,10 @@ class PersonasController < ApplicationController
     end
 
     def show
+        @persona = Persona.find_by(id: params[:id])
+        checkUserPrivileges(client_companies_personas_path, 'You cannot access this Lead Group')
 
-
+        @leads = @persona.leads.paginate(:page => params[:page], :per_page => 50)
     end
 
 
