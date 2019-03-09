@@ -32,8 +32,11 @@
       <table class = " airtable_data table table-hover">
         <thead class = "thead">
           <tr>
+          	<th scope="col">Company</th>
             <th scope="col">First Name</th>
             <th scope="col">Last Name</th>
+            <th scope="col">Email</th>
+            <th scope="col">Phone Number</th>
             <th scope="col">Last Campaign</th>
             <th scope="col">Status</th>
 
@@ -43,10 +46,15 @@
         <tbody id="myTable">
           <% @leads.each do |lead| %>
             <tr>
-
+            	<td> <%= lead.company_name %> </td>
+                
                 <td> <%= lead.first_name %> </td>
 
                 <td> <%= lead.last_name %> </td>
+
+                <td><%= lead.email %></td>
+
+                <td><%= lead.phone_number %></td>
 
 				<td> <%= lead.campaign.campaign_name %> </td>  
 				
