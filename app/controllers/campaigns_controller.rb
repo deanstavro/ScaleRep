@@ -41,7 +41,7 @@ class CampaignsController < ApplicationController
         @campaign = Campaign.find_by(id: params[:id])
 
         #If user accesses a campaign of another user, return flash
-        if is_non_admin_user(@user) and wrong_campaign(@campaign, @client_company)
+        if is_non_admin_user(@user) and wrong_campaign(@campaign, @user)
             flash[:notice] = "Campaign does not exist"
               redirect_to client_companies_personas_path
             return
@@ -152,20 +152,6 @@ class CampaignsController < ApplicationController
     def wrong_persona(persona, company)
         begin
             if persona.client_company != company
-              return true
-            else
-              return false
-            end
-        rescue
-            return true
-        end
-    end
-
-
-    # Check if regular user is trying to access persona show page with id that doesn't belong to them.
-    def wrong_campaign(campaign, company)
-        begin
-            if campaign.client_company != company
               return true
             else
               return false
