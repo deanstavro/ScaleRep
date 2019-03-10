@@ -24,29 +24,84 @@
   
   <% else %>
 
-  	<p>Type something in the input field to search the table for first names, last names, or emails:</p>  
-  	<input class="form-control" id="myInput" type="text" placeholder="Search..">
-  	<br>
+
+
+      <p>Search the table for first names, last names, or emails:</p>  
+      <input class="form-control" id="myInput" type="text" placeholder="Search..">
+
+
+    	<div class="row">
+            <div id="toolbar">
+                <select class="form-control">
+                    <option value="">Export Basic</option>
+                    <option value="all">Export All</option>
+                    <option value="selected">Export Selected</option>
+                </select>
+            </div>
+      </div>
+
+      
+
+          <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
+
+            <fieldset>
+              <div class="options clearfix">
+                
+                <div class="ck-button">
+                  <label><input type="checkbox" value="1" name="leads_company" checked="checked"><span>Company</span></label>
+                </div>
+
+                <div class="ck-button">
+                  <label><input type="checkbox" value="1" name="leads_first_name" checked="checked"><span>First Name</span></label>
+                </div>
+                
+                <div class="ck-button">
+                  <label><input type="checkbox" value="1" name="leads_last_name" checked="checked"><span>Last Name</span></label>
+                </div>
+
+                <div class="ck-button">
+                  <label><input type="checkbox" value="1" name="leads_email" checked="checked"><span>Email</span></label>
+                </div>
+                
+                <div class="ck-button">
+                  <label><input type="checkbox" value="1" name="leads_phone_number" checked="checked"><span>Phone Number</span></label>
+                </div>
+
+
+                <div class="ck-button">
+                  <label><input type="checkbox" value="1" name="leads_status" checked="checked"><span>Status</span></label>
+                </div>
+                
+              </div>
+            </fieldset>
+        </div>
 
     <div style="overflow: auto;">
-      <table class = " airtable_data table table-hover">
+      <table class = " airtable_data table table-hover" id="leads-table"
+                     data-toggle="table"
+                     data-show-export="true"
+                     data-click-to-select="true"
+                     data-toolbar="#toolbar">
         <thead class = "thead">
           <tr>
-          	<th scope="col">Company</th>
-            <th scope="col">First Name</th>
-            <th scope="col">Last Name</th>
-            <th scope="col">Email</th>
-            <th scope="col">Phone Number</th>
-            <th scope="col">Last Campaign</th>
-            <th scope="col">Status</th>
+            <th data-field="state" data-checkbox="true"></th>
+          	<th data-field="Company"   class="leads_company">Company</th>
+            <th data-field="FirstName"   class="leads_first_name">First Name</th>
+            <th data-field="LastName"   class="leads_last_name">Last Name</th>
+            <th data-field="Email"   class="leads_email">Email</th>
+            <th data-field="PhoneNumber"   class="leads_phone_number">Phone Number</th>
+            <th data-field="Status" class="leads_status">Status</th>
 
           </tr>
         </thead>
 
         <tbody id="myTable">
           <% @leads.each do |lead| %>
-            <tr>
-            	<td> <%= lead.company_name %> </td>
+            <tr id="<%= lead.id %>" >
+
+                <td>&nbsp;</td> 
+
+            	  <td> <%= lead.company_name %> </td>
                 
                 <td> <%= lead.first_name %> </td>
 
@@ -55,10 +110,8 @@
                 <td><%= lead.email %></td>
 
                 <td><%= lead.phone_number %></td>
-
-				<td> <%= lead.campaign.campaign_name %> </td>  
 				
-				<td> <%= lead.status %>
+				        <td> <%= lead.status %></td>
 
             </tr>
           <% end %>
@@ -77,6 +130,55 @@
   <% end %>
 </div>
 
+
+
+          
+
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.min.css">
+<link rel="stylesheet" href="https://rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/css/bootstrap-editable.css">
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>
+<script src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+<script>
+
+var $table = $('#leads-table');
+    $(function () {
+        $('#toolbar').find('select').change(function () {
+            $table.bootstrapTable('refreshOptions', {
+                exportDataType: $(this).val()
+            });
+        });
+    });
+
+    var trBoldBlue = $("table");
+
+  $(trBoldBlue).on("click", "tr", function (){
+      $(this).toggleClass("bold-blue");
+  });
+
+</script>
+<script src="/assets/colResizable-1.6.min.self-49ec489d01540fea0a7e8758767ea434047e1bab109f21d67f361ce94a06bcc4.js?body=1" data-turbolinks-track="reload"></script>
+
+<script type="text/javascript">
+$(function(){
+   var onSampleResized = function(e){
+    var table = $(e.currentTarget); //reference to the resized table
+  };
+
+ $("#leads-table").colResizable({
+    liveDrag:true,
+    gripInnerHtml:"<div class='grip'></div>",
+    draggingClass:"dragging",
+    disabledColumns: [0]
+  });
+});
+
+</script>
+
+
 <script>
 $(document).ready(function(){
   $("#myInput").on("keyup", function() {
@@ -87,4 +189,56 @@ $(document).ready(function(){
   });
 });
 </script>
+
+
+<script type="text/javascript">
+$(function(){
+$(document).ready(function() {
+  $(".search").keyup(function () {
+    var searchTerm = $(".search").val();
+    var listItem = $('.results tbody').children('tr');
+    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
+
+  $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
+        return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
+    }
+  });
+
+  $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','false');
+  });
+
+  $(".results tbody tr:containsi('" + searchSplit + "')").each(function(e){
+    $(this).attr('visible','true');
+  });
+
+  var jobCount = $('.results tbody tr[visible="true"]').length;
+    $('.counter').text(jobCount + ' item');
+
+  if(jobCount == '0') {$('.no-result').show();}
+    else {$('.no-result').hide();}
+      });
+});
+});
+</script>
+<script type="text/javascript">
+
+$("input:checkbox:not(:checked)").each(function() {
+    var column = "table ." + $(this).attr("name");
+    $(column).hide();
+});
+
+$("input:checkbox").click(function(){
+    var column = "table ." + $(this).attr("name");
+    $(column).toggle();
+});
+</script>
+<script>
+$(document).ready(function(){
+   $( ".fixed-table-toolbar" ).after( $( "div.options" ) );
+});
+</script>
+
+
+
 
