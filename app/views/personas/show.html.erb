@@ -1,4 +1,4 @@
-<div id="title" class="jumbotron">
+<div class="jumbotron">
 
     <% if flash[:error].present? or flash[:notice].present? %>
         <center>
@@ -12,7 +12,6 @@
     <h1>Lead Group</h1>
     <h2> <%= @persona.name %> </h2>
     <%= link_to 'View Campaigns', client_companies_campaigns_path(@persona), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
-    
     <br><br> 
 </div>
 
@@ -20,25 +19,24 @@
 
 <div class="card-body ">
   <% if @leads.count == 0 %>
-    <p> No leads in this group </p>
-  
+      <p> No leads in this group </p>
   <% else %>
 
+    <div>
+        <p>Search the table for first names, last names, or emails:</p>  
+        <input class="form-control" style="width:50%;" id="myInput" type="text" placeholder="Search...">
 
 
-      <p>Search the table for first names, last names, or emails:</p>  
-      <input class="form-control" id="myInput" type="text" placeholder="Search..">
+      <div id="toolbar">
+        <p> Export Options </p>
+          <select class="form-control">
 
-
-    	<div class="row">
-            <div id="toolbar">
-                <select class="form-control">
-                    <option value="">Export Basic</option>
-                    <option value="all">Export All</option>
-                    <option value="selected">Export Selected</option>
-                </select>
-            </div>
+              <option value="">Export Basic</option>
+              <option value="all">Export All</option>
+              <option value="selected">Export Selected</option>
+          </select>
       </div>
+    </div>
 
       
 
@@ -82,7 +80,7 @@
                      data-show-export="true"
                      data-click-to-select="true"
                      data-toolbar="#toolbar">
-        <thead class = "thead">
+        <thead>
           <tr>
             <th data-field="state" data-checkbox="true"></th>
           	<th data-field="Company"   class="leads_company">Company</th>
@@ -95,7 +93,7 @@
           </tr>
         </thead>
 
-        <tbody id="myTable">
+        <tbody>
           <% @leads.each do |lead| %>
             <tr id="<%= lead.id %>" >
 
@@ -135,15 +133,15 @@
           
 
 <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.min.css">
-<link rel="stylesheet" href="https://rawgit.com/vitalets/x-editable/master/dist/bootstrap3-editable/css/bootstrap-editable.css">
+
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>
-<script src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
+<script rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" >
 <script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script>
 <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-<script>
 
+<script>
 var $table = $('#leads-table');
     $(function () {
         $('#toolbar').find('select').change(function () {
@@ -158,24 +156,6 @@ var $table = $('#leads-table');
   $(trBoldBlue).on("click", "tr", function (){
       $(this).toggleClass("bold-blue");
   });
-
-</script>
-<script src="/assets/colResizable-1.6.min.self-49ec489d01540fea0a7e8758767ea434047e1bab109f21d67f361ce94a06bcc4.js?body=1" data-turbolinks-track="reload"></script>
-
-<script type="text/javascript">
-$(function(){
-   var onSampleResized = function(e){
-    var table = $(e.currentTarget); //reference to the resized table
-  };
-
- $("#leads-table").colResizable({
-    liveDrag:true,
-    gripInnerHtml:"<div class='grip'></div>",
-    draggingClass:"dragging",
-    disabledColumns: [0]
-  });
-});
-
 </script>
 
 
@@ -183,7 +163,7 @@ $(function(){
 $(document).ready(function(){
   $("#myInput").on("keyup", function() {
     var value = $(this).val().toLowerCase();
-    $("#myTable tr").filter(function() {
+    $("#leads-table tr").filter(function() {
       $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
     });
   });
@@ -191,36 +171,7 @@ $(document).ready(function(){
 </script>
 
 
-<script type="text/javascript">
-$(function(){
-$(document).ready(function() {
-  $(".search").keyup(function () {
-    var searchTerm = $(".search").val();
-    var listItem = $('.results tbody').children('tr');
-    var searchSplit = searchTerm.replace(/ /g, "'):containsi('")
 
-  $.extend($.expr[':'], {'containsi': function(elem, i, match, array){
-        return (elem.textContent || elem.innerText || '').toLowerCase().indexOf((match[3] || "").toLowerCase()) >= 0;
-    }
-  });
-
-  $(".results tbody tr").not(":containsi('" + searchSplit + "')").each(function(e){
-    $(this).attr('visible','false');
-  });
-
-  $(".results tbody tr:containsi('" + searchSplit + "')").each(function(e){
-    $(this).attr('visible','true');
-  });
-
-  var jobCount = $('.results tbody tr[visible="true"]').length;
-    $('.counter').text(jobCount + ' item');
-
-  if(jobCount == '0') {$('.no-result').show();}
-    else {$('.no-result').hide();}
-      });
-});
-});
-</script>
 <script type="text/javascript">
 
 $("input:checkbox:not(:checked)").each(function() {
@@ -233,6 +184,7 @@ $("input:checkbox").click(function(){
     $(column).toggle();
 });
 </script>
+
 <script>
 $(document).ready(function(){
    $( ".fixed-table-toolbar" ).after( $( "div.options" ) );

@@ -1,0 +1,41 @@
+
+.ck-button {
+      &:nth-child(1) {
+        margin-left: 2px;
+      }
+    }
+.ck-button {
+    margin:2px;
+    background-color: white;
+    border-radius:4px;
+    border:1px solid #007bff;
+    overflow:auto;
+    float:left;
+    color:#aaa;
+  
+  &:hover {
+    background-color:#ddd;
+  }
+  label {
+    float:left;
+    width:auto;
+    margin-bottom: 0;
+    font-size:14px;
+    
+    span {
+      text-align:center;
+      padding:3px 8px;
+      display:block;
+    }
+    input {
+        display: none;
+    }
+  }
+  input:checked + span {
+    color:#111;
+  }
+  &:nth-child(1){
+    margin-left:10px;
+    
+  }
+}
