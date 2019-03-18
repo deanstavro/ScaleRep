@@ -170,6 +170,8 @@ class LeadUploadJob < ApplicationJob
 							##### Call Reply To Upload #####
 							uploaded_contact  = AddContactToReplyJob.perform_now(le,campaign.id)
 							if uploaded_contact
+								puts 'H343 IS LEAD'
+								puts le.to_s
 								new_lead = Lead.create!(le)
 								imported << new_lead
 								leads_left_to_upload_in_campaign = leads_left_to_upload_in_campaign - 1

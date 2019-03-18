@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190308213412) do
+ActiveRecord::Schema.define(version: 20190318172127) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -203,25 +203,14 @@ ActiveRecord::Schema.define(version: 20190308213412) do
   end
 
   create_table "leads", force: :cascade do |t|
-    t.boolean  "decision_maker"
-    t.text     "internal_notes"
-    t.string   "email_in_contact_with"
     t.datetime "date_sourced"
-    t.datetime "created_at",                            null: false
-    t.datetime "updated_at",                            null: false
+    t.datetime "created_at",        null: false
+    t.datetime "updated_at",        null: false
     t.integer  "client_company_id"
     t.integer  "campaign_id"
-    t.string   "contract_sent"
-    t.integer  "contract_amount"
-    t.string   "timeline"
-    t.string   "project_scope"
-    t.string   "email_handed_off_too"
-    t.datetime "meeting_time"
     t.string   "email"
     t.string   "first_name"
     t.string   "last_name"
-    t.integer  "hunter_score"
-    t.datetime "hunter_date"
     t.string   "title"
     t.string   "phone_type"
     t.string   "phone_number"
@@ -231,7 +220,6 @@ ActiveRecord::Schema.define(version: 20190308213412) do
     t.string   "linkedin"
     t.string   "timezone"
     t.string   "address"
-    t.boolean  "meeting_taken",         default: false
     t.string   "full_name"
     t.integer  "status"
     t.string   "company_name"

@@ -4,7 +4,7 @@ class Lead < ApplicationRecord
 	require 'rubygems'
 	require 'json'
 
-	belongs_to :client_company, optional: true
+	belongs_to :client_company
 	belongs_to :account, optional: true
 	belongs_to :campaign, optional: true
 	belongs_to :persona
@@ -17,7 +17,6 @@ class Lead < ApplicationRecord
 	validates :email, presence: true
 	validates :first_name, presence: true
 	validates :full_name, presence: true
-	after_initialize :init
 
 	enum status: [:cold, :in_campaign, :not_interested, :blacklist, :interested, :handed_off, :sent_meeting_invite, :handed_off_with_questions]
 
@@ -91,29 +90,14 @@ class Lead < ApplicationRecord
 		return imported.to_s + " leads imported successfully to blacklist, duplicate lead rows moved to blacklist: "+ duplicates.to_s + ", " + rows_email_not_present.to_s + " rows without email field, not imported: " + not_imported.to_s
 	end
 
+	
+
 	private
 
 
 	def one_hash
-		one_hash.require(:lead).permit(:decision_maker, :internal_notes, :email_in_contact_with, :date_sourced, :client_company, :campaign_id, :contract_sent, :contract_amount, :timeline, :project_scope, :email_handed_off_too, :meeting_time, :email, :first_name, :last_name, :hunter_score, :hunter_date, :title, :phone_type, :phone_number, :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :full_name, :status, :company_name, :company_website, :account_id)
-		#
-		#id, decision_maker, internal_notes, email_in_contact_with, date_sourced
-    	# created_at, updated_at, client_company_id, campaign_id, contract_sent,
-    	# contract_amount, timeline, project_scope, email_handed_off_too, meeting_time,
-    	# email, first_name, last_name, hunter_score, hunter_date, title, phone_type,
-    	# phone_number, city, state, country, linkedin, timezone, address, meeting_taken,
-    	# full_name, status, company_name, company_website, account_id
+		one_hash.require(:lead).permit(:date_sourced, :client_company, :campaign_id, :email, :first_name, :last_name, :title, :phone_type, :phone_number, :city, :state, :country, :linkedin, :timezone, :address, :full_name, :status, :company_name, :company_website, :account_id)
 	end
-
-
-
-
-
-    def init
-      self.contract_amount ||= 0           #will set the default value only if it's nil
-      self.contract_sent ||= :no
-    end
-
 
 
 end

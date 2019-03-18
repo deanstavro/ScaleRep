@@ -12,7 +12,7 @@ ActiveAdmin.register Lead do
 #   permitted
 # end
 
-permit_params :contract_sent, :internal_notes, :contract_amount, :email_handed_off_too, :client_company_id, :date_sourced, :campaign_id, :persona_id, :first_name, :last_name, :decision_maker, :timeline, :project_scope,  :email_in_contact_with,  :email, :handed_off, :meeting_time, :hunter_date, :hunter_score, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :timezone, :address, :meeting_taken, :company_description, :full_name, :status, :account_id, :company_name, :company_website
+permit_params :client_company_id, :date_sourced, :campaign_id, :persona_id, :first_name, :last_name,  :email, :title, :phone_type, :phone_number,  :city, :state, :country, :linkedin, :timezone, :address, :full_name, :status, :account_id, :company_name, :company_website
 
 remove_filter :account
 remove_filter :campaign_replies
@@ -40,11 +40,6 @@ index do
     column :company_name
     column :company_website
 
-    
-
-    column :hunter_date
-    column :hunter_score
-
     column :phone_type
     column :phone_number
     column :linkedin
@@ -54,17 +49,7 @@ index do
     column :state
     column :country
 
-    column :internal_notes
-    column :email_in_contact_with
-    column :email_handed_off_too
-    column :meeting_time
-    column :meeting_taken
-    column :project_scope
-    column :timeline
     column :date_sourced
-    column :decision_maker
-    column :contract_sent
-    column :contract_amount
 
 
 
@@ -96,8 +81,6 @@ form do |f|
 
     f.input :campaign
     f.input :persona
-    f.input :hunter_date
-    f.input :hunter_score
     f.input :phone_type
     f.input :phone_number
     f.input :timezone
@@ -107,17 +90,8 @@ form do |f|
     f.inputs do
         f.input :country, as: :select, collection: country_dropdown
     end
-    f.input :internal_notes
-    f.input :email_in_contact_with
-    f.input :email_handed_off_too
-    f.input :meeting_time
-    f.input :meeting_taken
-    f.input :project_scope
-    f.input :timeline
+
     f.input :date_sourced
-    f.input :decision_maker
-    f.input :contract_sent
-    f.input :contract_amount
 
 
   end

@@ -2,7 +2,7 @@ class User < ApplicationRecord
   
   belongs_to :client_company, optional: true
   has_many :data_uploads
-  enum role: [:user, :scalerep, :admin]
+  enum role: [:user, :scalerep]
 
   # Include default devise modules. Others available are:
   # :confirmable, :lockable, :timeoutable and :omniauthable
@@ -20,9 +20,11 @@ class User < ApplicationRecord
   # Generate API key after user creation
   after_create :generate_key
 
+  
   def set_default_role
     self.role ||= :user
   end
+  
 
   def generate_key
     begin
@@ -30,5 +32,6 @@ class User < ApplicationRecord
     end while self.class.exists?(api_key: api_key)
     self.save!
   end
+
 
 end
