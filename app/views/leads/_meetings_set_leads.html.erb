@@ -11,7 +11,7 @@
                 <th scope = 'col'>E-mail</th>
                 <th scope = 'col'>Name</th>
 
-                <% if @user.role == "scalerep" %>
+                <% if current_user.role == "scalerep" %>
                     <th scope = 'col'>Client Company</th>
                 <% end %>
                     <th scope = 'col'>Status</th>
@@ -32,7 +32,7 @@
                 <td> <%= lead.full_name %></td>
               <% end %>
 
-              <% if @user.role == "scalerep" %>
+              <% if current_user.role == "scalerep" %>
                 <td> <%= lead.client_company.name %> </td>
               <% end %>
                 <td> <%= lead.status.to_s %></td>
