@@ -19,12 +19,6 @@
 
         <br><br>
 
-        <div class="digg_pagination">
-            <div class="page_info">
-              <%= page_entries_info @blacklist %>
-            </div>
-            <%= will_paginate @blacklist, :params => { :tab_id => "blacklist" }, :container => false %>
-        </div>
         <table class = " airtable_data table table-hover">
           <thead class = "thead">
             <tr>
