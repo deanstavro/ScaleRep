@@ -9,10 +9,10 @@
 
   <br>
 
-  <% if  @user.email == "demo@scalerep.com" %>
+  <% if  current_user.email == "demo@scalerep.com" %>
     <h1>Demo_Company Lead List </h1>
   <% else %>
-    <h1><%= @user.client_company.name if @user.client_company %> Lead List</h1>
+    <h1><%= current_user.client_company.name if current_user.client_company %> Lead List</h1>
   <% end %>
 
 </div>
@@ -21,7 +21,7 @@
 <div class = 'thin_margins' data-no-turbolink="true">
   <div id="accordion">
 
-    <% if @user.role == "scalerep" %>
+    <% if current_user.role == "scalerep" %>
       <%= render 'leads/scalerep_admin_portal' %>
     <% else %>
       <!-- tab view -->

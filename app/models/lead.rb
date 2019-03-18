@@ -21,8 +21,6 @@ class Lead < ApplicationRecord
 	enum status: [:cold, :in_campaign, :not_interested, :blacklist, :interested, :handed_off, :sent_meeting_invite, :handed_off_with_questions]
 
 
-
-
 	def self.import_blacklist(file, company, leads, params, col)
 
 		#Take row, convert keys to lowercase, put in key,value hash

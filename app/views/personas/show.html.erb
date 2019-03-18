@@ -18,13 +18,20 @@
 
 
 <div class="card-body ">
-  <% if @leads.count == 0 %>
+  <% if @leads.empty? %>
       <p> No leads in this group </p>
   <% else %>
 
+
+  
+
     <div>
-        <p>Search the table for first names, last names, or emails:</p>  
-        <input class="form-control" style="width:50%;" id="myInput" type="text" placeholder="Search...">
+        <p>Search the table for first names, last names, or emails:</p>
+        
+        <%= form_tag(client_companies_persona_path(@persona), method: :get) do %>
+          <%= text_field_tag(:search) %>
+          <%= submit_tag ("Search") %>
+        <% end %>
 
 
       <div id="toolbar">

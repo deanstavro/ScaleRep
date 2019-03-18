@@ -212,7 +212,7 @@ module Reply
 
   def post_campaign(scalerep_campaign, key, email_to_use)
       begin
-          payload = {"name": scalerep_campaign.campaign_name, "emailAccount": email_to_use, "settings": { "EmailsCountPerDay": 400, "daysToFinishProspect": 3, "daysFromLastProspectContact": 3, "emailSendingDelaySeconds": 560, "emailPriorityType": "Equally divided between", "disableOpensTracking": false, "repliesHandlingType": "Mark person as finished", "enableLinksTracking": false }, "steps": [{ "number": "1", "InMinutesCount": "25", "templates": [{ "body": "Hello World!", "subject": "Im here!"}]}]}.to_json
+          payload = {"name": scalerep_campaign.campaign_name, "emailAccount": email_to_use, "settings": { "EmailsCountPerDay": 400, "daysToFinishProspect": 3, "daysFromLastProspectContact": 3, "emailSendingDelaySeconds": 180, "emailPriorityType": "Equally divided between", "disableOpensTracking": false, "repliesHandlingType": "Mark person as finished", "enableLinksTracking": false }, "steps": [{ "number": "1", "InMinutesCount": "25", "templates": [{ "body": "Hello World!", "subject": "Im here!"}]}]}.to_json
           response = RestClient.post "https://api.reply.io/v2/campaigns?apiKey="+key, payload, :content_type => "application/json"
           data_hash = JSON.parse(response)
 

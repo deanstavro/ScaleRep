@@ -1,12 +1,10 @@
 class LeadsController < ApplicationController
   before_action :authenticate_user!
   include Reply
-  require 'will_paginate/array'
 
   def index
-    @user = User.find(current_user.id)
 
-    if @user.role == "scalerep"
+    if current_user.role == "scalerep"
 
       # Take leads who have set meetings to display in Handed-Off
       @meetings_set = Lead.where(:status => ["handed_off", "handed_off_with_questions", "sent_meeting_invite"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
@@ -30,7 +28,7 @@ class LeadsController < ApplicationController
       @blacklist    = Lead.where(:status => ["not_interested", "blacklist"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
 
     else
-      @company = ClientCompany.find_by(id: @user.client_company_id)
+      @company = current_user.client_company
       @accounts = Account.where(client_company_id: @company.id).paginate(:page => params[:page], :per_page => 20)
 
       # grab reports and grab leads for every week for a report

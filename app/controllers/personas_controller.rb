@@ -74,7 +74,16 @@ class PersonasController < ApplicationController
         @persona = Persona.find_by(id: params[:id])
         checkUserPrivileges(client_companies_personas_path, 'You cannot access this Lead Group')
 
-        @leads = @persona.leads.paginate(:page => params[:page], :per_page => 50)
+        if params[:search]
+            lead1 = @persona.leads.where(status: Lead.statuses[params[:search]])
+            lead1 = [] if lead1.empty?
+            lead2 = @persona.leads.where('last_name LIKE ? OR first_name LIKE ? OR company_name LIKE ? OR email LIKE ?',"%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%")
+            lead2 = [] if lead2.empty?
+            
+            @leads = (lead1 + lead2).paginate(:page => params[:page], :per_page => 50)
+        else
+            @leads = @persona.leads.paginate(:page => params[:page], :per_page => 50)
+        end
     end
 
 
