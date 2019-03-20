@@ -45,6 +45,7 @@ class LeadsController < ApplicationController
 
     @lead = Lead.find_by(id: params[:id])
     @lead_actions = @lead.lead_actions
+    @lead_touchpoints = @lead.touchpoints
 
   end
 

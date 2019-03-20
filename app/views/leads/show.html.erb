@@ -52,9 +52,9 @@
       
       <div class="digg_pagination">
         <div class="page_info">
-          <%= page_entries_info lead_action %>
+          <%= page_entries_info @lead_actions %>
         </div>
-        <%= will_paginate lead_action, :params => { :tab_id => :current }, :container => false %>
+        <%= will_paginate @lead_actions, :params => { :tab_id => :current }, :container => false %>
       </div>
 
     </div>
@@ -63,6 +63,7 @@
 
 <div>
   <h2> Touchpoints </h2>
+
 </div>
 
 
