@@ -34,7 +34,7 @@
 
         <tbody>
           <% @lead_actions.each do |lead_action| %>
-            <tr id="<%= lead.id %>" >
+            <tr id="<%= lead_action.id %>" >
 
                 <td>&nbsp;</td> 
 
@@ -42,7 +42,7 @@
                 
                 <td> <%= lead_action.created_date %> </td>
 
-                <td> <%= lead.touchpoint %></td>
+                <td> <%= lead_action.touchpoint %></td>
 
             </tr>
           <% end %>
@@ -52,9 +52,9 @@
       
       <div class="digg_pagination">
         <div class="page_info">
-          <%= page_entries_info @leads %>
+          <%= page_entries_info lead_action %>
         </div>
-        <%= will_paginate @leads, :params => { :tab_id => :current }, :container => false %>
+        <%= will_paginate lead_action, :params => { :tab_id => :current }, :container => false %>
       </div>
 
     </div>
