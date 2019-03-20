@@ -1,0 +1,68 @@
+<div class="jumbotron">
+  
+  <% if flash[:error].present? or flash[:notice].present? %>
+      <center>
+        <p class="container text-danger"><%= flash[:error] %></p>
+        <p class="container text-success"><%= flash[:notice] %></p>
+      </center>
+  <% end %>
+
+  <br>
+
+  <h1>Lead: <%= @lead.first_name if @lead.first_name %> <%= @lead.last_name if @lead.last_name %></h1>
+  <h2> Status: <%= @lead.status %></h2>
+</div>
+
+<div class="thin_margins">
+
+  <h2> Lead Actions </h2>
+
+  <div style="overflow: auto;">
+    <% if @lead_actions.empty? %>
+      <p> No leads action </p>
+    <% else %>
+      <table class = " airtable_data table table-hover" id="leads-table">
+        
+        <thead>
+          <tr>
+            <th data-field="state" data-checkbox="true"></th>
+            <th>Action</th>
+            <th>Date</th>
+            <th>Touchpoint</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @lead_actions.each do |lead_action| %>
+            <tr id="<%= lead.id %>" >
+
+                <td>&nbsp;</td> 
+
+                <td> <%= lead_action.action %> </td>
+                
+                <td> <%= lead_action.created_date %> </td>
+
+                <td> <%= lead.touchpoint %></td>
+
+            </tr>
+          <% end %>
+        </tbody>
+
+      </table>
+      
+      <div class="digg_pagination">
+        <div class="page_info">
+          <%= page_entries_info @leads %>
+        </div>
+        <%= will_paginate @leads, :params => { :tab_id => :current }, :container => false %>
+      </div>
+
+    </div>
+  <% end %>
+</div>
+
+<div>
+  <h2> Touchpoints </h2>
+</div>
+
+

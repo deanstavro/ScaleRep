@@ -41,6 +41,14 @@ class LeadsController < ApplicationController
   end
 
 
+  def show
+
+    @lead = Lead.find_by(id: params[:id])
+    @lead_actions = @lead.lead_actions
+
+  end
+
+
   #POST - save cleaned_data contacts and upload into reply
   def import_to_current_campaign
     puts params

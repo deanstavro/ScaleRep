@@ -32,61 +32,16 @@
           <%= text_field_tag(:search) %>
           <%= submit_tag ("Search") %>
         <% end %>
-
-
-      <div id="toolbar">
-        <p> Export Options </p>
-          <select class="form-control">
-
-              <option value="">Export Basic</option>
-              <option value="all">Export All</option>
-              <option value="selected">Export Selected</option>
-          </select>
-      </div>
+        <br>
     </div>
 
       
 
-          <div class="row col-xs-12 col-sm-12 col-md-12 col-lg-12">
-
-            <fieldset>
-              <div class="options clearfix">
-                
-                <div class="ck-button">
-                  <label><input type="checkbox" value="1" name="leads_company" checked="checked"><span>Company</span></label>
-                </div>
-
-                <div class="ck-button">
-                  <label><input type="checkbox" value="1" name="leads_first_name" checked="checked"><span>First Name</span></label>
-                </div>
-                
-                <div class="ck-button">
-                  <label><input type="checkbox" value="1" name="leads_last_name" checked="checked"><span>Last Name</span></label>
-                </div>
-
-                <div class="ck-button">
-                  <label><input type="checkbox" value="1" name="leads_email" checked="checked"><span>Email</span></label>
-                </div>
-                
-                <div class="ck-button">
-                  <label><input type="checkbox" value="1" name="leads_phone_number" checked="checked"><span>Phone Number</span></label>
-                </div>
-
-
-                <div class="ck-button">
-                  <label><input type="checkbox" value="1" name="leads_status" checked="checked"><span>Status</span></label>
-                </div>
-                
-              </div>
-            </fieldset>
-        </div>
+          
 
     <div style="overflow: auto;">
       <table class = " airtable_data table table-hover" id="leads-table"
-                     data-toggle="table"
-                     data-show-export="true"
-                     data-click-to-select="true"
-                     data-toolbar="#toolbar">
+                     >
         <thead>
           <tr>
             <th data-field="state" data-checkbox="true"></th>
@@ -112,7 +67,7 @@
 
                 <td> <%= lead.last_name %> </td>
 
-                <td><%= lead.email %></td>
+                <td><%= link_to "#{lead.email}",lead_path(lead)%></td>
 
                 <td><%= lead.phone_number %></td>
 				
@@ -134,84 +89,6 @@
     </div>
   <% end %>
 </div>
-
-
-
-          
-<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.min.css">
-
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.10.0/bootstrap-table.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/editable/bootstrap-table-editable.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/export/bootstrap-table-export.js"></script>
-<script rel="stylesheet" href="https://cdn.datatables.net/1.10.19/css/jquery.dataTables.min.css" >
-<script src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-table/1.9.1/extensions/filter-control/bootstrap-table-filter-control.js"></script>
-<script src="https://rawgit.com/hhurz/tableExport.jquery.plugin/master/tableExport.js"></script>
-<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-
-<script>
-var $table = $('#leads-table');
-    $(function () {
-        $('#toolbar').find('select').change(function () {
-            $table.bootstrapTable('refreshOptions', {
-                exportDataType: $(this).val()
-            });
-        });
-    });
-
-    var trBoldBlue = $("table");
-
-  $(trBoldBlue).on("click", "tr", function (){
-      $(this).toggleClass("bold-blue");
-  });
-</script>
-
-
-<script>
-$(document).ready(function(){
-  $("#myInput").on("keyup", function() {
-    var value = $(this).val().toLowerCase();
-    $("#leads-table tr").filter(function() {
-      $(this).toggle($(this).text().toLowerCase().indexOf(value) > -1)
-    });
-  });
-});
-</script>
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-
-<script type="text/javascript">
-
-$("input:checkbox:not(:checked)").each(function() {
-    var column = "table ." + $(this).attr("name");
-    $(column).hide();
-});
-
-$("input:checkbox").click(function(){
-    var column = "table ." + $(this).attr("name");
-    $(column).toggle();
-});
-</script>
-
-<script>
-$(document).ready(function(){
-   $( ".fixed-table-toolbar" ).after( $( "div.options" ) );
-});
-</script>
 
 
 
