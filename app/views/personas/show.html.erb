@@ -26,7 +26,8 @@
   
 
     <div>
-        <p>Search the table for first names, last names, or emails:</p>
+        <p>Search for names, companies, emails, or statuses<br>
+        Statuses: cold, in_campaign, interested, not_interested, handed_off, handed_off_with_questions, blacklist</p>
         
         <%= form_tag(client_companies_persona_path(@persona), method: :get) do %>
           <%= text_field_tag(:search) %>
