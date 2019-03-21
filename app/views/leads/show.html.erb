@@ -13,6 +13,58 @@
   <h2> Status: <%= @lead.status %></h2>
 </div>
 
+
+<div class="thin_margins">
+
+  <h2> Replies </h2>
+
+  <div style="overflow: auto;">
+    <% if @replies.empty? %>
+      <p> No replies </p>
+    <% else %>
+      <table class = " airtable_data table table-hover" id="leads-table">
+        
+        <thead>
+          <tr>
+            <th data-field="state" data-checkbox="true"></th>
+            <th>Date</th>
+            <th>Reply</th>
+
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @replies.each do |campaign_reply| %>
+            <tr id="<%= campaign_reply.id %>" >
+
+                <td>&nbsp;</td> 
+
+                <td> <%= campaign_reply.created_at %> </td>
+                
+                <td> <%= campaign_reply.last_conversation_summary %> </td>
+
+            </tr>
+          <% end %>
+        </tbody>
+
+      </table>
+      
+      <div class="digg_pagination">
+        <div class="page_info">
+          <%= page_entries_info @replies %>
+        </div>
+        <%= will_paginate @replies, :params => { :tab_id => :current }, :container => false %>
+      </div>
+
+    <% end %>
+  </div>
+  
+</div>
+
+
+
+
+
 <div class="thin_margins">
 
   <h2> Lead Actions </h2>
@@ -68,7 +120,7 @@
 
 <div class="thin_margins">
 
-  <h2> Touchpoints </h2>
+  <h2> Sent Touchpoints </h2>
 
   <div style="overflow: auto;">
     <% if @touchpoints.empty? %>

@@ -46,6 +46,7 @@ class LeadsController < ApplicationController
     checkUserPrivileges(:back, 'You cannot access this Lead')
     @lead_actions = @lead.lead_actions.paginate(:page => params[:page], :per_page => 20)
     @touchpoints = @lead.touchpoints.paginate(:page => params[:page], :per_page => 20)
+    @replies = @lead.campaign_replies.paginate(:page => params[:page], :per_page => 20)
   end
 
 
