@@ -42,7 +42,7 @@
                 
                 <td> <%= lead_action.created_at %> </td>
 
-                <td> <%= lead_action.touchpoint %></td>
+                <td> <%= lead_action.touchpoint.email_body.to_s %></td>
 
             </tr>
           <% end %>
@@ -62,5 +62,56 @@
   
 </div>
 
+<div class="thin_margins">
+
+  <h2> Touchpoints </h2>
+
+  <div style="overflow: auto;">
+    <% if @touchpoints.empty? %>
+      <p> No touchpoints </p>
+    <% else %>
+      <table class="airtable_data table table-hover">
+        
+        <thead>
+          <tr>
+            <th data-field="state" data-checkbox="true"></th>
+            <th>Date</th>
+            <th>Sender</th>
+            <th>Subject</th>
+            <th>Body</th>
+          </tr>
+        </thead>
+
+        <tbody>
+          <% @touchpoints.each do |touchpoint| %>
+            <tr id="<%= touchpoint.id %>" >
+
+                <td>&nbsp;</td> 
+
+                <td> <%= touchpoint.created_at %> </td>
+                
+                <td> <%= touchpoint.sender_email %> </td>
+
+                <td> <%= touchpoint.email_subject %></td>
+
+                <td> <%= touchpoint.email_body %></td>
+
+            </tr>
+          <% end %>
+        </tbody>
+
+      </table>
+      
+      <div class="digg_pagination">
+        <div class="page_info">
+          <%= page_entries_info @touchpoints %>
+        </div>
+        <%= will_paginate @touchpoints, :params => { :tab_id => :current }, :container => false %>
+      </div>
+
+    <% end %>
+  </div>
+  
+</div>
 
 

@@ -45,7 +45,7 @@ class LeadsController < ApplicationController
 
     @lead = Lead.find_by(id: params[:id])
     @lead_actions = @lead.lead_actions.paginate(:page => params[:page], :per_page => 20)
-    @lead_touchpoints = @lead.touchpoints.paginate(:page => params[:page], :per_page => 20)
+    @touchpoints = @lead.touchpoints.paginate(:page => params[:page], :per_page => 20)
 
   end
 
