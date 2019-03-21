@@ -42,7 +42,11 @@
                 
                 <td> <%= lead_action.created_at %> </td>
 
-                <td> <%= lead_action.touchpoint.email_body.to_s %></td>
+                <% if lead_action.touchpoint.email_body.to_s.length > 80 %>
+                  <td><%= strip_tags(lead_action.touchpoint.email_body)[0...80] +"..." %></td>
+                <% else %>
+                  <td><%= strip_tags(lead_action.touchpoint.email_body) %></td>
+                <% end %>
 
             </tr>
           <% end %>
@@ -94,7 +98,11 @@
 
                 <td> <%= touchpoint.email_subject %></td>
 
-                <td> <%= touchpoint.email_body %></td>
+                <% if touchpoint.email_body.to_s.length > 80 %>
+                  <td><%= strip_tags(touchpoint.email_body)[0...80] +"..." %></td>
+                <% else %>
+                  <td><%= strip_tags(touchpoint.email_body) %></td>
+                <% end %>
 
             </tr>
           <% end %>

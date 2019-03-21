@@ -42,15 +42,10 @@ class LeadsController < ApplicationController
 
 
   def show
-
     @lead = Lead.find_by(id: params[:id])
-
     checkUserPrivileges(:back, 'You cannot access this Lead')
-
     @lead_actions = @lead.lead_actions.paginate(:page => params[:page], :per_page => 20)
     @touchpoints = @lead.touchpoints.paginate(:page => params[:page], :per_page => 20)
-
-    
   end
 
 
