@@ -73,18 +73,14 @@ class PersonasController < ApplicationController
     def show
         @persona = Persona.find_by(id: params[:id])
         checkUserPrivileges(client_companies_personas_path, 'You cannot access this Lead Group')
+        @dropdown = Lead.statuses.keys
 
         if params[:search]
-            lead1 = @persona.leads.where(status: Lead.statuses[params[:search]])
-            lead1 = [] if lead1.empty?
-            
-            lead2 = @persona.leads.where('last_name LIKE ? OR first_name LIKE ? OR company_name LIKE ? OR email LIKE ?',"%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%")
-            lead2 = [] if lead2.empty?
-            
-            @leads = (lead1 + lead2).order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
+            @leads = @persona.leads.where('last_name LIKE ? OR first_name LIKE ? OR company_name LIKE ? OR email LIKE ?',"%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%").order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
+        elsif params[:leadstatus]
+            @leads = @persona.leads.where(status: params[:leadstatus]).order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50) 
         else
-            @all_leads = @persona.leads
-            @leads = @all_leads.order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
+            @leads = @persona.leads.order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
         end
     end
 

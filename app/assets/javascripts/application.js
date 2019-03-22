@@ -18,7 +18,7 @@
 //= require chartkick
 //= require bootstrap-datepicker
 //= require bootstrap-toggle
-
+//= require_tree .
 
 
 $( document ).on('turbolinks:load', function() {

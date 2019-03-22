@@ -1,91 +1,77 @@
 <div class="jumbotron">
-
+    
     <% if flash[:error].present? or flash[:notice].present? %>
         <center>
             <p class="container text-danger"><%= flash[:error] %></p>
             <p class="container text-success"><%= flash[:notice] %></p>
         </center>
     <% end %>
-
     <br>
 
     <h1>Lead Group</h1>
     <h2> <%= @persona.name %> </h2>
-    <%= link_to 'View Campaigns', client_companies_campaigns_path(@persona), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
-    <br><br> 
+    <br>
+    <%= link_to 'View Campaigns', client_companies_campaigns_path(@persona), :class=>"" %>
 </div>
 
+<div class="card-body">
+  
+  <div class="row">
+      <div>
+          <%= form_tag(client_companies_persona_path(@persona), method: :get) do %>
+            <%= text_field_tag(:search) %>
+            <%= submit_tag ("Search"), :class=>"btn btn-primary" %>
+          <% end %>
+          <br>
+      </div>
 
+      <div style="margin-left:auto;">
+        <%= form_tag(client_companies_persona_path(@persona), method: :get) do %>
+          <%= label_tag  'select status:' %>      
+          <%= select_tag :leadstatus, options_for_select(@dropdown),:include_blank => 'choose status', :onchange => "this.form.submit();" %>
+        <% end %>
+      </div>
+</div>
 
-<div class="card-body ">
-  <% if @leads.empty? %>
+  <% if @leads.nil? or @leads.empty? %>
       <p> No leads in this group </p>
   <% else %>
 
-    <div>
-      <%= form_tag(client_companies_persona_path(@persona), method: :get) do %>
-        <%= text_field_tag(:search) %>
-        <%= submit_tag ("Search"), :class=>"btn btn-primary" %>
-      <% end %>
-      <br>
-    </div>   
+    <table class = " airtable_data table table-hover">
+      <thead>
+        <tr>
+          <th><%= sortable "full_name" %></th>
+          <th><%= sortable "email" %></th>
+          <th><%= sortable "company_name" %></th>
+          <th><%= sortable "phone_number" %></th>
+          <th><%= sortable "status" %></th>
+        </tr>
+      </thead>
 
-    <div style="overflow: auto;">
-      <table class = " airtable_data table table-hover" id="leads-table">
-        <thead>
-          <tr>
-            <th data-checkbox="true"></th>
-            <th><%= sortable "full_name" %></th>
-            <th><%= sortable "email" %></th>
-            <th><%= sortable "company_name" %></th>
-            <th><%= sortable "phone_number" %></th>
-            <th><%= sortable "status" %></th>
+      <tbody>
+        <% @leads.each do |lead| %>
+          <tr data-link="<%= lead_path(lead) %>" id="<%= lead.id %>" style="cursor:pointer;" >
+              <td><%= lead.full_name %></td>
+              <td><%= lead.email %></td>
+              <td><%= lead.company_name %> </td>
+              <td><%= lead.phone_number %></td>
+			        <td><%= lead.status %></td>
           </tr>
-        </thead>
+        <% end %>
+      </tbody>
 
-        <tbody>
-          <% @leads.each do |lead| %>
-            <tr data-link="<%= lead_path(lead) %>" id="<%= lead.id %>" >
-                <td><input type="checkbox" /></td> 
-                
-                <td><%= lead.full_name %></td>
-
-                <td><%= lead.email %></td>
-
-                <td><%= lead.company_name %> </td>
-
-                <td><%= lead.phone_number %></td>
-				
-				        <td><%= lead.status %></td>
-            </tr>
-          <% end %>
-        </tbody>
-
-      </table>
-      
-      <div class="digg_pagination">
-        <div class="page_info">
-          <%= page_entries_info @leads %>
-        </div>
-        <%= will_paginate @leads, :params => { :tab_id => :current }, :container => false %>
+    </table>
+    
+    <div class="digg_pagination">
+      <div class="page_info">
+        <%= page_entries_info @leads %>
       </div>
-
+      <%= will_paginate @leads, :params => { :tab_id => :current }, :container => false %>
     </div>
+
   <% end %>
 </div>
 
-<script>
-checkboxes = document.getElementsByTagName("input");
-for (var i = 0; i < checkboxes.length; i++) {
-    var checkbox = checkboxes[i];
-    checkbox.onclick = function() {
-        var currentRow = this.parentNode.parentNode;
-        var secondColumn = currentRow.getElementsByTagName("td")[1];
-
-        alert("My text is: " + secondColumn.textContent );
-    };
-} 
-</script>
 
 <script>
   $("tr[data-link]").click(function() {
