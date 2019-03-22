@@ -22,58 +22,41 @@
       <p> No leads in this group </p>
   <% else %>
 
-
-  
-
     <div>
-        <p>Search for names, companies, emails, or statuses<br>
-        Statuses: cold, in_campaign, interested, not_interested, handed_off, handed_off_with_questions, blacklist</p>
-        
-        <%= form_tag(client_companies_persona_path(@persona), method: :get) do %>
-          <%= text_field_tag(:search) %>
-          <%= submit_tag ("Search") %>
-        <% end %>
-        <br>
-    </div>
-
-      
-
-          
+      <%= form_tag(client_companies_persona_path(@persona), method: :get) do %>
+        <%= text_field_tag(:search) %>
+        <%= submit_tag ("Search"), :class=>"btn btn-primary" %>
+      <% end %>
+      <br>
+    </div>   
 
     <div style="overflow: auto;">
-      <table class = " airtable_data table table-hover" id="leads-table"
-                     >
+      <table class = " airtable_data table table-hover" id="leads-table">
         <thead>
           <tr>
-            <th data-field="state" data-checkbox="true"></th>
-          	<th data-field="Company"   class="leads_company">Company</th>
-            <th data-field="FirstName"   class="leads_first_name">First Name</th>
-            <th data-field="LastName"   class="leads_last_name">Last Name</th>
-            <th data-field="Email"   class="leads_email">Email</th>
-            <th data-field="PhoneNumber"   class="leads_phone_number">Phone Number</th>
-            <th data-field="Status" class="leads_status">Status</th>
-
+            <th data-checkbox="true"></th>
+            <th><%= sortable "full_name" %></th>
+            <th><%= sortable "email" %></th>
+            <th><%= sortable "company_name" %></th>
+            <th><%= sortable "phone_number" %></th>
+            <th><%= sortable "status" %></th>
           </tr>
         </thead>
 
         <tbody>
           <% @leads.each do |lead| %>
-            <tr id="<%= lead.id %>" >
-
-                <td>&nbsp;</td> 
-
-            	  <td> <%= lead.company_name %> </td>
+            <tr data-link="<%= lead_path(lead) %>" id="<%= lead.id %>" >
+                <td><input type="checkbox" /></td> 
                 
-                <td> <%= lead.first_name %> </td>
+                <td><%= lead.full_name %></td>
 
-                <td> <%= lead.last_name %> </td>
+                <td><%= lead.email %></td>
 
-                <td><%= link_to "#{lead.email}",lead_path(lead)%></td>
+                <td><%= lead.company_name %> </td>
 
                 <td><%= lead.phone_number %></td>
 				
-				        <td> <%= lead.status %></td>
-
+				        <td><%= lead.status %></td>
             </tr>
           <% end %>
         </tbody>
@@ -90,6 +73,25 @@
     </div>
   <% end %>
 </div>
+
+<script>
+checkboxes = document.getElementsByTagName("input");
+for (var i = 0; i < checkboxes.length; i++) {
+    var checkbox = checkboxes[i];
+    checkbox.onclick = function() {
+        var currentRow = this.parentNode.parentNode;
+        var secondColumn = currentRow.getElementsByTagName("td")[1];
+
+        alert("My text is: " + secondColumn.textContent );
+    };
+} 
+</script>
+
+<script>
+  $("tr[data-link]").click(function() {
+  window.location = $(this).data("link")
+})
+</script>
 
 
 

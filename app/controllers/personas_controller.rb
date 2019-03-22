@@ -77,12 +77,14 @@ class PersonasController < ApplicationController
         if params[:search]
             lead1 = @persona.leads.where(status: Lead.statuses[params[:search]])
             lead1 = [] if lead1.empty?
+            
             lead2 = @persona.leads.where('last_name LIKE ? OR first_name LIKE ? OR company_name LIKE ? OR email LIKE ?',"%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%")
             lead2 = [] if lead2.empty?
             
-            @leads = (lead1 + lead2).paginate(:page => params[:page], :per_page => 50)
+            @leads = (lead1 + lead2).order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
         else
-            @leads = @persona.leads.paginate(:page => params[:page], :per_page => 50)
+            @all_leads = @persona.leads
+            @leads = @all_leads.order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
         end
     end
 
@@ -175,6 +177,18 @@ class PersonasController < ApplicationController
         end
         return metrics_hash
     end
+
+
+    def sort_column
+        Lead.column_names.include?(params[:sort]) ? params[:sort] : "full_name"
+    end
+  
+    def sort_direction
+        %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
+    end
+
+
+    
 
 
 end
