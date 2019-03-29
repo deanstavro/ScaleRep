@@ -156,11 +156,11 @@ class PersonasController < ApplicationController
         
         #loop through personas
         personas.each do |persona|
-            
+            campaigns = persona.campaigns
             cql_count = persona.leads.handed_off.count + persona.leads.handed_off_with_questions.count
             #loop through campaigns in each persona
-            persona.campaigns.each do |campaign|
-                array = [cql_count,campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.uniqueOpens]
+            campaigns.each do |campaign|
+                array = [cql_count, campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.uniqueOpens]
                 
                 # if lead group metrics is not empty, aggregate
                 if !metrics_hash.empty?
