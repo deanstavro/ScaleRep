@@ -78,7 +78,7 @@
 
             <tbody>
               <% @meetings_set.each do |lead| %>
-                <tr>
+                <tr data-link="<%= lead_path(lead) %>" id="<%= lead.id %>" style="cursor:pointer;">
 
                   <td> <%= lead.date_sourced.strftime("%b %d, %Y") %> </td>
 
@@ -104,7 +104,9 @@
                         <td><%= lead.campaign.persona.name %></td>
                     <% end %>
                   <% end %>
+
                   <td> <%= lead.status.to_s %></td>
+                  
                 </tr>
               <% end %>
             </tbody>
@@ -121,3 +123,9 @@
         </div>
       <% end %>
 </div>
+
+<script>
+   $("tr[data-link]").click(function() {
+    window.location = $(this).data("link")
+  })
+</script>
