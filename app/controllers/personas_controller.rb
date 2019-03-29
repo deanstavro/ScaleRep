@@ -151,26 +151,35 @@ class PersonasController < ApplicationController
 
     def getCampaignMetrics(personas)
 
+        #define metrics_hash, an aggregate of all persona metrics
         metrics_hash = Hash.new
+        
+        #loop through personas
         personas.each do |persona|
-            campaigns = persona.campaigns
-            count = 0
-            campaigns.each do |campaign|
-                array = [campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.uniqueOpens]
-                count = count + 1
-                if metrics_hash[persona]
-                    metrics_hash[persona][0] += array[0].to_i
+            
+            cql_count = persona.leads.handed_off.count + persona.leads.handed_off_with_questions.count
+            #loop through campaigns in each persona
+            persona.campaigns.each do |campaign|
+                array = [cql_count,campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.uniqueOpens]
+                
+                # if lead group metrics is not empty, aggregate
+                if !metrics_hash.empty?
+                    
                     metrics_hash[persona][1] += array[1].to_i
                     metrics_hash[persona][2] += array[2].to_i
                     metrics_hash[persona][3] += array[3].to_i
                     metrics_hash[persona][4] += array[4].to_i
                     metrics_hash[persona][5] += array[5].to_i
+                    metrics_hash[persona][6] += array[6].to_i
                 else
                     metrics_hash[persona] = array
                 end
-                metrics_hash[persona][6] = count
+
+                metrics_hash[persona][0] = cql_count
             end
+
         end
+
         return metrics_hash
     end
 

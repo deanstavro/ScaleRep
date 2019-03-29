@@ -35,6 +35,7 @@ gem 'restforce', '~> 2.5.3'
 gem 'bootstrap-toggle-rails'
 gem 'omniauth-salesforce'
 gem "haml-rails", "~> 1.0"
+gem 'material_icons'
 
 
 group :test do
