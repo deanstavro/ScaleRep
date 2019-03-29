@@ -174,8 +174,6 @@ class PersonasController < ApplicationController
                 else
                     metrics_hash[persona] = array
                 end
-
-                metrics_hash[persona][0] = cql_count
             end
 
         end

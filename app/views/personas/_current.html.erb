@@ -112,8 +112,15 @@
                   <td>0%</td>
               <% end %>
             
-              <td><%= @metrics_hash ?  0 : @metrics_hash[persona][0] %></td>
+              <td>
+                <%  if @metrics_hash[persona] && @metrics_hash[persona][0] %>
+                  <%= @metrics_hash[persona][0] %>
+                <% else %>
+                  0
+                <% end %>
+              </td>
 
+              
               <td>
                   <span title="Edit">
                     <%= link_to edit_client_companies_persona_path(persona) do %>
