@@ -53,7 +53,7 @@
                     <% if persona[7] < 1 or persona[2] < 1 %>
                       0%
                     <% else %>
-                      <%= number_to_percentage(persona[7] / persona[2].to_f * 100, precision:1) %>
+                      <%= number_to_percentage(persona[7] / (persona[2] - persona[4]).to_f * 100, precision:1) %>
                               
                     <% end %>
                     <span class="pct">
@@ -95,6 +95,7 @@
                     <% end %>
                   </span>  
               </td>
+            </tr>
 
           <% end %>
         </tbody>
