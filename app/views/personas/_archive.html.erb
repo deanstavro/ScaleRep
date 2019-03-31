@@ -32,14 +32,47 @@
                 <td><%= persona[3] %></td>
 
                 <% if current_user.role == "scalerep" %>
-                  <td><%= persona[4] %></td>
+                    <td> 
+                        <% if persona[4] < 1 or persona[2] < 1 %>
+                          0%
+                        <% else %>
+                          <%= number_to_percentage(persona[4] / persona[2].to_f * 100, precision:1) %> 
+                        <% end %>
+
+                        <span class="pct">
+                          (<%= persona[4] %>)
+                        </span>
+                    </td>
+                  
+
                 <% end %>
 
                 <td><%= persona[6] %></td>
 
-                <td><%= persona[7] %></td>
+                <td>
+                    <% if persona[7] < 1 or persona[2] < 1 %>
+                      0%
+                    <% else %>
+                      <%= number_to_percentage(persona[7] / persona[2].to_f * 100, precision:1) %>
+                              
+                    <% end %>
+                    <span class="pct">
+                      (<%= persona[7] %>)
+                    </span>
+                </td>
 
-                <td><%= persona[5] %></td>
+                <td>
+                  <% if persona[5] < 1 or persona[2] < 1 %>
+                    0%
+                  <% else %>
+                    <%= number_to_percentage(persona[5] / (persona[2] - persona[4]).to_f * 100, precision:1) %>
+                    
+                  <% end %>
+                  <span class="pct">
+                    (<%= persona[5] %>)
+                  </span>
+                  
+                </td>
 
                 <td> <%= persona[1] %></td>
 
