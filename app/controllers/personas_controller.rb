@@ -21,9 +21,17 @@ class PersonasController < ApplicationController
         @personas = @company.personas.order('created_at DESC')
         @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
         @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
-
         #Get aggregates statistics for persona's campaigns
         @metrics_hash = getCampaignMetrics(@personas)
+
+
+        @current2 = @personas.where("archive =?", false)
+        @archive2 = @personas.where("archive =?", true)
+        
+
+        @current_sorted_metrics_array =  getPersonaMetrics(@current2).sort { |a, b| b[1] <=> a[1] }
+        @archive_sorted_metrics_array = getPersonaMetrics(@archive2).sort { |a, b| b[1] <=> a[1] }
+
     end
 
 
@@ -179,6 +187,25 @@ class PersonasController < ApplicationController
         end
 
         return metrics_hash
+    end
+
+
+    def getPersonaMetrics(personas)
+        personas_array = []
+        personas.each_with_index do |persona, index|
+            persona_array = [persona.id, persona.leads.handed_off.count + persona.leads.handed_off_with_questions.count, persona.leads.count, 0, 0, 0, 0, 0, persona.name ]
+
+            persona.campaigns.each do |campaign|
+                persona_array[3] += campaign.deliveriesCount
+                persona_array[4] += campaign.bouncesCount
+                persona_array[5] += campaign.repliesCount
+                persona_array[6] += campaign.opensCount
+                persona_array[7] += campaign.uniqueOpens
+            end
+
+            personas_array << persona_array
+        end
+        return personas_array
     end
 
 
