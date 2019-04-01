@@ -25,37 +25,30 @@
 
                 <td><%= persona[3] %></td>
 
-                <td><%= persona[6] %></td>
+                <td>
+                    <% if persona[2] > 0 and persona[6] > 0 %>
+                      <%= number_to_percentage(persona[6] / (persona[2]).to_f * 100, precision:1) %>
+                    <% else %>
+                      0%
+                    <% end%>
 
-                <td><%= persona[5] %></td>
+                    <span class="pct">
+                        (<%= persona[6] %>)
+                    </span>
+                </td>
 
-                <%  if false %>
 
-                    <td>
-                        <% if persona[7] < 1 or persona[2] < 1 %>
-                          0%
-                        <% else %>
-                          <%= number_to_percentage(persona[7] / (persona[2] - persona[4]).to_f * 100, precision:1) %>
-                                  
-                        <% end %>
-                        <span class="pct">
-                          (<%= persona[7] %>)
-                        </span>
-                    </td>
+                <td>
+                  <% if persona[2] > 0 and persona[5] > 0 %>
+                      <%= number_to_percentage(persona[5] / (persona[2]).to_f * 100, precision:1) %>
+                    <% else %>
+                      0%
+                    <% end%>
 
-                    <td>
-                      <% if persona[5] < 1 or persona[2] < 1 %>
-                        0%
-                      <% else %>
-                        <%= number_to_percentage(persona[5] / (persona[2] - persona[4]).to_f * 100, precision:1) %>
-                        
-                      <% end %>
-                      <span class="pct">
+                    <span class="pct">
                         (<%= persona[5] %>)
-                      </span>
-                      
-                    </td>
-                <% end %>
+                    </span>
+                </td>
 
                 <td> <%= persona[1] %></td>
 

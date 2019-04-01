@@ -151,11 +151,9 @@ class PersonasController < ApplicationController
 
         personas_array = []
         personas.each_with_index do |persona, index|
-
             # Get leads in the group
             lead_group_leads = persona.leads
             persona_array = [persona.id, lead_group_leads.handed_off.count + lead_group_leads.handed_off_with_questions.count, lead_group_leads.count, 0, 0, 0, 0, 0, persona.name ]
-
             # Find all Leads that have been contacted (or have a touchpoints associated with them)
             persona_array[3] = lead_group_leads.where('id IN (SELECT DISTINCT(lead_id) FROM touchpoints)').count
             #Total Touchpoints
