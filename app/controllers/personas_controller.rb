@@ -7,9 +7,7 @@ class PersonasController < ApplicationController
     def index        
         
         #If admin, set client_companies chooser
-        if is_scalerep_admin
-            @client_companies = scalerep_director_client_company() 
-        end
+        [@client_companies = scalerep_director_client_company()] if is_scalerep_admin
 
         #  If admin and company param exists, show company param's groups
         if is_scalerep_admin and params.has_key?(:client_company)
@@ -157,12 +155,18 @@ class PersonasController < ApplicationController
         personas.each_with_index do |persona, index|
             persona_array = [persona.id, persona.leads.handed_off.count + persona.leads.handed_off_with_questions.count, persona.leads.count, 0, 0, 0, 0, 0, persona.name ]
 
-            for lead in persona.leads
+            # Find all Leads that have been contacted (or have a touchpoints associated with them)
+            persona_array[3] = persona.leads.where('id IN (SELECT DISTINCT(lead_id) FROM touchpoints)').count
+
+            
+            #User.joins(:account).merge(Account.where(:active => true))
+            #.where(client_company_id: @company.id, status: "interested")
+            #for lead in persona.leads
                 #persona_array[3] += lead.touchpoints.count
                 #persona_array[5] += lead.lead_actions.where(action: "reply").count
                 #persona_array[5] += lead.lead_actions.where(action: "open").count
                 #[persona_array[7] += 1 ] if lead.lead_actions.where(action: "open").exists?
-            end
+            #end
 
             personas_array << persona_array
         end
