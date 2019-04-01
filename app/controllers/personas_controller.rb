@@ -22,7 +22,6 @@ class PersonasController < ApplicationController
 
         @current_sorted_metrics_array =  getPersonaMetrics(@current2).sort { |a, b| b[1] <=> a[1] }.paginate(:page => params[:page], :per_page => 20)
         @archive_sorted_metrics_array = getPersonaMetrics(@archive2).sort { |a, b| b[1] <=> a[1] }.paginate(:page => params[:page], :per_page => 20)
-
     end
 
 
@@ -148,28 +147,23 @@ class PersonasController < ApplicationController
       end
     end
 
-
     def getPersonaMetrics(personas)
 
         personas_array = []
         personas.each_with_index do |persona, index|
-            persona_array = [persona.id, persona.leads.handed_off.count + persona.leads.handed_off_with_questions.count, persona.leads.count, 0, 0, 0, 0, 0, persona.name ]
+
+            # Get leads in the group
+            lead_group_leads = persona.leads
+            persona_array = [persona.id, lead_group_leads.handed_off.count + lead_group_leads.handed_off_with_questions.count, lead_group_leads.count, 0, 0, 0, 0, 0, persona.name ]
 
             # Find all Leads that have been contacted (or have a touchpoints associated with them)
-            persona_array[3] = persona.leads.where('id IN (SELECT DISTINCT(lead_id) FROM touchpoints)').count
-
-            # Find all unique Leads that have engaged (leads that have opened)
-            persona_array[6] = persona.leads.where('id IN (SELECT DISTINCT(lead_id) FROM lead_actions)').count
-            # Find all leads that have responded (leads that have replied)
-            puts persona_array[6].to_s
-            #User.joins(:account).merge(Account.where(:active => true))
-            #.where(client_company_id: @company.id, status: "interested")
-            #for lead in persona.leads
-                #persona_array[3] += lead.touchpoints.count
-                #persona_array[5] += lead.lead_actions.where(action: "reply").count
-                #persona_array[6] += lead.lead_actions.where(action: "open").count
-                #[persona_array[7] += 1 ] if lead.lead_actions.where(action: "open").exists?
-            #end
+            persona_array[3] = lead_group_leads.where('id IN (SELECT DISTINCT(lead_id) FROM touchpoints)').count
+            #Total Touchpoints
+            #persona_array[4] = lead_group_leads.joins(:touchpoints).count
+            # Find number of leads Leads that have engaged (leads that have opened)
+            persona_array[6] = lead_group_leads.where('id IN (SELECT DISTINCT(lead_id) FROM lead_actions)').count
+            # Find number of leads who have replied
+            persona_array[5] = LeadAction.where(lead: lead_group_leads, action: "reply").select(:lead_id).map(&:lead_id).uniq.count
 
             personas_array << persona_array
         end
@@ -184,9 +178,5 @@ class PersonasController < ApplicationController
     def sort_direction
         %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
-
-
-    
-
 
 end
