@@ -10,9 +10,6 @@
             <th>group</th>
             <th>leads</th>
             <th>touchpoints</th>
-            <th>views</th>
-            <th>unique opens</th>
-            <th>replies</th>
             <th>CQLs</th>
             <th></th>
           </tr>
@@ -29,32 +26,35 @@
 
                 <td><%= persona[3] %></td>
 
-                <td><%= persona[6] %></td>
+                <% if false %>
+                  <td><%= persona[6] %></td>
 
-                <td>
-                    <% if persona[7] < 1 or persona[2] < 1 %>
-                      0%
-                    <% else %>
-                      <%= number_to_percentage(persona[7] / (persona[2] - persona[4]).to_f * 100, precision:1) %>
-                              
-                    <% end %>
-                    <span class="pct">
-                      (<%= persona[7] %>)
-                    </span>
-                </td>
+                
+                    <td>
+                        <% if persona[7] < 1 or persona[2] < 1 %>
+                          0%
+                        <% else %>
+                          <%= number_to_percentage(persona[7] / (persona[2] - persona[4]).to_f * 100, precision:1) %>
+                                  
+                        <% end %>
+                        <span class="pct">
+                          (<%= persona[7] %>)
+                        </span>
+                    </td>
 
-                <td>
-                  <% if persona[5] < 1 or persona[2] < 1 %>
-                    0%
-                  <% else %>
-                    <%= number_to_percentage(persona[5] / (persona[2] - persona[4]).to_f * 100, precision:1) %>
-                    
-                  <% end %>
-                  <span class="pct">
-                    (<%= persona[5] %>)
-                  </span>
-                  
-                </td>
+                    <td>
+                      <% if persona[5] < 1 or persona[2] < 1 %>
+                        0%
+                      <% else %>
+                        <%= number_to_percentage(persona[5] / (persona[2] - persona[4]).to_f * 100, precision:1) %>
+                        
+                      <% end %>
+                      <span class="pct">
+                        (<%= persona[5] %>)
+                      </span>
+                      
+                    </td>
+                <% end %>
 
                 <td> <%= persona[1] %></td>
 

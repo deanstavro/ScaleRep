@@ -159,9 +159,9 @@ class PersonasController < ApplicationController
 
             for lead in persona.leads
                 persona_array[3] += lead.touchpoints.count
-                persona_array[5] += lead.lead_actions.where(action: "reply").count
-                persona_array[5] += lead.lead_actions.where(action: "open").count
-                [persona_array[7] += 1 ] if lead.lead_actions.where(action: "open").exists?
+                #persona_array[5] += lead.lead_actions.where(action: "reply").count
+                #persona_array[5] += lead.lead_actions.where(action: "open").count
+                #[persona_array[7] += 1 ] if lead.lead_actions.where(action: "open").exists?
             end
 
             personas_array << persona_array
