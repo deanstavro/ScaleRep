@@ -158,7 +158,7 @@ class PersonasController < ApplicationController
             persona_array = [persona.id, persona.leads.handed_off.count + persona.leads.handed_off_with_questions.count, persona.leads.count, 0, 0, 0, 0, 0, persona.name ]
 
             for lead in persona.leads
-                persona_array[3] += lead.touchpoints.count
+                #persona_array[3] += lead.touchpoints.count
                 #persona_array[5] += lead.lead_actions.where(action: "reply").count
                 #persona_array[5] += lead.lead_actions.where(action: "open").count
                 #[persona_array[7] += 1 ] if lead.lead_actions.where(action: "open").exists?
