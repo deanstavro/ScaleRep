@@ -19,18 +19,11 @@ class PersonasController < ApplicationController
         end
 
         @personas = @company.personas.order('created_at DESC')
-        @current = @personas.where("archive =?", false).paginate(:page => params[:page], :per_page => 20)
-        @archive = @personas.where("archive =?", true).paginate(:page => params[:page], :per_page => 20)
-        #Get aggregates statistics for persona's campaigns
-        @metrics_hash = getCampaignMetrics(@personas)
-
-
         @current2 = @personas.where("archive =?", false)
-        @archive2 = @personas.where("archive =?", true)
-        
+        @archive2 = @personas.where("archive =?", true) 
 
-        @current_sorted_metrics_array =  getPersonaMetrics(@current2).sort { |a, b| b[1] <=> a[1] }
-        @archive_sorted_metrics_array = getPersonaMetrics(@archive2).sort { |a, b| b[1] <=> a[1] }
+        @current_sorted_metrics_array =  getPersonaMetrics(@current2).sort { |a, b| b[1] <=> a[1] }.paginate(:page => params[:page], :per_page => 20)
+        @archive_sorted_metrics_array = getPersonaMetrics(@archive2).sort { |a, b| b[1] <=> a[1] }.paginate(:page => params[:page], :per_page => 20)
 
     end
 
@@ -157,50 +150,18 @@ class PersonasController < ApplicationController
       end
     end
 
-    def getCampaignMetrics(personas)
-
-        #define metrics_hash, an aggregate of all persona metrics
-        metrics_hash = Hash.new
-        
-        #loop through personas
-        personas.each do |persona|
-            
-            cql_count = persona.leads.handed_off.count + persona.leads.handed_off_with_questions.count
-            #loop through campaigns in each persona
-            persona.campaigns.each do |campaign|
-                array = [cql_count,campaign.peopleCount, campaign.deliveriesCount, campaign.bouncesCount, campaign.repliesCount, campaign.opensCount, campaign.uniqueOpens]
-                
-                # if lead group metrics is not empty, aggregate
-                if metrics_hash[persona]
-                    
-                    metrics_hash[persona][1] += array[1].to_i
-                    metrics_hash[persona][2] += array[2].to_i
-                    metrics_hash[persona][3] += array[3].to_i
-                    metrics_hash[persona][4] += array[4].to_i
-                    metrics_hash[persona][5] += array[5].to_i
-                    metrics_hash[persona][6] += array[6].to_i
-                else
-                    metrics_hash[persona] = array
-                end
-            end
-
-        end
-
-        return metrics_hash
-    end
-
 
     def getPersonaMetrics(personas)
+
         personas_array = []
         personas.each_with_index do |persona, index|
             persona_array = [persona.id, persona.leads.handed_off.count + persona.leads.handed_off_with_questions.count, persona.leads.count, 0, 0, 0, 0, 0, persona.name ]
 
-            persona.campaigns.each do |campaign|
-                persona_array[3] += campaign.deliveriesCount
-                persona_array[4] += campaign.bouncesCount
-                persona_array[5] += campaign.repliesCount
-                persona_array[6] += campaign.opensCount
-                persona_array[7] += campaign.uniqueOpens
+            for lead in persona.leads
+                persona_array[3] += lead.touchpoints.count
+                persona_array[5] += lead.lead_actions.where(action: "reply").count
+                persona_array[5] += lead.lead_actions.where(action: "open").count
+                [persona_array[7] += 1 ] if lead.lead_actions.where(action: "open").exists?
             end
 
             personas_array << persona_array

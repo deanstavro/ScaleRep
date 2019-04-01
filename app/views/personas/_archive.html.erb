@@ -1,5 +1,5 @@
 <div class="card-body">
-  <% if @archive.count == 0 %>
+  <% if @archive_sorted_metrics_array.count == 0 %>
     <p> No Archived Lead Groups </p>
   <% else %>
     <div style="overflow: auto;">
@@ -11,9 +11,6 @@
             <th>group</th>
             <th>leads</th>
             <th>touchpoints</th>
-            <% if current_user.role == 'scalerep' %>
-                <th>bounces</th>
-            <% end %>
             <th>views</th>
             <th>unique opens</th>
             <th>replies</th>
@@ -30,22 +27,6 @@
                 <td><%= persona[2] %></td>
 
                 <td><%= persona[3] %></td>
-
-                <% if current_user.role == "scalerep" %>
-                    <td> 
-                        <% if persona[4] < 1 or persona[2] < 1 %>
-                          0%
-                        <% else %>
-                          <%= number_to_percentage(persona[4] / persona[2].to_f * 100, precision:1) %> 
-                        <% end %>
-
-                        <span class="pct">
-                          (<%= persona[4] %>)
-                        </span>
-                    </td>
-                  
-
-                <% end %>
 
                 <td><%= persona[6] %></td>
 
@@ -103,9 +84,9 @@
 
       <div class="digg_pagination">
           <div class="page_info">
-            <%= page_entries_info @archive %>
+            <%= page_entries_info @archive_sorted_metrics_array %>
           </div>
-      <%= will_paginate @archive, :params => { :tab_id => :archive }, :container => false %>
+      <%= will_paginate @archive_sorted_metrics_array, :params => { :tab_id => :archive }, :container => false %>
     </div>
     </div>
   <% end %>
