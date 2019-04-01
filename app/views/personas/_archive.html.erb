@@ -26,8 +26,8 @@
                 <td><%= persona[3] %></td>
 
                 <td>
-                    <% if persona[2] > 0 and persona[6] > 0 %>
-                      <%= number_to_percentage(persona[6] / (persona[2]).to_f * 100, precision:1) %>
+                    <% if persona[3] > 0 and persona[6] > 0 %>
+                      <%= number_to_percentage(persona[6] / (persona[3]).to_f * 100, precision:1) %>
                     <% else %>
                       0%
                     <% end%>
@@ -39,8 +39,8 @@
 
 
                 <td>
-                  <% if persona[2] > 0 and persona[5] > 0 %>
-                      <%= number_to_percentage(persona[5] / (persona[2]).to_f * 100, precision:1) %>
+                  <% if persona[3] > 0 and persona[5] > 0 %>
+                      <%= number_to_percentage(persona[5] / (persona[3]).to_f * 100, precision:1) %>
                     <% else %>
                       0%
                     <% end%>
