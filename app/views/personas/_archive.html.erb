@@ -2,15 +2,14 @@
   <% if @archive_sorted_metrics_array.count == 0 %>
     <p> No Archived Lead Groups </p>
   <% else %>
-    <div style="overflow: auto;">
-
+    <div>
       <table class = " airtable_data table table-hover">
         <thead class = "thead">
           <tr>
-            
             <th>group</th>
             <th>leads</th>
-            <th>leads contacted</th>
+            <th>contacted</th>
+            <th>opened</th>
             <th>CQLs</th>
             <th></th>
           </tr>
@@ -25,12 +24,10 @@
 
                 <td><%= persona[3] %></td>
 
+                <td><%= persona[6] %></td>
+
 
                 <%  if false %>
-                    
-
-               
-                    <td><%= persona[6] %></td>
 
                     <td>
                         <% if persona[7] < 1 or persona[2] < 1 %>
@@ -85,12 +82,14 @@
         </tbody>
       </table>
 
+
       <div class="digg_pagination">
           <div class="page_info">
             <%= page_entries_info @archive_sorted_metrics_array %>
           </div>
-      <%= will_paginate @archive_sorted_metrics_array, :params => { :tab_id => :archive }, :container => false %>
-    </div>
+        <%= will_paginate @archive_sorted_metrics_array, :params => { :tab_id => :archive }, :container => false %>
+      </div>
+
     </div>
   <% end %>
 </div>

@@ -158,13 +158,16 @@ class PersonasController < ApplicationController
             # Find all Leads that have been contacted (or have a touchpoints associated with them)
             persona_array[3] = persona.leads.where('id IN (SELECT DISTINCT(lead_id) FROM touchpoints)').count
 
-            
+            # Find all unique Leads that have engaged (leads that have opened)
+            persona_array[6] = persona.leads.where('id IN (SELECT DISTINCT(lead_id) FROM lead_actions)').count
+            # Find all leads that have responded (leads that have replied)
+            puts persona_array[6].to_s
             #User.joins(:account).merge(Account.where(:active => true))
             #.where(client_company_id: @company.id, status: "interested")
             #for lead in persona.leads
                 #persona_array[3] += lead.touchpoints.count
                 #persona_array[5] += lead.lead_actions.where(action: "reply").count
-                #persona_array[5] += lead.lead_actions.where(action: "open").count
+                #persona_array[6] += lead.lead_actions.where(action: "open").count
                 #[persona_array[7] += 1 ] if lead.lead_actions.where(action: "open").exists?
             #end
 

@@ -5,17 +5,15 @@
     <div>
       <table class = " airtable_data table table-hover">
         <thead class = "thead">
-          <tr>
-            
+          <tr> 
             <th>group</th>
             <th>leads</th>
-            <th>leads contacted</th>
+            <th>contacted</th>
+            <th>opened</th>
             <th>CQLs</th>
             <th></th>
           </tr>
         </thead>
-
-        
 
         <tbody>
           <% @current_sorted_metrics_array.each do |persona| %>
@@ -26,11 +24,10 @@
 
                 <td><%= persona[3] %></td>
 
-                <% if false %>
-                
-                  <td><%= persona[6] %></td>
+                <td><%= persona[6] %></td>
 
-                
+                <% if false %>
+
                     <td>
                         <% if persona[7] < 1 or persona[2] < 1 %>
                           0%
@@ -82,18 +79,16 @@
 
           <% end %>
         </tbody>
-
-
-
-        
-
       </table>
+
+
       <div class="digg_pagination">
           <div class="page_info">
             <%= page_entries_info @current_sorted_metrics_array %>
           </div>
-      <%= will_paginate @current_sorted_metrics_array, :params => { :tab_id => :current }, :container => false %>
-    </div>
+        <%= will_paginate @current_sorted_metrics_array, :params => { :tab_id => :current }, :container => false %>
+      </div>
+
     </div>
   <% end %>
 </div>
