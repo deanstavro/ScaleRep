@@ -61,65 +61,58 @@
       <% if @meetings_set.count == 0 %>
         <p> No Leads Handed Off </p>
       <% else %>
-        <div style="overflow: auto;">
-          <p style="margin-bottom: 30px;"><i>Leads that are ready to speak to sales, or are ready for a follow-up conversation</i></p>
+        <p style="margin-bottom: 30px;"><i>Leads that are ready to speak to sales or are ready for a follow-up conversation</i></p>
 
-          <table class = " airtable_data table table-hover">
-            <thead class = "thead">
-              <tr>
-                    <th scope = 'col'>Date Sourced</th>
-                    <th scope = 'col'>E-mail</th>
-                    <th scope = 'col'>Name</th>
-                    <th scope = 'col'>Campaign</th>
-                    <th scope = 'col'>Persona</th>
-                    <th scope = 'col'>Status</th>
+        <table class = " airtable_data table table-hover">
+          <thead class = "thead">
+            <tr>
+                  <th scope = 'col'>Date Sourced</th>
+                  <th scope = 'col'>E-mail</th>
+                  <th scope = 'col'>Name</th>
+                  <th scope = 'col'>Persona</th>
+                  <th scope = 'col'>Status</th>
+            </tr>
+          </thead>
+
+          <tbody>
+            <% @meetings_set.each do |lead| %>
+              <tr data-link="<%= lead_path(lead) %>" id="<%= lead.id %>" style="cursor:pointer;">
+
+                <td> <%= lead.date_sourced.strftime("%b %d, %Y") %> </td>
+
+
+                <td> <%= lead.email %> </td>
+
+
+                <% if lead.first_name.present? && lead.last_name.present? %>
+                  <td> <%= lead.first_name + " " + lead.last_name %></td>
+                <% else %>
+                  <td> <%= lead.full_name %></td>
+                <% end %>
+
+                <% if !lead.persona.name.nil? %>
+                  <td><%= lead.persona.name %></td>
+                <% else %>
+                  <% if lead.campaign.persona.nil? %>
+                    </td>N/A</td>
+                  <% else %>
+                    <td><%= lead.campaign.persona.name %></td>
+                  <% end %>
+                <% end %>
+
+                <td> <%= lead.status.to_s %></td>
+
               </tr>
-            </thead>
+            <% end %>
+          </tbody>
 
-            <tbody>
-              <% @meetings_set.each do |lead| %>
-                <tr data-link="<%= lead_path(lead) %>" id="<%= lead.id %>" style="cursor:pointer;">
+        </table>
 
-                  <td> <%= lead.date_sourced.strftime("%b %d, %Y") %> </td>
-
-
-                  <td> <%= lead.email %> </td>
-
-
-                  <% if lead.first_name.present? && lead.last_name.present? %>
-                    <td> <%= lead.first_name + " " + lead.last_name %></td>
-                  <% else %>
-                    <td> <%= lead.full_name %></td>
-                  <% end %>
-
-                  <% if lead.campaign.nil? %>
-                    <td>N/A</td>
-                    <td>N/A</td>
-                  <% else %>
-                    <td><%= lead.campaign.campaign_name %></td>
-
-                    <% if lead.campaign.persona.nil? %>
-                        </tr>N/A</tr>
-                    <% else %>
-                        <td><%= lead.campaign.persona.name %></td>
-                    <% end %>
-                  <% end %>
-
-                  <td> <%= lead.status.to_s %></td>
-                  
-                </tr>
-              <% end %>
-            </tbody>
-
-          </table>
-
-          <div class="digg_pagination">
-              <div class="page_info">
-                <%= page_entries_info @meetings_set %>
-              </div>
-              <%= will_paginate @meetings_set, :params => { :tab_id => "meetings" }, :container => false %>
-          </div>
-
+        <div class="digg_pagination">
+            <div class="page_info">
+              <%= page_entries_info @meetings_set %>
+            </div>
+            <%= will_paginate @meetings_set, :params => { :tab_id => "meetings" }, :container => false %>
         </div>
       <% end %>
 </div>
