@@ -13,7 +13,7 @@
     <% if current_user.role == 'scalerep' %>
         <div>
           <%= form_tag({}, {:method => :get}) do %>
-            <%= label_tag  'select company:' %>      
+            <%= label_tag  'select company:' %>
                   <%= select_tag :client_company, options_for_select(@client_companies, @company.name), :onchange => "this.form.submit();" %>
           <% end %>
         </div>
@@ -26,7 +26,7 @@
 
 <div class="table-display thin_margins border-sf-option">
   <table class="table table-hover template-table">
-    
+
     <thead class="thead">
       <tr>
         <th scope="col">Name</th>
@@ -39,20 +39,20 @@
 
     <tbody>
       <% @templates.each do |template| %>
-        <tr>
-          
-          <td><%= template.title %></td>
+        <tr data-link>
+
+          <td><b><%= template.title %></b></td>
 
           <% if template.subject.empty? %>
-            <td>Re:</td>
+            <td id="subject">Re:</td>
           <% else %>
-            <td><%= template.subject %></td>
+            <td id="subject"><%= template.subject %></td>
           <% end %>
 
           <% if template.body.length > 80 %>
-            <td><%= template.body[0...80] +"..." %></td>
+            <td id="body"><%= template.body[0...80] +"..." %></td>
           <% else %>
-            <td><%= template.body %></td>
+            <td id="body"><%= template.body %></td>
           <% end %>
 
           <td><%= link_to edit_template_path(template) do %>
@@ -70,12 +70,17 @@
       <% end %>
     </tbody>
   </table>
-  
+
   <div class="digg_pagination">
       <div class="page_info">
           <%= page_entries_info @templates %>
       </div>
       <%= will_paginate @templates, :params => { :tab_id => :current }, :container => false %>
   </div>
-  
 </div>
+
+<script>
+  /* $("tr[data-link]").click(function() {
+     alert("<%= @templates[0].body %>");
+  });*/
+</script>

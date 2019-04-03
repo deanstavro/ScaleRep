@@ -12,7 +12,7 @@
     <% if @user.role == 'scalerep' %>
         <div>
           <%= form_tag({}, {:method => :get}) do %>
-            <%= label_tag  'select company:' %>      
+            <%= label_tag  'select company:' %>
                   <%= select_tag :client_company, options_for_select(@client_companies, @company.name), :onchange => "this.form.submit();" %>
           <% end %>
         </div>
@@ -25,7 +25,7 @@
 
 <div class="table-display thin_margins border-sf-option">
   <table class="table table-hover template-table">
-    
+
     <thead class="thead">
       <tr>
         <th scope="col">Name</th>
@@ -39,8 +39,8 @@
     <tbody>
       <% @common_replies.each do |common_reply| %>
         <tr>
-          
-          <td><%= common_reply.name %></td>
+
+          <td><b><%= common_reply.name %></b></td>
 
           <% if common_reply.common_message.length > 80 %>
             <td><%= common_reply.common_message[0...80] +"..." %></td>
@@ -69,13 +69,12 @@
       <% end %>
     </tbody>
   </table>
-  
+
   <div class="digg_pagination">
       <div class="page_info">
           <%= page_entries_info @common_replies %>
       </div>
       <%= will_paginate @common_replies, :params => { :tab_id => :current }, :container => false %>
   </div>
-  
-</div>
 
+</div>
