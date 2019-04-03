@@ -5,7 +5,7 @@
     <div>
       <table class = " airtable_data table table-hover">
         <thead class = "thead">
-          <tr> 
+          <tr>
             <th>group</th>
             <th>leads</th>
             <th>contacted</th>
@@ -50,7 +50,19 @@
                     </span>
                 </td>
 
-                <td> <%= persona[1] %></td>
+                <td> 
+                  <% if persona[3] > 0 and persona[1] > 0 %>
+                    <%= number_to_percentage(persona[1] / (persona[3]).to_f * 100, precision:1) %>
+                  <% else %>
+                    0%
+                  <% end%>
+
+                  <span class="pct">
+                      (<%= persona[1] %>)
+                  </span>
+                </td>
+
+
 
                 <td>
                   <span title="Edit">
@@ -69,7 +81,7 @@
                     <%= link_to client_companies_persona_path(persona), method: :delete, data: { confirm: 'Are you sure?' }  do %>
                       <%= material_icon.delete.md_24.style('color: red;') %>
                     <% end %>
-                  </span>  
+                  </span>
               </td>
             </tr>
 
