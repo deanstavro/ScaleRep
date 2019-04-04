@@ -48,27 +48,9 @@ class LeadsController < ApplicationController
     touchpoints = @lead.touchpoints.select("created_at","channel","email_subject", "email_body", "sender_email").order("created_at desc").paginate(:page => params[:page], :per_page => 20)
     replies = @lead.campaign_replies.select("created_at","last_conversation_subject", "last_conversation_summary").order("created_at desc").paginate(:page => params[:page], :per_page => 20)
 
-    # create array versions of each
-    replies_array = []
-    touchpoints_array = []
-    lead_actions_array = []
+    @lead_history = (lead_actions + touchpoints + replies).sort_by(&:created_at).reverse
 
-    replies.each do |reply|
-      replies_array << [reply.created_at, 'reply','reply', reply.last_conversation_subject, reply.last_conversation_summary]
-    end
-
-    touchpoints.each do |touchpoint|
-      touchpoints_array << [touchpoint.created_at, 'touchpoint', touchpoint.channel, touchpoint.email_subject, touchpoint.email_body]
-    end
-
-    lead_actions.each do |lead_action|
-      lead_actions_array << [lead_action.created_at, 'lead_action', lead_action.action, lead_action.touchpoint.channel, lead_action.touchpoint.email_subject, lead_action.touchpoint.email_body]
-    end
-
-    # sort arrays together
-    actions_replies = mergeArraysReverse(lead_actions_array, replies_array)
-
-    @lead_history_array = mergeArraysReverse(actions_replies, touchpoints_array)
+    puts @lead_history
 
     # sum counts of each type
     @reply_count = replies.count
@@ -280,26 +262,6 @@ class LeadsController < ApplicationController
   def checkUserPrivileges(path, message)
     if !is_scalerep_admin && @lead.client_company != current_user.client_company
       redirect_to metrics_path, notice: message
-    end
-  end
-
-  def mergeArraysReverse(a,b)
-    result = []
-
-    # check to see if either array is empty
-    if a.length == 0
-      return result + b
-    elsif b.length ==0
-      return result + a
-    else
-      # get lower head value
-      if a[0][0].to_datetime > b[0][0].to_datetime
-        result << a.shift
-      else
-        result << b.shift
-      end
-
-      return result + mergeArraysReverse(a, b)
     end
   end
 end

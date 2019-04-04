@@ -20,41 +20,41 @@
   <h2>Lead History</h2>
   <table class = " airtable_data table table-hover">
 
-    <% @lead_history_array.each do |event| %>
+    <% @lead_history.each do |event| %>
       <tr>
         <td>
-          <%= event[0].strftime("%a, %b %d") %><br><span class="small_text"><%= event[0].strftime("%H:%M") %> UTC
+          <%= event.created_at.strftime("%a, %b %d") %><br><span class="small_text"><%= event.created_at.strftime("%H:%M") %> UTC
         </td>
 
         <td>
           <div class="history">
-            <% if event[1] == "touchpoint" %>
-              <p>Sent <b><%= event[2] %></b> to <%= @lead.first_name if @lead.first_name %></p>
-              <% if event[2]=="email" %>
+            <% if event.is_a?(Touchpoint) %>
+              <p>Sent <b><%= event.channel %></b> to <%= @lead.first_name if @lead.first_name %></p>
+              <% if event.channel=="email" %>
                 <div class="card" style="width:50%;">
                   <div class="card-body">
-                    <h6 class="card-title"> <%= event[3] %> </h6>
-                    <p class="card-text"><% if event[4].length > 80 %><%= strip_tags(event[4])[0...80] +"..." %> <% else %> <%=strip_tags(event[4])%><% end %></p>
+                    <h6 class="card-title"> <%= event.email_subject %> </h6>
+                    <p class="card-text"><% if event.email_body.length > 80 %><%= strip_tags(event.email_body)[0...80] +"..." %> <% else %> <%=strip_tags(event.email_body)%><% end %></p>
                   </div>
                 </div>
               <% end %>
 
-            <% elsif event[1] == "reply" %>
+            <% elsif event.is_a?(CampaignReply) %>
                 <p><%= @lead.first_name if @lead.first_name %> <b>Replied</b></p>
-                <% if event[3].present? or event[4].present? %>
+                <% if event.last_conversation_subject.present? or event.last_conversation_summary.present? %>
                   <div class="card" style="width:50%;">
                     <div class="card-body">
-                      <h6 class="card-title"> <%= event[3] %> </h6>
-                      <p class="card-text"><% if event[4].length > 80 %><%= strip_tags(event[4])[0...80] +"..." %> <% else %> <%=strip_tags(event[4])%><% end %></p>
+                      <h6 class="card-title"> <%= event.last_conversation_subject %> </h6>
+                      <p class="card-text"><% if event.last_conversation_summary.length > 80 %><%= strip_tags(event.last_conversation_summary)[0...80] +"..." %> <% else %> <%=strip_tags(event.last_conversation_summary)%><% end %></p>
                     </div>
                   </div>
                 <% end %>
 
             <% else %> <!--lead_action! -->
-              <p><%= event[3] %> was <b>
-                <% if event[2] == "open"%> opened <% elsif event[2] == "bounce" %> bounced <%else %>opted out <% end %></p>
+              <p><%= event.touchpoint.channel %> was <b>
+                <% if event.action == "open"%> opened <% elsif event.action == "bounce" %> bounced <%else %>opted out <% end %></p>
               </b>
-              <span class="small_text"><b><%=event[4] %></b> &nbsp; &nbsp;<% if event[5].length > 80 %><%= strip_tags(event[5])[0...80] +"..." %> <% else %> <%= strip_tags(event[5]) %><% end %></span>
+              <span class="small_text"><b><%=event.touchpoint.email_subject %></b> &nbsp; &nbsp;<% if event.touchpoint.email_body.length > 80 %><%= strip_tags(event.touchpoint.email_body)[0...80] +"..." %> <% else %> <%= strip_tags(event.touchpoint.email_body) %><% end %></span>
             <% end %>
 
           </div>
