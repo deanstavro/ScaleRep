@@ -50,8 +50,6 @@ class LeadsController < ApplicationController
 
     @lead_history = (lead_actions + touchpoints + replies).sort_by(&:created_at).reverse
 
-    puts @lead_history
-
     # sum counts of each type
     @reply_count = replies.count
     @lead_actions_count = lead_actions.count
