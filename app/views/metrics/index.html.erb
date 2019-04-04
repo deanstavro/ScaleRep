@@ -84,20 +84,14 @@
                 <td> <%= lead.email %> </td>
 
 
-                <% if lead.first_name.present? && lead.last_name.present? %>
-                  <td> <%= lead.first_name + " " + lead.last_name %></td>
-                <% else %>
-                  <td> <%= lead.full_name %></td>
+                <% if lead.full_name %>
+                  <td><%= lead.full_name %></td>
                 <% end %>
 
-                <% if !lead.persona.name.nil? %>
+                <% if !lead.persona.present? %>
                   <td><%= lead.persona.name %></td>
                 <% else %>
-                  <% if lead.campaign.persona.nil? %>
-                    </td>N/A</td>
-                  <% else %>
-                    <td><%= lead.campaign.persona.name %></td>
-                  <% end %>
+                  <td>N/A</td>
                 <% end %>
 
                 <td> <%= lead.status.to_s %></td>
