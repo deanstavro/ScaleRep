@@ -1,5 +1,5 @@
 <div class="jumbotron">
-  
+
   <% if flash[:error].present? or flash[:notice].present? %>
       <center>
         <p class="container text-danger"><%= flash[:error] %></p>
@@ -11,167 +11,56 @@
 
   <h1>Lead: <%= @lead.first_name if @lead.first_name %> <%= @lead.last_name if @lead.last_name %></h1>
   <h2> Status: <%= @lead.status %></h2>
+  <br>
+  <h4>Touches: <%= @touchpoints_count %> &nbsp;&nbsp; Actions: <%= @lead_actions_count %> &nbsp;&nbsp; Replies: <%= @reply_count %> </h4>
 </div>
 
 
 <div class="thin_margins">
+  <h2>Lead History</h2>
+  <table class = " airtable_data table table-hover">
 
-  <h2> Replies </h2>
+    <% @lead_history_array.each do |event| %>
+      <tr>
+        <td>
+          <%= event[0].strftime("%a, %b %d") %><br><span class="small_text"><%= event[0].strftime("%H:%M") %> UTC
+        </td>
 
-  <div style="overflow: auto;">
-    <% if @replies.empty? %>
-      <p> No replies </p>
-    <% else %>
-      <table class = " airtable_data table table-hover" id="leads-table">
-        
-        <thead>
-          <tr>
-            <th data-field="state" data-checkbox="true"></th>
-            <th>Date</th>
-            <th>Reply</th>
+        <td>
+          <div class="history">
+            <% if event[1] == "touchpoint" %>
+              <p>Sent <b><%= event[2] %></b> to <%= @lead.first_name if @lead.first_name %></p>
+              <% if event[2]=="email" %>
+                <div class="card" style="width:50%;">
+                  <div class="card-body">
+                    <h6 class="card-title"> <%= event[3] %> </h6>
+                    <p class="card-text"><% if event[4].length > 80 %><%= strip_tags(event[4])[0...80] +"..." %> <% else %> <%=strip_tags(event[4])%><% end %></p>
+                  </div>
+                </div>
+              <% end %>
 
-          </tr>
-        </thead>
-
-        <tbody>
-          <% @replies.each do |campaign_reply| %>
-            <tr id="<%= campaign_reply.id %>" >
-
-                <td>&nbsp;</td> 
-
-                <td> <%= campaign_reply.created_at %> </td>
-                
-                <td> <%= campaign_reply.last_conversation_summary %> </td>
-
-            </tr>
-          <% end %>
-        </tbody>
-
-      </table>
-      
-      <div class="digg_pagination">
-        <div class="page_info">
-          <%= page_entries_info @replies %>
-        </div>
-        <%= will_paginate @replies, :params => { :tab_id => :current }, :container => false %>
-      </div>
-
-    <% end %>
-  </div>
-  
-</div>
-
-
-
-
-
-<div class="thin_margins">
-
-  <h2> Lead Actions </h2>
-
-  <div style="overflow: auto;">
-    <% if @lead_actions.empty? %>
-      <p> No leads action </p>
-    <% else %>
-      <table class = " airtable_data table table-hover" id="leads-table">
-        
-        <thead>
-          <tr>
-            <th data-field="state" data-checkbox="true"></th>
-            <th>Action</th>
-            <th>Date</th>
-            <th>Touchpoint</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <% @lead_actions.each do |lead_action| %>
-            <tr id="<%= lead_action.id %>" >
-
-                <td>&nbsp;</td> 
-
-                <td> <%= lead_action.action %> </td>
-                
-                <td> <%= lead_action.created_at %> </td>
-
-                <% if lead_action.touchpoint.email_body.to_s.length > 80 %>
-                  <td><%= strip_tags(lead_action.touchpoint.email_body)[0...80] +"..." %></td>
-                <% else %>
-                  <td><%= strip_tags(lead_action.touchpoint.email_body) %></td>
+            <% elsif event[1] == "reply" %>
+                <p><%= @lead.first_name if @lead.first_name %> <b>Replied</b></p>
+                <% if event[3].present? or event[4].present? %>
+                  <div class="card" style="width:50%;">
+                    <div class="card-body">
+                      <h6 class="card-title"> <%= event[3] %> </h6>
+                      <p class="card-text"><% if event[4].length > 80 %><%= strip_tags(event[4])[0...80] +"..." %> <% else %> <%=strip_tags(event[4])%><% end %></p>
+                    </div>
+                  </div>
                 <% end %>
 
-            </tr>
-          <% end %>
-        </tbody>
+            <% else %> <!--lead_action! -->
+              <p><%= event[3] %> was <b>
+                <% if event[2] == "open"%> opened <% elsif event[2] == "bounce" %> bounced <%else %>opted out <% end %></p>
+              </b>
+              <span class="small_text"><b><%=event[4] %></b> &nbsp; &nbsp;<% if event[5].length > 80 %><%= strip_tags(event[5])[0...80] +"..." %> <% else %> <%= strip_tags(event[5]) %><% end %></span>
+            <% end %>
 
-      </table>
-      
-      <div class="digg_pagination">
-        <div class="page_info">
-          <%= page_entries_info @lead_actions %>
-        </div>
-        <%= will_paginate @lead_actions, :params => { :tab_id => :current }, :container => false %>
-      </div>
+          </div>
+        </td>
 
+    </tr>
     <% end %>
-  </div>
-  
+  </table>
 </div>
-
-<div class="thin_margins">
-
-  <h2> Sent Touchpoints </h2>
-
-  <div style="overflow: auto;">
-    <% if @touchpoints.empty? %>
-      <p> No touchpoints </p>
-    <% else %>
-      <table class="airtable_data table table-hover">
-        
-        <thead>
-          <tr>
-            <th data-field="state" data-checkbox="true"></th>
-            <th>Date</th>
-            <th>Sender</th>
-            <th>Subject</th>
-            <th>Body</th>
-          </tr>
-        </thead>
-
-        <tbody>
-          <% @touchpoints.each do |touchpoint| %>
-            <tr id="<%= touchpoint.id %>" >
-
-                <td>&nbsp;</td> 
-
-                <td> <%= touchpoint.created_at %> </td>
-                
-                <td> <%= touchpoint.sender_email %> </td>
-
-                <td> <%= touchpoint.email_subject %></td>
-
-                <% if touchpoint.email_body.to_s.length > 80 %>
-                  <td><%= strip_tags(touchpoint.email_body)[0...80] +"..." %></td>
-                <% else %>
-                  <td><%= strip_tags(touchpoint.email_body) %></td>
-                <% end %>
-
-            </tr>
-          <% end %>
-        </tbody>
-
-      </table>
-      
-      <div class="digg_pagination">
-        <div class="page_info">
-          <%= page_entries_info @touchpoints %>
-        </div>
-        <%= will_paginate @touchpoints, :params => { :tab_id => :current }, :container => false %>
-      </div>
-
-    <% end %>
-  </div>
-  
-</div>
-
-

@@ -18,7 +18,7 @@ class LeadsController < ApplicationController
       @auto_reply = CampaignReply.where("follow_up_date is not null").where(status: "auto_reply", pushed_to_reply_campaign: false).order(:follow_up_date)
       @no_auto_reply = CampaignReply.where(follow_up_date: [nil, ""]).where(status: "auto_reply", pushed_to_reply_campaign: false)
       @auto_replies = (@no_auto_reply + @auto_reply).paginate(:page => params[:page], :per_page => 20)
-      
+
       # Show referrals
       @referral    = CampaignReply.where.not(referral_email: [nil, ""]).where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false).order(:follow_up_date)
       @no_referral    = CampaignReply.where(referral_email: [nil, ""]).where(:status => ["referral", "auto_reply_referral"],  pushed_to_reply_campaign: false)
@@ -44,9 +44,37 @@ class LeadsController < ApplicationController
   def show
     @lead = Lead.find_by(id: params[:id])
     checkUserPrivileges(:back, 'You cannot access this Lead')
-    @lead_actions = @lead.lead_actions.paginate(:page => params[:page], :per_page => 20)
-    @touchpoints = @lead.touchpoints.paginate(:page => params[:page], :per_page => 20)
-    @replies = @lead.campaign_replies.paginate(:page => params[:page], :per_page => 20)
+    lead_actions = @lead.lead_actions.where.not(action:['reply']).paginate(:page => params[:page], :per_page => 20)
+    touchpoints = @lead.touchpoints.select("created_at","channel","email_subject", "email_body", "sender_email").order("created_at desc").paginate(:page => params[:page], :per_page => 20)
+    replies = @lead.campaign_replies.select("created_at","last_conversation_subject", "last_conversation_summary").order("created_at desc").paginate(:page => params[:page], :per_page => 20)
+
+    # create array versions of each
+    replies_array = []
+    touchpoints_array = []
+    lead_actions_array = []
+
+    replies.each do |reply|
+      replies_array << [reply.created_at, 'reply','reply', reply.last_conversation_subject, reply.last_conversation_summary]
+    end
+
+    touchpoints.each do |touchpoint|
+      touchpoints_array << [touchpoint.created_at, 'touchpoint', touchpoint.channel, touchpoint.email_subject, touchpoint.email_body]
+    end
+
+    lead_actions.each do |lead_action|
+      lead_actions_array << [lead_action.created_at, 'lead_action', lead_action.action, lead_action.touchpoint.channel, lead_action.touchpoint.email_subject, lead_action.touchpoint.email_body]
+    end
+
+    # sort arrays together
+    actions_replies = mergeArraysReverse(lead_actions_array, replies_array)
+
+    @lead_history_array = mergeArraysReverse(actions_replies, touchpoints_array)
+
+    # sum counts of each type
+    @reply_count = replies.count
+    @lead_actions_count = lead_actions.count
+    @touchpoints_count = touchpoints.count
+
   end
 
 
@@ -64,7 +92,7 @@ class LeadsController < ApplicationController
 
   # POST, Reclean data, and show STEP 3 page, the page rendered after rules and inputted data cleaned
   def update_lead_import
-        
+
         @user = User.find(current_user.id)
         @data_upload = DataUpload.find_by(id: params[:data_upload])
         @cleaned_data_copy = @data_upload.cleaned_data
@@ -80,13 +108,13 @@ class LeadsController < ApplicationController
           @page = params[:page].to_i
         end
 
-        
+
         new_cleaned_hash = []
         row_array = []
         params_copy = params.dup.except(:controller,:action, :commit, :authenticity_token, :data_upload, :utf8, :page, :per_page)
 
         # If edits are being made on the second page and beyond, we must first copy the data
-        
+
         lead_start = ((@page.to_i - 1)*@per_page.to_i) + 1
         lead_end = ((@page.to_i)*@per_page.to_i)
         puts "ON PAGE: " + @page.to_s
@@ -199,7 +227,7 @@ class LeadsController < ApplicationController
         unless (@reply.referral_email.nil? or @reply.referral_email=="") or (@reply.referral_name.nil? or @reply.referral_name == "") or @reply.full_name.nil?
           response = add_referral_contact(@company.referral_campaign_key,@company.referral_campaign_id, @reply)
           puts "push referral reply response: " + response
-          
+
           if response != "did not input into reply"
             @reply.update_attribute(:pushed_to_reply_campaign, !@reply.pushed_to_reply_campaign)
           end
@@ -220,7 +248,7 @@ class LeadsController < ApplicationController
     @reply.update_attribute(:first_name, params[:first_name])
     @reply.update_attribute(:status, params[:status])
 
-    
+
     begin
         # if we move a reply to handed-off/opt-out/not-interested, update lead
         if ["do_not_contact", "opt_out"].include?(params[:status])
@@ -250,10 +278,28 @@ class LeadsController < ApplicationController
   private
 
   def checkUserPrivileges(path, message)
-      if !is_scalerep_admin && @lead.client_company != current_user.client_company
-        redirect_to metrics_path, notice: message
-      end
+    if !is_scalerep_admin && @lead.client_company != current_user.client_company
+      redirect_to metrics_path, notice: message
     end
+  end
 
+  def mergeArraysReverse(a,b)
+    result = []
 
+    # check to see if either array is empty
+    if a.length == 0
+      return result + b
+    elsif b.length ==0
+      return result + a
+    else
+      # get lower head value
+      if a[0][0].to_datetime > b[0][0].to_datetime
+        result << a.shift
+      else
+        result << b.shift
+      end
+
+      return result + mergeArraysReverse(a, b)
+    end
+  end
 end

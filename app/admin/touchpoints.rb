@@ -2,7 +2,7 @@ ActiveAdmin.register Touchpoint do
 # See permitted parameters documentation:
 # https://github.com/activeadmin/activeadmin/blob/master/docs/2-resource-customization.md#setting-up-strong-parameters
 #
-# permit_params :list, :of, :attributes, :on, :model
+permit_params :lead_id, :campaign_id, :client_company_id, :channel, :sender_email, :email_subject, :email_body
 #
 # or
 #

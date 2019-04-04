@@ -6,6 +6,14 @@
   color:blue;
 }
 
+.small_text {
+  color:#777;
+  font-size: 12px;
+}
+
+.card {
+  font-size: 14px;
+}
 .digg_pagination {
   background: white;
   cursor: default;
@@ -15,18 +23,18 @@
     padding: 0.2em 0.5em;
     display: block;
     float: left;
-    margin-right: 1px; }  
+    margin-right: 1px; }
 
 .digg_pagination .disabled {
     color: #999999;
-    border: 1px solid #dddddd; }  
+    border: 1px solid #dddddd; }
 
 .digg_pagination .current {
     font-style: normal;
     font-weight: bold;
     background: #2e6ab1;
     color: white;
-    border: 1px solid #2e6ab1; } 
+    border: 1px solid #2e6ab1; }
 
 .digg_pagination a {
     text-decoration: none;
@@ -34,7 +42,7 @@
     border: 1px solid #9aafe5; }
     .digg_pagination a:hover, .digg_pagination a:focus {
       color: #000033;
-      border-color: #000033; } 
+      border-color: #000033; }
 
 .digg_pagination .page_info {
     color: gray;
@@ -56,7 +64,7 @@
     height: 1%; }
   *:first-child + html .digg_pagination {
     overflow: hidden; }
-   
+
 
 .import-table-settings {
     border: 1px solid black;
@@ -69,7 +77,7 @@
 .td-import-table-settings {
     overflow: hidden;
     vertical-align: middle;
-    white-space: nowrap; 
+    white-space: nowrap;
     text-overflow: ellipsis;
     margin:0;
     padding:0;
