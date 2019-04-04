@@ -51,9 +51,7 @@
 
 </div>
 
-
 <br><br><br><br>
-
 
 <div class="container">
   <h4>Conversation Qualified Leads</h4>
@@ -77,25 +75,19 @@
           <tbody>
             <% @meetings_set.each do |lead| %>
               <tr data-link="<%= lead_path(lead) %>" id="<%= lead.id %>" style="cursor:pointer;">
-
                 <td> <%= lead.date_sourced.strftime("%b %d, %Y") %> </td>
-
 
                 <td> <%= lead.email %> </td>
 
+                <td><%= lead.full_name %></td>
 
-                <% if lead.full_name %>
-                  <td><%= lead.full_name %></td>
-                <% end %>
-
-                <% if !lead.persona.present? %>
+                <% if lead.persona.present? %>
                   <td><%= lead.persona.name %></td>
                 <% else %>
                   <td>N/A</td>
                 <% end %>
 
                 <td> <%= lead.status.to_s %></td>
-
               </tr>
             <% end %>
           </tbody>
