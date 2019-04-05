@@ -3,7 +3,7 @@ class PersonasController < ApplicationController
 
     # GET /personas
     # GET /personas.json
-    def index        
+    def index
         #If admin, set client_companies chooser
         [@client_companies = scalerep_director_client_company()] if is_scalerep_admin
         #  If admin and company param exists, show company param's groups
@@ -12,7 +12,7 @@ class PersonasController < ApplicationController
         else
             @company = current_user.client_company
         end
-        @personas = @company.personas.order('created_at DESC') 
+        @personas = @company.personas.order('created_at DESC')
         #Get list of current, and archived personas with aggregated metrics
         @current_sorted_metrics_array =  getPersonaMetrics(@personas.where("archive =?", false)).sort { |a, b| b[1] <=> a[1] }.paginate(:page => params[:page], :per_page => 20)
         @archive_sorted_metrics_array = getPersonaMetrics(@personas.where("archive =?", true)).sort { |a, b| b[1] <=> a[1] }.paginate(:page => params[:page], :per_page => 20)
@@ -64,8 +64,8 @@ class PersonasController < ApplicationController
 
         if params[:search]
             @leads = @persona.leads.where('last_name LIKE ? OR first_name LIKE ? OR company_name LIKE ? OR email LIKE ?',"%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%").order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
-        elsif params[:leadstatus]
-            @leads = @persona.leads.where(status: params[:leadstatus]).order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50) 
+        elsif params[:leadstatus] and !params[:leadstatus].empty?
+            @leads = @persona.leads.where(status: params[:leadstatus]).order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
         else
             @leads = @persona.leads.order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
         end
@@ -96,7 +96,7 @@ class PersonasController < ApplicationController
         redirect_to client_companies_personas_path
     end
 
-    
+
     # DELETE /personas/1
     # DELETE /personas/1.json
     def destroy
@@ -159,7 +159,7 @@ class PersonasController < ApplicationController
     def sort_column
         Lead.column_names.include?(params[:sort]) ? params[:sort] : "full_name"
     end
-  
+
     def sort_direction
         %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end

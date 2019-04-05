@@ -1,5 +1,5 @@
 <div class="jumbotron">
-    
+
     <% if flash[:error].present? or flash[:notice].present? %>
         <center>
             <p class="container text-danger"><%= flash[:error] %></p>
@@ -8,76 +8,31 @@
     <% end %>
     <br>
 
-    <h1>Lead Group</h1>
-    <h2> <%= @persona.name %> </h2>
+    <h1> <%= @persona.name %> </h1>
+    <h2>Lead Group</h2>
+    <br/>
     <br>
     <%= link_to 'View Campaigns', client_companies_campaigns_path(@persona), :class=>"" %>
 </div>
 
-<div class="card-body">
-  
-  <div class="row">
+<div class="thin_margins">
+  <div class="controls">
       <div>
           <%= form_tag(client_companies_persona_path(@persona), method: :get) do %>
-            <%= text_field_tag(:search) %>
-            <%= submit_tag ("Search"), :class=>"btn btn-primary" %>
+            <%= text_field_tag 'search', nil, placeholder:"  name, email, or company", size:40  %>
+            <%= submit_tag ("Search"), :class=>"btn-sm btn-primary"%>
           <% end %>
           <br>
       </div>
 
-      <div style="margin-left:auto;">
+      <div>
         <%= form_tag(client_companies_persona_path(@persona), method: :get) do %>
-          <%= label_tag  'select status:' %>      
-          <%= select_tag :leadstatus, options_for_select(@dropdown),:include_blank => 'choose status', :onchange => "this.form.submit();" %>
+          <%= select_tag :leadstatus, options_for_select(@dropdown),:include_blank => 'All Statuses', prompt: "Filter by Status", :onchange => "this.form.submit();" %>
         <% end %>
       </div>
-</div>
+  </div>
 
-  <% if @leads.nil? or @leads.empty? %>
-      <p> No leads in this group </p>
-  <% else %>
-
-    <table class = " airtable_data table table-hover">
-      <thead>
-        <tr>
-          <th><%= sortable "full_name" %></th>
-          <th><%= sortable "company_name" %></th>
-          <th><%= sortable "status" %></th>
-          <th>emails sent</th>
-          <th>email opens</th>
-          <th>connected with?</th>
-          
-        </tr>
-      </thead>
-
-      <tbody>
-        <% @leads.each do |lead| %>
-          <tr data-link="<%= lead_path(lead) %>" id="<%= lead.id %>" style="cursor:pointer;" >
-              <td><%= lead.full_name %></td>
-              <td><%= lead.company_name %> </td>
-              <td><%= lead.status %></td>
-              <td><%= lead.touchpoints.count%></td>
-              <td><%= lead.lead_actions.where(action: "open").count %></td>
-              <% if lead.lead_actions.where(action: "reply").count > 0 %>
-                <td><%= image_tag "yes-circle.png", :class => "yes-circle" %></td>
-              <% else %>
-                <td><%= image_tag "no-circle.png", :class => "yes-circle" %></td>
-              <% end %>
-
-          </tr>
-        <% end %>
-      </tbody>
-
-    </table>
-    
-    <div class="digg_pagination">
-      <div class="page_info">
-        <%= page_entries_info @leads %>
-      </div>
-      <%= will_paginate @leads, :params => { :tab_id => :current }, :container => false %>
-    </div>
-
-  <% end %>
+  <%= render '/layouts/leads_table' %>
 </div>
 
 
@@ -86,7 +41,3 @@
   window.location = $(this).data("link")
 })
 </script>
-
-
-
-
