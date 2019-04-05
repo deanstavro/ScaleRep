@@ -1,6 +1,10 @@
 
 <nav class="navbar navbar-expand-lg navbar-light" style="margin-bottom:0px;">
-  <a class="navbar-brand" href="https://scalerep.com">ScaleRep</a><span style="color:#777;font-size:12px;">We &hearts; <%= current_user.client_company.name %>!</span>
+    <a class="navbar-brand" href="https://scalerep.com">ScaleRep</a>
+    <% if user_signed_in? %>
+      <span style="color:#777;font-size:12px;">We &hearts; <%= current_user.client_company.name %>!</span>
+    <% end %>
+  
   <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
     <span class="navbar-toggler-icon"></span>
   </button>

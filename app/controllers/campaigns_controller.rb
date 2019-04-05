@@ -104,13 +104,13 @@ class CampaignsController < ApplicationController
     # Check if regular user is trying to access persona show page with id that doesn't belong to them.
     def wrong_persona(persona, company)
         begin
-            if persona.client_company != company
-              return true
-            else
-              return false
-            end
-        rescue
+          if persona.client_company != company
             return true
+          else
+            return false
+          end
+        rescue
+          return true
         end
     end
 

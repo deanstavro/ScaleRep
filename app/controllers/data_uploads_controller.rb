@@ -120,39 +120,25 @@ class DataUploadsController < ApplicationController
   # Redirects to leads#import for clean options
   def campaign_data
     # User account we are logged into
-    user = User.find(current_user.id)
     persona = Persona.find_by(id: params[:persona].to_i)
     campaign = Campaign.find_by(id: params[:campaign].to_i)
     company = campaign.client_company
     leads = Lead.where(client_company: company)
-    col =  Lead.column_names - %w{id client_company_id campaign_id account_id}
-    # Column Names
-    # ["decision_maker", "internal_notes", "email_in_contact_with", "date_sourced", "created_at", "updated_at", "contract_sent", "contract_amount", "timeline", "project_scope", "email_handed_off_too", "meeting_time", "email", "first_name", "last_name", "hunter_score", "hunter_date", "title", "phone_type", "phone_number", "city", "state", "country", "linkedin", "timezone", "address", "meeting_taken", "full_name", "status", "company_name", "company_website"]
-    begin
-        if (params[:file].content_type).to_s == 'text/csv'
-          if (params[:file].size).to_i < 1000000
-            upload_message, uploaded_data = DataUpload.campaign_data_upload(params[:file], company, campaign, col, user)
-            puts "Finished uploading. Redirecting!"
-            # If error in upload (because of duplicate columns, or columns missing)
-            if uploaded_data.nil?
-              redirect_to client_companies_campaigns_path(persona), :flash => { :error => upload_message }
-              return
-            else
-              flash[:notice] = upload_message
-              redirect_to edit_data_upload_path(uploaded_data.id)
-            end
-          else
+    lead_columns =  Lead.column_names - %w{id client_company_id campaign_id account_id}
 
-            redirect_to client_companies_campaigns_path(persona), :flash => { :error => "The CSV is too large. Please upload a shorter CSV!" }
-            return
-          end
-        else
-          redirect_to client_companies_campaigns_path(persona), :flash => { :error => "The file was not uploaded. Please Upload a CSV!" }
-          return
-        end
-    rescue
-        redirect_to client_companies_campaigns_path(persona), :flash => { :error => "No file chosen. Please upload a CSV!" }
+    can_upload, message = DataUpload.pass_upload_requirements(params[:file])
+
+    if can_upload
+      upload_message, uploaded_data = DataUpload.campaign_data_upload(params[:file], company, campaign, lead_columns, current_user)
+      if uploaded_data.nil?
+        redirect_to client_companies_campaigns_path(persona), :flash => { :error => upload_message }
         return
+      else
+        flash[:notice] = upload_message
+        redirect_to edit_data_upload_path(uploaded_data.id)
+      end
+    else
+      redirect_to client_companies_campaigns_path(persona), :flash => { :error => message }
     end
   end
 

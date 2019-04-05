@@ -4,6 +4,18 @@ class DataUpload < ApplicationRecord
   belongs_to :user
   serialize :rules, Array
 
+  def self.pass_upload_requirements(file)
+  	# Defined Rules for File Upload
+  	if file.nil?
+  		return false, "CSV file not included - please include CSV"
+  	elsif file.content_type.to_s != 'text/csv'
+  		return false, "The file is not a CSV"
+  	elsif file.size.to_i > 1000000
+  		return false, "CSV file is too large. Please upload a shorter CSV"
+  	else
+  		return true, "Success"
+  	end
+  end
 
   # Loops through a file. Checks if first_name and email are present
   # Save Data_Upload object with data as a hash
