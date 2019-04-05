@@ -10,8 +10,20 @@
   <br>
 
   <h1>Lead: <%= @lead.first_name if @lead.first_name %> <%= @lead.last_name if @lead.last_name %></h1>
-  <h2> Status: <%= @lead.status %></h2>
-  <br>
+  <h4>
+    <% if @lead.title.present? and @lead.company_name.present? %>
+      <%= @lead.title %> at <%= @lead.company_name %>
+    <% elsif @lead.company_name %>
+      <%= @lead.company_name %>
+    <% else %>
+      <%= @lead.title %>
+    <% end %>
+  </h4>
+  <h5> <%= @lead.email %> </h5>
+
+  <br/><br/>
+
+  <h4> Status: <%= @lead.status %></h4>
   <h4>Touches: <%= @touchpoints_count %> &nbsp;&nbsp; Actions: <%= @lead_actions_count %> &nbsp;&nbsp; Replies: <%= @reply_count %> </h4>
 </div>
 
