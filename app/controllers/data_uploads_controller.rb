@@ -129,7 +129,8 @@ class DataUploadsController < ApplicationController
     can_upload, message = DataUpload.pass_upload_requirements(params[:file])
 
     if can_upload
-      upload_message, uploaded_data = DataUpload.campaign_data_upload(params[:file], company, campaign, lead_columns, current_user)
+
+      upload_message, uploaded_data = DataUpload.upload_data(params[:file], company, campaign, lead_columns, current_user)
       if uploaded_data.nil?
         redirect_to client_companies_campaigns_path(persona), :flash => { :error => upload_message }
         return

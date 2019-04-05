@@ -19,7 +19,7 @@ class DataUpload < ApplicationRecord
 
   # Loops through a file. Checks if first_name and email are present
   # Save Data_Upload object with data as a hash
-  def self.campaign_data_upload(file, company, campaign, column_names, user)
+  def self.upload_data(file, company, campaign, column_names, user)
 		puts "Starting lead import to campaign"
 		
 		lines = CSV.open(file.path).readlines
@@ -76,11 +76,7 @@ class DataUpload < ApplicationRecord
   			puts JSON.pretty_generate(data_ob)
   			data = data_ob
 		end
-
 		new_data_upload = DataUpload.create(client_company: company, campaign: campaign, user: user, data: data, count: count, headers: keys_array.to_s)
-		
 		return count.to_s + " records uploaded. Columns " + keys_array.to_s + " included.", new_data_upload
-
 	end
-
 end
