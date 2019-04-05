@@ -38,22 +38,6 @@ class DataUploadsController < ApplicationController
   end
 
 
-  # GET /data_uploads/show_data_list - Shows Upload Data Lists (Imported, Not Imported, CRM Dups, Cleaned, Uploaded)
-  def show_data_list
-    @user = User.find(current_user.id)
-    @data_upload = DataUpload.find_by(id: params[:id])
-    @headers = @data_upload.data[0].keys
-    @campaign = @data_upload.campaign
-    @client_company = @campaign.client_company
-    
-    @list_name = params[:list]
-    @list_unpa = @data_upload.method(params[:list]).call
-    @list_unpa.each_with_index do |record, index|
-      @list_unpa[index] = record.slice(*@headers)
-    end
-    @list = @list_unpa.paginate(:page => params[:page], :per_page => 100)
-  end
-
   # GET /data_uploads/new
   def new
     @data_upload = DataUpload.new
@@ -67,19 +51,27 @@ class DataUploadsController < ApplicationController
     @headers = @data_upload.headers.tr('[]"', '').split(',').map(&:to_s)
   end
 
-  # POST /data_uploads
-  # POST /data_uploads.json
+  # CSV upload initiated by user on the campaign
+  # Uploads CSV, and created a DataUpload object.
+  # Redirects to leads#import for clean options
   def create
-    @data_upload = DataUpload.new(data_upload_params)
-
-    respond_to do |format|
-      if @data_upload.save
-        format.html { redirect_to @data_upload, notice: 'Data upload was successfully created.' }
-        format.json { render :show, status: :created, location: @data_upload }
+    # User account we are logged into
+    persona = Persona.find_by(id: params[:persona].to_i)
+    campaign = Campaign.find_by(id: params[:campaign].to_i)
+    leads = Lead.where(client_company: campaign.client_company)
+    lead_columns =  Lead.column_names - %w{id client_company_id campaign_id account_id}
+    # Check Data Upload Requirements
+    can_upload, message = DataUpload.pass_upload_requirements(params[:file])
+    if can_upload
+      upload_message, uploaded_data = DataUpload.upload_data(params[:file], campaign.client_company, campaign, lead_columns, current_user)
+      if uploaded_data.nil?
+        redirect_to client_companies_campaigns_path(persona), :flash => { :error => upload_message }
       else
-        format.html { render :new }
-        format.json { render json: @data_upload.errors, status: :unprocessable_entity }
+        flash[:notice] = upload_message
+        redirect_to edit_data_upload_path(uploaded_data.id)
       end
+    else
+      redirect_to client_companies_campaigns_path(persona), :flash => { :error => message }
     end
   end
 
@@ -113,36 +105,21 @@ class DataUploadsController < ApplicationController
     end
   end
 
-
-
-  # CSV upload initiated by user on the campaign
-  # Uploads CSV, and created a DataUpload object.
-  # Redirects to leads#import for clean options
-  def campaign_data
-    # User account we are logged into
-    persona = Persona.find_by(id: params[:persona].to_i)
-    campaign = Campaign.find_by(id: params[:campaign].to_i)
-    company = campaign.client_company
-    leads = Lead.where(client_company: company)
-    lead_columns =  Lead.column_names - %w{id client_company_id campaign_id account_id}
-
-    can_upload, message = DataUpload.pass_upload_requirements(params[:file])
-
-    if can_upload
-
-      upload_message, uploaded_data = DataUpload.upload_data(params[:file], company, campaign, lead_columns, current_user)
-      if uploaded_data.nil?
-        redirect_to client_companies_campaigns_path(persona), :flash => { :error => upload_message }
-        return
-      else
-        flash[:notice] = upload_message
-        redirect_to edit_data_upload_path(uploaded_data.id)
-      end
-    else
-      redirect_to client_companies_campaigns_path(persona), :flash => { :error => message }
+  # GET /data_uploads/show_data_list - Shows Upload Data Lists (Imported, Not Imported, CRM Dups, Cleaned, Uploaded)
+  def show_data_list
+    @user = User.find(current_user.id)
+    @data_upload = DataUpload.find_by(id: params[:id])
+    @headers = @data_upload.data[0].keys
+    @campaign = @data_upload.campaign
+    @client_company = @campaign.client_company
+    
+    @list_name = params[:list]
+    @list_unpa = @data_upload.method(params[:list]).call
+    @list_unpa.each_with_index do |record, index|
+      @list_unpa[index] = record.slice(*@headers)
     end
+    @list = @list_unpa.paginate(:page => params[:page], :per_page => 100)
   end
-
 
   private
     

@@ -6,7 +6,6 @@
       <tr>
         <th>Start Date</th>
         <th>Campaign</th>
-        <th>Add Leads <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="a"></i></th>
         <th>email Account</th>
         <th>People</th>
         <th>Delivered</th>
@@ -25,18 +24,6 @@
 
           <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
           <td><%= link_to "#{campaign.campaign_name}", client_companies_campaign_path(campaign.id) %></td>
-
-          <td>
-            <%= form_tag campaign_data_data_uploads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true, class:"shorter-column" do %>
-              <div class= "fileUpload btn btn-sm btn-light">
-                  <span id="uploadPath">upload csv</span>
-                  <%= file_field_tag :file, class:"upload uploadBtn", accept: 'text/csv' %>
-              </div>
-              <br/>
-              <%= submit_tag "Submit", class: "btn btn-sm btn-outline-primary"%>
-            <% end %>
-          </td>
-
           <td><%= campaign.emailAccount %></td>
           <td><%= campaign.peopleCount %></td>
           <td><%= campaign.deliveriesCount %></td> 
@@ -49,7 +36,6 @@
           <td>
                 <%= campaign.repliesCount %>  
           </td>
-          
           <% if current_user.role == 'scalerep' %>
               <td>
                 <%= link_to archive_client_companies_campaigns_path(campaign), method: :put do %>

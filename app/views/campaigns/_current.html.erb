@@ -26,7 +26,7 @@
           <td><%= link_to "#{campaign.campaign_name}", client_companies_campaign_path(campaign.id) %></td>
 
           <td>
-            <%= form_tag campaign_data_data_uploads_path(:campaign => campaign, :persona => campaign.persona ), multipart: true, class:"shorter-column" do %>
+            <%= form_tag data_uploads_path(:campaign => campaign, :persona => campaign.persona), :method => :post, multipart: true, class:"shorter-column" do %>
               <div class= "fileUpload btn btn-sm btn-light">
                   <span id="uploadPath">upload csv</span>
                   <%= file_field_tag :file, class:"upload uploadBtn", accept: 'text/csv' %>
