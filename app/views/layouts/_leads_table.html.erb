@@ -25,7 +25,7 @@
                 <span class="alert alert-primary"><%= lead.status %></span>
               <% elsif lead.status == "cold" or lead.status == "not_interested" %>
                 <span class="alert alert-secondary"><%= lead.status %></span>
-              <% elsif lead.status == "do_not_contact" %>
+              <% elsif lead.status == "blacklist" %>
                 <span class="alert alert-danger"><%= lead.status %></span>
               <% else %> <!-- interested -->
                 <span class="alert alert-warning"><%= lead.status %></span>
