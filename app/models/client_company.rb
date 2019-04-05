@@ -19,10 +19,8 @@ class ClientCompany < ApplicationRecord
 
 	# JSON Serialized Column
 	serialize :replyio_keys
-
 	# Allows us to call @company.campaign to build campaign
 	attr_accessor :campaign_id
-	
 	# Generate API key after Client Company creation
 	after_create :generate_key
 

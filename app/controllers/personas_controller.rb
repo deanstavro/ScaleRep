@@ -1,45 +1,34 @@
 class PersonasController < ApplicationController
     before_action :authenticate_user!
 
-
     # GET /personas
     # GET /personas.json
     def index        
-        
         #If admin, set client_companies chooser
         [@client_companies = scalerep_director_client_company()] if is_scalerep_admin
-
         #  If admin and company param exists, show company param's groups
         if is_scalerep_admin and params.has_key?(:client_company)
             @company = findCompanyByName(params["client_company"])
         else
             @company = current_user.client_company
         end
-
-        @personas = @company.personas.order('created_at DESC')
-        @current2 = @personas.where("archive =?", false)
-        @archive2 = @personas.where("archive =?", true) 
-
-        @current_sorted_metrics_array =  getPersonaMetrics(@current2).sort { |a, b| b[1] <=> a[1] }.paginate(:page => params[:page], :per_page => 20)
-        @archive_sorted_metrics_array = getPersonaMetrics(@archive2).sort { |a, b| b[1] <=> a[1] }.paginate(:page => params[:page], :per_page => 20)
+        @personas = @company.personas.order('created_at DESC') 
+        #Get list of current, and archived personas with aggregated metrics
+        @current_sorted_metrics_array =  getPersonaMetrics(@personas.where("archive =?", false)).sort { |a, b| b[1] <=> a[1] }.paginate(:page => params[:page], :per_page => 20)
+        @archive_sorted_metrics_array = getPersonaMetrics(@personas.where("archive =?", true)).sort { |a, b| b[1] <=> a[1] }.paginate(:page => params[:page], :per_page => 20)
     end
 
 
     # GET /personas/new
     def new
         @persona = Persona.new
-
-        if is_scalerep_admin
-            @client_companies = scalerep_director_client_company()
-        end
-
+        [@client_companies = scalerep_director_client_company()] if is_scalerep_admin
     end
 
 
     # POST /personas
     # POST /personas.json
     def create
-
         if is_scalerep_admin
             @company = ClientCompany.find_by(name: params[:persona][:client_company])
         else
@@ -65,9 +54,9 @@ class PersonasController < ApplicationController
     def edit
         @persona = Persona.find_by(id: params[:id])
         checkUserPrivileges(client_companies_personas_path, 'You cannot access this Lead Group')
-
     end
 
+    # Show Persona Group
     def show
         @persona = Persona.find_by(id: params[:id])
         checkUserPrivileges(client_companies_personas_path, 'You cannot access this Lead Group')
@@ -148,7 +137,6 @@ class PersonasController < ApplicationController
     end
 
     def getPersonaMetrics(personas)
-
         personas_array = []
         personas.each_with_index do |persona, index|
             # Get leads in the group
@@ -168,7 +156,6 @@ class PersonasController < ApplicationController
         return personas_array
     end
 
-
     def sort_column
         Lead.column_names.include?(params[:sort]) ? params[:sort] : "full_name"
     end
@@ -176,5 +163,4 @@ class PersonasController < ApplicationController
     def sort_direction
         %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
-
 end

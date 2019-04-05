@@ -12,8 +12,8 @@
   <h3>for <%= @persona.name if @persona.name %></h3>
   <br>
 
-  <% if @user.role == 'scalerep' %>
-      <%= link_to '+ Add Campaign', new_client_companies_campaign_path(@user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
+  <% if current_user.role == 'scalerep' %>
+      <%= link_to '+ Add Campaign', new_client_companies_campaign_path(current_user.client_company, persona_name: @persona.name, persona_id: @persona.id), :class=>"add_campaign btn btn-primary btn-xl page-scroll" %>
   <% end %>
 </div>
 

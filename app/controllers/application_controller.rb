@@ -9,11 +9,6 @@ class ApplicationController < ActionController::Base
     devise_parameter_sanitizer.permit(:account_update, keys: [:name])
   end
 
-  def find_current_user(id)
-  	user = User.find(id)
-  	return user
-  end
-
   def is_scalerep_admin()
   	return is_admin()
   end

@@ -4,17 +4,17 @@
     
     <thead class="thead">
       <tr>
-        <th scope="col">Start Date</th>
-        <th scope="col">Campaign</th>
-        <th scope="col">Add Leads <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="a"></i></th>
-        <th scope="col">email Account</th>
-        <th scope="col">People</th>
-        <th scope="col">Delivered</th>
-        <th scope="col">Opens</th>
-        <th scope="col">Unique Opens</th>
-        <th scope="col">Replies</th>
-        <% if @user.role == 'scalerep' %>
-            <th scope="col">Un-Archive</th>
+        <th>Start Date</th>
+        <th>Campaign</th>
+        <th>Add Leads <i class="fa fa-info-circle" aria-hidden="true" data-toggle="tooltip" title="a"></i></th>
+        <th>email Account</th>
+        <th>People</th>
+        <th>Delivered</th>
+        <th>Opens</th>
+        <th>Unique Opens</th>
+        <th>Replies</th>
+        <% if current_user.role == 'scalerep' %>
+            <th>Archive</th>
         <% end %>
       </tr>
     </thead>
@@ -24,7 +24,6 @@
         <tr>
 
           <td><%= campaign.created_at.to_time.strftime('%m/%d/%Y') %></td>
-          
           <td><%= link_to "#{campaign.campaign_name}", client_companies_campaign_path(campaign.id) %></td>
 
           <td>
@@ -39,37 +38,25 @@
           </td>
 
           <td><%= campaign.emailAccount %></td>
-
-
           <td><%= campaign.peopleCount %></td>
-
-
-          <td><%= campaign.deliveriesCount %></td>
-
-          
+          <td><%= campaign.deliveriesCount %></td> 
           <td>
               <%= campaign.opensCount %>
           </td>
-          
-
           <td>
                 <%= campaign.uniqueOpens %>  
           </td>
-
-
           <td>
                 <%= campaign.repliesCount %>  
           </td>
           
-
-          <% if @user.role == 'scalerep' %>
+          <% if current_user.role == 'scalerep' %>
               <td>
                 <%= link_to archive_client_companies_campaigns_path(campaign), method: :put do %>
                   <%= octicon "issue-closed", :height => 20,  :class => "right left", :"aria-label" => "hi" %>
                 <% end %>
               </td>
           <% end %>
-
         </tr>
       <% end %>
     </tbody>

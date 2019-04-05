@@ -5,7 +5,7 @@ class SalesforcesController < InheritedResources::Base
   # GET - Renders Salesforce Settings Page
   # Renders client_company's salesforce if it exist. Or renders a new salesforce
   def index
-  	@user = find_current_user(current_user.id)
+  	@user = current_user
   	@client_company = @user.client_company
   	@client_company_id = @user.client_company.id
   	@salesforce = @client_company.salesforce
@@ -34,7 +34,7 @@ class SalesforcesController < InheritedResources::Base
   # Redirects to the salesforce page
   def setup
  	  begin
-	 	  @user = find_current_user(current_user.id)
+	 	  @user = current_user
 	  	@client_company = @user.client_company
 	  	@salesforce = @client_company.salesforce
 	  	app_key = @salesforce.app_key
@@ -50,7 +50,7 @@ class SalesforcesController < InheritedResources::Base
 
   # GET/POST - Redirect After Salesforce Sign On
   def web_authentication
-  	@user = find_current_user(current_user.id)
+  	@user = current_user
 	  @client_company = @user.client_company
 	
 	  begin

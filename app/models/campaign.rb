@@ -10,7 +10,6 @@ class Campaign < ApplicationRecord
 
 	before_save :default_campaign_metrics
 
-
     def default_campaign_metrics
         self.peopleCount ||= 0
         self.deliveriesCount ||= 0
