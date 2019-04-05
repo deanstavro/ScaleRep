@@ -1,0 +1,49 @@
+<% if @leads.nil? or @leads.empty? %>
+    <p> No leads to show </p>
+<% else %>
+  <table class = " airtable_data table table-hover">
+    <thead>
+      <tr>
+        <th><%= sortable "full_name" %></th>
+        <th><%= sortable "company_name" %></th>
+        <th><%= sortable "status" %></th>
+        <th>emails sent</th>
+        <th>email opens</th>
+
+      </tr>
+    </thead>
+
+    <tbody>
+      <% @leads.each do |lead| %>
+        <tr data-link="<%= lead_path(lead) %>" id="<%= lead.id %>" style="cursor:pointer;" >
+            <td><%= lead.full_name %></td>
+            <td><%= lead.company_name %> </td>
+            <td>
+              <% if lead.status == "handed_off" or lead.status == "handed_off_with_questions" or lead.status == "sent_meeting_invite" %>
+                <span class="alert alert-success"><%= lead.status %></span>
+              <% elsif lead.status == "interested" %>
+                <span class="alert alert-primary"><%= lead.status %></span>
+              <% elsif lead.status == "cold" or lead.status == "not_interested" %>
+                <span class="alert alert-secondary"><%= lead.status %></span>
+              <% elsif lead.status == "do_not_contact" %>
+                <span class="alert alert-danger"><%= lead.status %></span>
+              <% else %> <!-- interested -->
+                <span class="alert alert-warning"><%= lead.status %></span>
+              <% end %>
+            </td>
+            <td><%= lead.touchpoints.count%></td>
+            <td><%= lead.lead_actions.where(action: "open").count %></td>
+        </tr>
+      <% end %>
+    </tbody>
+
+  </table>
+
+  <div class="digg_pagination">
+    <div class="page_info">
+      <%= page_entries_info @leads %>
+    </div>
+    <%= will_paginate @leads, :params => { :tab_id => :current }, :container => false %>
+  </div>
+
+<% end %>
