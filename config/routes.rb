@@ -68,9 +68,7 @@ Rails.application.routes.draw do
     resources :leads do
       collection { post :import_blacklist}
       collection { post :update_reply_from_portal}
-      collection { get :fields}
       collection { post :import_to_current_campaign}
-      collection { post :update_lead_import}
     end
     
     resources :contacts
@@ -78,8 +76,8 @@ Rails.application.routes.draw do
     resources :campaign
     resources :users
     resources :data_uploads do
-      collection { post :campaign_data}
       collection { get :show_data_list}
+      collection { post :update_cleaned_data}
     end
     resources :salesforces do
         collection {put :toggle}

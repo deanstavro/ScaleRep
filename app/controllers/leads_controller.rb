@@ -49,8 +49,6 @@ class LeadsController < ApplicationController
 
   #POST - save cleaned_data contacts and upload into reply
   def import_to_current_campaign
-    puts params
-
     @data_object = DataUpload.find_by(id: params[:data_upload])
     persona = @data_object.campaign.persona
     LeadUploadJob.perform_later(@data_object)
@@ -58,88 +56,6 @@ class LeadsController < ApplicationController
     redirect_to client_companies_campaigns_path(persona), :flash => { :notice => "Contacts are being save and uploaded. Wait for task to finish!" }
   end
 
-
-  # POST, Reclean data, and show STEP 3 page, the page rendered after rules and inputted data cleaned
-  def update_lead_import
-
-        @user = User.find(current_user.id)
-        @data_upload = DataUpload.find_by(id: params[:data_upload])
-        @cleaned_data_copy = @data_upload.cleaned_data
-        @cleaned_data_count = @cleaned_data_copy.count
-        @headers = @data_upload.data[0].keys
-        @campaign = @data_upload.campaign
-        @client_company = @campaign.client_company
-        @per_page = params[:per_page].to_i
-
-        if params[:page].empty?
-          @page = 1
-        else
-          @page = params[:page].to_i
-        end
-
-
-        new_cleaned_hash = []
-        row_array = []
-        params_copy = params.dup.except(:controller,:action, :commit, :authenticity_token, :data_upload, :utf8, :page, :per_page)
-
-        # If edits are being made on the second page and beyond, we must first copy the data
-
-        lead_start = ((@page.to_i - 1)*@per_page.to_i) + 1
-        lead_end = ((@page.to_i)*@per_page.to_i)
-        puts "ON PAGE: " + @page.to_s
-        puts "PER PAGE: " + @per_page.to_s
-        puts "LEAD_START:" + lead_start.to_s
-        puts "Lead end: " + lead_end.to_s
-
-        if @page > 1
-          #copy cleaned_data into new array up until page
-          @cleaned_data_copy[0...lead_start-1].each do |clean_data|
-              new_cleaned_hash << clean_data
-          end
-        end
-
-
-        #puts params_copy
-        previous_row = "0"
-        params_copy.each do |key, value|
-
-            row_column_array = key.split("_")
-            row_index_string = row_column_array[0].to_s
-            column_index_string = row_column_array[1].to_s
-
-            #if row_index_string.to_i < lead_start
-
-            if row_index_string == previous_row
-              row_array << value
-            else
-
-              previous_row = row_index_string
-              new_cleaned_hash_row = Hash[@headers.zip(row_array)]
-              new_cleaned_hash << new_cleaned_hash_row
-              row_array = []
-              row_array << value
-            end
-        end
-
-        # Add in last row
-        new_cleaned_hash_row = Hash[@headers.zip(row_array)]
-        new_cleaned_hash << new_cleaned_hash_row
-
-
-        begin
-          @cleaned_data_copy[lead_end..-1].each do |clean_data|
-              new_cleaned_hash << clean_data
-          end
-        rescue
-            puts "out of range"
-        end
-
-
-        @data_upload.update_attribute(:cleaned_data, new_cleaned_hash)
-
-   redirect_to data_upload_path(:id => @data_upload.id), :flash => { :notice => "Your changes have been saved. Click '+ import to campaign' to add to the the list to the campaign!" }
-   return
-  end
 
   def import_blacklist
 
