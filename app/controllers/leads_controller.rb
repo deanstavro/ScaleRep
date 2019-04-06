@@ -1,6 +1,7 @@
 class LeadsController < ApplicationController
   before_action :authenticate_user!
   include Reply
+  include PersonasHelper
 
   def index
     if current_user.role == "scalerep"
@@ -28,6 +29,17 @@ class LeadsController < ApplicationController
       @blacklist = Lead.where(client_company_id: @company.id, status: "blacklist").order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
       @meetings_set = Lead.where(client_company_id: @company.id).where(:status => ["handed_off", "handed_off_with_questions", "sent_meeting_invite"]).order('updated_at DESC').paginate(:page => params[:page], :per_page => 20)
       @current_table = params[:table_id]
+      @dropdown = Lead.statuses.keys
+
+      if params[:search]
+          @leads = Lead.where(client_company_id: @company.id).where('last_name LIKE ? OR first_name LIKE ? OR company_name LIKE ? OR email LIKE ?',"%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%").order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
+      elsif params[:leadstatus] and !params[:leadstatus].empty?
+          @leads = Lead.where(client_company_id: @company.id).where(status: params[:leadstatus]).order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
+      else
+          @leads = Lead.where(client_company_id: @company.id).order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
+      end
+
+
     end
   end
 

@@ -70,7 +70,7 @@ Rails.application.routes.draw do
       collection { post :update_reply_from_portal}
       collection { post :import_to_current_campaign}
     end
-    
+
     resources :contacts
     resources :accounts
     resources :campaign
