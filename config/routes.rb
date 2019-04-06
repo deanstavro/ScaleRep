@@ -72,7 +72,7 @@ Rails.application.routes.draw do
       collection { post :import_to_current_campaign}
       collection { post :update_lead_import}
     end
-    
+
     resources :contacts
     resources :accounts
     resources :campaign
