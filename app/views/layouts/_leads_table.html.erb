@@ -5,7 +5,10 @@
     <%= material_icon.check_box_outline_blank.style('color: #007bff;').html(id:"master_checkbox")%>
 
     <span class="checked_options" style="display: none;">
-      <%= material_icon.highlight_off.style('color: gray;').html(data:{action: 'blacklist', content:"blacklist", placement: 'top', trigger: 'hover'}) %>
+      <%= material_icon.highlight_off.style('color: gray;')
+            .html(data:{update: 'status', value: 'blacklist', path:'update_leads_from_frontend',
+              placement: 'top', trigger: 'hover'})
+      %>
     </span>
 
   </div>
@@ -80,9 +83,17 @@
     })
 
     // take action on selected rows
-    $("i[data-action]").on("click", function(){
-      var checked = $("input:checkbox:checked");
-      alert($(this).attr("data-action"));
+    $("i[data-path]").on("click", function(){
+      var lead_ids = $.map($("input:checkbox:checked"), function(lead){return lead.parentElement.parentElement.getAttribute("id");});
+      var update = $(this).attr("data-update");
+      var value = $(this).attr("data-value");
+
+      var confirm = window.confirm("Are you sure you want to mark these leads as \"" + value + "\"?");
+
+      if (confirm==true){
+        var params = {"lead_ids":lead_ids, "update":update, "value":value}
+        $.post("/leads/update_leads_from_frontend",params, function(data){});
+      }
     });
 
     // tooltips

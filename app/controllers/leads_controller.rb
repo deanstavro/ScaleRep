@@ -255,6 +255,15 @@ class LeadsController < ApplicationController
     redirect_to leads_path
   end
 
+  def update_leads_from_frontend
+    if params[:lead_ids].present? and params[:update].present? and params[:value].present?
+      Lead.where(:id=>params[:lead_ids]).update_all(params[:update]=> params[:value])
+
+      ##TODO: Call job to remove or pause leads from reply
+    end
+    redirect_to :back
+  end
+
 
   private
 
