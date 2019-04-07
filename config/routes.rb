@@ -66,6 +66,7 @@ Rails.application.routes.draw do
       end
     end
     resources :leads do
+      collection { post :update_leads_from_frontend}
       collection { post :import_blacklist}
       collection { post :update_reply_from_portal}
       collection { post :import_to_current_campaign}
