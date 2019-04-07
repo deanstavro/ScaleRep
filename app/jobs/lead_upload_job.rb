@@ -1,22 +1,17 @@
 class LeadUploadJob < ApplicationJob
 	queue_as :default
-	
 	require 'csv'
 	require 'rest-client'
 	include Reply
 	include Salesforce_Integration
 
-	
 	def perform(data_upload_object)
-		puts "upload lead job has been started"
 		data_list = Marshal.load(Marshal.dump(data_upload_object.cleaned_data))
 		base_campaign = Campaign.find_by(id: data_upload_object.campaign_id)
 		client_company = base_campaign.client_company
 		clients_leads = Lead.where("client_company_id =? " , data_upload_object.client_company)
-
-		crm_dup = []
-		not_imported = []
-		imported = []
+		# Define lead update statuses
+		crm_dup, not_imported, imported = [], [], []
 
 		# Check if current campaign still has leads to be upload
 		if (base_campaign.contactLimit - base_campaign.peopleCount) > 0
@@ -28,19 +23,15 @@ class LeadUploadJob < ApplicationJob
 			end
 		end
 
-		#loop until the data_list is empty. Create campaigns and upload leds
+		#loop until the data_list is empty. Create campaigns and upload leads
 		loop do 
 			break if data_list.empty?
-			
-			# Create campaign
+			# Create New campaign
 			current_campaign_id = createCampaign(client_company, base_campaign)
 			current_campaign = Campaign.find_by(id: current_campaign_id)
-			puts "New Campaign Created: " + current_campaign.campaign_name
-			
 			# Upload leads into new campaign
 			clients_leads = Lead.where("client_company_id =? " , data_upload_object.client_company)
 			data_list, imports, not_imports, current_crm_dup = upload_leads(clients_leads, data_list, current_campaign)
-
 			# Update lead counts
 			imported += imports
 			not_imported += not_imports
@@ -51,9 +42,6 @@ class LeadUploadJob < ApplicationJob
 		data_upload_object.update_attributes(:imported => imported, :not_imported => not_imported, :external_crm_duplicates => crm_dup)
 		return
 	end
-
-
-
 
 	private
 
@@ -89,17 +77,13 @@ class LeadUploadJob < ApplicationJob
 
 
 	def upload_leads(clients_leads, upload_lead_list, campaign)
-		not_imported = []
-		imported = []
-		crm_dup = []
+		not_imported, imported, crm_dup = [], [], []
 		leads_left_to_upload_in_campaign = campaign.contactLimit - campaign.peopleCount
 		# Fill in the rest of leads in the campaign
-		lead_list_copy = []
-		lead_list_copy.replace(upload_lead_list)
+		lead_list_copy = [].replace(upload_lead_list)
 
 		# Loop through data_object_lead list
 		for le in upload_lead_list
-
 			if leads_left_to_upload_in_campaign == 0
 				break
 			end
@@ -122,7 +106,6 @@ class LeadUploadJob < ApplicationJob
 							le[:full_name] = le["first_name"]
 							le[:last_name] = "n/a"
 						end
-						
 						
 						##### Call Salesforce Integration #####
 						include_contact = true
@@ -170,8 +153,6 @@ class LeadUploadJob < ApplicationJob
 							##### Call Reply To Upload #####
 							uploaded_contact  = AddContactToReplyJob.perform_now(le,campaign.id)
 							if uploaded_contact
-								puts 'H343 IS LEAD'
-								puts le.to_s
 								new_lead = Lead.create!(le)
 								imported << new_lead
 								leads_left_to_upload_in_campaign = leads_left_to_upload_in_campaign - 1
@@ -179,9 +160,7 @@ class LeadUploadJob < ApplicationJob
 								not_imported << new_lead
 							end
 						end
-
 					else
-
 						#################### Duplicate Lead ###########################
 						begin
 							puts le["email"] + " is a duplicate"
@@ -189,7 +168,6 @@ class LeadUploadJob < ApplicationJob
 
 							#double check not lead
 							if !(%w{handed_off sent_meeting_invite blacklist handed_off_with_questions}.include?(dup_lead.status))
-
 								##### Call Reply To Upload #####
 								uploaded_contact  = AddContactToReplyJob.perform_now(le,campaign.id)
 								# If reply was a success
@@ -217,10 +195,7 @@ class LeadUploadJob < ApplicationJob
 				puts "Row not imported due to an error"
 			end
 		end
-
 		return lead_list_copy, imported, not_imported, crm_dup
 	end
-
-
 
 end
