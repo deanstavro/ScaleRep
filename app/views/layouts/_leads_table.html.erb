@@ -1,9 +1,19 @@
 <% if @leads.nil? or @leads.empty? %>
     <p> No leads to show </p>
 <% else %>
+  <div class = "table_options">
+    <%= material_icon.check_box_outline_blank.style('color: #007bff;').html(id:"master_checkbox")%>
+
+    <span class="checked_options" style="display: none;">
+      <%= material_icon.highlight_off.style('color: gray;').html(data:{action: 'blacklist', content:"blacklist", placement: 'top', trigger: 'hover'}) %>
+    </span>
+
+  </div>
+
   <table class = " airtable_data table table-hover">
     <thead>
       <tr>
+        <th></th>
         <th><%= sortable "full_name" %></th>
         <th><%= sortable "company_name" %></th>
         <th><%= sortable "status" %></th>
@@ -16,6 +26,7 @@
     <tbody>
       <% @leads.each do |lead| %>
         <tr data-link="<%= lead_path(lead) %>" id="<%= lead.id %>" style="cursor:pointer;" >
+            <td class="rowCheckbox"><%= check_box_tag('lead_id[]', lead.id,false) %></td>
             <td><%= lead.full_name %></td>
             <td><%= lead.company_name %> </td>
             <td>
@@ -49,7 +60,52 @@
 <% end %>
 
 <script>
+  $(document).ready(function(){
+    // listener for master checkbox
+    $('.table_options').on("click", '#master_checkbox', function(){
+      master_checkbox_toggle();
+    });
+
+    // listener to see when a checkbox is selected
+    $("input:checkbox").change(function(){
+      if($("input:checkbox").length == $("input:checkbox:checked").length) {
+        $("#master_checkbox").html('<%= material_icon.check_box.style("color: #007bff;") %>');
+      }
+      if($("input:checkbox:checked").length > 0) {
+        $(".checked_options").show();
+      } else {
+        $(".checked_options").hide();
+        $("#master_checkbox").html('<%= material_icon.check_box_outline_blank.style("color: #007bff;") %>');
+      }
+    })
+
+    // take action on selected rows
+    $("i[data-action]").on("click", function(){
+      var checked = $("input:checkbox:checked");
+      alert($(this).attr("data-action"));
+    });
+
+    // tooltips
+    $(".material-icons").popover();
+  });
+
+  // toggle checkboxes on / off
+  function master_checkbox_toggle() {
+    var cbxs = $('input[type="checkbox"]');
+    cbxs.prop("checked", !cbxs.prop("checked"));
+
+    // trigger change
+    $('input[type="checkbox"]').trigger('change');
+  }
+
+  // go to lead/show
   $("tr[data-link]").click(function() {
     window.location = $(this).data("link")
-  })
+  });
+
+  // stop propagation on checkbox
+  $(".rowCheckbox").on("click", function(event) {
+    event.stopPropagation();
+  });
+
 </script>
