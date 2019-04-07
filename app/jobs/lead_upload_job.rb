@@ -78,13 +78,13 @@ class LeadUploadJob < ApplicationJob
 
 	def upload_leads(clients_leads, upload_lead_list, campaign)
 		not_imported, imported, crm_dup = [], [], []
-		leads_left_to_upload_in_campaign = campaign.contactLimit - campaign.peopleCount
+		number_of_leads_left_to_upload_in_campaign = campaign.contactLimit - campaign.peopleCount
 		# Fill in the rest of leads in the campaign
 		lead_list_copy = [].replace(upload_lead_list)
 
 		# Loop through data_object_lead list
 		for le in upload_lead_list
-			if leads_left_to_upload_in_campaign == 0
+			if number_of_leads_left_to_upload_in_campaign == 0
 				break
 			end
 
@@ -96,66 +96,27 @@ class LeadUploadJob < ApplicationJob
 					if clients_leads.where(:email => le["email"]).count == 0
 
 						###### Update Lead Fields ############
-						le[:client_company] = campaign.client_company
-						le[:campaign_id] = campaign.id
-						le[:status] = "cold"
-						le[:persona_id] = campaign.persona.id
-						begin
-							le[:full_name] = le["first_name"] + " " + le["last_name"]
-						rescue
-							le[:full_name] = le["first_name"]
-							le[:last_name] = "n/a"
-						end
+						updateLeadFields(le, campaign)
 						
 						##### Call Salesforce Integration #####
-						include_contact = true
-						salesforce = campaign.client_company.salesforce
-						if !salesforce.nil? and salesforce.salesforce_integration_on
-							salesforce_client = authenticate(salesforce)
-							if salesforce_client != 400
-								# Check Blacklist
-								if salesforce.check_dup_against_existing_contact_email_option
-									puts "checking against email dups"
-									salesforce_contacts = find_salesforce_contact_by_email(salesforce_client, le["email"])
-									puts salesforce_contacts.to_s
-									if !salesforce_contacts.empty?
-										puts "Lead is blacklisted on salesforce. Skip"
-										include_contact = false
-										crm_dup << le # Add le to dup
-									end
-								end
-
-								# Upload Contact/Account to Salesforce if options toggled on
-								if include_contact
-									### Check if user would like account and contact to be uploaded. ###
-									#### If so, call method to create_salesforce_account_and_lead
-									if salesforce.upload_accounts_to_salesforce_option
-										# Create or Find id of salesforce acocunt
-										puts "finding or creating account"
-										account_id = create_of_find_salesforce_account(salesforce, le, campaign)
-										puts "ACCOUNT ID: " + account_id
-
-										if salesforce.upload_contacts_to_salesforce_option
-											lead_created = create_or_find_salesforce_lead(account_id,salesforce, le, campaign)
-										end
-									# If create contact but not account, don't uplaod account reference
-									elsif salesforce.upload_contacts_to_salesforce_option
-										lead_created = create_or_find_salesforce_lead("nil",salesforce, le, campaign)
-									end
-								end
-							else
-								puts "not uploaded to salesforce. couldn't authenticate client"
-							end
-						end
+						include_contact, crm_dup = checkSalesforceIntegration(campaign.client_company.salesforce, crm_dup)
 
 						######### Upload to Campaign if Not Blacklisted #############
 						if include_contact
+							
 							##### Call Reply To Upload #####
 							uploaded_contact  = AddContactToReplyJob.perform_now(le,campaign.id)
+							# If Reply uploaded contact, upload to scalerep system
 							if uploaded_contact
+
 								new_lead = Lead.create!(le)
+								##### Update Account Fields #####
+								account = createOrUpdateAccountFields(new_lead, campaign)
+								new_lead.update_attribute(:account_id, account.id)
+
 								imported << new_lead
-								leads_left_to_upload_in_campaign = leads_left_to_upload_in_campaign - 1
+								# Updated the number of leads we can upload in the campaign
+								number_of_leads_left_to_upload_in_campaign = number_of_leads_left_to_upload_in_campaign - 1
 							else
 								not_imported << new_lead
 							end
@@ -174,7 +135,7 @@ class LeadUploadJob < ApplicationJob
 								if uploaded_contact
 									dup_lead.update_attributes(:campaign_id => campaign.id, :status => :cold)
 									imported << dup_lead
-									leads_left_to_upload_in_campaign = leads_left_to_upload_in_campaign - 1
+									number_of_leads_left_to_upload_in_campaign = number_of_leads_left_to_upload_in_campaign - 1
 								else
 									not_imported << dup_lead
 								end
@@ -197,5 +158,104 @@ class LeadUploadJob < ApplicationJob
 		end
 		return lead_list_copy, imported, not_imported, crm_dup
 	end
+
+	
+	#### Update Lead Fields #####
+	def updateLeadFields(le, campaign)
+		le[:client_company] = campaign.client_company
+		le[:campaign_id] = campaign.id
+		le[:status] = "cold"
+		le[:persona_id] = campaign.persona.id
+		begin
+			le[:full_name] = le["first_name"] + " " + le["last_name"]
+		rescue
+			le[:full_name] = le["first_name"]
+			le[:last_name] = "n/a"
+		end
+	end
+
+
+
+	##### Update Account Fields #####
+	def	createOrUpdateAccountFields(new_lead, campaign)
+		client_company = campaign.client_company
+		account = nil
+
+		puts "we here"
+		if new_lead.company_website.present?
+			puts new_lead.company_website
+			
+			company = client_company.accounts.where('lower(website) = ?', new_lead.company_website.downcase)
+			
+			if !company.empty?
+				puts "YO"
+				new_lead.account = company
+				puts "HIII"
+			else
+				#Create new account
+				puts "MAMAMAMIA"
+				if new_lead.company_name.present?
+					account = Account.create!(:website => new_lead.company_website, :name => new_lead.company_name, :client_company => client_company )
+				else
+					account = Account.create!(:website => new_lead.company_website, :client_company => client_company, :name => new_lead.company_website)
+				end
+
+				puts "DONE"
+			end
+		elsif new_lead.company_name.present?
+			puts new_lead.company_name.to_s
+			client_company.accounts.where('lower(name) = ?', new_lead.company_name.downcase)
+			
+			if !company.empty?
+				new_lead.account = company
+			else
+				account = Account.create!(:name => new_lead.company_name, :client_company => client_company)
+			end
+		end
+
+		return account
+	end
+
+
+
+	def checkSalesforceIntegration(salesforce, crm_dup)			
+		include_contact = true
+		if !salesforce.nil? and salesforce.salesforce_integration_on
+			salesforce_client = authenticate(salesforce)
+			if salesforce_client != 400
+				# Check Blacklist
+				if salesforce.check_dup_against_existing_contact_email_option
+					puts "checking against email dups"
+					salesforce_contacts = find_salesforce_contact_by_email(salesforce_client, le["email"])
+					puts salesforce_contacts.to_s
+					if !salesforce_contacts.empty?
+						puts "Lead is blacklisted on salesforce. Skip"
+						include_contact = false
+						crm_dup << le # Add le to dup
+					end
+				end
+				# Upload Contact/Account to Salesforce if options toggled on
+				if include_contact
+					### Check if user would like account and contact to be uploaded. ###
+					#### If so, call method to create_salesforce_account_and_lead
+					if salesforce.upload_accounts_to_salesforce_option
+						# Create or Find id of salesforce acocunt
+						account_id = create_of_find_salesforce_account(salesforce, le, campaign)
+
+						if salesforce.upload_contacts_to_salesforce_option
+							lead_created = create_or_find_salesforce_lead(account_id,salesforce, le, campaign)
+						end
+					# If create contact but not account, don't uplaod account reference
+					elsif salesforce.upload_contacts_to_salesforce_option
+						lead_created = create_or_find_salesforce_lead("nil",salesforce, le, campaign)
+					end
+				end
+			else
+				puts "not uploaded to salesforce. couldn't authenticate client"
+			end
+		end
+		return include_contact, crm_dup
+	end
+
 
 end

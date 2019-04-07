@@ -50,7 +50,6 @@ class LeadsController < ApplicationController
     lead_actions = @lead.lead_actions.where.not(action:['reply']).paginate(:page => params[:page], :per_page => 20)
     touchpoints = @lead.touchpoints.select("created_at","channel","email_subject", "email_body", "sender_email").order("created_at desc").paginate(:page => params[:page], :per_page => 20)
     replies = @lead.campaign_replies.select("created_at","last_conversation_subject", "last_conversation_summary").order("created_at desc").paginate(:page => params[:page], :per_page => 20)
-
     @lead_history = (lead_actions + touchpoints + replies).sort_by(&:created_at).reverse
     # sum counts of each type
     @reply_count = replies.count
@@ -75,22 +74,10 @@ class LeadsController < ApplicationController
     #@company = ClientCompany.find_by(id: @user.client_company_id)
     @leads = Lead.where(client_company: @company)
     col =  Lead.column_names
-    # Column Names
-    # id, decision_maker, internal_notes, email_in_contact_with, date_sourced
-    # created_at, updated_at, client_company_id, campaign_id, contract_sent,
-    # contract_amount, timeline, project_scope, email_handed_off_too, meeting_time,
-    # email, first_name, last_name, hunter_score, hunter_date, title, phone_type,
-    # phone_number, city, state, country, linkedin, timezone, address, meeting_taken,
-    # full_name, status, company_name, company_website, account_id
-    puts "THIS IS COL"
-    puts col
     begin
         if (params[:file].content_type).to_s == 'text/csv'
           if (params[:file].size).to_i < 1000000
-
-          puts "Starting upload method"
           AddBlacklistJob.perform_now(params[:file], @company, @leads, params, col)
-          puts "Finished uploading blacklist. Redirecting!"
           flash[:notice] = "Uploading..."
           redirect_to :back
           else
@@ -98,7 +85,6 @@ class LeadsController < ApplicationController
             return
           end
         else
-
           redirect_to :back, :flash => { :error => "Blacklist file was not uploaded. Please Upload a CSV!" }
           return
         end
