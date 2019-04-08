@@ -6,8 +6,8 @@ class Lead < ApplicationRecord
 
 	belongs_to :client_company
 	belongs_to :account, optional: true
-	belongs_to :campaign, optional: true
-	belongs_to :persona
+	belongs_to :campaign, optional: true #some replies are captured as leads, that don't have an asspcoated campaign
+	belongs_to :persona, optional: true	 #some replies are captured as leads, that don't have an asspcoated persona
 	
 	has_many :campaign_replies
 	has_many :touchpoints
@@ -22,6 +22,7 @@ class Lead < ApplicationRecord
 
 	after_initialize :update_full_name
 
+	# Update Full Name field after initialization
 	def update_full_name
       	begin
 			self.full_name = self.first_name + " " + self.last_name
@@ -30,10 +31,12 @@ class Lead < ApplicationRecord
 		end
   	end
 
+  	# Lead columns to allow to be uploaded
 	def self.lead_import_columns
 		return Lead.column_names - %w{id client_company_id campaign_id account_id persona_id}
 	end
 
+	# Upload Blacklist
 	def self.import_blacklist(file, company, leads, params, col)
 
 		#Take row, convert keys to lowercase, put in key,value hash

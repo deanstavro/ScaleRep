@@ -81,15 +81,10 @@ class Api::V1::ReplyController < Api::V1::BaseController
             if lead.nil?
                 #create lead
                 puts "lead to associate touchpoint does not exist. return"
-                begin
-                    full_name = params["reply"]["first_name"] + " " + params["reply"]["last_name"]
-                rescue
-                    full_name = params["reply"]["first_name"]
-                end
 
                 client_leads = client_company.leads
 
-                lead = Lead.create!(:email => params["reply"]["email"], :first_name => params["reply"]["first_name"], :last_name => params["reply"]["last_name"], :full_name => full_name, :client_company => client_company, :campaign => campaign, :status => "in_campaign")
+                lead = Lead.create!(:email => params["reply"]["email"], :first_name => params["reply"]["first_name"], :last_name => params["reply"]["last_name"], :client_company => client_company, :campaign => campaign, :status => "in_campaign")
                 campaign.update_attribute(:peopleCount, campaign.peopleCount + 1)
             else
 
@@ -331,7 +326,8 @@ class Api::V1::ReplyController < Api::V1::BaseController
     def update_lead(params_content, client_company, campaign_reply, status)
 
       @lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", campaign_reply.email.downcase, client_company]).first
-
+      f_name, l_name = '',''
+      
       if @lead.nil?
           
           if params_content[:full_name].split.length < 2
@@ -342,7 +338,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
               l_name = @campaign_reply[:full_name].split[-1]
           end
 
-          new_lead = Lead.create!(:email => campaign_reply.email, :status => status, :full_name => params_content[:full_name], :first_name => f_name, :last_name => l_name, :client_company => client_company)
+          new_lead = Lead.create!(:email => campaign_reply.email, :status => status, :first_name => f_name, :last_name => l_name, :client_company => client_company)
           campaign_reply.update_attribute(:lead, new_lead)
 
           if %w{handed_off sent_meeting_invite handed_off_with_questions}.include?(status)
