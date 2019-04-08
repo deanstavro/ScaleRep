@@ -8,15 +8,14 @@ class LeadUploadJob < ApplicationJob
 	def perform(data_upload_object)
 		data_list = Marshal.load(Marshal.dump(data_upload_object.cleaned_data))
 		base_campaign = Campaign.find_by(id: data_upload_object.campaign_id)
-		client_company = base_campaign.client_company
-		clients_leads = Lead.where("client_company_id =? " , data_upload_object.client_company)
+		client_company = base_campaign.client_company 
 		# Define lead update statuses
 		crm_dup, not_imported, imported = [], [], []
 
 		# Check if current campaign still has leads to be upload
 		if (base_campaign.contactLimit - base_campaign.peopleCount) > 0
 			# Upload leads into the campaign, up until the contactLimit of campaign has been reached, or until data finishes uploading
-			data_list, imported, not_imported, crm_dup = upload_leads(clients_leads, data_list, base_campaign)
+			data_list, imported, not_imported, crm_dup = upload_leads( Lead.where("client_company_id =? " , data_upload_object.client_company), data_list, base_campaign)
 			if data_list.empty?
 				data_upload_object.update_attributes(:imported => imported, :not_imported => not_imported, :external_crm_duplicates => crm_dup)
 				return
@@ -28,11 +27,8 @@ class LeadUploadJob < ApplicationJob
 			break if data_list.empty?
 			# Create New campaign
 			current_campaign_id = createCampaign(client_company, base_campaign)
-			current_campaign = Campaign.find_by(id: current_campaign_id)
-			# Upload leads into new campaign
-			clients_leads = Lead.where("client_company_id =? " , data_upload_object.client_company)
-			data_list, imports, not_imports, current_crm_dup = upload_leads(clients_leads, data_list, current_campaign)
-			# Update lead counts
+			# Upload Leads and update lead counts
+			data_list, imports, not_imports, current_crm_dup = upload_leads( Lead.where("client_company_id =? " , data_upload_object.client_company), data_list, Campaign.find_by(id: current_campaign_id))
 			imported += imports
 			not_imported += not_imports
 			crm_dup += current_crm_dup
@@ -47,20 +43,19 @@ class LeadUploadJob < ApplicationJob
 
 	def createCampaign(client_company, base_campaign)
 		campaign = Campaign.new(:campaign_name => base_campaign.campaign_name + " " +Time.now.getutc.to_s, :client_company => client_company, :persona => base_campaign.persona, :contactLimit => base_campaign.contactLimit)
-	    campaigns = Campaign.where("client_company_id =?", client_company).order('created_at DESC')
 
 	    # Get Array of all emails
 	  	email_array = get_email_accounts(client_company.replyio_keys)
 	    
 	    if base_campaign.email_pool and base_campaign.email_pool.count > 0
-	    	puts "Choosing email from pool to create campaign"
+	    	#Choosing email from pool to create campaign
 	    	campaign_email_pool = base_campaign.email_pool
           	email_to_use = campaign_email_pool.key(campaign_email_pool.values.min)
           	campaign_email_pool[email_to_use] += 1
           	campaign[:email_pool] = campaign_email_pool
         else
-        	puts "Following default rules to create campaign"
-          	count_dict = count_campaigns_per_email(email_array, campaigns)
+        	# Following default rules to create campaign
+          	count_dict = count_campaigns_per_email(email_array, Campaign.where("client_company_id =?", client_company).order('created_at DESC'))
          	email_to_use = count_dict.key(count_dict.values.min) 
         end
 	    reply_key = get_reply_key_for_campaign(email_to_use, email_array)
@@ -113,6 +108,7 @@ class LeadUploadJob < ApplicationJob
 								##### Update Account Fields #####
 								account = createOrUpdateAccountFields(new_lead, campaign)
 								new_lead.update_attribute(:account_id, account.id)
+								puts "FINITO"
 
 								imported << new_lead
 								# Updated the number of leads we can upload in the campaign
@@ -166,57 +162,45 @@ class LeadUploadJob < ApplicationJob
 		le[:campaign_id] = campaign.id
 		le[:status] = "cold"
 		le[:persona_id] = campaign.persona.id
-		begin
-			le[:full_name] = le["first_name"] + " " + le["last_name"]
-		rescue
-			le[:full_name] = le["first_name"]
-			le[:last_name] = "n/a"
-		end
 	end
 
-
-
 	##### Update Account Fields #####
+	## If company_website exists, check for by company_website
+	## If company_name exists, check by company_name
 	def	createOrUpdateAccountFields(new_lead, campaign)
 		client_company = campaign.client_company
 		account = nil
 
-		puts "we here"
+		# Check if website present
 		if new_lead.company_website.present?
-			puts new_lead.company_website
+			# Check if company exists
+			account = client_company.accounts.where('lower(website) = ?', new_lead.company_website.downcase).first
 			
-			company = client_company.accounts.where('lower(website) = ?', new_lead.company_website.downcase)
-			
-			if !company.empty?
-				puts "YO"
-				new_lead.account = company
-				puts "HIII"
+			# Company exists with website
+			if account.present?
+				new_lead.update_attribute(:account_id, account.id)
 			else
 				#Create new account
-				puts "MAMAMAMIA"
 				if new_lead.company_name.present?
 					account = Account.create!(:website => new_lead.company_website, :name => new_lead.company_name, :client_company => client_company )
 				else
 					account = Account.create!(:website => new_lead.company_website, :client_company => client_company, :name => new_lead.company_website)
 				end
-
-				puts "DONE"
 			end
+		# Check if company name present
 		elsif new_lead.company_name.present?
-			puts new_lead.company_name.to_s
-			client_company.accounts.where('lower(name) = ?', new_lead.company_name.downcase)
+			account = client_company.accounts.where('lower(name) = ?', new_lead.company_name.downcase).first
 			
-			if !company.empty?
-				new_lead.account = company
+			if account.present?
+				new_lead.update_attribute(:account_id, account.id)
 			else
 				account = Account.create!(:name => new_lead.company_name, :client_company => client_company)
 			end
 		end
 
+		puts "RETURNING"
 		return account
 	end
-
-
 
 	def checkSalesforceIntegration(salesforce, crm_dup)			
 		include_contact = true

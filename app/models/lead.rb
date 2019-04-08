@@ -20,8 +20,18 @@ class Lead < ApplicationRecord
 
 	enum status: [:cold, :in_campaign, :not_interested, :blacklist, :interested, :handed_off, :sent_meeting_invite, :handed_off_with_questions]
 
+	after_initialize :update_full_name
+
+	def update_full_name
+      	begin
+			self.full_name = self.first_name + " " + self.last_name
+		rescue
+			self.full_name = self.first_name
+		end
+  	end
+
 	def self.lead_import_columns
-		return Lead.column_names - %w{id client_company_id campaign_id account_id}
+		return Lead.column_names - %w{id client_company_id campaign_id account_id persona_id}
 	end
 
 	def self.import_blacklist(file, company, leads, params, col)

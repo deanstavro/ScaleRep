@@ -20,12 +20,3 @@
 //= require bootstrap-datepicker
 //= require bootstrap-toggle
 //= require_tree .
-
-
-$( document ).on('turbolinks:load', function() {
-  $(function () {
-    $('[data-toggle="tooltip"]').tooltip({
-      template: '<div class="tooltip"><div class="tooltip-arrow"></div><div class="tooltip-head"><dl><dt>Upload Requirements:</dt><dd>- Uploaded file must be a csv</dd><dt>CSV fields:</dt><ddd> first_name*, last_name, email*, company_name*, phone_type, </ddd><ddd>phone_number, title, linkedin, timezone, </ddd><ddd>company_website, address, city, state, </ddd><ddd> country, email_snippet</ddd></dl></div></div>'
-    });
-  });
-});
