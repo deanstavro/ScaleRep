@@ -107,8 +107,8 @@ class LeadUploadJob < ApplicationJob
 								new_lead = Lead.create!(le)
 								##### Update Account Fields #####
 								account = createOrUpdateAccountFields(new_lead, campaign)
-								new_lead.update_attribute(:account_id, account.id)
-								puts "FINITO"
+								# Update lead with account if account is not nil
+								[new_lead.update_attribute(:account_id, account.id)] if account != nil
 
 								imported << new_lead
 								# Updated the number of leads we can upload in the campaign

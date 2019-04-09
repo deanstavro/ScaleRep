@@ -262,5 +262,20 @@ module Reply
   end
 
 
+  def remove_contact_from_reply_by_email(lead_email, company_reply_key)
+    begin
+          url = "https://api.reply.io/v1/people?email=" + lead_email + "&apiKey=" + company_reply_key
+          response = RestClient::Request.execute(
+                    :method => :delete,
+                    :url => url
+                )
+          sleep(10)
+          return "lead removed from reply"
+        rescue
+          return "could not find lead in reply to delete"
+        end
+    end
+
+
 
 end
