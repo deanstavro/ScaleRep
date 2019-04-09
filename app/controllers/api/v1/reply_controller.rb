@@ -267,26 +267,19 @@ class Api::V1::ReplyController < Api::V1::BaseController
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
             @campaign_reply.update_attribute(:client_company, @client_company)
 
-            #begin
-                if @params_content[:status].to_s == "opt_out" or @params_content[:status].to_s == "do_not_contact"
-                    update_lead(@params_content, @client_company, @campaign_reply, "blacklist")
-                    render json: {response: "Reply uploaded", :status => 200}, status: 200
-                    return
-                elsif @params_content[:status].to_s == "interested" or @params_content[:status].to_s == "not_interested" or @params_content[:status].to_s == "handed_off" or @params_content[:status].to_s == "handed_off_with_questions" or @params_content[:status].to_s == "sent_meeting_invite"
-                    update_lead(@params_content, @client_company, @campaign_reply, @params_content[:status].to_s)
-                    render json: {response: "Reply uploaded", :status => 200}, status: 200
-                    return
-                else
-                    update_lead(@params_content, @client_company, @campaign_reply, "in_campaign")
-                    render json: {response: "Reply uploaded", :status => 200}, status: 200
-                    return
-
-                end
-            #rescue
-             #   render json: {error: "Reply was not uploaded. E-mail required fields missing (email)", :status => 400}, status: 400
-              #  return
-            #end
-
+            if @params_content[:status].to_s == "opt_out" or @params_content[:status].to_s == "do_not_contact"
+                update_lead(@params_content, @client_company, @campaign_reply, "blacklist")
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
+                return
+            elsif @params_content[:status].to_s == "interested" or @params_content[:status].to_s == "not_interested" or @params_content[:status].to_s == "handed_off" or @params_content[:status].to_s == "handed_off_with_questions" or @params_content[:status].to_s == "sent_meeting_invite"
+                update_lead(@params_content, @client_company, @campaign_reply, @params_content[:status].to_s)
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
+                return
+            else
+                update_lead(@params_content, @client_company, @campaign_reply, "in_campaign")
+                render json: {response: "Reply uploaded", :status => 200}, status: 200
+                return
+            end
         else
             render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
             return
@@ -294,8 +287,6 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
 
     end
-
-
 
 
     private
@@ -324,12 +315,11 @@ class Api::V1::ReplyController < Api::V1::BaseController
     end
 
     def update_lead(params_content, client_company, campaign_reply, status)
-
       @lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", campaign_reply.email.downcase, client_company]).first
       f_name, l_name = '',''
       
       if @lead.nil?
-          
+          # If lead does not exist, create the lead
           if params_content[:full_name].split.length < 2
               f_name = @campaign_reply[:full_name]
               l_name = 'N/A'
@@ -345,17 +335,15 @@ class Api::V1::ReplyController < Api::V1::BaseController
             #campaign_reply.update_attribute(:date_sourced, Date.today)
             new_lead.update_attribute(:date_sourced, Date.today)
           end
-
-          #check for first and last name
-          
       else
-              @lead.update_attribute(:status, status)
-              campaign_reply.update_attribute(:lead, @lead)
+          # Else, update the lead status, and associate the campaign reply to the lead
+          @lead.update_attribute(:status, status)
+          campaign_reply.update_attribute(:lead, @lead)
 
-              if %w{handed_off sent_meeting_invite handed_off_with_questions}.include?(status)
-                    #campaign_reply.update_attribute(:date_sourced, Date.today)
-                    @lead.update_attribute(:date_sourced, Date.today)
-              end
+          if %w{handed_off sent_meeting_invite handed_off_with_questions}.include?(status)
+                #campaign_reply.update_attribute(:date_sourced, Date.today)
+                @lead.update_attribute(:date_sourced, Date.today)
+          end
       end
     end
 

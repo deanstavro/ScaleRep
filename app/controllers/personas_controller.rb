@@ -63,7 +63,7 @@ class PersonasController < ApplicationController
         @dropdown = Lead.statuses.keys
 
         if params[:search]
-            @leads = @persona.leads.where('last_name LIKE ? OR first_name LIKE ? OR company_name LIKE ? OR email LIKE ?',"%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%","%#{params[:search]}%").order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
+            @leads = searchedLeads(@persona, params)
         elsif params[:leadstatus] and !params[:leadstatus].empty?
             @leads = @persona.leads.where(status: params[:leadstatus]).order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
         else
@@ -163,4 +163,17 @@ class PersonasController < ApplicationController
     def sort_direction
         %w[asc desc].include?(params[:direction]) ? params[:direction] : "asc"
     end
+
+    def searchedLeads(persona, params)
+        search_arr = params[:search].split(' ')
+
+        where_clause = ''
+        search_arr.each_with_index do |s, i|
+            where_clause += ' AND ' unless i == 0
+            where_clause += "lower(last_name) LIKE '%" + s + "%' OR lower(first_name) LIKE '%" + s + "%' OR lower(company_name) LIKE '%" + s + "%' OR lower(email) LIKE '%" + s + "%' "
+        end
+
+        return persona.leads.where(where_clause).paginate(:page => params[:page], :per_page => 50)
+    end
+
 end
