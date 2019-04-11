@@ -38,8 +38,6 @@ class LeadsController < ApplicationController
       else
           @leads = Lead.where(client_company_id: @company.id).order(sort_column + " " + sort_direction).paginate(:page => params[:page], :per_page => 50)
       end
-
-
     end
   end
 

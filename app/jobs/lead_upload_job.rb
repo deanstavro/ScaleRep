@@ -16,6 +16,7 @@ class LeadUploadJob < ApplicationJob
 		if (base_campaign.contactLimit - base_campaign.peopleCount) > 0
 			# Upload leads into the campaign, up until the contactLimit of campaign has been reached, or until data finishes uploading
 			data_list, imported, not_imported, crm_dup = upload_leads( Lead.where("client_company_id =? " , data_upload_object.client_company), data_list, base_campaign)
+			
 			if data_list.empty?
 				data_upload_object.update_attributes(:imported => imported, :not_imported => not_imported, :external_crm_duplicates => crm_dup)
 				return
@@ -152,6 +153,7 @@ class LeadUploadJob < ApplicationJob
 				puts "Row not imported due to an error"
 			end
 		end
+
 		return lead_list_copy, imported, not_imported, crm_dup
 	end
 
