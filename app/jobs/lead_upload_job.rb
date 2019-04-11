@@ -16,7 +16,7 @@ class LeadUploadJob < ApplicationJob
 		if (base_campaign.contactLimit - base_campaign.peopleCount) > 0
 			# Upload leads into the campaign, up until the contactLimit of campaign has been reached, or until data finishes uploading
 			data_list, imported, not_imported, crm_dup = upload_leads( Lead.where("client_company_id =? " , data_upload_object.client_company), data_list, base_campaign)
-			
+
 			if data_list.empty?
 				data_upload_object.update_attributes(:imported => imported, :not_imported => not_imported, :external_crm_duplicates => crm_dup)
 				return
@@ -80,7 +80,7 @@ class LeadUploadJob < ApplicationJob
 
 		# Loop through data_object_lead list
 		for le in upload_lead_list
-			if number_of_leads_left_to_upload_in_campaign == 0
+			if number_of_leads_left_to_upload_in_campaign < 1
 				break
 			end
 
