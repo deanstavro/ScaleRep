@@ -43,7 +43,9 @@ class LeadUploadJob < ApplicationJob
 	private
 
 	def createCampaign(client_company, base_campaign)
+		puts "WE ARE HERE TO MAKE MORE CAMPAIGNS"
 		campaign = Campaign.new(:campaign_name => base_campaign.campaign_name + " " +Time.now.getutc.to_s, :client_company => client_company, :persona => base_campaign.persona, :contactLimit => base_campaign.contactLimit)
+
 
 	    # Get Array of all emails
 	  	email_array = get_email_accounts(client_company.replyio_keys)
@@ -73,6 +75,7 @@ class LeadUploadJob < ApplicationJob
 
 
 	def upload_leads(clients_leads, upload_lead_list, campaign)
+		puts "IN UPLOAD LEAD METHOD"
 		not_imported, imported, crm_dup = [], [], []
 		number_of_leads_left_to_upload_in_campaign = campaign.contactLimit - campaign.peopleCount
 		# Fill in the rest of leads in the campaign
@@ -80,9 +83,10 @@ class LeadUploadJob < ApplicationJob
 
 		# Loop through data_object_lead list
 		for le in upload_lead_list
-			if number_of_leads_left_to_upload_in_campaign < 1
-				break
-			end
+			puts "STILL LOOPING"
+			
+			[break] if number_of_leads_left_to_upload_in_campaign < 1
+			puts number_of_leads_left_to_upload_in_campaign.to_s
 
 			begin
 				#Looping through contact. Strip from master list
