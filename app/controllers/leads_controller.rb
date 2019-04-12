@@ -158,18 +158,15 @@ class LeadsController < ApplicationController
 
   # Performed By Client Company User
   def update_leads_from_frontend
-    
     if params[:lead_ids].present? and params[:update].present? and params[:value].present?
       Lead.where(:id=>params[:lead_ids]).update_all(params[:update]=> params[:value])
 
       redirect_back(fallback_location: root_path, notice: "Leads updated")
-
       # Remove Contact From Reply if Blacklisted
       if params[:value] == "blacklist"
         UpdateBlacklistToReplyJob.perform_later(params[:lead_ids])
       end
     end
-
     return
   end
 
