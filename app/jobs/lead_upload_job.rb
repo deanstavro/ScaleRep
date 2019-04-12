@@ -44,9 +44,9 @@ class LeadUploadJob < ApplicationJob
 
 	def createCampaign(client_company, base_campaign)
 		puts "WE ARE HERE TO MAKE MORE CAMPAIGNS"
-		campaign = Campaign.new(:campaign_name => base_campaign.campaign_name + " " +Time.now.getutc.to_s, :client_company => client_company, :persona => base_campaign.persona, :contactLimit => base_campaign.contactLimit)
+		campaign = Campaign.new(:campaign_name => base_campaign.campaign_name + " " +Time.now.getutc.to_s, :client_company => client_company, :persona => base_campaign.persona, :contactLimit => base_campaign.contactLimit.to_i)
 
-
+		puts "CAMPAIGN" + campaign.to_s
 	    # Get Array of all emails
 	  	email_array = get_email_accounts(client_company.replyio_keys)
 	    
