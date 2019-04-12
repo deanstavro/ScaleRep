@@ -85,7 +85,7 @@ class LeadUploadJob < ApplicationJob
 		for le in upload_lead_list
 			puts "STILL LOOPING"
 			
-			[break] if number_of_leads_left_to_upload_in_campaign < 1
+			break if number_of_leads_left_to_upload_in_campaign < 1
 			puts number_of_leads_left_to_upload_in_campaign.to_s
 
 			begin
