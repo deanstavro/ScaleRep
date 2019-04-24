@@ -1,0 +1,51 @@
+<%= form_for(salesforce) do |f| %>
+    <% if salesforce.errors.any? %>
+      <div id="error_explanation">
+        <h2><%= pluralize(salesforce.errors.count, "error") %> prohibited this salesforce from being saved:</h2>
+        <ul>
+        <% salesforce.errors.full_messages.each do |message| %>
+          <li><%= message %></li>
+        <% end %>
+        </ul>
+      </div>
+    <% end %>
+
+    <%= f.label :sync_email_touchpoints_option do %>
+    <%= f.check_box :sync_email_touchpoints_option %>
+    Sync email touchpoints to Salesforce
+    <button type="button" data-toggle="modal" data-target="#salesforceSyncInfo" style="border:none;">
+      <%= octicon "info" %>
+    </button>
+  <% end %>
+  <br>
+
+    <%= f.submit "Update", class: "btn btn-primary btn-xl page-scroll header-text-space"  %>
+<% end %>
+
+<!-- Modal 1 - Data Upload to Salesforce -->
+<div class="modal fade" id="salesforceSyncInfo" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h4 class="modal-title" id="myModalLabel">Contact Upload</h4>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+
+      </div>
+      <div class="modal-body">
+        <h5>Accounts</h5>
+
+        <p>* Below are the account fields/values uploaded into Salesforce
+        <br>{salesforce_field}:{scalerep_value_uploaded}
+        <p>
+        <p style="color:black">
+        <br>account_name : {company_name}
+        <br>account_website : {company_website}
+        <p>
+
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+      </div>
+    </div>
+  </div>
+</div>

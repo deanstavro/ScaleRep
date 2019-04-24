@@ -20,7 +20,7 @@
             <% end %>
           <% end %>
       <% else %>
-          OFF 
+          OFF
       <% end %>
   </h4>
 </div>
@@ -29,20 +29,38 @@
 
 <% if @salesforce.salesforce_integration_on %>
 
+  <!--############################# Section 0: Sync items to salesforce ########################-->
+  <div  class="border-sf-option thin_margins" id = "accordion">
+      <div>
+        <h4>
+          <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseOne">
+            Sync to Salesforce</a>
+        </h4>
+      </div>
+      <div id = "collapseOne">
+        <div>
+            <%= render 'sync_options', salesforce: @salesforce %>
+        </div>
+      </div>
+  </div>
+
+  <br/>
+
   <!--############################# Section 1: Upload Data to salesforce ########################-->
-  <div  class="border-sf-option thin_margins" id = "accordion"> 
+  <div  class="border-sf-option thin_margins" id = "accordion">
       <div>
         <h4>
           <a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseOne">
             Upload to Salesforce</a>
-        </h4>   
+        </h4>
       </div>
       <div id = "collapseOne">
         <div>
             <%= render 'data_upload_options', salesforce: @salesforce %>
         </div>
-      </div>  
+      </div>
   </div>
+  
   <br>
 
   <!--############################# Section 2: Salesforce Blacklist ########################-->
@@ -57,7 +75,7 @@
       <div>
             <%= render 'options', salesforce: @salesforce %>
         </div>
-      
+
         <br>
       <div>
       <% if false %>
@@ -76,7 +94,7 @@
                   <div class="modal-header">
                     <h4 class="modal-title" id="myModalLabel">Add Blacklist Field</h4>
                     <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
-                    
+
                   </div>
                   <div class="modal-body">
                     <h5>Salesforce Field : Salesforce Value</h5>
@@ -115,7 +133,7 @@
 <!--############################# Section 3: Salesforce Setup ########################-->
 <div class="border-sf-option thin_margins" id = "accordion" >
   <div>
-    
+
       <% if @salesforce.salesforce_integration_on %>
         <h4><a data-toggle = "collapse" data-parent = "#accordion" href = "#collapseThree">
           Integration Setup</a>
@@ -131,7 +149,7 @@
         </h4>
           </div>
           <div id = "showThree">
-      <% end %>          
+      <% end %>
     <div>
         <%= render 'form', salesforce: @salesforce %>
     </div>
@@ -143,11 +161,11 @@
           <div class="modal-content">
             <div class="modal-header">
               <h4 class="modal-title" style="color:#007bff; id="myModalLabel">Salesforce Setup</h4>
-              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>  
+              <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
             </div>
             <div class="modal-body">
               <h5 style="color:#007bff;">Salesforce Prerequisites</h5>
-              <p> 
+              <p>
                 1. Group, Professional, Enterprise, Performance, Unlimited, or Developer Edition
                 <br>2. User permissions: Customize Application AND either Modify All Data OR Manage Connected Apps
                 <br> <i> (see <a href="https://help.salesforce.com/articleView?id=connected_app_create.htm&type=5"> more on prerequisites) </a></i>
@@ -158,7 +176,7 @@
                 </p>
               <h5 style="color:#007bff;">Step 2: Create the Connected App</h5>
                 <p> 1. Fill in required fields (App Name, API Name, and Email)
-                <br>2. Check "Enable OAuth Settings" 
+                <br>2. Check "Enable OAuth Settings"
                 <br>3. Check "Enable for Device Flow"
                 <br>4. Change "Callback URL" to: https://app.scalerep.com/auth/salesforce/callback
                 <br>5. For "Selected OAuth Scopes", choose "Access and manage your data (api)" AND "Perform requests on yor behalf at any time (resfresh_token, offline_access)"
@@ -189,4 +207,4 @@
    $(function () { $('#collapseThree').collapse('hide')});
    $(function () { $('#showThree').collapse('show')});
    $(function () { $('#collapseOne').collapse('show')});
-</script>  
+</script>

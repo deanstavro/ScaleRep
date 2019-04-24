@@ -1,7 +1,7 @@
 class SalesforcesController < InheritedResources::Base
   require 'restforce'
   include Salesforce_Integration
-  
+
   # GET - Renders Salesforce Settings Page
   # Renders client_company's salesforce if it exist. Or renders a new salesforce
   def index
@@ -51,7 +51,7 @@ class SalesforcesController < InheritedResources::Base
   def web_authentication
   	@user = current_user
 	  @client_company = @user.client_company
-	
+
 	  begin
 		  @salesforce = @client_company.salesforce
 		  puts  env["omniauth.auth"].to_s
@@ -59,7 +59,7 @@ class SalesforcesController < InheritedResources::Base
 	  	puts env["omniauth.auth"].credentials.token.to_s
 	  	puts env["omniauth.auth"].credentials.refresh_token.to_s
 	  	@salesforce.update_attributes(:instance_url => env["omniauth.auth"].credentials.instance_url, :oauth_token => env["omniauth.auth"].credentials.token , :refresh_token => env["omniauth.auth"].credentials.refresh_token )
- 		  
+
       # Try to authenticate Restforce!
       #success
  		  if authenticate(@salesforce) != 400
@@ -111,7 +111,7 @@ class SalesforcesController < InheritedResources::Base
   private
 
 	def salesforce_params
-	  params.require(:salesforce).permit(:api_version, :app_key, :app_secret, :client_company_id, :upload_contacts_to_salesforce_option, :check_dup_against_existing_contact_email_option, :check_dup_against_existing_account_domain_option, :upload_accounts_to_salesforce_option)
+	  params.require(:salesforce).permit(:api_version, :app_key, :app_secret, :client_company_id, :upload_contacts_to_salesforce_option, :check_dup_against_existing_contact_email_option, :check_dup_against_existing_account_domain_option, :upload_accounts_to_salesforce_option, :sync_email_touchpoints_option)
 	end
 
 end

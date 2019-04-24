@@ -10,7 +10,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20190318172127) do
+ActiveRecord::Schema.define(version: 20190424182430) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -259,6 +259,7 @@ ActiveRecord::Schema.define(version: 20190318172127) do
     t.string   "instance_url"
     t.string   "oauth_token"
     t.string   "refresh_token"
+    t.boolean  "sync_email_touchpoints_option"
     t.index ["client_company_id"], name: "index_salesforces_on_client_company_id", using: :btree
   end
 
