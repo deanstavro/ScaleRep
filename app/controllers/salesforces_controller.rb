@@ -42,7 +42,7 @@ class SalesforcesController < InheritedResources::Base
 	    req = request.env['omniauth.strategy'].options.merge!({ client_id: app_key, client_secret: app_secret })
 	    redirect_to(salesforces_path)
 	  rescue
-		  redirect_to(salesforces_path,:error => 'ERROR. Your credentials are correct, but check you Salesforce App settings')
+		  redirect_to(salesforces_path,:error => 'ERROR. Your credentials are correct, but check your Salesforce App settings')
 	  end
   end
 
