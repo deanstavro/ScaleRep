@@ -1,6 +1,6 @@
 class Api::V1::ReplyController < Api::V1::BaseController
 
-    
+
     def email_reply
         begin
             puts "e-mail reply notification has been received from reply.io"
@@ -12,13 +12,13 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             client_company = ClientCompany.find_by(api_key: params["api_key"])
             # Find campaign or return if nil
-            
+
             campaign = Campaign.find_by(client_company: client_company, campaign_name: params["reply"]["campaign_name"])
             if campaign.nil?
                 render json: {response: "Couldn't find campaign for campaign name " + params["reply"]["campaign_name"], :status => 200}, status: 200
                 return
             end
-            
+
             # Find lead or return if nil
             lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["reply"]["email"].downcase, client_company]).first
             if lead.nil?
@@ -28,7 +28,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             # Find campaign step number
             num = params["reply"]["campaign_step"].to_i
-            
+
             # Find how many total touchpoints
             tp_count = lead.touchpoints.where(["campaign_id = ?", campaign]).count
 
@@ -36,7 +36,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
                 render json: {response: "Couldn't find any touchpoints for lead", :status => 200}, status: 200
                 return
             end
-                
+
             lead_touchpoint = lead.touchpoints.where(["campaign_id = ?", campaign])[tp_count - num]
             if lead_touchpoint.nil?
                     render json: {response: "Couldn't find touchpoint to associate to email open", :status => 200}, status: 200
@@ -75,7 +75,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
                 render json: {response: "Couldn't find campaign", :status => 200}, status: 200
                 return
             end
-            
+
             lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", params["reply"]["email"].downcase, client_company]).first
             #Get lead, or create if needed
             if lead.nil?
@@ -96,7 +96,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
             #Create touchpoint and associate to lead
             puts "creating touchpoint. Associating to lead and campaign"
- 
+
             # Increment campaign uniquePeopleContacted
             if lead.touchpoints.where(['campaign_id = ?', campaign]).empty?
                 campaign.update_attribute(:uniquePeopleContacted, campaign.uniquePeopleContacted + 1)
@@ -106,6 +106,8 @@ class Api::V1::ReplyController < Api::V1::BaseController
             touchpoint = Touchpoint.create!(:channel => :email, :sender_email => params["reply"]["sender_email"], :email_subject => params["reply"]["email_subject"], :email_body => params["reply"]["email_body"], :campaign => campaign, :lead => lead, :client_company => client_company)
             campaign.update_attribute(:deliveriesCount, campaign.deliveriesCount + 1)
 
+            # trigger salesforce job to push touchpoint
+            SalesforceUpdateJob.perform_later(touchpoint)
 
             render json: {response: "Touchpoint created", :status => 200}, status: 200
             return
@@ -120,7 +122,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
 
     # Captures all e-mail opens from reply
     # API payload example: {"opens_count":"4", "campaign_step":"1", "last_name":"Lussier", "first_name":"Samantha", "first_time_open":"False", "campaign_name":"Better | Email Dump | 3110-3410", "email":"samanthalussierpsyd@gmail.com"},"api_key"=>"b4e330f5cda737343261c5c978266211", "controller"=>"api/v1/reply", "action"=>"email_open", "reply"=><ActionController::Parameters {"opens_count"=>"4", "campaign_step"=>"1", "last_name"=>"Lussier", "first_name"=>"Samantha","first_time_open"=>"False", "campaign_name"=>"Better | Email Dump | 3110-3410", "email"=>"samanthalussierpsyd@gmail.com"} permitted: false>}
-    
+
     # Associated to lead, or returned
     # Associated to touchpoint, or returned
     # If lead_action can be associated to touchpoint and lead, it is created
@@ -162,10 +164,10 @@ class Api::V1::ReplyController < Api::V1::BaseController
                     opened_email = true
                     break
                 end
-                
+
             end
 
-            if !opened_email 
+            if !opened_email
                 campaign_to_update.update_attributes(:opensCount => campaign_to_update.opensCount + 1, :uniqueOpens => campaign_to_update.uniqueOpens + 1)
             elsif params["reply"]["opens_count"].to_i == 1
                 campaign_to_update.update_attribute(:opensCount, campaign_to_update.opensCount + 1)
@@ -257,6 +259,9 @@ class Api::V1::ReplyController < Api::V1::BaseController
                 #set pushed_to_reply_campaign false
                 @campaign_reply.update_attribute(:pushed_to_reply_campaign, false)
 
+                # trigger salesforce job to push reply contents
+                SalesforceUpdateJob.perform_later(@campaign_reply)
+
             rescue
                 render json: {error: "Reply was not uploaded. Wrong status input, or bad payload.", :status => 400}, status: 400
                 return
@@ -317,7 +322,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
     def update_lead(params_content, client_company, campaign_reply, status)
       @lead = Lead.where(["lower(email) = ? AND leads.client_company_id = ?", campaign_reply.email.downcase, client_company]).first
       f_name, l_name = '',''
-      
+
       if @lead.nil?
           # If lead does not exist, create the lead
           if params_content[:full_name].split.length < 2
