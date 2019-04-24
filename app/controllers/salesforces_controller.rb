@@ -34,8 +34,7 @@ class SalesforcesController < InheritedResources::Base
   # Redirects to the salesforce page
   def setup
  	  begin
-	 	  @user = current_user
-	  	@client_company = @user.client_company
+	  	@client_company = current_user.client_company
 	  	@salesforce = @client_company.salesforce
 	  	app_key = @salesforce.app_key
 	  	app_secret = @salesforce.app_secret

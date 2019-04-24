@@ -134,7 +134,7 @@ class LeadUploadJob < ApplicationJob
 								uploaded_contact  = AddContactToReplyJob.perform_now(le,campaign.id)
 								# If reply was a success
 								if uploaded_contact
-									dup_lead.update_attributes(:campaign_id => campaign.id, :status => :cold)
+									dup_lead.update_attributes(:campaign_id => campaign.id, :persona_id => campaign.persona.id, :status => :cold)
 									imported << dup_lead
 									number_of_leads_left_to_upload_in_campaign = number_of_leads_left_to_upload_in_campaign - 1
 								else
