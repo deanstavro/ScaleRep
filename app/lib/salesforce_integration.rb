@@ -22,6 +22,19 @@ module Salesforce_Integration
         return 400
       end
     end
+
+
+    def upload_replies_to_salesforce
+      @client = authenticate(salesforce)
+
+      #Check if the contacts exist
+
+      # if it does, update the contact with the reply
+
+      # If contact does not exist, create, and update with reply
+
+
+    end
     
     # Creates Lead If Lead Does Not Exist (Fields: FirstName, LastName, Email, Title, LeadSource, Description)
     # Updates Lead if lead exists (updates LeadSource and Description)
