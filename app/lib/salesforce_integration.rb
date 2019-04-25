@@ -34,15 +34,24 @@ module Salesforce_Integration
       @client = authenticate(salesforce)
 
       #find
-      salesforceLead = @client.find('Lead', leadFromCampaignReply.email, 'Email')
+      salesforceLead = nil
+      begin
+        salesforceLead = @client.find('Lead', leadFromCampaignReply.email, 'Email')
+      rescue
+        puts "in rescue"
+        salesforceLead = nil
+      end
 
       if salesforceLead.present?
         # create email touch
         task = @client.create('Task', WhoId:salesforceLead.Id, Status: "Completed", Priority:"Normal", Subject: campaignReply.last_conversation_subject, Description: campaignReply.last_conversation_summary, ActivityDate: campaignReply.created_at.to_date)
 
-      # else case
-        puts "created this Task!"
+      else # else case
+        task = @client.create('Task', Status: "Open", Priority:"Normal", Subject: campaignReply.last_conversation_subject, Description: campaignReply.last_conversation_summary, ActivityDate: campaignReply.created_at.to_date)
       end
+
+      puts "created this Task!"
+      puts task
     end
 
     def upload_touchpoints_to_salesforce(touchpoint,salesforce)
@@ -54,7 +63,15 @@ module Salesforce_Integration
       @client = authenticate(salesforce)
 
       #find
-      salesforceLead = @client.find('Lead', leadFromTouchpoint.email, 'Email')
+      salesforceLead = nil
+
+      begin
+        salesforceLead = @client.find('Lead', leadFromTouchpoint.email, 'Email')
+      rescue
+        puts "in rescue"
+        salesforceLead = nil
+      end
+
 
       puts "found salesforceLead"
       puts salesforceLead
@@ -63,9 +80,12 @@ module Salesforce_Integration
         # create email touch
         task = @client.create('Task', WhoId:salesforceLead.Id, Status: "Completed", Priority:"Normal", Subject: touchpoint.email_subject, Description: touchpoint.email_body, ActivityDate: touchpoint.created_at.to_date)
 
-      # else case
-        puts "created this Task!"
+      else # else case
+        task = @client.create('Task', Status: "Open", Priority:"Normal", Subject: touchpoint.email_subject, Description: touchpoint.email_body, ActivityDate: touchpoint.created_at.to_date)
       end
+      puts "created this Task!"
+      puts task
+
     end
 
     # Creates Lead If Lead Does Not Exist (Fields: FirstName, LastName, Email, Title, LeadSource, Description)
