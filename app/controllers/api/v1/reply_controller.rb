@@ -107,7 +107,7 @@ class Api::V1::ReplyController < Api::V1::BaseController
             campaign.update_attribute(:deliveriesCount, campaign.deliveriesCount + 1)
 
             # trigger salesforce job to push touchpoint
-            SalesforceUpdateJob.perform_later(touchpoint)
+            SalesforceUpdateJob.perform_later(touchpoint, client_company.salesforce)
 
             render json: {response: "Touchpoint created", :status => 200}, status: 200
             return
@@ -259,9 +259,6 @@ class Api::V1::ReplyController < Api::V1::BaseController
                 #set pushed_to_reply_campaign false
                 @campaign_reply.update_attribute(:pushed_to_reply_campaign, false)
 
-                # trigger salesforce job to push reply contents
-                SalesforceUpdateJob.perform_later(@campaign_reply)
-
             rescue
                 render json: {error: "Reply was not uploaded. Wrong status input, or bad payload.", :status => 400}, status: 400
                 return
@@ -271,6 +268,9 @@ class Api::V1::ReplyController < Api::V1::BaseController
             # Update lead to the correct company
             @client_company = ClientCompany.find_by(api_key: params["api_key"])
             @campaign_reply.update_attribute(:client_company, @client_company)
+
+            # trigger salesforce job to push reply contents
+            SalesforceUpdateJob.perform_later(@campaign_reply, @client_company.salesforce)
 
             if @params_content[:status].to_s == "opt_out" or @params_content[:status].to_s == "do_not_contact"
                 update_lead(@params_content, @client_company, @campaign_reply, "blacklist")
@@ -285,6 +285,8 @@ class Api::V1::ReplyController < Api::V1::BaseController
                 render json: {response: "Reply uploaded", :status => 200}, status: 200
                 return
             end
+
+
         else
             render json: {error: "Reply was not uploaded. JSON post parameters missing", :status => 400}, status: 400
             return

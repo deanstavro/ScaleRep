@@ -1,8 +1,8 @@
 require 'restforce'
-
+require 'Date'
 module Salesforce_Integration
   protected
-  
+
     # Authenticates Restforce Gem (Salesforce Client)
     # Returns @client or 400, and accepts salesforce db object
     def authenticate(salesforce_object)
@@ -24,18 +24,39 @@ module Salesforce_Integration
     end
 
 
-    def upload_replies_to_salesforce
+    def upload_replies_to_salesforce(campaignReply, salesforce)
+      puts "IN METHOD upload_replies_to_salesforce"
+
+      #find Lead from object -- all CampaignReplies have an associated lead
+      leadFromCampaignReply = Lead.find(campaignReply.lead.id)
+      puts "finished leadFromCampaignReply - starting salesforceLead"
+
+      #authenticate
       @client = authenticate(salesforce)
 
-      #Check if the contacts exist
+      #find
+      salesforceLead = @client.find('Lead', leadFromCampaignReply.email, 'Email')
 
-      # if it does, update the contact with the reply
+      if salesforceLead.present?
+        puts "lead from campaign reply:"
+        puts leadFromCampaignReply
+        puts "salesforce lead"
+        puts salesforceLead
 
-      # If contact does not exist, create, and update with reply
+        # create email touch
+        puts campaignReply.created_at.strftime("%m/%d/%Y")
+        task = @client.create('Task', WhoId:salesforceLead.Id, Status: "Completed", Priority:"Normal", Subject: campaignReply.last_conversation_subject, Description: campaignReply.last_conversation_summary, ActivityDate: campaignReply.created_at.to_date)
+
+        puts "created this Task!"
+        puts task
+      end
+
+      #If it does, update the contact with the reply
+
 
 
     end
-    
+
     # Creates Lead If Lead Does Not Exist (Fields: FirstName, LastName, Email, Title, LeadSource, Description)
     # Updates Lead if lead exists (updates LeadSource and Description)
     # Returns true if lead is created
@@ -84,7 +105,7 @@ module Salesforce_Integration
         return false
       end
       account_ids, account_search_term = find_salesforce_account_by_domain(client, salesforce, lead)
-      
+
       if account_ids.empty?
         puts "ACCOUNT ID EMPTY"
 
@@ -101,7 +122,7 @@ module Salesforce_Integration
         account_id = account_ids.first.Id
         puts "ACCOUNT ID EXISTS: " + account_id.to_s
       end
-      
+
       return account_id
     end
 
@@ -110,11 +131,11 @@ module Salesforce_Integration
     end
 
 
-    
+
 
     def createSalesforceHash(lead, persona)
         field_dict = Hash.new
-        
+
         if lead["first_name"]
           field_dict["FirstName"] = lead["first_name"]
         end
@@ -141,7 +162,7 @@ module Salesforce_Integration
         return field_dict
     end
 
-    
+
     # Returns contacts if contacts exist
     def find_salesforce_contact_by_email(client, lead_email)
         copy_email = lead_email.dup
@@ -149,7 +170,7 @@ module Salesforce_Integration
         if copy_email.include? "-"
           copy_email = copy_email.gsub!("-","\u2013")
         end
-        
+
         contacts = client.search('FIND {'+copy_email+'} RETURNING Contact (Email)')
         return contacts.first.last
     end
@@ -188,7 +209,7 @@ module Salesforce_Integration
       if account_search_term.include? "-"
           account_search_term.gsub!("-","\u2013")
       end
-      
+
       puts "ACCOUNT SEARCH TERM: " + account_search_term
       account_ids = client.search('FIND {' + account_search_term + '} RETURNING Account (Id)')
 
