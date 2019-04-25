@@ -25,7 +25,6 @@ module Salesforce_Integration
 
 
     def upload_replies_to_salesforce(campaignReply, salesforce)
-
       #find Lead from object -- all CampaignReplies have an associated lead
       leadFromCampaignReply = Lead.find(campaignReply.lead.id)
       puts "finished leadFromCampaignReply - starting salesforceLead"
@@ -46,8 +45,22 @@ module Salesforce_Integration
         # create email touch
         task = @client.create('Task', WhoId:salesforceLead.Id, Status: "Completed", Priority:"Normal", Subject: campaignReply.last_conversation_subject, Description: campaignReply.last_conversation_summary, ActivityDate: campaignReply.created_at.to_date)
 
+        # if lead has been handed off, we need to update stats
+        # only need to do this work in campaign replies
+        puts "status is " + leadFromCampaignReply.status
+
+        if ['handed_off','handed_off_with_questions','sent_meeting_invite'].include?leadFromCampaignReply.status
+          puts "determined this was a handoff"
+          @client.update('Lead', Id: salesforceLead.Id, Status: "Working")
+        end
+
       else # else case
+        #Create Lead
+        puts campaignReply.lead.first_name, campaignReply.lead.last_name, campaignReply.lead.email
+        # LEAD TODO: need a company name - how do we get this or put a placeholder?
+        # lead = @client.create('Lead', FirstName: campaignReply.lead.first_name, LastName: campaignReply.lead.last_name, Email:campaignReply.lead.email, Account:campaignReply.lead.email)
         task = @client.create('Task', Status: "Open", Priority:"Normal", Subject: campaignReply.last_conversation_subject, Description: campaignReply.last_conversation_summary, ActivityDate: campaignReply.created_at.to_date)
+        puts lead
       end
 
       puts "created this Task!"
@@ -81,7 +94,10 @@ module Salesforce_Integration
         task = @client.create('Task', WhoId:salesforceLead.Id, Status: "Completed", Priority:"Normal", Subject: touchpoint.email_subject, Description: touchpoint.email_body, ActivityDate: touchpoint.created_at.to_date)
 
       else # else case
+        lead = @client.create('Lead', FirstName: campaignReply.lead.first_name, LastName: campaignReply.lead.last_name, Email:campaignReply.lead.email)
         task = @client.create('Task', Status: "Open", Priority:"Normal", Subject: touchpoint.email_subject, Description: touchpoint.email_body, ActivityDate: touchpoint.created_at.to_date)
+        puts 'created an open lead and an open task'
+
       end
       puts "created this Task!"
       puts task
