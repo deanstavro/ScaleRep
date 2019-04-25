@@ -10,10 +10,10 @@ class SalesforceUpdateJob < ApplicationJob
 
     # logic to determine which job to call
     if object.instance_of? CampaignReply
-      puts "successfully determined this is a CampaignReply"
       upload_replies_to_salesforce(object, salesforce)
 
-      
+    elsif object.instance_of? Touchpoint
+      upload_touchpoints_to_salesforce(object,salesforce)
 
     end
   end

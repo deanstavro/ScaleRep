@@ -25,7 +25,6 @@ module Salesforce_Integration
 
 
     def upload_replies_to_salesforce(campaignReply, salesforce)
-      puts "IN METHOD upload_replies_to_salesforce"
 
       #find Lead from object -- all CampaignReplies have an associated lead
       leadFromCampaignReply = Lead.find(campaignReply.lead.id)
@@ -38,23 +37,35 @@ module Salesforce_Integration
       salesforceLead = @client.find('Lead', leadFromCampaignReply.email, 'Email')
 
       if salesforceLead.present?
-        puts "lead from campaign reply:"
-        puts leadFromCampaignReply
-        puts "salesforce lead"
-        puts salesforceLead
-
         # create email touch
-        puts campaignReply.created_at.strftime("%m/%d/%Y")
         task = @client.create('Task', WhoId:salesforceLead.Id, Status: "Completed", Priority:"Normal", Subject: campaignReply.last_conversation_subject, Description: campaignReply.last_conversation_summary, ActivityDate: campaignReply.created_at.to_date)
 
+      # else case
         puts "created this Task!"
-        puts task
       end
+    end
 
-      #If it does, update the contact with the reply
+    def upload_touchpoints_to_salesforce(touchpoint,salesforce)
+      #find Lead from object -- all CampaignReplies have an associated lead
+      leadFromTouchpoint= Lead.find(touchpoint.lead.id)
+      puts "finished leadFromCampaignReply - starting salesforceLead"
 
+      #authenticate
+      @client = authenticate(salesforce)
 
+      #find
+      salesforceLead = @client.find('Lead', leadFromTouchpoint.email, 'Email')
 
+      puts "found salesforceLead"
+      puts salesforceLead
+
+      if salesforceLead.present?
+        # create email touch
+        task = @client.create('Task', WhoId:salesforceLead.Id, Status: "Completed", Priority:"Normal", Subject: touchpoint.email_subject, Description: touchpoint.email_body, ActivityDate: touchpoint.created_at.to_date)
+
+      # else case
+        puts "created this Task!"
+      end
     end
 
     # Creates Lead If Lead Does Not Exist (Fields: FirstName, LastName, Email, Title, LeadSource, Description)
