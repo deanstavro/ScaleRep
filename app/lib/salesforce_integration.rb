@@ -1,5 +1,4 @@
 require 'restforce'
-require 'Date'
 module Salesforce_Integration
   protected
 
